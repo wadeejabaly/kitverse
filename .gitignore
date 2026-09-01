@@ -15,7 +15,6 @@ next-env.d.ts
 .vercel
 .claude/
 
-# vendored supplier source data (on-disk only, not repo content — see vendor/images-source/
-vendor/images-alt/README.md)
+# vendored image archives (on-disk only; data/scripts/payloads ARE tracked)
 vendor/images-source/
 vendor/images-alt/
