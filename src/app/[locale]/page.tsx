@@ -70,7 +70,7 @@ export default async function HomePage({
           shirt rather than art we'd have to commission. */}
       <section className="grid items-center gap-10 py-14 wide:grid-cols-[1.05fr_1fr] wide:gap-14">
         <div>
-          <span className="mono-eyebrow text-ink-soft">{t("eyebrow")}</span>
+          <span className="mono-eyebrow">{t("eyebrow")}</span>
           <h1 className="mt-3.5 mb-4 text-[clamp(2rem,3.6vw,3.1rem)] leading-[1.08]">
             {t("title")}
           </h1>
@@ -179,7 +179,7 @@ export default async function HomePage({
           is asked. Two columns of plain prose, no imagery. */}
       <section className="grid gap-10 border-t border-rule py-14 wide:grid-cols-2 wide:gap-14">
         <div>
-          <span className="mono-eyebrow text-ink-soft">{t("explainer.eyebrow")}</span>
+          <span className="mono-eyebrow">{t("explainer.eyebrow")}</span>
           <h2 className="mt-3 text-[22px]">{t("explainer.title")}</h2>
         </div>
         <div className="flex flex-col gap-7">

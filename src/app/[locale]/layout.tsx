@@ -4,7 +4,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { routing, getDir } from "@/i18n/config";
 import { FONT_STACK_VARS } from "@/lib/fonts";
-import { alternatesFor, getSiteUrl } from "@/lib/site";
+import { OG_IMAGE, alternatesFor, getSiteUrl, localeUrl, ogImageUrl } from "@/lib/site";
 import { ConsentProvider } from "@/components/providers/ConsentProvider";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { ConsentBanner } from "@/components/shared/ConsentBanner";
@@ -16,6 +16,9 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+/** OpenGraph wants a territory-tagged locale, not a bare language code. */
+const OG_LOCALE: Record<string, string> = { ar: "ar_AR", en: "en_US" };
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,6 +26,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
+  // The share card is the crest on the site ground — see OG_IMAGE in site.ts.
+  // The icons themselves need no entry here: src/app/icon.png and
+  // src/app/apple-icon.png are picked up by Next's file convention.
+  const image = {
+    url: ogImageUrl(),
+    width: OG_IMAGE.width,
+    height: OG_IMAGE.height,
+    type: OG_IMAGE.type,
+    alt: t("title"),
+  };
   return {
     // Every absolute URL derives from getSiteUrl() — never a literal.
     metadataBase: new URL(getSiteUrl()),
@@ -33,6 +46,21 @@ export async function generateMetadata({
     description: t("description"),
     // Localized metadata + hreflang alternates — the multilingual SEO promise.
     alternates: alternatesFor(locale),
+    openGraph: {
+      type: "website",
+      siteName: t("title"),
+      title: t("title"),
+      description: t("description"),
+      url: localeUrl(locale),
+      locale: OG_LOCALE[locale] ?? locale,
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+      images: [image.url],
+    },
   };
 }
 

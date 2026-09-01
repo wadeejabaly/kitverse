@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getLeagues } from "@/data/catalog";
+import { BrandBadge } from "./BrandBadge";
 import { CookieSettingsButton } from "./CookieSettingsButton";
 
 /**
@@ -20,7 +21,9 @@ export async function Footer() {
   const year = String(new Date().getFullYear());
 
   return (
-    <footer className="border-t border-rule">
+    // The footer's top hairline is the crest gold — the site's one full-width
+    // brand mark, and the boundary it draws is real (page ends, footer begins).
+    <footer className="border-t border-gold">
       <div className="mx-auto w-full max-w-page px-6 pt-10 pb-14">
         <div className="flex flex-wrap justify-between gap-x-8 gap-y-10">
           <FooterColumn label={t("shopGroup")}>
@@ -56,11 +59,17 @@ export async function Footer() {
           </FooterColumn>
         </div>
 
-        <div className="flex flex-col gap-2 pt-9 text-[13px] text-ink-soft">
-          <p>{t("tagline")}</p>
-          <p className="tabular">
-            <bdi>{t("rights", { year })}</bdi>
-          </p>
+        {/* Brand line: the crest beside the tagline and the rights notice.
+            A flex gap again — the badge takes the inline start in both
+            directions with no direction-specific rule. */}
+        <div className="flex items-center gap-4 pt-9 text-[13px] text-ink-soft">
+          <BrandBadge size={40} className="shrink-0" />
+          <div className="flex flex-col gap-1">
+            <p>{t("tagline")}</p>
+            <p className="tabular">
+              <bdi>{t("rights", { year })}</bdi>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

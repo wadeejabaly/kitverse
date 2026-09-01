@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
+import { BrandBadge } from "@/components/shared/BrandBadge";
 import { CartLink } from "@/components/shared/CartLink";
 import { LocaleToggle } from "@/components/shared/LocaleToggle";
 import type { League } from "@/data/catalog";
@@ -69,7 +70,13 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
           className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ground"
         >
           <div className="flex items-center justify-between border-b border-rule px-6 py-5">
-            <span className="wordmark">KitVerse</span>
+            {/* Same lockup as the header behind it, so the overlay reads as
+                the same site rather than a second surface. Decorative badge
+                for the same reason: the wordmark is right there. */}
+            <span className="flex items-center gap-2.5">
+              <BrandBadge size={30} alt="" />
+              <span className="wordmark">KitVerse</span>
+            </span>
             <button
               type="button"
               onClick={() => setOpen(false)}

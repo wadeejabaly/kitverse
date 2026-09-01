@@ -16,7 +16,7 @@ export function PageLede({
 }) {
   return (
     <div className="border-b border-rule pt-7 pb-8">
-      <span className="mono-eyebrow text-ink-soft">{eyebrow}</span>
+      <span className="mono-eyebrow">{eyebrow}</span>
       <h1 className="mt-2 mb-2.5 text-[clamp(1.7rem,3vw,2.4rem)] leading-tight">
         {title}
       </h1>
@@ -39,7 +39,7 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-7 flex items-baseline justify-between gap-4 border-t border-rule pt-6">
-      <span className="mono-eyebrow text-ink-soft">{eyebrow}</span>
+      <span className="mono-eyebrow">{eyebrow}</span>
       {action}
     </div>
   );

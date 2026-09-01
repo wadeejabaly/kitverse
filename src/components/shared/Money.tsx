@@ -25,7 +25,14 @@ export function Price({
   );
 }
 
-/** A struck-through compare-at price (previous-season products only). */
+/**
+ * A struck-through compare-at price (previous-season products only).
+ *
+ * The sale signal is the strike itself, in the crest gold: the numerals stay
+ * ink-soft so the old price keeps receding, and only the rule through them
+ * carries the colour. This was chosen over a gold "save ₪40" tag — the tag
+ * shouts, the rule states.
+ */
 export function ComparePrice({
   value,
   className,
@@ -34,7 +41,10 @@ export function ComparePrice({
   className?: string;
 }) {
   return (
-    <bdi dir="ltr" className={cn("tabular text-ink-soft line-through", className)}>
+    <bdi
+      dir="ltr"
+      className={cn("tabular text-ink-soft line-through decoration-gold", className)}
+    >
       ₪{value}
     </bdi>
   );

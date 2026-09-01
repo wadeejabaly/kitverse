@@ -20,6 +20,27 @@ export function getSiteUrl(): string {
 }
 
 /**
+ * The social share card: the KitVerse crest centred on the site ground, no
+ * text — the platforms render the title and description themselves, and a
+ * baked-in headline would go stale and would be wrong in one of the two
+ * locales whichever language it was set in.
+ *
+ * Built absolute here rather than left relative, because several crawlers
+ * (and every link-preview bot that does not run our metadataBase resolution)
+ * want a fully-qualified URL.
+ */
+export const OG_IMAGE = {
+  path: "/brand/og.png",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+} as const;
+
+export function ogImageUrl(): string {
+  return `${getSiteUrl()}${OG_IMAGE.path}`;
+}
+
+/**
  * Path for a locale under localePrefix 'as-needed':
  * default locale lives at `/`, others at `/{locale}`.
  */

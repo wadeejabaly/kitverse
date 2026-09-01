@@ -76,12 +76,28 @@ photo-forward.
 ## Design tokens
 
 Light: ground `#F5F3EF`, tile `#FFFFFF`, ink `#14140F`, ink-soft `#6E6A5F`,
-rule `#E3DFD6`, accent `#1E4620`, chip `#EEEBE4`. Dark scheme swaps all of them
-except `--tile`, which stays white because it is the photo backdrop.
+rule `#E3DFD6`, accent `#182448`, gold `#856618`, chip `#EEEBE4`. Dark scheme
+swaps all of them (accent `#8FA5CE`, gold `#B08F55`) except `--tile`, which
+stays white because it is the photo backdrop.
 
 Radius is **0** everywhere. Max page width 1180px (`max-w-page`). The accent is
 precious: prices and primary buttons only. `--rule` is the only separator.
 All prices and figures get `.price` / `.tabular` (tabular-nums).
+
+The accent and the gold are sampled from the club crest
+(`public/brand/badge.png`) — shield navy and outer ring. The crest's electric
+blue is **not** a token and appears nowhere in the UI; it lives inside the
+badge artwork only.
+
+`--gold` is a micro-accent with exactly four uses, and no fifth may be added
+without a design decision: section/page eyebrows (a bare `.mono-eyebrow`;
+utility eyebrows opt out with `text-ink-soft`), the nav hover underline, the
+compare-at strikethrough rule, and the footer's top hairline.
+
+Brand assets: `public/brand/badge.png` (transparent crest, used by
+`<BrandBadge>` in the header, mobile overlay and footer), `public/brand/og.png`
+(share card), and `src/app/icon.png` + `src/app/apple-icon.png`, which Next
+picks up by file convention — do not add an `icons` block to metadata.
 
 ## Project rules
 

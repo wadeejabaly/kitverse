@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getLeagues } from "@/data/catalog";
+import { BrandBadge } from "@/components/shared/BrandBadge";
 import { CartLink } from "@/components/shared/CartLink";
 import { LocaleToggle } from "@/components/shared/LocaleToggle";
 import { MobileMenu } from "@/components/shared/MobileMenu";
@@ -25,8 +26,14 @@ export async function Header() {
       <div className="mx-auto flex w-full max-w-page items-center gap-6 px-6 py-5 wide:gap-10">
         <MobileMenu leagues={leagues} />
 
-        <Link href="/" className="wordmark shrink-0">
-          KitVerse
+        {/* Brand lockup: crest then wordmark, joined by a plain flex gap —
+            direction-agnostic, so the badge sits at the inline start in
+            English and mirrors to the inline start in Arabic on its own.
+            The badge is decorative here: the wordmark beside it already
+            names the link, so the crest carries no alt of its own. */}
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <BrandBadge size={30} priority alt="" />
+          <span className="wordmark">KitVerse</span>
         </Link>
 
         <nav className="hidden flex-1 gap-6 text-sm wide:flex">
@@ -58,7 +65,9 @@ function HeaderLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link
       href={href}
-      className="border-b border-transparent pb-1 text-ink transition-colors hover:border-ink"
+      // The hover underline is the crest gold — the one place a nav item
+      // signals itself. The label stays ink; only the hairline changes.
+      className="border-b border-transparent pb-1 text-ink transition-colors hover:border-gold"
     >
       {children}
     </Link>

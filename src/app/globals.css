@@ -4,8 +4,14 @@
    KitVerse design tokens.
    Components consume tokens only — never a hex literal.
    Quiet retail: warm off-white ground, near-black ink, one
-   hairline rule, and a single deep pitch green used ONLY for
+   hairline rule, and a single deep club navy used ONLY for
    prices and primary buttons. Radius is 0 everywhere.
+
+   The accent and the gold are both sampled from the KitVerse
+   club crest (public/brand/badge.png): the shield navy and the
+   outer ring gold. The crest's electric blue is deliberately NOT
+   a token — it lives inside the badge artwork and nowhere else
+   in the UI.
    ============================================================ */
 :root {
   --ground: #f5f3ef; /* page background — warm off-white */
@@ -13,9 +19,17 @@
   --ink: #14140f; /* text */
   --ink-soft: #6e6a5f; /* secondary text */
   --rule: #e3dfd6; /* hairline borders — the only separator used */
-  --accent: #1e4620; /* deep pitch green — prices + primary buttons ONLY */
-  --accent-ink: #ffffff; /* text on accent */
+  --accent: #182448; /* crest navy — prices + primary buttons ONLY (13.7:1 on ground) */
+  --accent-ink: #ffffff; /* text on accent (15.2:1) */
   --chip: #eeebe4; /* quiet fills: tags, inactive option buttons */
+
+  /* Micro-accent. A deep antique gold pulled down from the crest's bright
+     ring until it clears 4.5:1 on the ground (4.87:1) — it lands in the same
+     weight class as --ink-soft (4.94:1), so it reads as a tint of the
+     existing secondary text rather than as decoration. Used in exactly four
+     places: section/page eyebrows, the nav hover underline, the compare-at
+     strikethrough rule, and the footer's top hairline. Nowhere else. */
+  --gold: #856618;
 
   /* Type stacks arrive as --stack-* custom properties, set on <html> from
      src/lib/fonts.ts (the single source). Fallbacks keep the page readable
@@ -48,9 +62,10 @@
     --ink: #f1efe9;
     --ink-soft: #9a968b;
     --rule: #2b2b24;
-    --accent: #8fb08c;
+    --accent: #8fa5ce; /* crest's blue-lit navy, lifted for dark ground (7.5:1) */
     --accent-ink: #131310;
     --chip: #1f1f1a;
+    --gold: #b08f55; /* 6.1:1 — matched to dark --ink-soft's 6.3:1 */
   }
 }
 
@@ -59,14 +74,16 @@
   --ink: #f1efe9;
   --ink-soft: #9a968b;
   --rule: #2b2b24;
-  --accent: #8fb08c;
+  --accent: #8fa5ce;
   --accent-ink: #131310;
   --chip: #1f1f1a;
+  --gold: #b08f55;
 }
 
 /* Map tokens into Tailwind v4 (CSS-first @theme) →
    bg-ground, bg-tile, text-ink, text-ink-soft, border-rule, text-accent,
-   bg-accent, text-accent-ink, bg-chip, max-w-page, font-sans/mono/arabic. */
+   bg-accent, text-accent-ink, bg-chip, text-gold/border-gold/decoration-gold,
+   max-w-page, font-sans/mono/arabic. */
 @theme inline {
   --color-ground: var(--ground);
   --color-tile: var(--tile);
@@ -76,6 +93,7 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-chip: var(--chip);
+  --color-gold: var(--gold);
 
   --font-sans: var(--type-sans);
   --font-mono: var(--type-mono);
@@ -151,12 +169,32 @@ body[lang="ar"] {
 /* ---------- Utilities ---------- */
 
 /* Mono eyebrow: uppercase, widely tracked — LATIN ONLY. In Arabic it renders
-   in the Arabic stack at normal tracking and normal case. */
+   in the Arabic stack at normal tracking and normal case.
+
+   Colour rule: a bare .mono-eyebrow is GOLD, because the eyebrows that carry
+   no colour class are the ones that introduce a page or a section — the label
+   is the signal. Utility eyebrows (result counts, form legends, breadcrumbs,
+   table headers, footer column labels, card meta) opt out with `text-ink-soft`
+   and stay neutral; gold on all of them would read as decoration.
+
+   The gold is colour only. Arabic eyebrows take the gold like any other, and
+   the tracking/case neutralisation below is untouched — colour was never part
+   of that rule. */
 .mono-eyebrow {
   font-family: var(--type-mono);
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/* The colour goes in @layer base ON PURPOSE. An unlayered rule outranks every
+   Tailwind utility, so a bare `color:` here would paint the ~30 eyebrows that
+   already say `text-ink-soft` gold too and there would be no way to opt out.
+   In the base layer the utility wins, and the opt-out above is real. */
+@layer base {
+  .mono-eyebrow {
+    color: var(--gold);
+  }
 }
 
 [lang="ar"] .mono-eyebrow:not([lang="en"]):not(.latin) {
