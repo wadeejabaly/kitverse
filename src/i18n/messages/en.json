@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "title": "KitVerse",
+    "description": "Club and national team football shirts in Fan and Player versions. Clear prices, delivery nationwide."
+  },
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "search": "Search",
+    "cart": "Cart",
+    "sizeGuide": "Size guide",
+    "shipping": "Shipping & returns",
+    "about": "About",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language"
+  },
+  "home": {
+    "eyebrow": "This season's kits",
+    "title": "Your team's shirt, in your size, with your name on it.",
+    "intro": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing. The price you see is the final price, VAT included."
+  },
+  "common": {
+    "addToCart": "Add to cart",
+    "checkout": "Checkout",
+    "continueShopping": "Continue shopping",
+    "viewAll": "View all",
+    "back": "Back",
+    "close": "Close",
+    "remove": "Remove",
+    "search": "Search",
+    "loading": "Loading…",
+    "quantity": "Quantity",
+    "size": "Size",
+    "price": "Price",
+    "total": "Total"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The link may have changed or been mistyped. Try a search, or head back to the home page.",
+    "backHome": "Back to home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred on our end. Please try again — and if it keeps happening, get in touch.",
+    "retry": "Try again"
+  },
+  "footer": {
+    "rights": "© {year} KitVerse. All rights reserved.",
+    "tagline": "Football shirts for clubs and national teams.",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "cookieSettings": "Cookie settings"
+  },
+  "consent": {
+    "message": "We use essential cookies to run the site and your cart. Non-essential analytics or marketing tools only run after you accept, and you can change your choice at any time from \"Cookie settings\" at the bottom of the page.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "settingsTitle": "Cookie settings"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "updated": "Last updated: 1 September 2026",
+    "intro": "This page explains, in plain language, what information we collect when you buy from KitVerse, why we collect it, who processes it, and how long we keep it. We collect the minimum: only what the purchase and the delivery actually need.",
+    "sections": {
+      "collect": {
+        "title": "What we collect",
+        "body": "When you place an order we collect your name, email address, phone number and delivery address, along with the order itself: the products, sizes, version, and any name and number you asked us to print on the shirt.\n\nWe never collect or store your card details. Payment happens entirely at the payment provider, and all we receive back is confirmation of whether it succeeded.\n\nYour cart is stored in your own browser, not on our servers."
+      },
+      "use": {
+        "title": "Why we use it",
+        "body": "We use this information to fulfil and ship your order, to send you an order confirmation and tracking number, and to reply to you if something goes wrong with an order or a return. We do not sell your information, and we do not share it with anyone outside the processors listed below."
+      },
+      "processors": {
+        "title": "Who processes it",
+        "body": "We work with a small set of providers, and each one receives only what its job requires:\n\nPayPal — payment processing. Receives the payment details and the amount.\n\nSupabase — the orders database. Stores order and delivery details.\n\nResend — sends order confirmation and tracking emails.\n\nOur hosting provider, which runs the site and processes ordinary technical logs such as IP addresses on a short-term basis."
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "body": "Order records are kept for seven years, because they form part of the accounting records we are legally required to hold. Correspondence and general enquiries are kept for 12 months and then deleted."
+      },
+      "rights": {
+        "title": "Your rights: access and deletion",
+        "body": "You have the right to ask what information we hold about you, to have it corrected, or to have it deleted. Send the request from the contact page and we will reply within two business days. Please note that order records cannot be deleted before the legal retention period above has passed."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "body": "We use essential cookies only, to run the site and your cart — without them the site does not work. Any analytics or marketing tool that sets non-essential cookies runs only after you accept it in the cookie banner, and you can withdraw that consent at any time."
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of use",
+    "updated": "Last updated: 1 September 2026",
+    "intro": "These terms govern the use of the KitVerse website and any purchase made through it. By buying from the site you confirm that you have read and accepted them.",
+    "sections": {
+      "use": {
+        "title": "Using the site",
+        "body": "The site's content and product images are provided for the purpose of presenting and selling our products. Misuse of the site, or any attempt to gain unauthorised access to any part of it, is prohibited.\n\nOur products are sports shirts from our own sources. We are not officially affiliated with, and do not represent, any club, federation or manufacturer."
+      },
+      "prices": {
+        "title": "Prices",
+        "body": "All prices are in Israeli shekels and include VAT. The price shown on a product page is the final price for that product; shipping is added separately and shown at checkout before you pay.\n\nWe may change prices at any time, but the price that applied to your order at the time of purchase is the binding one."
+      },
+      "payment": {
+        "title": "Payment",
+        "body": "Payment is made through PayPal, either with a PayPal account or with a credit card through it. An order is only confirmed once we receive confirmation of payment.\n\nWe never see or store your card details — the whole transaction takes place at the payment provider."
+      },
+      "delivery": {
+        "title": "Delivery and shipping",
+        "body": "We currently ship within Israel only, at a single flat delivery rate shown at checkout.\n\nExpected delivery is 12 to 25 days from order confirmation, with a tracking number emailed to you once the order ships. Shirts printed with a name and number need two extra days of preparation before dispatch."
+      },
+      "cancellation": {
+        "title": "Cancellation and returns",
+        "body": "A purchase through this site is a distance sale under Israeli consumer protection law.\n\nYou may return a product within 14 days of receiving it, provided it is unworn, in its original condition, and with all tags still attached.\n\nShirts printed with a name or number are made to order and cannot be returned or exchanged — unless they arrive with a manufacturing defect or a printing error on our side.\n\nIf an item arrives damaged or incorrect, send us photos within 48 hours of delivery and we will put it right at our expense.\n\nRefunds are issued within 5 business days of the returned item reaching us and being inspected, to the original payment method. Cancellation fees are capped at 5% of the transaction value or 100 shekels, whichever is lower.\n\nThe cost of returning an item is borne by the buyer, except in cases of a defect or an error on our side."
+      },
+      "warranty": {
+        "title": "Warranty and liability",
+        "body": "We guarantee that your item arrives intact and matching the description and images on the site. Any manufacturing defect found on delivery will be resolved with a replacement or a full refund.\n\nThe warranty does not cover ordinary wear from use, or damage caused by washing contrary to the care instructions supplied with the shirt. Our liability is in all cases limited to the value of the order."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "For any question about an order, a return, or privacy, get in touch from the contact page on the site and we will reply within two business days.\n\nOur registered business details and address appear at the bottom of this page and on the invoice for every order."
+      },
+      "law": {
+        "title": "Governing law",
+        "body": "These terms are governed by the law of the State of Israel, and the competent courts of Israel have exclusive jurisdiction."
+      }
+    }
+  }
+}

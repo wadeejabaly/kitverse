@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/* ============================================================
+   KitVerse design tokens.
+   Components consume tokens only — never a hex literal.
+   Quiet retail: warm off-white ground, near-black ink, one
+   hairline rule, and a single deep pitch green used ONLY for
+   prices and primary buttons. Radius is 0 everywhere.
+   ============================================================ */
+:root {
+  --ground: #f5f3ef; /* page background — warm off-white */
+  --tile: #ffffff; /* product image tiles and cards */
+  --ink: #14140f; /* text */
+  --ink-soft: #6e6a5f; /* secondary text */
+  --rule: #e3dfd6; /* hairline borders — the only separator used */
+  --accent: #1e4620; /* deep pitch green — prices + primary buttons ONLY */
+  --accent-ink: #ffffff; /* text on accent */
+  --chip: #eeebe4; /* quiet fills: tags, inactive option buttons */
+
+  /* Type stacks arrive as --stack-* custom properties, set on <html> from
+     src/lib/fonts.ts (the single source). Fallbacks keep the page readable
+     if that style is ever missing. */
+  --type-sans: var(
+    --stack-sans,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif
+  );
+  --type-mono: var(--stack-mono, ui-monospace, "SF Mono", Menlo, monospace);
+  --type-arabic: var(
+    --stack-arabic,
+    "SF Arabic",
+    "Geeza Pro",
+    "Noto Sans Arabic",
+    "Segoe UI",
+    sans-serif
+  );
+}
+
+/* Dark scheme — honored for both the system preference and an explicit
+   [data-theme]. --tile deliberately STAYS white: it is the photo backdrop,
+   and the product shots are cut out on white. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #131310;
+    --ink: #f1efe9;
+    --ink-soft: #9a968b;
+    --rule: #2b2b24;
+    --accent: #8fb08c;
+    --accent-ink: #131310;
+    --chip: #1f1f1a;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #131310;
+  --ink: #f1efe9;
+  --ink-soft: #9a968b;
+  --rule: #2b2b24;
+  --accent: #8fb08c;
+  --accent-ink: #131310;
+  --chip: #1f1f1a;
+}
+
+/* Map tokens into Tailwind v4 (CSS-first @theme) →
+   bg-ground, bg-tile, text-ink, text-ink-soft, border-rule, text-accent,
+   bg-accent, text-accent-ink, bg-chip, max-w-page, font-sans/mono/arabic. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-tile: var(--tile);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-chip: var(--chip);
+
+  --font-sans: var(--type-sans);
+  --font-mono: var(--type-mono);
+  --font-arabic: var(--type-arabic);
+
+  --container-page: 1180px;
+
+  /* Radius 0 is a design decision, not a default — flatten every scale step
+     so a stray rounded-* utility cannot soften a corner. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--type-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings: medium weight, balanced wrapping. The negative tracking is
+   Latin-only — see the Arabic block below. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* ---------- Arabic rendering ----------
+   Arabic gets its own stack, more leading, and ZERO tracking. Letter-spacing
+   breaks the joined script and Arabic has no uppercase, so neither is ever
+   applied. Scoped to the Arabic locale; Latin islands opt back in with
+   lang="en" (see .latin). */
+[lang="ar"] body,
+body[lang="ar"] {
+  font-family: var(--type-arabic);
+  line-height: 1.85;
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+  letter-spacing: normal;
+}
+
+/* A Latin island inside an Arabic page — brand names, model codes, URLs. */
+[lang="ar"] .latin,
+[lang="ar"] [lang="en"] {
+  font-family: var(--type-sans);
+  line-height: 1.6;
+}
+
+/* ---------- Utilities ---------- */
+
+/* Mono eyebrow: uppercase, widely tracked — LATIN ONLY. In Arabic it renders
+   in the Arabic stack at normal tracking and normal case. */
+.mono-eyebrow {
+  font-family: var(--type-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+[lang="ar"] .mono-eyebrow:not([lang="en"]):not(.latin) {
+  font-family: var(--type-arabic);
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Every price and figure — columns of numerals must line up. */
+.price,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bidi isolation helper — wrap numerals, prices, dates, URLs and Latin terms
+   inside RTL copy (or use <bdi>) so they don't reorder. */
+.bidi-isolate {
+  unicode-bidi: isolate;
+  direction: ltr;
+  display: inline-block;
+}
+
+/* RTL discipline: logical properties ONLY, in CSS as in Tailwind classes —
+   margin-inline / padding-inline / inset-inline, text-align: start | end.
+   Preflight greps for physical-direction violations. */
+
+/* Motion backstop — reduced-motion users must always see the content. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Visible focus — never removed. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
