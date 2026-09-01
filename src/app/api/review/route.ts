@@ -9,21 +9,22 @@ import { getProduct } from "@/data/catalog";
  * every handler 404s unless NODE_ENV === "development". Also excluded from
  * the i18n proxy matcher (src/proxy.ts) and never listed in the sitemap.
  *
- * Reads two things from OUTSIDE this project on purpose:
- *   - /Users/akuna/Desktop/kitverse-pipeline/data/albums.json (supplier
- *     album metadata, to find alternate photos for the same team+season+kit)
- *   - /Users/akuna/Desktop/kitverse-pipeline/images/out/white/<hash>.jpg
- *     (whitened candidate photos, streamed back to the swap panel)
+ * Reads two vendored supplier data sets, kept out of the repo but on-disk
+ * under this project's own vendor/ directory (see vendor/README.md):
+ *   - vendor/data/albums.json (supplier album metadata, to find alternate
+ *     photos for the same team+season+kit)
+ *   - vendor/images-alt/<hash>.jpg (whitened candidate photos, streamed
+ *     back to the swap panel)
  * This is safe ONLY because the route never runs outside development (the
  * gate below) and never runs in a deployed environment — reading arbitrary
  * absolute host paths from a request would be a real vulnerability in prod.
  */
 
-const PIPELINE_DATA = "/Users/akuna/Desktop/kitverse-pipeline/data";
-const ALBUMS_JSON = path.join(PIPELINE_DATA, "albums.json");
-const SWAP_IMAGES_DIR = "/Users/akuna/Desktop/kitverse-pipeline/images/out/white";
-
 const ROOT = process.cwd();
+const PIPELINE_DATA = path.join(ROOT, "vendor", "data");
+const ALBUMS_JSON = path.join(PIPELINE_DATA, "albums.json");
+const SWAP_IMAGES_DIR = path.join(ROOT, "vendor", "images-alt");
+
 const REVIEW_STATE_PATH = path.join(ROOT, "data", "review-state.json");
 const PUBLIC_PRODUCTS_DIR = path.join(ROOT, "public", "products");
 
