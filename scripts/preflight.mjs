@@ -94,7 +94,13 @@ if (templateMode) {
 // go stale. Each file is allowed only its own named hosts and nothing else,
 // so the rule this check exists for — the site's own domain lives in exactly
 // one place — is untouched.
-const ALLOWED_HOSTS = new Set(["localhost", "schema.org"]);
+// www.w3.org is the same category as schema.org: an XML namespace identifier,
+// not a host anything is fetched from. An inline SVG in a CSS data: URI is
+// parsed as a standalone document and does not render at all without
+// xmlns="http://www.w3.org/2000/svg" — the string is part of the format, it is
+// fixed by the spec, and no request is ever made to it. The rule this check
+// exists for — the site's own domain lives in exactly one place — is untouched.
+const ALLOWED_HOSTS = new Set(["localhost", "schema.org", "www.w3.org"]);
 const FILE_HOST_ALLOWLIST = new Map([
   // null = the one file that assembles this site's own absolute URLs.
   [join("src", "lib", "site.ts"), null],

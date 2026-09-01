@@ -24,8 +24,21 @@ export async function Footer() {
     // The footer's top hairline is the crest gold — the site's one full-width
     // brand mark, and the boundary it draws is real (page ends, footer begins).
     <footer className="border-t border-gold">
-      <div className="mx-auto w-full max-w-page px-6 pt-10 pb-14">
-        <div className="flex flex-wrap justify-between gap-x-8 gap-y-10">
+      <div className="mx-auto w-full max-w-page overflow-hidden px-6 pt-10 pb-14">
+        {/* The editorial close: the logotype at watermark contrast, set to the
+            page width and clipped by it, so the footer ends on the brand
+            without anyone having to read it again. Latin logotype in both
+            locales — the long-standing exception, and the only place the
+            wordmark still appears anywhere on the site.
+
+            Decoration, and marked as such: aria-hidden, not selectable, and
+            below text contrast on purpose. There is nothing here to read that
+            the badge below does not already say. */}
+        <p aria-hidden className="ghost-wordmark -mb-2 select-none">
+          KitVerse
+        </p>
+
+        <div className="flex flex-wrap justify-between gap-x-8 gap-y-10 pt-12">
           <FooterColumn label={t("shopGroup")}>
             {leagues.map((league) => (
               <FooterLink key={league.slug} href={`/shop/${league.slug}`}>

@@ -12,6 +12,8 @@ photo-forward.
 - Next.js 16 App Router · React 19 · TypeScript strict (**no `any`**)
 - Tailwind v4, CSS-first `@theme` — tokens in `src/app/globals.css`
 - next-intl · Supabase (orders only) · Resend (order mail) · PayPal (checkout)
+- GSAP + ScrollTrigger + Lenis for motion — **dynamically imported, desktop
+  pointer only** (`src/components/motion/env.ts`). Never add Framer Motion.
 
 ## Conventions
 
@@ -99,8 +101,46 @@ Brand assets: `public/brand/badge.png` (transparent crest, used by
 (share card), and `src/app/icon.png` + `src/app/apple-icon.png`, which Next
 picks up by file convention — do not add an `icons` block to metadata.
 
-There is no wordmark: the crest alone is the brand mark in the header, the
-mobile overlay and the footer.
+There is no wordmark in the navigation: the crest alone is the brand mark in
+the header and the mobile overlay. The one surviving logotype is the footer's
+`.ghost-wordmark` — decorative, `aria-hidden`, ~5% ink, and the Latin-logotype
+exception still applies to it (tracked and uppercase in both locales).
+
+`--band` / `--band-ink` are the editorial band's surface, and they are NOT
+`--accent`. `--accent` is a text-and-button colour, so dark mode *lifts* it to
+a pale blue to stay legible on the ground; painting a full-bleed section with
+it turns that section into a light lavender slab in the middle of a dark page.
+The band is a surface, so it darkens like every other surface. Gold is not
+used inside the band: `--gold` measures 2.8:1 on the band navy, so the band's
+hairlines and secondary text are `--band-ink` at low alpha (`.band-rule`,
+`.band-soft`) instead.
+
+**Breakpoints must be declared in `rem`.** Tailwind orders breakpoint media
+queries by value so the larger one wins a conflict, but it can only compare
+like with like — a `px` breakpoint among `rem` defaults sorts ahead of all of
+them, and `wide:` then silently loses to `sm:` at every width.
+
+## Motion
+
+`src/components/motion/`. House rules: transform/opacity only, ease-out or
+`cubic-bezier(0.16, 1, 0.3, 1)`, entrances 400–800ms, hovers 200–300ms,
+stagger 60–100ms. No bounce, no overshoot.
+
+- **Everything is authored visible-by-default and enhanced when motion is
+  allowed.** `<Reveal>` ships plain markup and adds the start state itself, so
+  every failure path — reduced motion, no JS, a chunk that never loads, a
+  crawler — lands on "the content is already there". Never park content
+  offscreen behind a JS reveal.
+- CSS entrances (`.line-mask`) animate **transform only** and never opacity,
+  because the home headline is the LCP element and must paint on frame one.
+- The reduced-motion block zeroes `animation-delay`/`transition-delay` as well
+  as durations. A staggered entrance with `both` fill holds its FROM state
+  through the delay, so killing only the duration still blanks a headline.
+- GSAP/ScrollTrigger/Lenis load **only** behind `heavyMotionAllowed()`
+  (motion allowed + `(hover:hover) and (pointer:fine)` + ≥900px). A phone
+  never fetches those chunks — measured at 49KB and 3 requests lighter.
+- With Lenis, ScrollTrigger uses `scrub: true`, never a number: a numeric
+  scrub adds GSAP smoothing on top of Lenis's and the two fight into a float.
 
 The header is the site's one translucent surface (`.header-glass`): a
 navy-tinted veil at `--header-solid` / `--header-glass` with a backdrop blur.

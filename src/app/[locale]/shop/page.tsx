@@ -107,8 +107,8 @@ export default async function ShopPage({
     <Wrap>
       <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")} />
 
-      <section className="grid gap-7 pt-8 pb-14 wide:grid-cols-[230px_1fr] wide:gap-11">
-        <aside className="flex flex-col gap-6 self-start wide:sticky wide:top-24">
+      <section className="grid gap-7 pt-10 pb-[clamp(72px,10vw,120px)] wide:grid-cols-[220px_1fr] wide:gap-14">
+        <aside className="flex flex-col gap-9 self-start wide:sticky wide:top-28">
           <FilterGroup label={t("kind")}>
             <FilterLink
               href={shopHref({ league, team })}
@@ -194,6 +194,7 @@ export default async function ShopPage({
               locale={locale}
               columns={3}
               priorityCount={3}
+              reveal
             />
           ) : (
             <div className="py-14">
@@ -220,9 +221,14 @@ function FilterGroup({
   children: React.ReactNode;
 }) {
   return (
-    <div id={id} className="scroll-mt-28">
-      <span className="mono-eyebrow mb-2.5 block text-ink-soft">{label}</span>
-      <div className="flex flex-col gap-2">{children}</div>
+    // The group label sits above its own hairline rather than floating over
+    // the options: the rail reads as a set of small indexes, which is what it
+    // is, and the eye can find the group boundaries without any boxes.
+    <div id={id} className="scroll-mt-32">
+      <span className="mono-eyebrow mb-3 block border-b border-rule pb-3 text-ink-soft">
+        {label}
+      </span>
+      <div className="flex flex-col gap-2.5">{children}</div>
     </div>
   );
 }

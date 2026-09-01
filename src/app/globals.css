@@ -39,6 +39,15 @@
   --header-solid: #f1f2f5;
   --header-glass: rgb(241 242 245 / 0.78);
 
+  /* The editorial band's own surface. NOT --accent, and that distinction is
+     the whole point: --accent is a text-and-button colour, so in dark mode it
+     is LIFTED to a pale blue in order to stay legible ON the ground. Painting
+     a full-bleed band with it turns the section into a light lavender slab in
+     the middle of a dark page. The band is a surface, so it darkens in dark
+     mode like every other surface, and carries its own ink. */
+  --band: #182448; /* the crest navy, edge to edge */
+  --band-ink: #ffffff; /* 15.2:1 on the band */
+
   /* Type stacks arrive as --stack-* custom properties, set on <html> from
      src/lib/fonts.ts (the single source). Fallbacks keep the page readable
      if that style is ever missing. */
@@ -76,6 +85,8 @@
     --gold: #b08f55; /* 6.1:1 — matched to dark --ink-soft's 6.3:1 */
     --header-solid: #14161f;
     --header-glass: rgb(20 22 31 / 0.82);
+    --band: #1a2033; /* a cool panel against the warm near-black ground */
+    --band-ink: #f1efe9; /* 14.0:1 on the band */
   }
 }
 
@@ -90,6 +101,8 @@
   --gold: #b08f55;
   --header-solid: #14161f;
   --header-glass: rgb(20 22 31 / 0.82);
+  --band: #1a2033; /* a cool panel against the warm near-black ground */
+  --band-ink: #f1efe9; /* 14.0:1 on the band */
 }
 
 /* Map tokens into Tailwind v4 (CSS-first @theme) →
@@ -106,6 +119,8 @@
   --color-accent-ink: var(--accent-ink);
   --color-chip: var(--chip);
   --color-gold: var(--gold);
+  --color-band: var(--band);
+  --color-band-ink: var(--band-ink);
 
   --font-sans: var(--type-sans);
   --font-mono: var(--type-mono);
@@ -114,8 +129,15 @@
   --container-page: 1180px;
 
   /* The mockup's one custom breakpoint: above it the header shows its full
-     nav and listings go 4-up; below it the hamburger overlay takes over. */
-  --breakpoint-wide: 900px;
+     nav and listings go 4-up; below it the hamburger overlay takes over.
+
+     Declared in REM, not px, and that matters. Tailwind orders its breakpoint
+     media queries by value so the larger one wins a conflict, but it can only
+     compare like with like — a px breakpoint among rem defaults sorts ahead of
+     all of them, and `wide:` then loses to `sm:` at every width. That is not
+     theoretical: it is why `sm:grid-cols-3 wide:grid-cols-4` rendered the home
+     listing 3-up on a 1280px desktop. 56.25rem is the same 900px. */
+  --breakpoint-wide: 56.25rem;
 
   /* Radius 0 is a design decision, not a default — flatten every scale step
      so a stray rounded-* utility cannot soften a corner. */
@@ -293,6 +315,231 @@ body[lang="ar"] {
   text-transform: none;
 }
 
+/* ============================================================
+   EDITORIAL TYPE
+   Three roles only, as everywhere else on the site: display,
+   body, mono label. These add the display end of the scale that
+   the storefront pages did not previously need.
+   ============================================================ */
+
+/* The home headline. Oversized on purpose — it is the hero, and it is the
+   LCP element, so it is real text and it never fades in.
+
+   Latin gets the tight tracking and 1.02 leading that a grotesk display line
+   wants. Arabic gets neither: no tracking (it breaks the joined script) and
+   noticeably more leading, because the script's ascenders and descenders need
+   the room at this size. Both rules already exist for h1–h6; this restates
+   the leading because the display size needs a tighter value than the 1.85
+   body default. */
+.display {
+  font-size: clamp(2.5rem, 6.4vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+[lang="ar"] .display {
+  letter-spacing: normal;
+  line-height: 1.28;
+  /* The Arabic face carries more optical weight at display sizes; dropping a
+     step keeps the two locales at the same perceived heft. */
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.8vw, 4.9rem);
+}
+
+/* Section headlines — one step down, same rules. */
+.display-sm {
+  font-size: clamp(1.6rem, 3.1vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+[lang="ar"] .display-sm {
+  letter-spacing: normal;
+  line-height: 1.42;
+  font-weight: 400;
+}
+
+/* Oversized mono numerals: the magazine index rows (01–05) and the value
+   strip. Latin-only by construction — these are digits, and digits are
+   always Latin on this site. */
+.index-figure {
+  font-family: var(--type-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+
+/* The footer's ghost logotype. The wordmark is a Latin logotype, so it keeps
+   the tracking and the uppercase in both locales — the same exception the
+   site has always made for it. It is decoration and nothing else: aria-hidden
+   in the markup, and held at a contrast where it reads as a watermark in the
+   paper rather than as a word anyone is asked to read. */
+.ghost-wordmark {
+  font-family: var(--type-sans);
+  font-size: clamp(3.5rem, 15vw, 13rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 0.82;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.05;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* The same idea one step down: a watermark ordinal for the value strip.
+   Like the ghost wordmark it is aria-hidden in the markup and carries no
+   information the list order does not already carry — the sequence is
+   typographic rhythm, not content. That is what lets it sit below text
+   contrast without failing anybody: there is nothing here to read. */
+.ghost-figure {
+  font-family: var(--type-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2.75rem, 5.4vw, 4.25rem);
+  line-height: 1;
+  font-weight: 400;
+  color: var(--ink);
+  opacity: 0.13;
+  user-select: none;
+}
+
+/* ============================================================
+   THE MAGAZINE INDEX
+   Full-width hairline rows. The whole row is the target: on hover
+   the type steps toward the inline start and a gold hairline draws
+   in under it. Transform only, 240ms.
+   ============================================================ */
+.index-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--rule);
+  padding-block: clamp(1.1rem, 2.4vw, 1.9rem);
+  position: relative;
+}
+
+/* The gold underline. Scaled from the inline start so it draws in the
+   reading direction of the locale — transform-origin uses a logical
+   keyword, so RTL mirrors it with no extra rule. */
+.index-row::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[dir="rtl"] .index-row::after {
+  transform-origin: right center;
+}
+
+.index-row:hover::after,
+.index-row:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* A hairline that draws in under a link on hover. Same mechanic as the index
+   row, reusable on any inline heading: scaleX from the inline start, so it
+   grows in the reading direction and mirrors itself in Arabic. Transform
+   only — animating background-size or width would be a layout-thrashing
+   version of the same picture. */
+.underline-draw {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-draw::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[dir="rtl"] .underline-draw::after {
+  transform-origin: right center;
+}
+
+.group:hover .underline-draw::after,
+.group:focus-visible .underline-draw::after {
+  transform: scaleX(1);
+}
+
+.index-row-name {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* translate is direction-aware in the logical sense here: RTL moves the
+   other way, so the row always steps toward its own inline start. */
+.index-row:hover .index-row-name,
+.index-row:focus-visible .index-row-name {
+  transform: translateX(10px);
+}
+
+[dir="rtl"] .index-row:hover .index-row-name,
+[dir="rtl"] .index-row:focus-visible .index-row-name {
+  transform: translateX(-10px);
+}
+
+/* ============================================================
+   THE EDITORIAL BAND
+   The one full-bleed surface on the site: the accent, edge to
+   edge, carrying accent-ink type and gold hairlines. Used once,
+   for the Fan/Player explainer, which is the single question every
+   buyer arrives with.
+   ============================================================ */
+.band {
+  background: var(--band);
+  color: var(--band-ink);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* First-party paper grain: a two-octave fractal feTurbulence, desaturated,
+   held at ~5% so it reads as tooth in the stock rather than as noise.
+   It is a 240px tile with stitchTiles, repeated by CSS, NOT a full-bleed
+   filtered rect — a viewport-sized SVG filter is genuinely expensive to
+   rasterise on a low-end phone, and this is the same picture for free.
+   Carrying it as a data URI also means its filter id lives in its own tiny
+   document and can never collide with an id on the page. */
+.band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+/* Hairlines and secondary text inside the band cannot use --rule or
+   --ink-soft: both are tokens for the page ground, and the band is a
+   different surface. They are the band's own ink at low alpha, which is
+   correct in both schemes with no extra tokens. band-soft measures 8.9:1
+   (light) and 8.2:1 (dark) against the band. */
+.band-rule {
+  border-color: color-mix(in srgb, var(--band-ink) 22%, transparent);
+}
+
+.band-soft {
+  color: color-mix(in srgb, var(--band-ink) 74%, transparent);
+}
+
 /* Every price and figure — columns of numerals must line up. */
 .price,
 .tabular {
@@ -311,14 +558,102 @@ body[lang="ar"] {
    margin-inline / padding-inline / inset-inline, text-align: start | end.
    Preflight greps for physical-direction violations. */
 
-/* Motion backstop — reduced-motion users must always see the content. */
+/* ============================================================
+   MOTION
+   House rules: transform/opacity only, ease-out or the studio
+   cubic-bezier, entrances 400–800ms, hovers 200–300ms, stagger
+   60–100ms. No bounce, no overshoot, no scale-up-then-down.
+
+   Everything here is authored VISIBLE BY DEFAULT and enhanced
+   when motion is allowed. Two mechanisms, and both fail safe:
+
+   - CSS entrances (hero, section heads) animate transform only
+     and never touch opacity, so the text is painted at full
+     opacity on the very first frame. That is what keeps the
+     display headline usable as the LCP element.
+   - Scroll reveals (<Reveal>) are applied by JS: the element
+     ships with no reveal styling at all, and the component adds
+     the start state itself. If the bundle never loads, or the
+     observer never fires, the content is simply already there.
+   ============================================================ */
+
+/* ---- Line mask ----
+   A line of display type rising into its own clip box. Transform
+   only. The padding/negative-margin pair widens the clip region so
+   Arabic descenders (ي ج ن) are not shaved off, without changing
+   where the line sits in the layout. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.1em 0.18em;
+  margin-block: -0.1em -0.18em;
+}
+
+.line-mask > * {
+  display: block;
+  animation: kv-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--kv-delay, 0ms);
+}
+
+@keyframes kv-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ---- Scroll reveal ----
+   Applied by <Reveal> only after it has confirmed motion is allowed.
+   `.reveal-idle` is the start state; removing it runs the transition.
+   Opacity is fine here: these are never the LCP element. */
+.reveal-idle {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal-run {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 640ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--kv-delay, 0ms);
+}
+
+/* Mobile gets the same reveal at lower intensity — a shorter throw and a
+   quicker settle. Depth you feel, not a page that moves. */
+@media (max-width: 899px) {
+  .reveal-idle {
+    transform: translateY(10px);
+  }
+
+  .reveal-run {
+    transition-duration: 460ms;
+  }
+}
+
+/* Motion backstop — reduced-motion users must always see the content.
+   The delays matter as much as the durations: an entrance with `both` fill
+   holds its FROM state through the delay, so a 0.01ms duration behind a
+   240ms stagger would still blank a headline for a quarter of a second. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Belt and braces: even if a reveal start state were applied, nothing
+     stays hidden for a reduced-motion reader. */
+  .reveal-idle {
+    opacity: 1;
+    transform: none;
   }
 }
 

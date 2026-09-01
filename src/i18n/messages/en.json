@@ -24,7 +24,9 @@
   },
   "home": {
     "eyebrow": "This season's kits",
-    "title": "Your team's shirt, in your size, with your name on it.",
+    "titleA": "Your team's shirt,",
+    "titleB": "in your size,",
+    "titleC": "with your name on it.",
     "intro": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing. The price you see is the final price, VAT included.",
     "heroCta": "Shop all shirts",
     "heroSecondary": "National teams",
@@ -85,7 +87,8 @@
     "price": "Price",
     "total": "Total",
     "menu": "Menu",
-    "from": "From"
+    "from": "From",
+    "viewShirt": "View shirt"
   },
   "notFound": {
     "title": "Page not found",

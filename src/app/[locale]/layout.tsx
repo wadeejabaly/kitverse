@@ -7,6 +7,7 @@ import { FONT_STACK_VARS } from "@/lib/fonts";
 import { OG_IMAGE, alternatesFor, getSiteUrl, localeUrl, ogImageUrl } from "@/lib/site";
 import { ConsentProvider } from "@/components/providers/ConsentProvider";
 import { CartProvider } from "@/components/cart/CartProvider";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { ConsentBanner } from "@/components/shared/ConsentBanner";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
@@ -88,6 +89,10 @@ export default async function LocaleLayout({
                 and the cart page read the same provider, so adding a shirt on
                 a PDP updates the header without a reload. */}
             <CartProvider>
+              {/* Renders nothing. Resets scroll on navigation for everyone,
+                  and starts smooth scroll on desktop pointer devices only —
+                  phones and reduced-motion readers never fetch that chunk. */}
+              <MotionProvider />
               <Header />
               <main className="flex grow flex-col">{children}</main>
               <Footer />

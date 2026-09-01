@@ -7,6 +7,7 @@ import { routing } from "@/i18n/config";
 import { getLeagues, getProduct, getVisibleProducts } from "@/data/catalog";
 import { priceFor } from "@/data/pricing";
 import { slugify } from "@/data/slug";
+import { Reveal } from "@/components/motion/Reveal";
 import { ProductForm } from "@/components/product/ProductForm";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { Season } from "@/components/shared/Money";
@@ -134,7 +135,13 @@ export default async function ProductPage({
 
       <section className="grid items-start gap-10 pt-8 pb-10 wide:grid-cols-2 wide:gap-14">
         {/* One photograph per product today; the tile is sticky so the buy box
-            can scroll past it on tall screens. */}
+            can scroll past it on tall screens.
+
+            No reveal on the gallery: it is the LCP element on this page, and
+            an entrance on the thing the reader came to see is the one place
+            where motion costs more than it gives. The details column opposite
+            carries the entrance instead, 90ms behind the fold — enough to
+            read as "the page settled", not as a curtain. */}
         <div className="wide:sticky wide:top-24">
           <div className="grid aspect-square place-items-center bg-tile">
             <Image
@@ -149,7 +156,7 @@ export default async function ProductPage({
           </div>
         </div>
 
-        <div>
+        <Reveal delay={90}>
           <span className="mono-eyebrow text-ink-soft">
             {team}
             <span aria-hidden className="mx-2">
@@ -178,7 +185,7 @@ export default async function ProductPage({
               </Link>
             </Accordion>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {related.length > 0 ? (
@@ -195,7 +202,7 @@ export default async function ProductPage({
             }
           />
           <section className="pb-14">
-            <ProductGrid products={related} locale={locale} />
+            <ProductGrid products={related} locale={locale} reveal />
           </section>
         </>
       ) : (
@@ -209,7 +216,15 @@ export default async function ProductPage({
   );
 }
 
-/** The mockup's `<details>` accordion: hairline rows, +/– affordance. */
+/**
+ * The `<details>` accordion: hairline rows, +/– affordance.
+ *
+ * The two glyphs were a hard swap on open. They are now one glyph that
+ * rotates: the vertical stroke of the "+" turns a quarter-turn into the "–",
+ * which is a transform, runs at hover speed, and means the row never reflows.
+ * The summary text lifts to ink on hover so the whole row reads as the target
+ * it already was.
+ */
 function Accordion({
   summary,
   open = false,
@@ -221,16 +236,20 @@ function Accordion({
 }) {
   return (
     <details open={open} className="group border-b border-rule">
-      <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-sm text-ink-soft transition-colors duration-200 group-open:text-ink hover:text-ink [&::-webkit-details-marker]:hidden">
         {summary}
-        <span aria-hidden className="text-ink-soft group-open:hidden">
-          +
-        </span>
-        <span aria-hidden className="hidden text-ink-soft group-open:inline">
-          –
+        {/* Grid-cell stacking rather than absolute offsets: the two strokes
+            share one centred cell, so there is no physical left/top anywhere
+            and the glyph is identical in both directions. */}
+        <span
+          aria-hidden
+          className="grid size-3 shrink-0 place-items-center text-ink-soft"
+        >
+          <span className="col-start-1 row-start-1 h-px w-3 bg-current" />
+          <span className="col-start-1 row-start-1 h-3 w-px bg-current transition-transform duration-300 ease-out group-open:rotate-90" />
         </span>
       </summary>
-      <div className="max-w-[52ch] pb-4 text-sm text-ink-soft">{children}</div>
+      <div className="max-w-[52ch] pb-5 text-sm text-ink-soft">{children}</div>
     </details>
   );
 }

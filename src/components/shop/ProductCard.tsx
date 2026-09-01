@@ -1,7 +1,9 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { compareAtFor, priceFor } from "@/data/pricing";
 import type { Product } from "@/data/types";
+import { Reveal } from "@/components/motion/Reveal";
 import { ComparePrice, Price, Season } from "@/components/shared/Money";
 import { shortSeason, titleFor } from "@/lib/product";
 
@@ -23,6 +25,7 @@ export function ProductCard({
   locale: string;
   priority?: boolean;
 }) {
+  const t = useTranslations("common");
   const title = titleFor(product, locale);
   // The "from" price: smallest size, Fan version. Selections on the PDP move it.
   const price = priceFor(product.kind, "S", "fan");
@@ -43,8 +46,23 @@ export function ProductCard({
       </div>
       <h3 className="mb-1 text-sm font-normal">{title}</h3>
       <div className="flex items-baseline justify-between gap-2.5">
-        <span className="mono-eyebrow latin text-ink-soft">
-          <Season value={shortSeason(product.season)} />
+        {/* The season label and the invitation occupy the same cell and cross-
+            fade on hover: the card gains a second state without gaining a
+            line, so no row in the grid shifts. Both are laid out (grid-area
+            stacking, not absolute positioning), so the cell is always as wide
+            as the longer of the two and nothing reflows mid-transition.
+            aria-hidden on the invitation — the whole card is already a link
+            and "View shirt" would be a second, redundant announcement. */}
+        <span className="grid text-ink-soft">
+          <span className="mono-eyebrow latin col-start-1 row-start-1 text-ink-soft transition-opacity duration-300 ease-out group-hover:opacity-0">
+            <Season value={shortSeason(product.season)} />
+          </span>
+          <span
+            aria-hidden
+            className="mono-eyebrow col-start-1 row-start-1 text-ink-soft opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+          >
+            {t("viewShirt")}
+          </span>
         </span>
         {/* Live price leads, the struck compare-at follows it — the order
             retail readers expect, and it mirrors correctly in RTL because
@@ -58,34 +76,49 @@ export function ProductCard({
   );
 }
 
-/** The 4-up / 3-up / 2-up grid every listing on the site uses. */
+/**
+ * The 4-up / 3-up / 2-up grid every listing on the site uses.
+ *
+ * With `reveal`, the grid element itself becomes the reveal host so the
+ * stagger lands on the CARDS rather than on the grid as one block — which is
+ * the whole point of a staggered entrance. Wrapping a <Reveal> around this
+ * component from outside would stagger a single child and look like no
+ * stagger at all.
+ */
 export function ProductGrid({
   products,
   locale,
   columns = 4,
   priorityCount = 0,
+  reveal = false,
 }: {
   products: Product[];
   locale: string;
   columns?: 3 | 4;
   priorityCount?: number;
+  reveal?: boolean;
 }) {
-  return (
-    <div
-      className={
-        columns === 3
-          ? "grid grid-cols-2 gap-5 sm:grid-cols-3"
-          : "grid grid-cols-2 gap-5 sm:grid-cols-3 wide:grid-cols-4"
-      }
-    >
-      {products.map((product, index) => (
-        <ProductCard
-          key={product.handle}
-          product={product}
-          locale={locale}
-          priority={index < priorityCount}
-        />
-      ))}
-    </div>
-  );
+  const className =
+    columns === 3
+      ? "grid grid-cols-2 gap-5 sm:grid-cols-3"
+      : "grid grid-cols-2 gap-5 sm:grid-cols-3 wide:grid-cols-4";
+
+  const cards = products.map((product, index) => (
+    <ProductCard
+      key={product.handle}
+      product={product}
+      locale={locale}
+      priority={index < priorityCount}
+    />
+  ));
+
+  if (reveal) {
+    return (
+      <Reveal stagger={70} className={className}>
+        {cards}
+      </Reveal>
+    );
+  }
+
+  return <div className={className}>{cards}</div>;
 }

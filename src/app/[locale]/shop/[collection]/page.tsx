@@ -88,7 +88,12 @@ export default async function CollectionPage({
         </div>
 
         {collection.products.length > 0 ? (
-          <ProductGrid products={collection.products} locale={locale} priorityCount={4} />
+          <ProductGrid
+            products={collection.products}
+            locale={locale}
+            priorityCount={4}
+            reveal
+          />
         ) : (
           <div className="py-14">
             <h2 className="mb-2.5 text-xl">{t("emptyTitle")}</h2>
