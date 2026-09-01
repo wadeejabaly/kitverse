@@ -662,3 +662,153 @@ body[lang="ar"] {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
+
+/* ============================================================
+   HERO VARIANTS (A / B / C)
+
+   Everything below exists for the three alternative home-page
+   openings in src/components/hero/. It is authored here rather
+   than in the components because the winner is promoted into the
+   home page unchanged, and a hero's type scale and its motion
+   belong in the stylesheet with the rest of the system.
+
+   This block is authored LAST on purpose: the reduced-motion
+   override at the bottom has to come after the global
+   reduced-motion backstop to beat it (see the note there).
+   ============================================================ */
+
+/* ---- Variant C's headline ----
+   The home `.display` at 70% volume: 5.25rem → 3.7rem at the
+   ceiling, 2.5rem → 1.75rem at the floor, and the same 0.7 applied
+   to the vw term so the ramp between them scales too. Leading opens
+   very slightly (1.02 → 1.06) because a smaller display line does
+   not need to be set as tightly. Arabic drops the tracking and takes
+   the same 0.7 off its own scale, exactly as `.display` does. */
+.display-quiet {
+  font-size: clamp(1.75rem, 4.5vw, 3.7rem);
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+[lang="ar"] .display-quiet {
+  letter-spacing: normal;
+  line-height: 1.34;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.05vw, 3.45rem);
+}
+
+/* ---- Variant A's crossfade ----
+   Two shirts occupying one grid cell, swapped on a long timer. The
+   transition is opacity only and it is deliberately slow: at 900ms
+   over a 7s cycle the change is something you notice having
+   happened, not something that pulls the eye. The layers are
+   painted by the server with the first shirt opaque, so a browser
+   that never runs the timer simply shows one shirt. */
+.kv-crossfade {
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Variant B's ambient wall ----
+   A row of product tiles wide enough to overflow its window twice,
+   translated by exactly half its own width. Because the second half
+   is a copy of the first, the end state is pixel-identical to the
+   start and the loop has no seam.
+
+   The translate is a percentage of the ELEMENT, not the viewport, so
+   the loop is correct at every width with no JS measuring anything.
+
+   Duration comes in as --kv-drift per row (two different values, so
+   the rows never fall into step). ~2 minutes for a full pass is the
+   difference between a background and a carousel. */
+.kv-marquee {
+  display: flex;
+  width: max-content;
+  animation: kv-drift var(--kv-drift, 120s) linear infinite;
+}
+
+.kv-marquee-reverse {
+  animation-name: kv-drift-back;
+}
+
+@keyframes kv-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes kv-drift-back {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* The layer the rows live on.
+
+   `direction: ltr` is load-bearing and it has to sit HERE, on the
+   container, not on the strip. A strip 4,500px wide inside a 1,440px
+   window is placed by its containing block's direction: on the Arabic
+   page that pins its RIGHT edge to the window's right edge and hangs
+   the other 3,000px off to the left, so translating it further left
+   walks the whole row off screen within a few seconds. Setting
+   `direction` on the strip itself does not help — an element's own
+   `direction` lays out its CHILDREN, it does not move its own box.
+   The wall carries no text (it is aria-hidden decoration), so it has
+   no reading direction to preserve, and pinning it LTR makes one set
+   of keyframes correct in both locales.
+
+   The mask fades the wall out at the top and bottom of the section
+   instead of ending it on a hard edge. `black`/`transparent` here are
+   opacity stops, not colours — nothing is painted in them — which is
+   why this is not a token violation. */
+.kv-wall {
+  direction: ltr;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 13%,
+    black 87%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 13%,
+    black 87%,
+    transparent
+  );
+}
+
+/* The primary action when it sits ON the band rather than on the page
+   ground. `.btn` fills with --accent, and in light mode --accent and
+   --band are the same navy, so the default button disappears into the
+   panel. Inverting it — the band's own ink as the fill, the band as the
+   label — keeps one button treatment on the site and measures 15.2:1
+   (light) / 14.0:1 (dark) either way. No new token: both values are the
+   band's own pair. */
+.btn-band {
+  background: var(--band-ink);
+  color: var(--band);
+}
+
+/* Reduced motion: the wall stops and rests at its authored position.
+
+   This has to be spelled out. The global backstop above zeroes
+   animation-duration with !important, which for an INFINITE animation
+   does not stop it — it snaps it to the 100% keyframe and leaves the
+   strip parked half a width off, so the row would render with a hole
+   in it. `animation: none` puts it back at translate 0. Later in the
+   file and equally specific, so this wins. */
+@media (prefers-reduced-motion: reduce) {
+  .kv-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+}

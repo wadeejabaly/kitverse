@@ -350,5 +350,39 @@
     "delivery": "Delivery is 12 to 25 days with tracking. Shirts printed with a name and number add two days to dispatch.",
     "emailNote": "You will get an email with the order details, then a tracking number as soon as the parcel moves. If anything in the address is wrong, write to us quickly and we will fix it.",
     "keepShopping": "Keep shopping"
+  },
+  "heroPreview": {
+    "pageTitle": "Hero variants",
+    "pageLabel": "Hero variants",
+    "pageNote": "Three directions for the opening of the home page. Pick one.",
+    "a": {
+      "tag": "A",
+      "name": "Product-forward",
+      "eyebrow": "This season's kits",
+      "titleA": "Your team's shirt,",
+      "titleB": "printed to order.",
+      "sub": "Fan or Player, in every size, with your name and number if you want them. The price you see includes VAT.",
+      "cta": "Shop all shirts"
+    },
+    "b": {
+      "tag": "B",
+      "name": "Full-bleed showcase",
+      "eyebrow": "The full catalogue",
+      "titleA": "Every shirt,",
+      "titleB": "in one place.",
+      "sub": "Clubs and national teams from the major leagues — home, away and third, this season and last.",
+      "cta": "Browse the catalogue"
+    },
+    "c": {
+      "tag": "C",
+      "name": "Typographic, quieter",
+      "eyebrow": "This season's kits",
+      "titleA": "Your team's shirt,",
+      "titleB": "in your size,",
+      "titleC": "with your name on it.",
+      "sub": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing.",
+      "cta": "Shop all shirts",
+      "ctaSecondary": "National teams"
+    }
   }
 }
