@@ -70,13 +70,9 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
           className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ground"
         >
           <div className="flex items-center justify-between border-b border-rule px-6 py-5">
-            {/* Same lockup as the header behind it, so the overlay reads as
-                the same site rather than a second surface. Decorative badge
-                for the same reason: the wordmark is right there. */}
-            <span className="flex items-center gap-2.5">
-              <BrandBadge size={30} alt="" />
-              <span className="wordmark">KitVerse</span>
-            </span>
+            {/* The crest alone, exactly as the header behind it, so the
+                overlay reads as the same site rather than a second surface. */}
+            <BrandBadge size={32} />
             <button
               type="button"
               onClick={() => setOpen(false)}

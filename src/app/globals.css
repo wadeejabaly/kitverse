@@ -31,6 +31,14 @@
      strikethrough rule, and the footer's top hairline. Nowhere else. */
   --gold: #856618;
 
+  /* Header glass. The header is the one translucent surface on the site.
+     --header-solid is the tint every browser gets: the crest navy at ~6% over
+     white, which lands at the ground's own lightness but cooled — a blue-grey
+     veil, not a coloured bar. --header-glass is the same tint with alpha, and
+     is applied ONLY where backdrop-filter is supported (see .header-glass). */
+  --header-solid: #f1f2f5;
+  --header-glass: rgb(241 242 245 / 0.78);
+
   /* Type stacks arrive as --stack-* custom properties, set on <html> from
      src/lib/fonts.ts (the single source). Fallbacks keep the page readable
      if that style is ever missing. */
@@ -66,6 +74,8 @@
     --accent-ink: #131310;
     --chip: #1f1f1a;
     --gold: #b08f55; /* 6.1:1 — matched to dark --ink-soft's 6.3:1 */
+    --header-solid: #14161f;
+    --header-glass: rgb(20 22 31 / 0.82);
   }
 }
 
@@ -78,6 +88,8 @@
   --accent-ink: #131310;
   --chip: #1f1f1a;
   --gold: #b08f55;
+  --header-solid: #14161f;
+  --header-glass: rgb(20 22 31 / 0.82);
 }
 
 /* Map tokens into Tailwind v4 (CSS-first @theme) →
@@ -204,20 +216,42 @@ body[lang="ar"] {
   text-transform: none;
 }
 
-/* The wordmark is a logotype, not running text: it keeps the Latin sans and
-   its tracking in every locale (the centred-logotype exception to the
-   no-tracking-on-Arabic rule — the letters here are Latin either way). Arabic
-   pages tighten it slightly, as the mockup does. */
-.wordmark {
-  font-family: var(--type-sans);
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+/* The header surface: a frosted, navy-tinted veil over whatever scrolls under
+   it. Every browser gets the opaque --header-solid first; only browsers that
+   actually support backdrop-filter get the translucent version, so an
+   unsupported browser shows a clean tinted bar rather than a see-through one
+   with unreadable text over the product photography behind it.
+
+   The tint is deliberately light on colour. It reads as cooled glass next to
+   the warm ground, never as a blue band. */
+.header-glass {
+  background: var(--header-solid);
 }
 
-[lang="ar"] .wordmark {
-  letter-spacing: 0.1em;
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .header-glass {
+    background: transparent;
+  }
+
+  /* The blur lives on a pseudo-element, NEVER on the header itself.
+     An element with backdrop-filter becomes the containing block for its
+     position:fixed descendants — and <MobileMenu>'s `fixed inset-0` overlay
+     is rendered inside <header>. Filter the header directly and that overlay
+     stops resolving against the viewport and collapses to the header's own
+     ~76px box, so the mobile menu silently breaks. The pseudo-element carries
+     the effect without changing what the header is a containing block for.
+
+     Do not add transform, filter or perspective to .header-glass either:
+     they create the same containing block and would reintroduce the bug. */
+  .header-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--header-glass);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
 }
 
 /* The one button treatment on the site. Accent fill for the primary action

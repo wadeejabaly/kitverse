@@ -99,6 +99,23 @@ Brand assets: `public/brand/badge.png` (transparent crest, used by
 (share card), and `src/app/icon.png` + `src/app/apple-icon.png`, which Next
 picks up by file convention — do not add an `icons` block to metadata.
 
+There is no wordmark: the crest alone is the brand mark in the header, the
+mobile overlay and the footer.
+
+The header is the site's one translucent surface (`.header-glass`): a
+navy-tinted veil at `--header-solid` / `--header-glass` with a backdrop blur.
+Two rules it must keep:
+- The blur lives on `.header-glass::before`, never on `<header>` itself.
+  `backdrop-filter` (like `transform` and `filter`) makes an element the
+  containing block for its `position: fixed` descendants, and MobileMenu's
+  `fixed inset-0` overlay renders inside the header — filtering the header
+  directly collapses that overlay to the header's own ~76px box.
+- The header's utility row is `text-ink`, not `text-ink-soft`. Content of any
+  lightness passes under a translucent header: measured against the real
+  composite, ink-soft falls to 3.1:1 (light, dark shirt beneath) and 3.5:1
+  (dark, white tile beneath), while ink holds ≥8.9:1. For the same reason the
+  row's hover cannot dim — it takes the nav's gold hairline instead.
+
 ## Project rules
 
 - **No agency branding or third-party attribution anywhere in this project** —

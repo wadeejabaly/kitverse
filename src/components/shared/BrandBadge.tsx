@@ -11,27 +11,24 @@ import Image from "next/image";
  * It carries no colour of its own into the UI: the crest's electric blue lives
  * inside the image and is never a token.
  *
- * `alt` defaults to the brand name, but pass `alt=""` wherever the badge sits
- * beside the visible wordmark (header, mobile overlay): the mark and the word
- * are one lockup, and labelling both makes a screen reader say "KitVerse"
- * twice. The footer badge is the only brand name in its row, so it keeps the
- * label.
+ * The alt is always the brand name: no surface pairs the crest with wordmark
+ * text any more, so in every placement the badge is the only thing naming the
+ * brand — and in the header it is what gives the home link its accessible
+ * name.
  */
 export function BrandBadge({
   size,
   priority = false,
   className,
-  alt = "KitVerse",
 }: {
   size: number;
   priority?: boolean;
   className?: string;
-  alt?: string;
 }) {
   return (
     <Image
       src="/brand/badge.png"
-      alt={alt}
+      alt="KitVerse"
       width={size}
       height={size}
       priority={priority}

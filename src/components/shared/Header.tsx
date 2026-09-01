@@ -9,9 +9,16 @@ import { MobileMenu } from "@/components/shared/MobileMenu";
 /**
  * Sticky site header.
  *
- * The wordmark is a Latin logotype and keeps its tracking in both locales —
- * the one sanctioned exception to "never letter-space Arabic", because the
- * letters being tracked are Latin either way (see .wordmark in globals.css).
+ * The crest is the only brand mark here — no wordmark text — so the badge
+ * carries the "KitVerse" label itself and the home link takes its accessible
+ * name from it.
+ *
+ * The surface is frosted glass (.header-glass): a navy-tinted veil with a
+ * backdrop blur, so listings and product shots read as texture beneath it
+ * rather than sliding under an opaque bar. Because content of ANY lightness
+ * can pass under a translucent header, the utility row is ink rather than
+ * ink-soft — ink clears 4.5:1 against the tint over both a white tile and a
+ * near-black shirt, and ink-soft does not.
  *
  * Above 900px the full nav shows; below it everything folds into <MobileMenu>.
  * The layout is plain flex with logical gaps, so Arabic mirrors it whole
@@ -22,18 +29,14 @@ export async function Header() {
   const leagues = getLeagues();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-ground">
+    <header className="header-glass sticky top-0 z-40 border-b border-rule">
       <div className="mx-auto flex w-full max-w-page items-center gap-6 px-6 py-5 wide:gap-10">
         <MobileMenu leagues={leagues} />
 
-        {/* Brand lockup: crest then wordmark, joined by a plain flex gap —
-            direction-agnostic, so the badge sits at the inline start in
-            English and mirrors to the inline start in Arabic on its own.
-            The badge is decorative here: the wordmark beside it already
-            names the link, so the crest carries no alt of its own. */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <BrandBadge size={30} priority alt="" />
-          <span className="wordmark">KitVerse</span>
+        {/* The crest alone. Nothing else names the link, so the badge keeps
+            its alt and becomes the link's accessible name. */}
+        <Link href="/" className="flex shrink-0 items-center">
+          <BrandBadge size={32} priority />
         </Link>
 
         <nav className="hidden flex-1 gap-6 text-sm wide:flex">
@@ -44,22 +47,28 @@ export async function Header() {
           <HeaderLink href="/about">{t("about")}</HeaderLink>
         </nav>
 
-        <div className="flex items-center gap-5 text-[13px] text-ink-soft ms-auto wide:ms-0">
-          <Link
-            href="/search"
-            aria-label={t("search")}
-            className="transition-colors hover:text-ink"
-          >
+        {/* Utility row. Ink, not ink-soft: see the note above — over a
+            translucent header ink-soft measures 3.1:1 against a dark shirt
+            passing beneath, and 3.5:1 against a white tile in dark mode.
+            For the same reason hover cannot DIM these (dimming is what
+            fails); they take the nav's gold hairline instead, which is
+            decoration and costs no text contrast. */}
+        <div className="flex items-center gap-5 text-[13px] text-ink ms-auto wide:ms-0">
+          <Link href="/search" aria-label={t("search")} className={utilityHover}>
             <SearchIcon />
           </Link>
-          <CartLink />
+          <CartLink className={utilityHover} />
           <span aria-hidden className="hidden h-3.5 w-px bg-rule wide:block" />
-          <LocaleToggle />
+          <LocaleToggle className={utilityHover} />
         </div>
       </div>
     </header>
   );
 }
+
+/** The utility row's hover: the nav's gold hairline, not a colour change. */
+const utilityHover =
+  "border-b border-transparent pb-0.5 transition-colors hover:border-gold";
 
 function HeaderLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
