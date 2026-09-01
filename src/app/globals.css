@@ -48,6 +48,35 @@
   --band: #182448; /* the crest navy, edge to edge */
   --band-ink: #ffffff; /* 15.2:1 on the band */
 
+  /* The plaque is a MATERIAL, not a fill, and it is described by two pairs.
+     --band-hi/--band-lo are the opaque gradient every browser can draw: the
+     crest navy lifted a little at the near corner and deepened at the far one,
+     so the surface has a direction instead of being a rectangle of one colour.
+     --band-glass-* are the same two stops carrying alpha, used only where a
+     backdrop blur is actually available (see .band-glass).
+
+     The alphas are not a taste call. They are the floor that keeps band-ink
+     legible when the worst-case pixel — a pure white product tile — is what
+     the blur is sampling, and the numbers below are READ OFF THE RENDERED
+     FRAME rather than computed from the token, because a computed background
+     colour says nothing true about a surface whose colour is made at composite
+     time. Method: force the wall behind the plaque to #FFF, hide the plaque's
+     own text, screenshot, and take the LIGHTEST pixel in the surface.
+
+       glass    light  8.39:1 headline / 5.48:1 band-soft
+                dark   8.81:1          / 5.67:1
+       opaque   light 12.92:1          / 7.82:1
+                dark  11.66:1          / 7.12:1
+
+     Everything clears AA; the headline clears AAA on all four. The glass end
+     is dearer than the flat navy it replaced (13.71:1 measured) and that is
+     the trade being made — a surface you can see the shirts through cannot
+     also be a surface nothing reaches. */
+  --band-hi: #1d2b54;
+  --band-lo: #101a35;
+  --band-glass-hi: rgb(29 43 84 / 0.88);
+  --band-glass-lo: rgb(16 26 53 / 0.8);
+
   /* Type stacks arrive as --stack-* custom properties, set on <html> from
      src/lib/fonts.ts (the single source). Fallbacks keep the page readable
      if that style is ever missing. */
@@ -87,6 +116,10 @@
     --header-glass: rgb(20 22 31 / 0.82);
     --band: #1a2033; /* a cool panel against the warm near-black ground */
     --band-ink: #f1efe9; /* 14.0:1 on the band */
+    --band-hi: #212a45;
+    --band-lo: #12172a;
+    --band-glass-hi: rgb(33 42 69 / 0.92);
+    --band-glass-lo: rgb(18 23 42 / 0.85);
   }
 }
 
@@ -103,6 +136,10 @@
   --header-glass: rgb(20 22 31 / 0.82);
   --band: #1a2033; /* a cool panel against the warm near-black ground */
   --band-ink: #f1efe9; /* 14.0:1 on the band */
+  --band-hi: #212a45;
+  --band-lo: #12172a;
+  --band-glass-hi: rgb(33 42 69 / 0.92);
+  --band-glass-lo: rgb(18 23 42 / 0.85);
 }
 
 /* Map tokens into Tailwind v4 (CSS-first @theme) →
@@ -492,37 +529,177 @@ body[lang="ar"] {
    do not read as two emphases; they read as a pattern, and then
    neither is an event. The explainer went back to the page ground
    and the hero kept the navy.
-   ============================================================ */
-.band {
-  background: var(--band);
-  color: var(--band-ink);
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
 
-/* First-party paper grain: a two-octave fractal feTurbulence, desaturated,
-   held at ~5% so it reads as tooth in the stock rather than as noise.
+   THE BAND IS A MATERIAL, NOT A FILL. Three layers, in order:
+
+     1. the surface — an opaque navy gradient, or, where a backdrop
+        blur is available, a translucent tint over a blurred view of
+        the wall of shirts (see .band-glass);
+     2. the grain — a fractal turbulence tile at ~4.5%, which is
+        also what keeps a 400px-tall two-stop gradient from banding
+        on an 8-bit display;
+     3. the plate frame — a hairline drawn 8–12px inside the edge,
+        so the panel reads as a plate fixed to the wall rather than
+        as a rectangle cut out of it.
+
+   A crest watermark was tried as a fourth layer and dropped: at any
+   alpha where it registered at all, badge.png's wordmark and its
+   electric blue registered too, and both are things this UI has
+   agreed not to say outside the badge artwork itself.
+   ============================================================ */
+
+/* The grain tile, shared by both surfaces. A two-octave fractal
+   feTurbulence, desaturated, with its alpha baked INTO the SVG rather than
+   applied as element `opacity` — an opacity below 1 on the glass layer would
+   dilute its own backdrop-filter result back toward the unfiltered backdrop.
+
    It is a 240px tile with stitchTiles, repeated by CSS, NOT a full-bleed
    filtered rect — a viewport-sized SVG filter is genuinely expensive to
    rasterise on a low-end phone, and this is the same picture for free.
    Carrying it as a data URI also means its filter id lives in its own tiny
    document and can never collide with an id on the page. */
-.band::before {
-  content: "";
+:root {
+  --kv-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='kvGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23kvGrain)' opacity='0.045'/%3E%3C/svg%3E");
+}
+
+.band {
+  /* The gradient's axis is physical, so it is mirrored by hand: it runs from
+     the corner the reading starts in toward the far one, and the eyebrow and
+     headline sit on the densest part of the surface in both locales.
+
+     The mirror is a custom property rather than a second background-image
+     declaration, and that is not a style preference. `[dir="rtl"] .band` is
+     more specific than `.band`, so an RTL override that restated the whole
+     background would outrank the `background-image: none` the glass gate below
+     needs — leaving the Arabic page with an OPAQUE plaque under a translucent
+     one, frosted glass over a wall it cannot see. (It did, for one commit.)
+     A custom property carries the difference with no specificity of its own. */
+  --band-angle: 158deg;
+
+  color: var(--band-ink);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--band);
+  background-image: var(--kv-grain),
+    linear-gradient(var(--band-angle), var(--band-hi), var(--band-lo));
+  background-size:
+    240px 240px,
+    auto;
+  /* One-time entrance, transform only. See the note on kv-plaque-in. */
+  animation: kv-plaque-in 620ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+[dir="rtl"] .band {
+  --band-angle: 202deg;
+}
+
+/* The frosted layer. Hidden by default and switched on only under the
+   @supports/@media gate below, so every path that cannot render it correctly
+   falls back to the opaque gradient instead of to a see-through panel.
+
+   It is a real element rather than a pseudo-element for one reason: the
+   plaque must not create a Backdrop Root above it. `isolation: isolate` (which
+   .band used to carry, so that a z-index:-1 pseudo stayed put) is exactly such
+   a root — with it in place the blur samples only the plaque's own background
+   and the wall of shirts never reaches the glass. Two positioned children in
+   tree order — glass first, content second — give the same painting order with
+   no stacking context at all. */
+.band-glass {
+  display: none;
   position: absolute;
   inset: 0;
-  z-index: -1;
   pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-size: 240px 240px;
+}
+
+/* The plate frame. Hairline, band-ink at low alpha, radius 0 like everything
+   else. Drawn last so it sits over the glass, and inset far enough that no
+   glyph ever comes near it. */
+.band::after {
+  content: "";
+  position: absolute;
+  inset: clamp(8px, 1.2vw, 12px);
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--band-ink) 15%, transparent);
+  animation: kv-plate-in 620ms 200ms ease-out backwards;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  /* Desktop only, and that is a performance decision rather than a layout one.
+     The backdrop here is not static the way the header's is — the wall of
+     shirts is translating under it continuously, so the blur re-rasterises
+     every frame for as long as the hero is on screen. On the phone that is a
+     battery and LCP cost against a Lighthouse budget of 90, and the plaque is
+     nearly the full measure there anyway, so there is very little wall left to
+     look through. Phones get the opaque gradient, which is the same material
+     one layer shallower. 56.25rem is the site's `wide` breakpoint. */
+  @media (min-width: 56.25rem) {
+    .band {
+      background-color: transparent;
+      background-image: none;
+    }
+
+    .band-glass {
+      display: block;
+      background-image: var(--kv-grain),
+        linear-gradient(var(--band-angle), var(--band-glass-hi), var(--band-glass-lo));
+      background-size:
+        240px 240px,
+        auto;
+      -webkit-backdrop-filter: blur(18px) saturate(0.85);
+      backdrop-filter: blur(18px) saturate(0.85);
+    }
+  }
+}
+
+/* Transparency is a preference, not a given. A reader who has asked for less
+   of it gets the opaque surface — authored as an override rather than as a
+   condition on the gate above, because an unknown media feature makes a query
+   never match, and gating the frost ON it would silently delete the material
+   in every browser that has not shipped the feature yet. */
+@media (prefers-reduced-transparency: reduce) {
+  .band {
+    background-color: var(--band);
+    background-image: var(--kv-grain),
+      linear-gradient(var(--band-angle), var(--band-hi), var(--band-lo));
+  }
+
+  .band-glass {
+    display: none;
+  }
+}
+
+/* The plaque's one entrance: it rises a little and settles. TRANSFORM ONLY —
+   the headline inside it is the page's LCP element and has to paint at full
+   opacity on the first frame, which is the same reason .line-mask never
+   touches opacity either. `backwards` fill, not `both`: the FROM state applies
+   through the delay and then the animation lets go entirely, so the plaque is
+   not left holding a transform (and therefore a containing block) forever.
+   The frame fades in just behind it — that layer is decoration, so opacity is
+   free there. Nothing here loops. */
+@keyframes kv-plaque-in {
+  from {
+    transform: translateY(16px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes kv-plate-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Secondary text inside the band cannot use --ink-soft: that is a token for
    the page ground, and the band is a different surface. It is the band's own
    ink at low alpha, which is correct in both schemes with no extra token, and
-   measures 8.9:1 (light) / 8.2:1 (dark) against the band.
+   measures 8.9:1 (light) / 8.2:1 (dark) against the opaque band. On the
+   frosted surface, against the worst white tile the blur can find, the same
+   74% holds 5.48:1 / 5.67:1 — see the --band-glass-* note up top.
 
    (A matching `.band-rule` used to sit here for hairlines on the band. The
    only thing that ever drew one was the Fan/Player explainer, which is on the

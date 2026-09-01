@@ -114,6 +114,19 @@ surface, so it darkens like every other surface. Gold is not used inside the
 band: `--gold` measures 2.8:1 on the band navy, so secondary text on it is
 `--band-ink` at low alpha (`.band-soft`) instead.
 
+The band is a layered material, not a flat fill: a directional navy gradient
+(`--band-hi` → `--band-lo`), baked-alpha grain, and a `band-ink` plate-frame
+hairline (`.band::after`). At ≥900px a `.band-glass` layer adds frosted
+translucency (`backdrop-filter` blur; worst-pixel contrast measured 8.4:1+
+headline, 5.5:1+ `.band-soft`, both themes); below 900px and under
+`prefers-reduced-transparency` it falls back to the opaque gradient (11.7:1+).
+The blur lives on a positioned child span, never on `.band` itself —
+`isolation: isolate` or a backdrop root on the plaque would blind the blur to
+the wall behind it, and `backdrop-filter` on an ancestor of anything `fixed`
+re-parents that fixed element (the header bug). RTL mirrors the gradient via
+the inherited `--band-angle` property, not a `[dir]` restatement (specificity
+would defeat the glass gate's `background-image: none`).
+
 **The band is used exactly once**, and that is a rule rather than a
 description: the hero plaque in `<HeroB/>`. The Fan/Player explainer used to
 be a second, full-bleed band, and a page carrying both read as a pattern

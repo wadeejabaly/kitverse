@@ -30,14 +30,31 @@ import { spreadShirts } from "./shirts";
  * - The wall is masked to nothing at the top and bottom of the section, so it
  *   fades into the page ground instead of ending on a hard edge.
  *
+ * THE PLAQUE IS A MATERIAL. It began as a flat fill of `--band` and read as
+ * exactly that — a navy rectangle dropped on the wall. It is now a frosted
+ * navy glass echoing the header: a heavy directional tint over a blurred view
+ * of the shirts drifting behind it, with a fractal grain and a hairline plate
+ * frame set in from the edge. The layers live in `globals.css` under THE BAND;
+ * the only thing this file owns is their ORDER, which is load-bearing — see
+ * the note on `.band-glass` below.
+ *
  * OVERLAY CONTRAST. The tiles are pure white and the shirts on them are any
  * colour at all, so there is no scrim value that is safe against the worst-case
- * pixel. The plaque is therefore OPAQUE — `--band`, the same surface the
- * Fan/Player section uses — and the type on it measures against the band, not
- * against the photography: band-ink 15.2:1 (light) / 14.0:1 (dark), band-soft
- * 8.9:1 / 8.2:1. Nothing behind the plaque can change those numbers. The CTA
- * inverts to `.btn-band` because in light mode `--accent` and `--band` are the
- * same navy and a default button would vanish into the panel.
+ * pixel — and once the plaque stopped being opaque, that pixel started to
+ * matter. It is answered by density rather than by opacity: the tint runs
+ * 88%→80% (light) and 92%→85% (dark), which is what a white tile directly
+ * behind the type has to get through. Measured on the composited frame, not
+ * computed from the token: 8.39:1 headline / 5.48:1 band-soft in light,
+ * 8.81:1 / 5.67:1 in dark. Below the `wide` breakpoint, and anywhere the blur
+ * is unavailable or unwanted, the same gradient paints opaque and the numbers
+ * go back up to 12.92:1 / 7.82:1.
+ *
+ * The CTA inverts to `.btn-band` because in light mode `--accent` and `--band`
+ * are the same navy and a default button would vanish into the panel. It is an
+ * opaque fill, so the frost never reaches it: 15.2:1 / 14.1:1 either way.
+ *
+ * The plaque also gets one entrance — a 620ms rise, transform only, no loop.
+ * The headline is the LCP element, so nothing here fades in.
  */
 export async function HeroB({ priority = false }: { priority?: boolean }) {
   const t = await getTranslations("home.hero");
@@ -79,25 +96,33 @@ export async function HeroB({ priority = false }: { priority?: boolean }) {
 
       <Wrap className="relative">
         <div className="band w-full max-w-[min(34rem,100%)] px-[clamp(1.5rem,3vw,2.5rem)] py-[clamp(1.75rem,3.6vw,3rem)]">
-          {/* Gold is not used inside the band — it measures 2.8:1 on the navy.
-              The eyebrow takes the band's own soft ink instead. */}
-          <span className="mono-eyebrow band-soft">{t("eyebrow")}</span>
-          <h1 className="display-sm mt-4 mb-5">
-            {(["titleA", "titleB"] as const).map((key, index) => (
-              <span key={key} className="line-mask">
-                <span
-                  style={{ "--kv-delay": `${index * 90}ms` } as React.CSSProperties}
-                >
-                  {t(key)}
-                  {index === 0 ? " " : null}
+          {/* The frosted layer, and the reason the content below it is wrapped
+              in its own positioned box: two positioned children in tree order
+              paint glass-then-content without the plaque needing a stacking
+              context of its own — and a stacking context here would cut the
+              blur off from the wall it is supposed to be looking through. */}
+          <span className="band-glass" aria-hidden />
+          <div className="relative">
+            {/* Gold is not used inside the band — it measures 2.8:1 on the navy.
+                The eyebrow takes the band's own soft ink instead. */}
+            <span className="mono-eyebrow band-soft">{t("eyebrow")}</span>
+            <h1 className="display-sm mt-4 mb-5">
+              {(["titleA", "titleB"] as const).map((key, index) => (
+                <span key={key} className="line-mask">
+                  <span
+                    style={{ "--kv-delay": `${index * 90}ms` } as React.CSSProperties}
+                  >
+                    {t(key)}
+                    {index === 0 ? " " : null}
+                  </span>
                 </span>
-              </span>
-            ))}
-          </h1>
-          <p className="mb-8 max-w-[36ch] text-sm band-soft">{t("sub")}</p>
-          <Link href="/shop" className="btn btn-band">
-            {t("cta")}
-          </Link>
+              ))}
+            </h1>
+            <p className="mb-8 max-w-[36ch] text-sm band-soft">{t("sub")}</p>
+            <Link href="/shop" className="btn btn-band">
+              {t("cta")}
+            </Link>
+          </div>
         </div>
       </Wrap>
     </section>
