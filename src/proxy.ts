@@ -14,6 +14,8 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip api routes, Next internals, Vercel internals, and files with extensions.
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  // Skip api routes, Next internals, Vercel internals, the dev-only image
+  // review tool (src/app/review — not localized, 404s outside development),
+  // and files with extensions.
+  matcher: "/((?!api|trpc|_next|_vercel|review|.*\\..*).*)",
 };

@@ -1,0 +1,674 @@
+{
+  "dropped": [
+    {
+      "reason": "national-season-dedupe",
+      "team": "Algeria",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "algeria-2025-26-home-shirt",
+      "keptHandle": "algeria-2026-27-home-shirt",
+      "hash": "fb4a2a14"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Algeria",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "algeria-2026-home-shirt",
+      "keptHandle": "algeria-2026-27-home-shirt",
+      "hash": "136591e7"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Argentina",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "argentina-2025-26-home-shirt",
+      "keptHandle": "argentina-2026-27-home-shirt",
+      "hash": "bb68fb8f"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Argentina",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "argentina-2026-home-shirt",
+      "keptHandle": "argentina-2026-27-home-shirt",
+      "hash": "05cb91ef"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Argentina",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "argentina-2026-away-shirt",
+      "keptHandle": "argentina-2026-27-away-shirt",
+      "hash": "71dd2d1c"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Australia",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "australia-2025-26-home-shirt",
+      "keptHandle": "australia-2026-27-home-shirt",
+      "hash": "7b0c7ca0"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Australia",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "australia-2026-home-shirt",
+      "keptHandle": "australia-2026-27-home-shirt",
+      "hash": "baf5d0f7"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Belgium",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "belgium-2026-away-shirt",
+      "keptHandle": "belgium-2026-27-away-shirt",
+      "hash": "0faab503"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Brazil",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "brazil-2025-26-away-shirt",
+      "keptHandle": "brazil-2026-27-away-shirt",
+      "hash": "451580ce"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Brazil",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "brazil-2026-away-shirt",
+      "keptHandle": "brazil-2026-27-away-shirt",
+      "hash": "452e231b"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Brazil",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "brazil-2025-26-home-shirt",
+      "keptHandle": "brazil-2026-27-home-shirt",
+      "hash": "28c50b69"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Brazil",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "brazil-2026-home-shirt",
+      "keptHandle": "brazil-2026-27-home-shirt",
+      "hash": "71566748"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Colombia",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "colombia-2025-26-home-shirt",
+      "keptHandle": "colombia-2026-home-shirt",
+      "hash": "d3bccedc"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Colombia",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "colombia-2026-away-shirt",
+      "keptHandle": "colombia-2026-27-away-shirt",
+      "hash": "f550c4d5"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Croatia",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "croatia-2026-away-shirt",
+      "keptHandle": "croatia-2026-27-away-shirt",
+      "hash": "6509f450"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Croatia",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "croatia-2026-home-shirt",
+      "keptHandle": "croatia-2026-27-home-shirt",
+      "hash": "1b1b3c33"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Ecuador",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "ecuador-2025-26-away-shirt",
+      "keptHandle": "ecuador-2026-away-shirt",
+      "hash": "c247e536"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Ecuador",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "ecuador-2025-26-home-shirt",
+      "keptHandle": "ecuador-2026-home-shirt",
+      "hash": "d1fda624"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Egypt",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "egypt-2025-26-home-shirt",
+      "keptHandle": "egypt-2026-27-home-shirt",
+      "hash": "d6cdb4b9"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "England",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "england-2025-26-away-shirt",
+      "keptHandle": "england-2026-27-away-shirt",
+      "hash": "3e0267e1"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "England",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "england-2025-26-home-shirt",
+      "keptHandle": "england-2026-27-home-shirt",
+      "hash": "086947ca"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "England",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "england-2026-home-shirt",
+      "keptHandle": "england-2026-27-home-shirt",
+      "hash": "a02fb2f6"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "France",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "france-2025-26-away-shirt",
+      "keptHandle": "france-2026-27-away-shirt",
+      "hash": "cf0a8c91"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "France",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "france-2026-away-shirt",
+      "keptHandle": "france-2026-27-away-shirt",
+      "hash": "befe6d84"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "France",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "france-2026-home-shirt",
+      "keptHandle": "france-2026-27-home-shirt",
+      "hash": "96ff9dd2"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Germany",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "germany-2025-26-home-shirt",
+      "keptHandle": "germany-2026-27-home-shirt",
+      "hash": "9a7b279f"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Germany",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "germany-2026-home-shirt",
+      "keptHandle": "germany-2026-27-home-shirt",
+      "hash": "f218c412"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Germany",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "germany-2026-away-shirt",
+      "keptHandle": "germany-2026-27-away-shirt",
+      "hash": "b21fac63"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Ghana",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "ghana-2025-26-away-shirt",
+      "keptHandle": "ghana-2026-away-shirt",
+      "hash": "f7b79ce6"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Ghana",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "ghana-2025-26-home-shirt",
+      "keptHandle": "ghana-2026-home-shirt",
+      "hash": "1364414b"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Haiti",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "haiti-2026-away-shirt",
+      "keptHandle": "haiti-2026-27-away-shirt",
+      "hash": "b01e1c13"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Haiti",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "haiti-2026-home-shirt",
+      "keptHandle": "haiti-2026-27-home-shirt",
+      "hash": "46612fa3"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Italy",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "italy-2025-26-away-shirt",
+      "keptHandle": "italy-2026-27-away-shirt",
+      "hash": "30194dd9"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Italy",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "italy-2025-26-home-shirt",
+      "keptHandle": "italy-2026-27-home-shirt",
+      "hash": "d704a36c"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Italy",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "italy-2026-home-shirt",
+      "keptHandle": "italy-2026-27-home-shirt",
+      "hash": "e1762c41"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Japan",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "japan-2025-26-home-shirt",
+      "keptHandle": "japan-2026-27-home-shirt",
+      "hash": "866a85f6"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Japan",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "japan-2026-home-shirt",
+      "keptHandle": "japan-2026-27-home-shirt",
+      "hash": "34f719dc"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Japan",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "japan-2026-away-shirt",
+      "keptHandle": "japan-2026-27-away-shirt",
+      "hash": "269a954d"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Mexico",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "mexico-2025-26-away-shirt",
+      "keptHandle": "mexico-2026-27-away-shirt",
+      "hash": "929ed932"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Mexico",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "mexico-2026-away-shirt",
+      "keptHandle": "mexico-2026-27-away-shirt",
+      "hash": "355d552d"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Mexico",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "mexico-2025-26-home-shirt",
+      "keptHandle": "mexico-2026-27-home-shirt",
+      "hash": "d49af11f"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Mexico",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "mexico-2026-home-shirt",
+      "keptHandle": "mexico-2026-27-home-shirt",
+      "hash": "d145700e"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Mexico",
+      "kit": "Third",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "mexico-2026-third-shirt",
+      "keptHandle": "mexico-2026-27-third-shirt",
+      "hash": "3d381902dd"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Morocco",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "morocco-2025-26-home-shirt",
+      "keptHandle": "morocco-2026-home-shirt",
+      "hash": "9d64e8df"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Netherlands",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "netherlands-2026-away-shirt",
+      "keptHandle": "netherlands-2026-27-away-shirt",
+      "hash": "2b5b9bdf"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Netherlands",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "netherlands-2026-home-shirt",
+      "keptHandle": "netherlands-2026-27-home-shirt",
+      "hash": "e6731279"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Nigeria",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "nigeria-2025-26-away-shirt",
+      "keptHandle": "nigeria-2026-27-away-shirt",
+      "hash": "109303cd"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Nigeria",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "nigeria-2025-26-home-shirt",
+      "keptHandle": "nigeria-2026-27-home-shirt",
+      "hash": "c3c70d5f"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Paraguay",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "paraguay-2026-home-shirt",
+      "keptHandle": "paraguay-2026-27-home-shirt",
+      "hash": "f99154e4"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Portugal",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "portugal-2025-26-away-shirt",
+      "keptHandle": "portugal-2026-27-away-shirt",
+      "hash": "b474d0c4"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Portugal",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "portugal-2026-away-shirt",
+      "keptHandle": "portugal-2026-27-away-shirt",
+      "hash": "db976fc6"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Portugal",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "portugal-2025-26-home-shirt",
+      "keptHandle": "portugal-2026-27-home-shirt",
+      "hash": "930fc0e5"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Portugal",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "portugal-2026-home-shirt",
+      "keptHandle": "portugal-2026-27-home-shirt",
+      "hash": "970881ed"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Scotland",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "scotland-2025-26-away-shirt",
+      "keptHandle": "scotland-2026-away-shirt",
+      "hash": "488d6fee"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Senegal",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "senegal-2026-away-shirt",
+      "keptHandle": "senegal-2026-27-away-shirt",
+      "hash": "6fcd8ac2"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "South Korea",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "south-korea-2025-26-home-shirt",
+      "keptHandle": "south-korea-2026-home-shirt",
+      "hash": "9cb08271"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Spain",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "spain-2025-26-away-shirt",
+      "keptHandle": "spain-2026-27-away-shirt",
+      "hash": "e789815b"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Spain",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "spain-2026-away-shirt",
+      "keptHandle": "spain-2026-27-away-shirt",
+      "hash": "e88a0e7e"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Spain",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026/27",
+      "droppedHandle": "spain-2025-26-home-shirt",
+      "keptHandle": "spain-2026-27-home-shirt",
+      "hash": "33aff14c"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Spain",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "spain-2026-home-shirt",
+      "keptHandle": "spain-2026-27-home-shirt",
+      "hash": "383a5643"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Spain",
+      "kit": "Third",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "spain-2026-third-shirt",
+      "keptHandle": "spain-2026-27-third-shirt",
+      "hash": "64a5ff913c"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Tunisia",
+      "kit": "Away",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "tunisia-2026-away-shirt",
+      "keptHandle": "tunisia-2026-27-away-shirt",
+      "hash": "4933f6e3"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Tunisia",
+      "kit": "Third",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "tunisia-2026-third-shirt",
+      "keptHandle": "tunisia-2026-27-third-shirt",
+      "hash": "fb93a875"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "United States",
+      "kit": "Home",
+      "droppedSeason": "2026",
+      "keptSeason": "2026/27",
+      "droppedHandle": "united-states-2026-home-shirt",
+      "keptHandle": "united-states-2026-27-home-shirt",
+      "hash": "6755ff06"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Uruguay",
+      "kit": "Away",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "uruguay-2025-26-away-shirt",
+      "keptHandle": "uruguay-2026-away-shirt",
+      "hash": "0c622e6b"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Uruguay",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "uruguay-2025-26-home-shirt",
+      "keptHandle": "uruguay-2026-home-shirt",
+      "hash": "4ad6496c"
+    },
+    {
+      "reason": "national-season-dedupe",
+      "team": "Venezuela",
+      "kit": "Home",
+      "droppedSeason": "2025/26",
+      "keptSeason": "2026",
+      "droppedHandle": "venezuela-2025-26-home-shirt",
+      "keptHandle": "venezuela-2026-home-shirt",
+      "hash": "ff3dd3d0"
+    }
+  ]
+}
