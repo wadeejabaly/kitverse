@@ -82,6 +82,59 @@ describe("pluralised count messages", () => {
     });
   }
 
+  it("bidi-isolates every shekel amount embedded in an Arabic string", () => {
+    /**
+     * "₪19" inside Arabic prose renders as "19₪" without help.
+     *
+     * The shekel sign is bidi class ET and the digits are EN, and normally
+     * rule W5 fuses them into one left-to-right number run. But after an
+     * Arabic letter (class AL) rule W2 first retypes the digits as AN, the
+     * ET/EN fusion never happens, and the orphaned ₪ resolves as a neutral
+     * taking the paragraph's RTL direction — landing on the far side of its
+     * own number.
+     *
+     * So every amount baked into an Arabic string carries an explicit
+     * isolate: U+2066 LRI … U+2069 PDI. (Components render amounts through
+     * <Price>, which supplies <bdi dir="ltr"> instead — the same fix in
+     * markup. This guard covers the strings, which have no markup to lean
+     * on.) English is unaffected: in an LTR paragraph the ET/EN fusion
+     * happens normally.
+     */
+    const LRI = "⁦";
+    const PDI = "⁩";
+    const AMOUNT = /\+?₪\d+/g;
+
+    const strings = (value: unknown, prefix = ""): [string, string][] =>
+      typeof value === "object" && value !== null
+        ? Object.entries(value).flatMap(([key, child]) =>
+            strings(child, prefix ? `${prefix}.${key}` : key),
+          )
+        : typeof value === "string"
+          ? [[prefix, value]]
+          : [];
+
+    const offenders: string[] = [];
+    for (const [key, text] of strings(ar)) {
+      if (!text.includes("₪")) continue;
+      for (const match of text.matchAll(AMOUNT)) {
+        const start = match.index ?? 0;
+        const end = start + match[0].length;
+        if (text[start - 1] !== LRI || text[end] !== PDI) {
+          offenders.push(`${key}: ${match[0]}`);
+        }
+      }
+    }
+
+    expect(
+      offenders,
+      "Arabic amounts must be wrapped in U+2066 … U+2069",
+    ).toEqual([]);
+
+    // The guard is only meaningful if it is actually looking at something.
+    const withAmounts = strings(ar).filter(([, text]) => text.includes("₪"));
+    expect(withAmounts.length).toBeGreaterThan(0);
+  });
+
   it("keeps ar and en message keysets identical", () => {
     const paths = (value: unknown, prefix = ""): string[] =>
       typeof value === "object" && value !== null
