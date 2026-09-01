@@ -106,14 +106,25 @@ the header and the mobile overlay. The one surviving logotype is the footer's
 `.ghost-wordmark` — decorative, `aria-hidden`, ~5% ink, and the Latin-logotype
 exception still applies to it (tracked and uppercase in both locales).
 
-`--band` / `--band-ink` are the editorial band's surface, and they are NOT
-`--accent`. `--accent` is a text-and-button colour, so dark mode *lifts* it to
-a pale blue to stay legible on the ground; painting a full-bleed section with
-it turns that section into a light lavender slab in the middle of a dark page.
-The band is a surface, so it darkens like every other surface. Gold is not
-used inside the band: `--gold` measures 2.8:1 on the band navy, so the band's
-hairlines and secondary text are `--band-ink` at low alpha (`.band-rule`,
-`.band-soft`) instead.
+`--band` / `--band-ink` are the navy surface, and they are NOT `--accent`.
+`--accent` is a text-and-button colour, so dark mode *lifts* it to a pale blue
+to stay legible on the ground; painting a whole panel with it turns that panel
+into a light lavender slab in the middle of a dark page. The band is a
+surface, so it darkens like every other surface. Gold is not used inside the
+band: `--gold` measures 2.8:1 on the band navy, so secondary text on it is
+`--band-ink` at low alpha (`.band-soft`) instead.
+
+**The band is used exactly once**, and that is a rule rather than a
+description: the hero plaque in `<HeroB/>`. The Fan/Player explainer used to
+be a second, full-bleed band, and a page carrying both read as a pattern
+instead of two emphases — so the explainer went back to the page ground. Do
+not paint a second navy surface without retiring the first.
+
+Because `--accent` and `--band` are the same navy in light mode, a `.btn`
+inside the band disappears into it. The primary action on the band is
+`.btn btn-band`, which inverts to a band-ink fill with band-coloured type
+(15.2:1 light / 14.0:1 dark). It is the same one button treatment, not a
+second one.
 
 **Breakpoints must be declared in `rem`.** Tailwind orders breakpoint media
 queries by value so the larger one wins a conflict, but it can only compare

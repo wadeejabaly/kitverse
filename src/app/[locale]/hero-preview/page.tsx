@@ -54,7 +54,7 @@ export default async function HeroPreviewPage({
         <HeroA locale={locale} priority />
       </Variant>
 
-      <Variant tag={t("b.tag")} name={t("b.name")}>
+      <Variant tag={t("b.tag")} name={t("b.name")} live={t("live")}>
         <HeroB />
       </Variant>
 
@@ -73,14 +73,23 @@ export default async function HeroPreviewPage({
  * an index, like the footer's logotype, not a word. The variant's name beside
  * it is copy and reads in the page's own language. z-10 puts the tag over
  * Variant B's full-bleed wall.
+ *
+ * `live` marks the variant that is currently the home page. It is the one
+ * label here that carries emphasis, so it takes the section gold rather than
+ * the neutral ink-soft the index letter and the name use — the same rule the
+ * rest of the site follows, where a bare `.mono-eyebrow` is the one that
+ * means something.
  */
 function Variant({
   tag,
   name,
+  live,
   children,
 }: {
   tag: string;
   name: string;
+  /** Present only on the variant that is live on the home page. */
+  live?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -88,6 +97,7 @@ function Variant({
       <div className="pointer-events-none absolute top-4 start-6 z-10 flex items-baseline gap-2.5">
         <span className="mono-eyebrow latin text-ink-soft">{tag}</span>
         <span className="text-[11px] text-ink-soft">{name}</span>
+        {live ? <span className="mono-eyebrow">{live}</span> : null}
       </div>
       {children}
     </div>

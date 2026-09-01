@@ -322,33 +322,19 @@ body[lang="ar"] {
    the storefront pages did not previously need.
    ============================================================ */
 
-/* The home headline. Oversized on purpose — it is the hero, and it is the
-   LCP element, so it is real text and it never fades in.
+/* The top of the scale. Every headline on the site — the hero's included —
+   sets here or below.
 
-   Latin gets the tight tracking and 1.02 leading that a grotesk display line
-   wants. Arabic gets neither: no tracking (it breaks the joined script) and
-   noticeably more leading, because the script's ascenders and descenders need
-   the room at this size. Both rules already exist for h1–h6; this restates
-   the leading because the display size needs a tighter value than the 1.85
-   body default. */
-.display {
-  font-size: clamp(2.5rem, 6.4vw, 5.25rem);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  font-weight: 500;
-  text-wrap: balance;
-}
+   Latin gets the tight tracking a grotesk display line wants. Arabic gets
+   neither tracking (it breaks the joined script) nor the tight leading,
+   because the script's ascenders and descenders need the room at this size.
+   Both rules already exist for h1–h6; these restate the leading because a
+   display size needs a tighter value than the 1.85 body default.
 
-[lang="ar"] .display {
-  letter-spacing: normal;
-  line-height: 1.28;
-  /* The Arabic face carries more optical weight at display sizes; dropping a
-     step keeps the two locales at the same perceived heft. */
-  font-weight: 400;
-  font-size: clamp(2.1rem, 5.8vw, 4.9rem);
-}
-
-/* Section headlines — one step down, same rules. */
+   There was a larger `.display` step above this one, for the type-led hero
+   the home page used to open with. That hero is gone — the home page opens on
+   the showcase now — and nothing else on the site ever asked for a 5.25rem
+   line, so the step went with it. */
 .display-sm {
   font-size: clamp(1.6rem, 3.1vw, 2.6rem);
   line-height: 1.1;
@@ -495,11 +481,17 @@ body[lang="ar"] {
 }
 
 /* ============================================================
-   THE EDITORIAL BAND
-   The one full-bleed surface on the site: the accent, edge to
-   edge, carrying accent-ink type and gold hairlines. Used once,
-   for the Fan/Player explainer, which is the single question every
-   buyer arrives with.
+   THE BAND
+   The one navy surface on the site: crest navy carrying band-ink
+   type and a paper grain. Used exactly once — the hero plaque in
+   <HeroB/>, sitting over the drifting wall of shirts.
+
+   ONCE is the rule, not an accident of the current design. This
+   was originally the Fan/Player explainer's full-bleed band, and
+   for a moment the page carried both. Two navy slabs in one scroll
+   do not read as two emphases; they read as a pattern, and then
+   neither is an event. The explainer went back to the page ground
+   and the hero kept the navy.
    ============================================================ */
 .band {
   background: var(--band);
@@ -527,15 +519,14 @@ body[lang="ar"] {
   background-size: 240px 240px;
 }
 
-/* Hairlines and secondary text inside the band cannot use --rule or
-   --ink-soft: both are tokens for the page ground, and the band is a
-   different surface. They are the band's own ink at low alpha, which is
-   correct in both schemes with no extra tokens. band-soft measures 8.9:1
-   (light) and 8.2:1 (dark) against the band. */
-.band-rule {
-  border-color: color-mix(in srgb, var(--band-ink) 22%, transparent);
-}
+/* Secondary text inside the band cannot use --ink-soft: that is a token for
+   the page ground, and the band is a different surface. It is the band's own
+   ink at low alpha, which is correct in both schemes with no extra token, and
+   measures 8.9:1 (light) / 8.2:1 (dark) against the band.
 
+   (A matching `.band-rule` used to sit here for hairlines on the band. The
+   only thing that ever drew one was the Fan/Player explainer, which is on the
+   page ground now and uses --rule like every other section.) */
 .band-soft {
   color: color-mix(in srgb, var(--band-ink) 74%, transparent);
 }
@@ -678,12 +669,16 @@ body[lang="ar"] {
    ============================================================ */
 
 /* ---- Variant C's headline ----
-   The home `.display` at 70% volume: 5.25rem → 3.7rem at the
+   The retired `.display` step at 70% volume: 5.25rem → 3.7rem at the
    ceiling, 2.5rem → 1.75rem at the floor, and the same 0.7 applied
    to the vw term so the ramp between them scales too. Leading opens
    very slightly (1.02 → 1.06) because a smaller display line does
    not need to be set as tightly. Arabic drops the tracking and takes
-   the same 0.7 off its own scale, exactly as `.display` does. */
+   the same 0.7 off its own scale.
+
+   Used only by <HeroC/>, which is kept on /hero-preview in case the
+   owner revisits the typographic direction. It carries its own
+   numbers rather than deriving them, so it survived `.display`. */
 .display-quiet {
   font-size: clamp(1.75rem, 4.5vw, 3.7rem);
   line-height: 1.06;

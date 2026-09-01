@@ -7,7 +7,13 @@ import { cn } from "@/lib/utils";
 import { spreadShirts } from "./shirts";
 
 /**
- * HERO B — full-bleed showcase.
+ * HERO B — full-bleed showcase. THE HOME PAGE HERO.
+ *
+ * Chosen out of the three variants on /hero-preview and promoted unchanged.
+ * Its copy lives in the `home.hero` namespace rather than `heroPreview.b`,
+ * because it is the storefront's opening line now and not a pitch — the
+ * preview page renders this same component, so both places read the one
+ * source.
  *
  * The argument is breadth: two offset rows of product tiles drifting past each
  * other behind a navy plaque carrying the headline and the one action. It is
@@ -34,7 +40,7 @@ import { spreadShirts } from "./shirts";
  * same navy and a default button would vanish into the panel.
  */
 export async function HeroB({ priority = false }: { priority?: boolean }) {
-  const t = await getTranslations("heroPreview.b");
+  const t = await getTranslations("home.hero");
 
   // Even strides through the approved set — see spreadShirts(). The two rows
   // are offset from each other so no shirt is on screen twice.

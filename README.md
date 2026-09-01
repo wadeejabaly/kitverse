@@ -37,7 +37,42 @@ failing.
 | `npm run build` | Production build |
 | `npm run start` | Serve the production build |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run test` | Unit tests (vitest) |
+| `npm run import-catalog` | Rebuilds `src/data/*.json` and `public/products/` from `vendor/` |
 | `npm run preflight` | Project rule checks — see below |
+
+## Source data
+
+`vendor/` holds the supplier source material the catalog is built from. See
+`vendor/README.md` for what each folder contains.
+
+**Not all of it is in git.** `vendor/data/`, `vendor/scripts/` and
+`vendor/payloads/` are tracked; the two image archives are not:
+
+| Path | Tracked? | What it is |
+| --- | --- | --- |
+| `vendor/data/` | yes | Supplier catalogue, Arabic translations, album metadata |
+| `vendor/payloads/` | yes | Size guide + policy drafts as supplier HTML |
+| `vendor/scripts/` | yes | The crawl/processing scripts, kept for provenance |
+| `vendor/images-source/` | **no — on disk only** | The 329 shipped product photos |
+| `vendor/images-alt/` | **no — on disk only** | 491 alternate photos the review tool swaps from |
+
+The image archives are `.gitignore`d because they are large binaries, which
+means **a fresh clone does not have them**. Back both folders up before any
+machine migration or reinstall — losing them means the photography has to be
+re-derived from the supplier.
+
+Two things depend on `vendor/` existing:
+
+- `npm run import-catalog` reads `vendor/data/` and copies from
+  `vendor/images-source/` into `public/products/`.
+- The dev-only image review tool (`/review`) reads `vendor/data/albums.json`
+  to find a product's alternate photos and streams them from
+  `vendor/images-alt/`.
+
+Neither is needed to run or build the site: `src/data/*.json` and
+`public/products/` are committed, so `npm run dev` and `npm run build` work
+from a clean clone with no `vendor/` at all.
 
 ## Preflight
 

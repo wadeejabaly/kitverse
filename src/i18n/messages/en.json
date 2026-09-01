@@ -23,13 +23,13 @@
     "cartWithCount": "Cart ({count})"
   },
   "home": {
-    "eyebrow": "This season's kits",
-    "titleA": "Your team's shirt,",
-    "titleB": "in your size,",
-    "titleC": "with your name on it.",
-    "intro": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing. The price you see is the final price, VAT included.",
-    "heroCta": "Shop all shirts",
-    "heroSecondary": "National teams",
+    "hero": {
+      "eyebrow": "The full catalogue",
+      "titleA": "Every shirt,",
+      "titleB": "in one place.",
+      "sub": "Clubs and national teams from the major leagues — home, away and third, this season and last.",
+      "cta": "Browse the catalogue"
+    },
     "browseEyebrow": "Browse",
     "kinds": {
       "national": {
@@ -355,6 +355,7 @@
     "pageTitle": "Hero variants",
     "pageLabel": "Hero variants",
     "pageNote": "Three directions for the opening of the home page. Pick one.",
+    "live": "live",
     "a": {
       "tag": "A",
       "name": "Product-forward",
@@ -366,12 +367,7 @@
     },
     "b": {
       "tag": "B",
-      "name": "Full-bleed showcase",
-      "eyebrow": "The full catalogue",
-      "titleA": "Every shirt,",
-      "titleB": "in one place.",
-      "sub": "Clubs and national teams from the major leagues — home, away and third, this season and last.",
-      "cta": "Browse the catalogue"
+      "name": "Full-bleed showcase"
     },
     "c": {
       "tag": "C",
