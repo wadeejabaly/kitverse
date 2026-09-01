@@ -87,16 +87,37 @@ if (templateMode) {
 // standard, and rewriting them through getSiteUrl() would emit invalid
 // structured data. The rule this check exists for — "the site's own domain
 // lives in exactly one place" — is unaffected.
+//
+// Two integration files additionally carry a third party's FIXED API
+// endpoints. Those hosts belong to the provider, not to this store, so they
+// cannot derive from getSiteUrl() and are not a deployment domain that could
+// go stale. Each file is allowed only its own named hosts and nothing else,
+// so the rule this check exists for — the site's own domain lives in exactly
+// one place — is untouched.
 const ALLOWED_HOSTS = new Set(["localhost", "schema.org"]);
+const FILE_HOST_ALLOWLIST = new Map([
+  // null = the one file that assembles this site's own absolute URLs.
+  [join("src", "lib", "site.ts"), null],
+  [
+    join("src", "lib", "paypal.ts"),
+    new Set(["api-m.paypal.com", "api-m.sandbox.paypal.com"]),
+  ],
+  [join("src", "lib", "notify.ts"), new Set(["api.resend.com"])],
+]);
 const URL_RE = /https?:\/\/([a-zA-Z0-9.-]+)/g;
 {
   const hits = [];
   for (const file of scanned) {
-    if (rel(file) === join("src", "lib", "site.ts")) continue;
+    const name = rel(file);
+    const hasEntry = FILE_HOST_ALLOWLIST.has(name);
+    const fileHosts = hasEntry ? FILE_HOST_ALLOWLIST.get(name) : undefined;
+    if (hasEntry && fileHosts === null) continue;
     const stripped = stripComments(readFileSync(file, "utf8"), file);
     stripped.split("\n").forEach((line, i) => {
       for (const match of line.matchAll(URL_RE)) {
-        if (!ALLOWED_HOSTS.has(match[1])) hits.push(`${rel(file)}:${i + 1} (${match[1]})`);
+        if (ALLOWED_HOSTS.has(match[1])) continue;
+        if (fileHosts && fileHosts.has(match[1])) continue;
+        hits.push(`${name}:${i + 1} (${match[1]})`);
       }
     });
   }
