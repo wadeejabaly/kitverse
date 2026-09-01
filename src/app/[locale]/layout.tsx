@@ -6,8 +6,10 @@ import { routing, getDir } from "@/i18n/config";
 import { FONT_STACK_VARS } from "@/lib/fonts";
 import { alternatesFor, getSiteUrl } from "@/lib/site";
 import { ConsentProvider } from "@/components/providers/ConsentProvider";
+import { CartProvider } from "@/components/cart/CartProvider";
 import { ConsentBanner } from "@/components/shared/ConsentBanner";
 import { Footer } from "@/components/shared/Footer";
+import { Header } from "@/components/shared/Header";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -54,8 +56,14 @@ export default async function LocaleLayout({
       <body className="flex min-h-dvh flex-col bg-ground text-ink">
         <NextIntlClientProvider messages={messages}>
           <ConsentProvider>
-            <main className="flex grow flex-col">{children}</main>
-            <Footer />
+            {/* The cart wraps the whole locale tree: the header's live count
+                and the cart page read the same provider, so adding a shirt on
+                a PDP updates the header without a reload. */}
+            <CartProvider>
+              <Header />
+              <main className="flex grow flex-col">{children}</main>
+              <Footer />
+            </CartProvider>
             <ConsentBanner />
           </ConsentProvider>
         </NextIntlClientProvider>

@@ -13,12 +13,62 @@
     "about": "About",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "language": "Language"
+    "language": "Language",
+    "nationalTeams": "National teams",
+    "leagues": "Leagues",
+    "menuBrowse": "Browse",
+    "menuHelp": "Help",
+    "toArabic": "العربية",
+    "toEnglish": "English",
+    "cartWithCount": "Cart ({count})"
   },
   "home": {
     "eyebrow": "This season's kits",
     "title": "Your team's shirt, in your size, with your name on it.",
-    "intro": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing. The price you see is the final price, VAT included."
+    "intro": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing. The price you see is the final price, VAT included.",
+    "heroCta": "Shop all shirts",
+    "heroSecondary": "National teams",
+    "browseEyebrow": "Browse",
+    "kinds": {
+      "national": {
+        "title": "National teams",
+        "body": "Every side heading to the 2026 tournament, home and away."
+      },
+      "current": {
+        "title": "This season",
+        "body": "The 2026/27 club kits, as the clubs released them."
+      },
+      "previous": {
+        "title": "Last season",
+        "body": "The 2025/26 shirts, reduced while they last."
+      }
+    },
+    "newIn": "New in",
+    "leaguesEyebrow": "Shop by league",
+    "explainer": {
+      "eyebrow": "Fan or Player",
+      "title": "The same shirt, cut two ways",
+      "fanTitle": "Fan",
+      "fanBody": "A relaxed cut with a woven badge. The version most people wear, and the one we sell most of.",
+      "playerTitle": "Player",
+      "playerBody": "The athletic cut the squad wears: slimmer through the body, lighter fabric, heat-pressed badge."
+    },
+    "valuesEyebrow": "How we work",
+    "values": {
+      "one": {
+        "title": "Authentic-look replicas",
+        "body": "We sell replicas, and we say so. Same design, same badge placement, honest photographs of the shirt you receive."
+      },
+      "two": {
+        "title": "12 to 25 days, tracked",
+        "body": "Shipped from our supplier with a tracking number as soon as the parcel moves. No dates we cannot keep."
+      },
+      "three": {
+        "title": "Name and number printing",
+        "body": "Any name, any number, printed to order. Adds ₪39 to the shirt and two days before dispatch."
+      }
+    },
+    "empty": "The catalogue is being photographed. Shirts appear here as soon as their images are approved."
   },
   "common": {
     "addToCart": "Add to cart",
@@ -33,7 +83,9 @@
     "quantity": "Quantity",
     "size": "Size",
     "price": "Price",
-    "total": "Total"
+    "total": "Total",
+    "menu": "Menu",
+    "from": "From"
   },
   "notFound": {
     "title": "Page not found",
@@ -50,7 +102,12 @@
     "tagline": "Football shirts for clubs and national teams.",
     "privacy": "Privacy policy",
     "terms": "Terms of use",
-    "cookieSettings": "Cookie settings"
+    "cookieSettings": "Cookie settings",
+    "shopGroup": "Shop",
+    "helpGroup": "Help",
+    "legalGroup": "Legal",
+    "contactGroup": "Contact",
+    "emailUs": "Email us"
   },
   "consent": {
     "message": "We use essential cookies to run the site and your cart. Non-essential analytics or marketing tools only run after you accept, and you can change your choice at any time from \"Cookie settings\" at the bottom of the page.",
@@ -127,5 +184,124 @@
         "body": "These terms are governed by the law of the State of Israel, and the competent courts of Israel have exclusive jurisdiction."
       }
     }
+  },
+  "shop": {
+    "eyebrow": "All shirts",
+    "title": "Shop the catalogue",
+    "intro": "Clubs from the big five leagues and every national side, in Fan and Player versions.",
+    "metaDescription": "Browse every KitVerse football shirt: clubs, national teams, Fan and Player versions, with prices in shekels including VAT.",
+    "filters": "Filters",
+    "kind": "Season",
+    "league": "League",
+    "team": "Team",
+    "all": "All",
+    "allTeams": "All teams",
+    "clear": "Clear filters",
+    "kinds": {
+      "national": "National teams",
+      "current": "This season",
+      "previous": "Last season"
+    },
+    "showing": "Showing {count} of {total}",
+    "count": "{count, plural, =0 {No shirts} one {{countText} shirt} other {{countText} shirts}}",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "No shirts match this filter right now. Clear it, or try another league."
+  },
+  "product": {
+    "breadcrumbShop": "Shop",
+    "size": "Size",
+    "sizeDelta": "+₪15",
+    "version": "Version",
+    "versionFan": "Fan",
+    "versionPlayer": "Player",
+    "nameNumber": "Name and number — optional",
+    "nameNumberToggle": "Add a name and number",
+    "nameNumberLabel": "Name and number",
+    "nameNumberHint": "Printed to order. Adds ₪39 and two days to dispatch.",
+    "badge": "Badge patch",
+    "badgeToggle": "Add the competition badge patch",
+    "badgeHint": "Sewn-on league or tournament patch. Adds ₪19.",
+    "quantity": "Quantity",
+    "added": "Added to your cart.",
+    "viewCart": "View cart",
+    "was": "Was",
+    "accordionShipping": "Shipping",
+    "accordionShippingBody": "Shirts ship from our supplier and take 12 to 25 days to arrive, tracked door to door. Printed shirts add two days before dispatch.",
+    "accordionReturns": "Returns",
+    "accordionReturnsBody": "Fourteen days from delivery on unworn shirts with tags attached. Printed shirts can only be returned if the print is wrong or the shirt is faulty.",
+    "accordionSizing": "Sizing",
+    "accordionSizingBody": "Sizing runs about one size smaller than European. Between sizes, take the larger one. Player version is cut slimmer than Fan.",
+    "accordionSizingLink": "Full measurements",
+    "related": "More from {team}",
+    "metaDescription": "{title} — Fan and Player versions, sizes S to 4XL, optional name and number printing. Prices in shekels including VAT."
+  },
+  "cart": {
+    "eyebrow": "Cart",
+    "title": "Your cart",
+    "metaDescription": "The shirts in your KitVerse cart.",
+    "emptyTitle": "Your cart is empty",
+    "emptyBody": "Nothing added yet. Have a look at the new season, or search for your club.",
+    "propSize": "Size",
+    "propVersion": "Version",
+    "propNameNumber": "Name and number",
+    "propBadge": "Badge patch",
+    "propBadgeYes": "Added",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingLabel": "Flat rate",
+    "shippingNote": "Israel only for now.",
+    "total": "Total",
+    "deliveryNote": "Delivery is 12 to 25 days. Printed shirts add two days.",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "unavailable": "This shirt is no longer available and was removed from your cart."
+  },
+  "search": {
+    "eyebrow": "Search",
+    "title": "Find a shirt",
+    "metaDescription": "Search KitVerse for a club, a national team, or a season.",
+    "placeholder": "Arsenal, Brazil, Bayern…",
+    "label": "Search shirts",
+    "prompt": "Type a club or a country to start.",
+    "results": "{count, plural, =0 {No results for “{query}”} one {{countText} result for “{query}”} other {{countText} results for “{query}”}}",
+    "empty": "Nothing matched “{query}”. Try the club's short name."
+  },
+  "sizeGuide": {
+    "eyebrow": "Size guide",
+    "title": "Measurements",
+    "metaDescription": "KitVerse size guide: chest and length measurements in centimetres for sizes S to 4XL, and how they compare to European sizing.",
+    "intro": "Shirts are cut to Asian sizing and run about one size smaller than European. Measure a shirt you already own flat, and match the chest figure.",
+    "colSize": "Size",
+    "colChest": "Chest (cm)",
+    "colLength": "Length (cm)",
+    "colFits": "Fits (EU)",
+    "note": "Chest is measured flat across the shirt under the arms and doubled. Length runs from the highest point of the shoulder to the hem. The Player version is cut slimmer than the Fan version — take one size up if you prefer a looser fit.",
+    "surcharge": "Sizes 3XL and 4XL add ₪15 to the shirt price."
+  },
+  "shippingPage": {
+    "eyebrow": "Shipping and returns",
+    "title": "How delivery works",
+    "metaDescription": "KitVerse shipping and returns: 12 to 25 day tracked delivery, 14-day returns, and how customs are handled.",
+    "timingTitle": "Timing",
+    "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 12 to 25 days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
+    "rateTitle": "Rate and area",
+    "rateBody": "We deliver within Israel only for now, at one flat rate shown in the cart and at checkout. Prices are in shekels and include VAT.",
+    "trackingTitle": "Tracking",
+    "trackingBody": "You get a tracking number by email as soon as the parcel moves. If tracking has not updated in seven days, write to us and we will chase it.",
+    "returnsTitle": "Returns",
+    "returnsBody": "Fourteen days from delivery, on unworn shirts with tags still attached. Printed shirts cannot be returned for a change of mind — only if the print is wrong or the shirt is faulty. Refunds are issued within 5 business days of the return reaching us. If an item arrives damaged, send photos within 48 hours.",
+    "customsTitle": "Customs",
+    "customsBody": "Orders delivered outside Israel may attract import duty on arrival. That charge is set by the destination country, not by us, and is not included in the price shown here."
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "Shirts, described honestly",
+    "metaDescription": "What KitVerse sells: replica football shirts for clubs and national teams, in Fan and Player versions, with honest photographs and honest delivery dates.",
+    "body1": "KitVerse sells football shirts for clubs from the big five leagues and for national teams, in two versions: Fan and Player. Sizes run from S to 4XL, and any shirt can be printed with a name and number.",
+    "body2": "These are replicas, not licensed merchandise, and we would rather say that on the front page than leave you to work it out. The design, the badge placement and the fabric are made to match the original closely; the shirt is not sold by the club. Every product photograph on this site is of the actual shirt we ship.",
+    "body3": "Prices are in shekels and include VAT. Delivery is 12 to 25 days with tracking, inside Israel for now.",
+    "contactTitle": "Contact",
+    "contactBody": "Questions about an order, a size, or a return — write to us and we reply within two business days.",
+    "email": "hello@kitverse.co.il"
   }
 }

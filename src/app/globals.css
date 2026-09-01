@@ -83,6 +83,10 @@
 
   --container-page: 1180px;
 
+  /* The mockup's one custom breakpoint: above it the header shows its full
+     nav and listings go 4-up; below it the hamburger overlay takes over. */
+  --breakpoint-wide: 900px;
+
   /* Radius 0 is a design decision, not a default — flatten every scale step
      so a stray rounded-* utility cannot soften a corner. */
   --radius-xs: 0px;
@@ -158,6 +162,61 @@ body[lang="ar"] {
 [lang="ar"] .mono-eyebrow:not([lang="en"]):not(.latin) {
   font-family: var(--type-arabic);
   font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* The wordmark is a logotype, not running text: it keeps the Latin sans and
+   its tracking in every locale (the centred-logotype exception to the
+   no-tracking-on-Arabic rule — the letters here are Latin either way). Arabic
+   pages tighten it slightly, as the mockup does. */
+.wordmark {
+  font-family: var(--type-sans);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+[lang="ar"] .wordmark {
+  letter-spacing: 0.1em;
+}
+
+/* The one button treatment on the site. Accent fill for the primary action
+   (add to cart, checkout, shop all), a hairline outline for anything quieter.
+   Tracked uppercase is a Latin treatment: Arabic drops both and takes the
+   Arabic stack, exactly as the eyebrows do. */
+.btn {
+  display: inline-block;
+  font-family: var(--type-sans);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 15px 34px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-quiet {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+
+.btn-quiet:hover {
+  border-color: var(--ink);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[lang="ar"] .btn {
+  font-family: var(--type-arabic);
   letter-spacing: normal;
   text-transform: none;
 }

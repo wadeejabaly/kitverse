@@ -82,7 +82,12 @@ if (templateMode) {
 // --- (b) No hardcoded absolute domains outside getSiteUrl/allowlist ----------
 // src/lib/site.ts is the ONE place absolute URLs are assembled. Everything
 // else derives from getSiteUrl(), so a wrong domain can never reach production.
-const ALLOWED_HOSTS = new Set(["localhost"]);
+// schema.org is a vocabulary namespace, not a deployment domain: JSON-LD
+// @context/@type/availability values are fixed identifiers defined by the
+// standard, and rewriting them through getSiteUrl() would emit invalid
+// structured data. The rule this check exists for — "the site's own domain
+// lives in exactly one place" — is unaffected.
+const ALLOWED_HOSTS = new Set(["localhost", "schema.org"]);
 const URL_RE = /https?:\/\/([a-zA-Z0-9.-]+)/g;
 {
   const hits = [];
