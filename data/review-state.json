@@ -1,118 +1,1018 @@
 {
-  "ac-milan-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "argentina-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "arsenal-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "bayern-munich-2025-26-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "bayern-munich-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "brazil-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "brazil-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "brazil-2026-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "chelsea-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "france-2026-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "germany-2026-27-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "inter-milan-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "japan-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "manchester-city-2025-26-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "manchester-city-2025-26-third-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "manchester-united-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "mexico-2026-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "morocco-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "netherlands-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "netherlands-2026-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "newcastle-united-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "norway-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "portugal-2026-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "real-betis-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "real-madrid-2025-26-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "real-madrid-2025-26-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "spain-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "spain-2026-home-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  },
-  "united-states-2026-away-shirt": {
-    "state": "approved",
-    "at": "2026-09-01"
-  }
+ "ac-milan-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "argentina-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "arsenal-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bayern-munich-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bayern-munich-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "brazil-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "brazil-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "brazil-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "chelsea-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "france-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "germany-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "inter-milan-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "japan-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-city-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-city-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-united-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "mexico-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "morocco-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "netherlands-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "netherlands-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "newcastle-united-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "norway-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "portugal-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-betis-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-madrid-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-madrid-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "spain-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "spain-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "united-states-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "1-fc-koln-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "1-fc-union-berlin-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "1-fc-union-berlin-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ac-milan-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ac-milan-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "ac-milan-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ac-milan-2026-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "alaves-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "albania-2026-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "argentina-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "argentina-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "armenia-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "arsenal-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "arsenal-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "arsenal-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "aston-villa-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "atalanta-2025-26-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "atalanta-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "athletic-bilbao-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "atl-tico-madrid-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "atl-tico-madrid-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "atl-tico-madrid-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "australia-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "australia-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "austria-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "barcelona-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bayern-munich-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "belgium-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "belgium-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bolivia-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bolivia-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "borussia-dortmund-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "borussia-dortmund-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bosnia-and-herzegovina-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "bosnia-and-herzegovina-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "brazil-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "brazil-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "brentford-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "burnley-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "cagliari-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "cameroon-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "cameroon-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "cameroon-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "canada-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "canada-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "celta-vigo-2025-26-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "celta-vigo-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "celta-vigo-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "celta-vigo-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "chelsea-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "chelsea-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "chelsea-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "chile-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "chile-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "colombia-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "colombia-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "como-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "congo-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "croatia-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "croatia-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "curacao-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "curacao-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "czech-republic-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ecuador-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ecuador-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ecuador-2026-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "egypt-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "egypt-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "eintracht-frankfurt-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "eintracht-frankfurt-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "el-salvador-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "el-salvador-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "england-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "espanyol-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "everton-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "everton-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "fc-st-pauli-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "fc-st-pauli-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "finland-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "finland-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "fiorentina-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "france-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "france-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "fulham-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "germany-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "getafe-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ghana-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ghana-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "guatemala-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "guatemala-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "haiti-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "haiti-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "haiti-2026-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "hamburger-sv-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "hellas-verona-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "honduras-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "hungary-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "inter-milan-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "inter-milan-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "italy-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "italy-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "jamaica-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "japan-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "jordan-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "jordan-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "jordan-2026-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "leeds-united-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "leeds-united-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "lens-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "lens-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "levante-2025-26-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "levante-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "levante-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "lille-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "lyon-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "lyon-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "malaysia-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "malaysia-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "mallorca-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-city-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-city-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-city-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "manchester-city-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-united-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-united-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "manchester-united-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "manchester-united-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "marseille-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "mexico-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "mexico-2026-27-third-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "monaco-2025-26-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "monaco-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "morocco-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "nantes-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "napoli-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "napoli-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "napoli-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "netherlands-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "netherlands-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "new-zealand-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "new-zealand-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "newcastle-united-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "newcastle-united-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "nigeria-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "nigeria-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "northern-ireland-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "norway-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "norway-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "nottingham-forest-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "osasuna-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "palestine-2025-26-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "palestine-2025-26-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "palestine-2025-26-third-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "paraguay-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "paraguay-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "paris-saint-germain-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "paris-saint-germain-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "parma-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "poland-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "portugal-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "qatar-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "rayo-vallecano-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "rb-leipzig-2025-26-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "rb-leipzig-2025-26-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "real-betis-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-betis-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-betis-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-madrid-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-madrid-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "real-madrid-2026-27-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "real-oviedo-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-oviedo-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-oviedo-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-sociedad-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "real-sociedad-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "republic-of-ireland-2026-27-away-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "roma-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "roma-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "romania-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "romania-2025-26-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "saudi-arabia-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "saudi-arabia-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "scotland-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "scotland-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "senegal-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "senegal-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sevilla-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sevilla-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sevilla-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "south-africa-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "south-africa-2026-home-shirt": {
+  "state": "rejected",
+  "at": "2026-09-01"
+ },
+ "south-korea-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "south-korea-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "spain-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "spain-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "spain-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sunderland-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sunderland-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sweden-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "sweden-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "switzerland-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "tottenham-hotspur-2025-26-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "tottenham-hotspur-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "tunisia-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "tunisia-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "tunisia-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "ukraine-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "united-arab-emirates-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "united-states-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "uruguay-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "uruguay-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "uzbekistan-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "valencia-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "venezuela-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "venezuela-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "vfb-stuttgart-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "villarreal-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "wales-2026-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "wales-2026-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "werder-bremen-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "werder-bremen-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "werder-bremen-2026-27-third-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "west-ham-united-2026-27-away-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "west-ham-united-2026-27-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ },
+ "wolverhampton-wanderers-2025-26-home-shirt": {
+  "state": "approved",
+  "at": "2026-09-01"
+ }
 }

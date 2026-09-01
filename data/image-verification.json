@@ -1,0 +1,1232 @@
+{
+ "date": "2026-09-01",
+ "method": "AI vision pass, 6 independent graders, strict approve bar; PM spot-check 6 images; 2 PM overrides (Leeds)",
+ "verdicts": [
+  {
+   "handle": "1-fc-koln-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Köln crest and REWE sponsor, plausible navy/red away scheme, clean product shot."
+  },
+  {
+   "handle": "1-fc-union-berlin-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Union Berlin crest, traditional red/white hooped home design, clean shot."
+  },
+  {
+   "handle": "1-fc-union-berlin-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Union Berlin crest and red home colorway with raisin sponsor, clean shot."
+  },
+  {
+   "handle": "ac-milan-2025-26-away-shirt",
+   "verdict": "unsure",
+   "reason": "Puma/Emirates branding matches Milan but the chest crest is a stylized dragon, not Milan's real oval crest."
+  },
+  {
+   "handle": "ac-milan-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct AC Milan crest, Puma/Emirates branding, plausible yellow/black third kit."
+  },
+  {
+   "handle": "ac-milan-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Long-sleeve jersey shown, violates the adult short-sleeve product-shot requirement."
+  },
+  {
+   "handle": "ac-milan-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct AC Milan crest, Puma/Emirates branding, plausible dark navy third kit."
+  },
+  {
+   "handle": "ac-milan-2026-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct AC Milan crest, Puma/Emirates branding, plausible yellow third kit, matches album title."
+  },
+  {
+   "handle": "alaves-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct Deportivo Alavés crest and Macron branding, plausible mint third kit."
+  },
+  {
+   "handle": "albania-2026-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct Albania federation crest (double eagle, FSHF), plausible black third kit."
+  },
+  {
+   "handle": "algeria-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Predominantly white shirt labeled Home; Algeria is traditionally green at home, which is what the paired 'Away' listing shows, suggesting a possible home/away swap."
+  },
+  {
+   "handle": "algeria-2026-away-shirt",
+   "verdict": "unsure",
+   "reason": "Predominantly green shirt labeled Away; Algeria is traditionally green at home and white away, suggesting a possible home/away swap with the home listing."
+  },
+  {
+   "handle": "argentina-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Photo shows a full jersey+shorts set rather than a standalone shirt product shot."
+  },
+  {
+   "handle": "argentina-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct AFA crest, adidas branding, traditional albiceleste home pattern, clean shot."
+  },
+  {
+   "handle": "armenia-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct Armenia federation crest and Macron branding, plausible blue third kit."
+  },
+  {
+   "handle": "arsenal-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Arsenal cannon crest, adidas/Emirates branding, plausible blue away kit."
+  },
+  {
+   "handle": "arsenal-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct Arsenal crest, adidas/Emirates branding, plausible white/gold third kit."
+  },
+  {
+   "handle": "arsenal-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Arsenal crest, adidas/Emirates branding, traditional red/white home design."
+  },
+  {
+   "handle": "aston-villa-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct Aston Villa lion crest and Betano sponsor visible under a stylized dragon graphic third kit."
+  },
+  {
+   "handle": "atalanta-2025-26-home-shirt",
+   "verdict": "reject",
+   "reason": "Crest and sponsor clearly read 'Atlanta United FC' / American Family Insurance (MLS club), not the claimed Italian club Atalanta BC."
+  },
+  {
+   "handle": "atalanta-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Atalanta BC crest (knight head roundel) and New Balance branding, traditional black/blue home stripes."
+  },
+  {
+   "handle": "athletic-bilbao-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Correct Athletic Club Bilbao crest, Castore/Kutxabank branding, plausible blue third kit."
+  },
+  {
+   "handle": "atl-tico-madrid-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Atlético Madrid crest, Nike/Riyadh Air branding, traditional red/white stripes."
+  },
+  {
+   "handle": "atl-tico-madrid-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Atlético Madrid crest, Nike/Riyadh Air branding, plausible black away kit."
+  },
+  {
+   "handle": "atl-tico-madrid-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Atlético Madrid crest, Nike/Riyadh Air branding, traditional red/white stripes."
+  },
+  {
+   "handle": "australia-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Australia (Socceroos) crest, Nike branding, plausible teal/coral away kit."
+  },
+  {
+   "handle": "australia-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Australia crest, Nike branding, traditional gold/green home kit."
+  },
+  {
+   "handle": "austria-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct ÖFB eagle crest, Puma branding, plausible white/mint away kit."
+  },
+  {
+   "handle": "barcelona-2025-26-away-shirt",
+   "verdict": "unsure",
+   "reason": "Correct Barcelona crest and black away colorway, but an odd hand-written 'T.S. 1989' print is on the shirt, unclear if this represents the standard retail product."
+  },
+  {
+   "handle": "barcelona-2025-26-home-shirt",
+   "verdict": "unsure",
+   "reason": "Correct Barcelona crest and Rakuten sponsor, but the shirt is a graffiti/collage special design rather than the standard blaugrana home strip, atypical for a plain 'Home Shirt' listing."
+  },
+  {
+   "handle": "barcelona-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Barcelona crest, Nike/Spotify branding, plausible cream/maroon away design."
+  },
+  {
+   "handle": "barcelona-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Correct Barcelona crest and Spotify sponsor, but mint-green colorway is far from Barcelona's traditional blaugrana home colors."
+  },
+  {
+   "handle": "bayern-munich-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Bayern Munich crest, adidas/Telekom branding, plausible white away kit."
+  },
+  {
+   "handle": "belgium-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Royal Belgian FA crest, adidas branding, plausible pink/teal away kit."
+  },
+  {
+   "handle": "belgium-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Royal Belgian FA crest, adidas branding, traditional red home kit."
+  },
+  {
+   "handle": "bolivia-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Bolivia federation crest, Marathon branding, plausible white away kit."
+  },
+  {
+   "handle": "bolivia-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct Bolivia federation crest, Marathon branding, traditional green home kit."
+  },
+  {
+   "handle": "borussia-dortmund-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Correct BVB crest and Puma branding on traditional yellow/black home design (with a One Piece collab print)."
+  },
+  {
+   "handle": "borussia-dortmund-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct BVB crest, Puma/Vodafone branding, plausible black away kit."
+  },
+  {
+   "handle": "borussia-monchengladbach-2025-26-home-shirt",
+   "verdict": "unsure",
+   "reason": "Correct Gladbach crest and flatex sponsor, but this is an all-black anniversary/special edition rather than the club's traditional white home colors."
+  },
+  {
+   "handle": "bosnia-and-herzegovina-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Correct Bosnia and Herzegovina federation crest, Kelme branding, plausible white/blue away kit."
+  },
+  {
+   "handle": "bosnia-and-herzegovina-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue Kelme shirt with correct Bosnia crest matches traditional home colors."
+  },
+  {
+   "handle": "brazil-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Long-sleeve Jordan/Brasil top, not an adult short-sleeve jersey product shot."
+  },
+  {
+   "handle": "brazil-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Short-sleeve yellow/green CBF shirt on mannequin matches Brazil home identity."
+  },
+  {
+   "handle": "brentford-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red/white striped Joma shirt with correct Brentford bee crest matches home colors."
+  },
+  {
+   "handle": "brighton-hove-albion-2026-27-away-shirt",
+   "verdict": "unsure",
+   "reason": "White/blue pinstripe Nike shirt with correct Brighton crest but color scheme is very close to the club's traditional blue/white home identity for a claimed Away kit."
+  },
+  {
+   "handle": "burnley-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Bright pink Castore shirt claimed as Home does not match Burnley's traditional claret/blue home colors."
+  },
+  {
+   "handle": "cagliari-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with correct Cagliari four-Moors crest, plausible away scheme vs. traditional dark home."
+  },
+  {
+   "handle": "cameroon-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Cameroon lion crest, plausible away alternate to green home."
+  },
+  {
+   "handle": "cameroon-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Green shirt with correct Cameroon lion crest matches traditional home color."
+  },
+  {
+   "handle": "cameroon-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "White/green shirt with correct Cameroon crest, plausible third-kit design."
+  },
+  {
+   "handle": "canada-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/grey Nike shirt with correct Canada crest, plausible away vs. red home."
+  },
+  {
+   "handle": "canada-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red Nike shirt with correct Canada crest matches traditional home color."
+  },
+  {
+   "handle": "celta-vigo-2025-26-home-shirt",
+   "verdict": "reject",
+   "reason": "Navy/red cityscape-pattern Hummel shirt claimed as Home shows no trace of Celta Vigo's signature sky-blue home color."
+  },
+  {
+   "handle": "celta-vigo-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Navy Hummel shirt with correct Celta crest, plausible away vs. sky-blue home."
+  },
+  {
+   "handle": "celta-vigo-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Sky-blue Hummel shirt with correct Celta crest matches traditional home color exactly."
+  },
+  {
+   "handle": "celta-vigo-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Red argyle-pattern Hummel shirt with correct Celta crest, plausible third-kit design."
+  },
+  {
+   "handle": "chelsea-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Cream/beige Nike shirt with correct Chelsea lion crest, plausible away vs. blue home."
+  },
+  {
+   "handle": "chelsea-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue Nike shirt with correct Chelsea crest matches traditional home color."
+  },
+  {
+   "handle": "chelsea-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "White pinstripe Nike shirt with Chelsea branding on collar and crest, plausible third-kit design."
+  },
+  {
+   "handle": "chile-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Red adidas shirt with correct Chile federation crest matches traditional home color."
+  },
+  {
+   "handle": "chile-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Cream/pink floral adidas shirt with correct Chile crest, plausible away vs. red home."
+  },
+  {
+   "handle": "colombia-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue adidas shirt with correct Colombia crest, plausible away vs. yellow home."
+  },
+  {
+   "handle": "colombia-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow adidas shirt with correct Colombia federation crest matches traditional home color."
+  },
+  {
+   "handle": "como-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue adidas polo shirt with correct Como 1907 crest matches club's traditional blue/white identity."
+  },
+  {
+   "handle": "congo-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue Umbro shirt with FECOFA/leopard crest consistent with (DR) Congo national team branding and colors."
+  },
+  {
+   "handle": "croatia-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue checkerboard Nike shirt with correct HNS crest, plausible away vs. red/white checkerboard home."
+  },
+  {
+   "handle": "croatia-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red/white checkerboard Nike shirt with correct HNS crest matches iconic Croatia home design."
+  },
+  {
+   "handle": "curacao-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue adidas shirt with correct Curacao federation crest matches traditional home color."
+  },
+  {
+   "handle": "curacao-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Yellow adidas shirt with correct Curacao federation crest, plausible away vs. blue home."
+  },
+  {
+   "handle": "czech-republic-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red Puma shirt with correct Czech lion crest matches traditional home color."
+  },
+  {
+   "handle": "ecuador-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Navy Marathon shirt with correct Ecuador crest, plausible away vs. yellow home."
+  },
+  {
+   "handle": "ecuador-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow Marathon shirt with correct Ecuador crest matches traditional home color."
+  },
+  {
+   "handle": "ecuador-2026-third-shirt",
+   "verdict": "approve",
+   "reason": "White/navy/orange Marathon shirt with correct Ecuador crest, plausible third-kit design."
+  },
+  {
+   "handle": "egypt-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red Puma shirt with correct Egyptian FA crest matches traditional home color."
+  },
+  {
+   "handle": "egypt-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "White Puma shirt with correct Egyptian FA crest (Arabic text confirmed), plausible away vs. red home."
+  },
+  {
+   "handle": "eintracht-frankfurt-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Red adidas shirt with correct Eintracht Frankfurt eagle crest matches traditional home color."
+  },
+  {
+   "handle": "eintracht-frankfurt-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/black striped adidas shirt with correct Eintracht crest, plausible away vs. red home."
+  },
+  {
+   "handle": "el-salvador-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "White Umbro shirt with 'ES' national branding, plausible away vs. blue home."
+  },
+  {
+   "handle": "el-salvador-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue Umbro shirt with 'ES' national branding matches traditional home color, consistent with matching away listing."
+  },
+  {
+   "handle": "england-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Image shows an infant snap-button romper/bodysuit, not an adult short-sleeve jersey product shot."
+  },
+  {
+   "handle": "england-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Nike x Palace stained-glass special-edition shirt with correct England crest, but predominantly grey/black coloring is a major departure from England's traditional white home kit."
+  },
+  {
+   "handle": "espanyol-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue/white striped shirt matches RCD Espanyol's traditional home colors with correct crest and Kelme branding."
+  },
+  {
+   "handle": "everton-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/navy pinstripe shirt with correct Everton crest, Castore branding, and CMC Markets sponsor, plausible away vs blue home."
+  },
+  {
+   "handle": "everton-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue shirt with correct Everton crest, Castore branding, and CMC Markets sponsor matches traditional home color."
+  },
+  {
+   "handle": "fc-st-pauli-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White zebra-pattern shirt with correct St. Pauli crest, Puma, and congstar sponsor, plausible away vs brown home."
+  },
+  {
+   "handle": "fc-st-pauli-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Brown chevron shirt matches St. Pauli's traditional home color with correct crest and sponsors."
+  },
+  {
+   "handle": "finland-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue Suomi shirt with correct crest and Nike branding, plausible away vs white home."
+  },
+  {
+   "handle": "finland-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White Suomi shirt with correct crest and Nike branding matches traditional home color."
+  },
+  {
+   "handle": "fiorentina-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Purple shirt matches Fiorentina's traditional home color with correct crest, Joma, and Mediacom sponsor."
+  },
+  {
+   "handle": "france-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Long-sleeve jersey, not a short-sleeve adult product shot."
+  },
+  {
+   "handle": "france-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Long-sleeve jersey, not a short-sleeve adult product shot."
+  },
+  {
+   "handle": "fulham-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt matches Fulham's traditional home color with correct FFC crest and ClickHouse sponsor."
+  },
+  {
+   "handle": "germany-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Black/red/yellow retro-style shirt is atypical for Germany's traditionally white home kit."
+  },
+  {
+   "handle": "germany-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Dark grey/gold pinstripe shirt with correct DFB crest is plausible as a third kit distinct from home/away."
+  },
+  {
+   "handle": "getafe-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Maroon shirt with correct Getafe crest and Tecnocasa sponsor, plausible away vs blue home."
+  },
+  {
+   "handle": "ghana-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Gold/yellow shirt with correct Ghana FA crest, star, and Puma branding, plausible alternate kit."
+  },
+  {
+   "handle": "ghana-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with correct Ghana FA crest and Puma branding; album title matches season and kit type."
+  },
+  {
+   "handle": "guatemala-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Navy shirt with correct Guatemala crest and Umbro branding, plausible away vs lighter home."
+  },
+  {
+   "handle": "guatemala-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Image shows a jersey+shorts kids set, not a clean adult shirt-only product shot."
+  },
+  {
+   "handle": "haiti-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/grey commemorative-design shirt with correct Haiti crest and SAETA branding; album title consistent."
+  },
+  {
+   "handle": "haiti-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue shirt matches Haiti's traditional home color with correct crest and SAETA branding."
+  },
+  {
+   "handle": "haiti-2026-third-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Haiti crest and SAETA branding; album title matches season and third designation."
+  },
+  {
+   "handle": "hamburger-sv-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue/gold shirt with correct HSV crest, adidas, and HanseMerkur sponsor, plausible away vs white home."
+  },
+  {
+   "handle": "hellas-verona-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow/blue shirt matches Verona's traditional home colors; anniversary badge matches album title's Anniversary Edition."
+  },
+  {
+   "handle": "honduras-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Sky blue/white striped shirt with correct Honduras crest and Joma branding, plausible away kit."
+  },
+  {
+   "handle": "honduras-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Predominantly white shirt is atypical for Honduras's traditional blue home and looks very similar to the away design."
+  },
+  {
+   "handle": "hungary-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Maroon/red shirt matches Hungary's traditional home color with correct crest, adidas branding, and anniversary patch."
+  },
+  {
+   "handle": "inter-milan-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Pale mint patterned shirt with correct Inter Milan crest, Nike, and betsson.sport sponsor, plausible away kit."
+  },
+  {
+   "handle": "inter-milan-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White pinstripe shirt with correct Inter Milan crest, Nike, and betsson.sport sponsor, plausible away kit."
+  },
+  {
+   "handle": "italy-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Image shows a jersey+shorts set, not a clean shirt-only product shot."
+  },
+  {
+   "handle": "italy-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Image shows a jersey+shorts set, not a clean shirt-only product shot."
+  },
+  {
+   "handle": "jamaica-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Image shows a jersey+shorts kids set, not a clean adult shirt-only product shot."
+  },
+  {
+   "handle": "japan-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White retro pinstripe shirt with correct JFA crest and adidas branding, plausible away vs blue home."
+  },
+  {
+   "handle": "japan-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "All-over kanji/samurai graphic novelty design in black is atypical for Japan's traditional blue home shirt."
+  },
+  {
+   "handle": "jordan-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Jordan crest and Kelme branding, consistent as away paired with the white home."
+  },
+  {
+   "handle": "jordan-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with correct Jordan crest and Kelme branding matches traditional home color."
+  },
+  {
+   "handle": "jordan-2026-third-shirt",
+   "verdict": "approve",
+   "reason": "Black shirt with correct Jordan crest and Kelme branding, distinct plausible third color."
+  },
+  {
+   "handle": "leeds-united-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Yellow shirt has correct Leeds United crest but a prominent Red Bull bulls logo that is not a known Leeds sponsor, raising a branding-consistency concern. [PM override: Red Bull is Leeds sponsor since 2024/25; crest verified]"
+  },
+  {
+   "handle": "leeds-united-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White/blue shirt has correct Leeds United crest but the same unexplained Red Bull bulls logo as the away version. [PM override: Red Bull is Leeds sponsor since 2024/25; crest verified]"
+  },
+  {
+   "handle": "lens-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Black shirt with correct RCL crest, adidas, and Auchan sponsor, plausible away vs red/gold home."
+  },
+  {
+   "handle": "lens-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Gold/red shirt matches Lens's traditional 'Sang et Or' home colors with correct crest and sponsors."
+  },
+  {
+   "handle": "levante-2025-26-home-shirt",
+   "verdict": "reject",
+   "reason": "Crest visibly reads 'Castellón' (CD Castellón), not Levante UD, and the black/white stripe design does not match Levante's blue/red identity."
+  },
+  {
+   "handle": "levante-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/navy striped polo shirt with correct Levante UD crest, plausible away colorway."
+  },
+  {
+   "handle": "levante-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Garnet/navy striped shirt matches Levante's traditional home colors and crest."
+  },
+  {
+   "handle": "lille-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct LOSC crest and Boulanger sponsor matches Lille home."
+  },
+  {
+   "handle": "lyon-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with blue sleeves and correct Olympique Lyonnais crest matches home kit."
+  },
+  {
+   "handle": "lyon-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Black patterned shirt with correct OL crest, plausible third kit."
+  },
+  {
+   "handle": "malaysia-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Black/white shirt with correct Malaysia FA crest, plausible away colorway."
+  },
+  {
+   "handle": "malaysia-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow/black shirt with correct Malaysia FA crest matches home colorway."
+  },
+  {
+   "handle": "mallorca-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Mallorca crest, matches 120th anniversary album title."
+  },
+  {
+   "handle": "mallorca-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Unusual half-red/half-black split design is atypical for a plain home claim; correct crest but low confidence."
+  },
+  {
+   "handle": "manchester-city-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Sky blue shirt with correct City crest and Etihad sponsor matches home kit."
+  },
+  {
+   "handle": "manchester-city-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/blue shirt with correct City crest and Etihad sponsor, plausible away colorway."
+  },
+  {
+   "handle": "manchester-city-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Photo actually shows a Manchester United crest and Snapdragon sponsor, not Manchester City."
+  },
+  {
+   "handle": "manchester-city-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Black/gold bee-pattern shirt with correct City crest and Etihad sponsor, plausible third kit."
+  },
+  {
+   "handle": "manchester-united-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Purple shirt matches album title description and correct United crest/Snapdragon sponsor."
+  },
+  {
+   "handle": "manchester-united-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue shirt with correct United crest and Snapdragon sponsor, plausible away colorway."
+  },
+  {
+   "handle": "manchester-united-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Cream/rose-pattern shirt does not match United's traditional home red; kit-type mismatch."
+  },
+  {
+   "handle": "manchester-united-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Red/black striped shirt with correct United crest, plausible third kit."
+  },
+  {
+   "handle": "marseille-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Navy patterned shirt with correct OM crest and CMA CGM sponsor, plausible away colorway."
+  },
+  {
+   "handle": "mexico-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Product photo shows a full shirt+shorts set rather than a clean shirt-only shot."
+  },
+  {
+   "handle": "mexico-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Black-based Aztec pattern deviates substantially from Mexico's traditional green home color."
+  },
+  {
+   "handle": "mexico-2026-27-third-shirt",
+   "verdict": "reject",
+   "reason": "Product photo shows a full shirt+shorts set rather than a clean shirt-only shot."
+  },
+  {
+   "handle": "monaco-2025-26-home-shirt",
+   "verdict": "reject",
+   "reason": "Blue jersey does not match Monaco's traditional red/white diagonal home sash design."
+  },
+  {
+   "handle": "monaco-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red/white diagonal sash matches Monaco's traditional home look, correct crest and apm sponsor."
+  },
+  {
+   "handle": "morocco-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Moroccan federation (FRMF) crest matches home colors."
+  },
+  {
+   "handle": "nantes-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Orange/black design with 'Midnite'/'Sudu' branding matches Wolverhampton Wanderers, not FC Nantes; wrong team."
+  },
+  {
+   "handle": "napoli-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White pinstriped shirt with correct Napoli crest and MSC/EA7 sponsors, plausible away colorway."
+  },
+  {
+   "handle": "napoli-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue shirt with correct Napoli crest and sponsors matches home colorway."
+  },
+  {
+   "handle": "napoli-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Napoli crest and sponsors, plausible third kit."
+  },
+  {
+   "handle": "netherlands-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Product photo shows a full shirt+shorts set rather than a clean shirt-only shot."
+  },
+  {
+   "handle": "netherlands-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Product photo shows a full shirt+shorts set rather than a clean shirt-only shot."
+  },
+  {
+   "handle": "new-zealand-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with correct silver fern crest matches New Zealand football home colorway."
+  },
+  {
+   "handle": "new-zealand-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Black patterned shirt with correct fern crest, plausible away colorway."
+  },
+  {
+   "handle": "newcastle-united-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Navy shirt with correct Newcastle United crest, plausible away colorway."
+  },
+  {
+   "handle": "newcastle-united-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Black/white striped shirt with correct crest matches Newcastle's traditional home."
+  },
+  {
+   "handle": "nigeria-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with correct NFF crest, plausible away colorway."
+  },
+  {
+   "handle": "nigeria-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Green shirt with correct NFF crest matches Nigeria's traditional home colors."
+  },
+  {
+   "handle": "northern-ireland-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Green shirt with correct IFA crest matches Northern Ireland's traditional home color."
+  },
+  {
+   "handle": "norway-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with correct Norway crest, plausible third kit."
+  },
+  {
+   "handle": "norway-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with Norwegian cross design and correct crest matches home colorway."
+  },
+  {
+   "handle": "nottingham-forest-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Forest tree crest matches traditional home color."
+  },
+  {
+   "handle": "osasuna-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/light-blue shirt with correct Osasuna crest and Kosner sponsor, plausible away colorway."
+  },
+  {
+   "handle": "palestine-2025-26-away-shirt",
+   "verdict": "reject",
+   "reason": "Crest reads 'PALESTINO', the Chilean club Deportivo Palestino, not the Palestine national team badge."
+  },
+  {
+   "handle": "palestine-2025-26-home-shirt",
+   "verdict": "reject",
+   "reason": "Crest reads 'PALESTINO' (Chilean club), not the Palestine national team badge claimed as 'national' kind."
+  },
+  {
+   "handle": "palestine-2025-26-third-shirt",
+   "verdict": "reject",
+   "reason": "Novelty watermelon-pattern shirt with 'PALESTINO' crest is the Chilean club's special edition, not the Palestine national team."
+  },
+  {
+   "handle": "paraguay-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red/white stripes with APF Paraguay crest match traditional home colors and album title."
+  },
+  {
+   "handle": "paraguay-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "APF Paraguay crest confirmed on zoom; dark blue abstract pattern is a plausible away alternate."
+  },
+  {
+   "handle": "paris-saint-germain-2025-26-home-shirt",
+   "verdict": "unsure",
+   "reason": "Black with pink laser-line pattern is not PSG's traditional navy/red home look, so kit-type plausibility is doubtful."
+  },
+  {
+   "handle": "paris-saint-germain-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Product photo shows a full jersey+shorts set rather than a standalone shirt."
+  },
+  {
+   "handle": "paris-saint-germain-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Image actually shows a Spain national team shirt (adidas, Spain federation crest, 'ESPAÑA' sleeve text), not PSG."
+  },
+  {
+   "handle": "parma-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White with black cross and Parma Calcio crest match the club's traditional home identity."
+  },
+  {
+   "handle": "poland-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with Polish eagle crest matches traditional home colors."
+  },
+  {
+   "handle": "portugal-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Product photo shows a full jersey+shorts set rather than a standalone shirt."
+  },
+  {
+   "handle": "portugal-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Crest and red color are correct for home, but the shot has distracting non-product background graphics/clutter behind the shirt."
+  },
+  {
+   "handle": "qatar-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Maroon shirt with QFA crest matches Qatar's traditional home color."
+  },
+  {
+   "handle": "rayo-vallecano-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "White shirt with red diagonal bolt is Rayo Vallecano's iconic traditional home look, not a plausible away design; appears swapped with the home listing."
+  },
+  {
+   "handle": "rayo-vallecano-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Grey/black design does not match Rayo's traditional white/red home identity; likely swapped with the away listing."
+  },
+  {
+   "handle": "rb-leipzig-2025-26-away-shirt",
+   "verdict": "reject",
+   "reason": "Crest reads 'Red Bull Salzburg', a different club than RB Leipzig."
+  },
+  {
+   "handle": "rb-leipzig-2025-26-home-shirt",
+   "verdict": "reject",
+   "reason": "Crest reads 'Red Bull Salzburg', a different club than RB Leipzig."
+  },
+  {
+   "handle": "real-betis-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Dark green ornate pattern with correct Real Betis crest is a plausible away alternate."
+  },
+  {
+   "handle": "real-betis-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Green/white vertical stripes match Real Betis's traditional home identity."
+  },
+  {
+   "handle": "real-betis-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Blue/black stripes with correct crest are a plausible third alternate."
+  },
+  {
+   "handle": "real-madrid-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "Blue shirt with correct Real Madrid crest is a plausible third alternate."
+  },
+  {
+   "handle": "real-madrid-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Image shows a baby romper/onesie with snap closures, not an adult jersey product shot."
+  },
+  {
+   "handle": "real-madrid-2026-27-home-shirt",
+   "verdict": "reject",
+   "reason": "Pink LV-monogram shirt labeled Home, but Real Madrid's traditional home color is white; pink is not a plausible home color."
+  },
+  {
+   "handle": "real-oviedo-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/blue shirt with correct Real Oviedo crest is a plausible away alternate."
+  },
+  {
+   "handle": "real-oviedo-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue shirt with correct crest matches Real Oviedo's traditional home color."
+  },
+  {
+   "handle": "real-oviedo-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Pink shirt with correct crest is a plausible third alternate."
+  },
+  {
+   "handle": "real-sociedad-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue/white vertical stripes match Real Sociedad's traditional home identity."
+  },
+  {
+   "handle": "real-sociedad-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct crest is a plausible third alternate."
+  },
+  {
+   "handle": "republic-of-ireland-2026-27-away-shirt",
+   "verdict": "reject",
+   "reason": "Crest reads 'Northern Ireland', a different national team than the Republic of Ireland."
+  },
+  {
+   "handle": "roma-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/red/yellow retro design with correct AS Roma wolf crest is a plausible away alternate."
+  },
+  {
+   "handle": "roma-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Maroon/red shirt with AS Roma crest matches traditional home color."
+  },
+  {
+   "handle": "romania-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow shirt with Romania crest matches traditional home color."
+  },
+  {
+   "handle": "romania-2025-26-third-shirt",
+   "verdict": "approve",
+   "reason": "Navy blue shirt with Romania crest is a plausible alternate color."
+  },
+  {
+   "handle": "saudi-arabia-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "White/gold shirt with SAFF Saudi crest is a plausible away alternate to the green home kit."
+  },
+  {
+   "handle": "saudi-arabia-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Green shirt with SAFF Saudi crest matches traditional home color."
+  },
+  {
+   "handle": "scotland-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Coral pinstripe shirt with correct Scotland crest is a plausible away alternate to navy home."
+  },
+  {
+   "handle": "scotland-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Navy blue shirt with Scotland crest matches traditional home color."
+  },
+  {
+   "handle": "senegal-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Green shirt with correct Senegal federation crest is a plausible kit color."
+  },
+  {
+   "handle": "senegal-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White/pastel shirt with correct Senegal federation crest is a plausible home design."
+  },
+  {
+   "handle": "sevilla-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Red shirt with correct Sevilla crest is a plausible away alternate to the white home kit."
+  },
+  {
+   "handle": "sevilla-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White shirt with red stripes and Sevilla crest matches traditional home identity."
+  },
+  {
+   "handle": "sevilla-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Black shirt with pink/purple gradient trim, correct Sevilla FC shield and adidas branding, alternate colorway fits a third kit."
+  },
+  {
+   "handle": "south-africa-2026-away-shirt",
+   "team": "South Africa",
+   "verdict": "approve",
+   "reason": "Green/yellow adidas shirt with South African Football Association crest, clean product shot."
+  },
+  {
+   "handle": "south-africa-2026-home-shirt",
+   "verdict": "reject",
+   "reason": "This is a Springboks Nike rugby jersey (FNB sponsor, 'RUGBY' text) not a football shirt."
+  },
+  {
+   "handle": "south-korea-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue Nike shirt with Korea crest, plausible away alternate to Korea's red home."
+  },
+  {
+   "handle": "south-korea-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red Nike shirt with Korea crest matches traditional home red."
+  },
+  {
+   "handle": "spain-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/maroon adidas shirt with Spain crest, plausible away alternate to red home."
+  },
+  {
+   "handle": "spain-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Maroon adidas shirt with Spain crest and FIFA champions badge, consistent team branding."
+  },
+  {
+   "handle": "spain-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Blue adidas shirt with red/yellow stripes, ESP text and Spain crest, plausible third kit."
+  },
+  {
+   "handle": "sunderland-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "Pink/black hummel shirt with Sunderland AFC crest, plausible alternate colorway."
+  },
+  {
+   "handle": "sunderland-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Red/white striped hummel shirt with Sunderland AFC crest matches traditional home colors."
+  },
+  {
+   "handle": "sweden-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Blue adidas shirt with Sverige crest, plausible away alternate to yellow home."
+  },
+  {
+   "handle": "sweden-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow adidas shirt with Sverige crest matches Sweden's traditional home color."
+  },
+  {
+   "handle": "switzerland-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Light blue/pink Puma shirt with Swiss cross badge and SFV/ASF crest, plausible away alternate to red home."
+  },
+  {
+   "handle": "tottenham-hotspur-2025-26-away-shirt",
+   "verdict": "approve",
+   "reason": "Black Nike shirt with Spurs cockerel crest, plausible away alternate to white home."
+  },
+  {
+   "handle": "tottenham-hotspur-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "White Nike shirt with gold snake pattern matching album's 'White Gold Snake Edition' label and Spurs crest."
+  },
+  {
+   "handle": "tunisia-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/grey Kappa shirt with Tunisia eagle crest, plausible away alternate to red home."
+  },
+  {
+   "handle": "tunisia-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Black Kappa shirt with Tunisia crest, plausible third colorway."
+  },
+  {
+   "handle": "tunisia-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red Kappa shirt with Tunisia crest matches traditional home red."
+  },
+  {
+   "handle": "turkey-2026-27-away-shirt",
+   "verdict": "unsure",
+   "reason": "Red Nike shirt labeled Away while the matching home listing is white, reversed from Turkey's usual red-home/white-away scheme."
+  },
+  {
+   "handle": "turkey-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "White Nike shirt labeled Home while the matching away listing is red, reversed from Turkey's usual red-home/white-away scheme."
+  },
+  {
+   "handle": "ukraine-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow adidas shirt with Ukraine trident crest matches traditional home color."
+  },
+  {
+   "handle": "united-arab-emirates-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "White adidas shirt with UAE FA crest in flag colors, matches UAE's traditional home white."
+  },
+  {
+   "handle": "united-states-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White Nike shirt with USA crest and VW sponsor, matches USA's traditional home white."
+  },
+  {
+   "handle": "uruguay-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Navy Nike shirt with AUF crest, plausible away alternate to sky-blue home."
+  },
+  {
+   "handle": "uruguay-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Sky-blue Nike shirt with AUF crest matches Uruguay's traditional celeste home."
+  },
+  {
+   "handle": "uzbekistan-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Blue JAKO shirt with UFA crest, consistent with Uzbekistan's traditional blue home."
+  },
+  {
+   "handle": "valencia-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Pink Puma shirt with Valencia CF bat crest and TM Real Estate sponsor, plausible third colorway."
+  },
+  {
+   "handle": "venezuela-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "White adidas shirt with Venezuela crest, plausible away alternate to burgundy home."
+  },
+  {
+   "handle": "venezuela-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Burgundy adidas shirt with Venezuela crest matches the traditional 'Vinotinto' home color."
+  },
+  {
+   "handle": "vfb-stuttgart-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "White/red JAKO shirt with VfB Stuttgart crest and LBBW sponsor, matches traditional home colors."
+  },
+  {
+   "handle": "villarreal-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Yellow Joma shirt with Villarreal crest and Pamesa Ceramica sponsor, matches traditional 'yellow submarine' home."
+  },
+  {
+   "handle": "wales-2026-away-shirt",
+   "verdict": "approve",
+   "reason": "Cream/off-white adidas shirt with Wales dragon crest, plausible away alternate to red home."
+  },
+  {
+   "handle": "wales-2026-home-shirt",
+   "verdict": "approve",
+   "reason": "Red adidas shirt with Cymru text and Wales dragon crest matches traditional home red."
+  },
+  {
+   "handle": "werder-bremen-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Green hummel shirt with Werder Bremen crest and Matthai sponsor matches traditional home green."
+  },
+  {
+   "handle": "werder-bremen-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White hummel shirt with Werder Bremen crest, plausible away alternate to green home."
+  },
+  {
+   "handle": "werder-bremen-2026-27-third-shirt",
+   "verdict": "approve",
+   "reason": "Coral/salmon hummel shirt with Werder Bremen crest, plausible third colorway."
+  },
+  {
+   "handle": "west-ham-united-2026-27-away-shirt",
+   "verdict": "approve",
+   "reason": "White/grey New Balance shirt with West Ham crossed hammers crest and Boyle Sports sponsor, plausible away alternate."
+  },
+  {
+   "handle": "west-ham-united-2026-27-home-shirt",
+   "verdict": "approve",
+   "reason": "Claret shirt with blue sleeves, West Ham United crest and Boyle Sports sponsor, matches traditional home colors."
+  },
+  {
+   "handle": "wolverhampton-wanderers-2025-26-home-shirt",
+   "verdict": "approve",
+   "reason": "Gold satin shirt with faint wolf-head crest and '70Y' anniversary marking matches album's 70th Anniversary Jersey label."
+  },
+  {
+   "handle": "wolverhampton-wanderers-2026-27-home-shirt",
+   "verdict": "unsure",
+   "reason": "Orange SUDU shirt has correct sponsor but the shield crest does not clearly resemble Wolves' usual wolf-head badge."
+  }
+ ]
+}

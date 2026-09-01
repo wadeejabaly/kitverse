@@ -13,7 +13,7 @@
       "edition": "standard",
       "image": "/products/1-fc-koln-2026-27-away-shirt.jpg",
       "sourceHash": "093928062a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "1-fc-union-berlin-2025-26-home-shirt",
@@ -28,7 +28,7 @@
       "edition": "standard",
       "image": "/products/1-fc-union-berlin-2025-26-home-shirt.jpg",
       "sourceHash": "eec7e57c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "1-fc-union-berlin-2026-27-home-shirt",
@@ -43,7 +43,7 @@
       "edition": "standard",
       "image": "/products/1-fc-union-berlin-2026-27-home-shirt.jpg",
       "sourceHash": "c6804f8f00",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ac-milan-2025-26-away-shirt",
@@ -88,7 +88,7 @@
       "edition": "standard",
       "image": "/products/ac-milan-2025-26-third-shirt.jpg",
       "sourceHash": "d675caa9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ac-milan-2026-27-home-shirt",
@@ -118,7 +118,7 @@
       "edition": "standard",
       "image": "/products/ac-milan-2026-27-third-shirt.jpg",
       "sourceHash": "71df6ac958",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ac-milan-2026-third-shirt",
@@ -133,7 +133,7 @@
       "edition": "standard",
       "image": "/products/ac-milan-2026-third-shirt.jpg",
       "sourceHash": "93670dba",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "alaves-2026-27-third-shirt",
@@ -148,7 +148,7 @@
       "edition": "standard",
       "image": "/products/alaves-2026-27-third-shirt.jpg",
       "sourceHash": "5c8be97f1f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "albania-2026-third-shirt",
@@ -163,7 +163,7 @@
       "edition": "standard",
       "image": "/products/albania-2026-third-shirt.jpg",
       "sourceHash": "0f23e590",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "algeria-2026-27-home-shirt",
@@ -223,7 +223,7 @@
       "edition": "standard",
       "image": "/products/argentina-2026-27-home-shirt.jpg",
       "sourceHash": "ce212d9c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "armenia-2025-26-third-shirt",
@@ -238,7 +238,7 @@
       "edition": "standard",
       "image": "/products/armenia-2025-26-third-shirt.jpg",
       "sourceHash": "82f47543",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "arsenal-2025-26-away-shirt",
@@ -253,7 +253,7 @@
       "edition": "standard",
       "image": "/products/arsenal-2025-26-away-shirt.jpg",
       "sourceHash": "1f1fcc42",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "arsenal-2025-26-home-shirt",
@@ -283,7 +283,7 @@
       "edition": "standard",
       "image": "/products/arsenal-2025-26-third-shirt.jpg",
       "sourceHash": "c0c3042e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "arsenal-2026-27-home-shirt",
@@ -298,7 +298,7 @@
       "edition": "standard",
       "image": "/products/arsenal-2026-27-home-shirt.jpg",
       "sourceHash": "f557c60a99",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "aston-villa-2025-26-third-shirt",
@@ -313,7 +313,7 @@
       "edition": "standard",
       "image": "/products/aston-villa-2025-26-third-shirt.jpg",
       "sourceHash": "11b87a30",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atalanta-2025-26-home-shirt",
@@ -343,7 +343,7 @@
       "edition": "standard",
       "image": "/products/atalanta-2026-27-home-shirt.jpg",
       "sourceHash": "575e098e9e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "athletic-bilbao-2026-27-third-shirt",
@@ -358,7 +358,7 @@
       "edition": "standard",
       "image": "/products/athletic-bilbao-2026-27-third-shirt.jpg",
       "sourceHash": "498b7d859a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atl-tico-madrid-2025-26-home-shirt",
@@ -373,7 +373,7 @@
       "edition": "standard",
       "image": "/products/atl-tico-madrid-2025-26-home-shirt.jpg",
       "sourceHash": "542b1508",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atl-tico-madrid-2026-27-away-shirt",
@@ -388,7 +388,7 @@
       "edition": "standard",
       "image": "/products/atl-tico-madrid-2026-27-away-shirt.jpg",
       "sourceHash": "8a9735c5ba",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atl-tico-madrid-2026-27-home-shirt",
@@ -403,7 +403,7 @@
       "edition": "standard",
       "image": "/products/atl-tico-madrid-2026-27-home-shirt.jpg",
       "sourceHash": "671a255883",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "australia-2026-27-away-shirt",
@@ -418,7 +418,7 @@
       "edition": "standard",
       "image": "/products/australia-2026-27-away-shirt.jpg",
       "sourceHash": "e45d10d6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "australia-2026-27-home-shirt",
@@ -433,7 +433,7 @@
       "edition": "standard",
       "image": "/products/australia-2026-27-home-shirt.jpg",
       "sourceHash": "4bc219e2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "austria-2026-27-away-shirt",
@@ -448,7 +448,7 @@
       "edition": "standard",
       "image": "/products/austria-2026-27-away-shirt.jpg",
       "sourceHash": "91059b53f8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "barcelona-2025-26-away-shirt",
@@ -493,7 +493,7 @@
       "edition": "standard",
       "image": "/products/barcelona-2026-27-away-shirt.jpg",
       "sourceHash": "b9f2998223",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "barcelona-2026-27-home-shirt",
@@ -553,7 +553,7 @@
       "edition": "standard",
       "image": "/products/bayern-munich-2026-27-away-shirt.jpg",
       "sourceHash": "2d0e2216bd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "belgium-2026-27-away-shirt",
@@ -568,7 +568,7 @@
       "edition": "standard",
       "image": "/products/belgium-2026-27-away-shirt.jpg",
       "sourceHash": "b2865fa98d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "belgium-2026-home-shirt",
@@ -583,7 +583,7 @@
       "edition": "standard",
       "image": "/products/belgium-2026-home-shirt.jpg",
       "sourceHash": "8c6bcacb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bolivia-2025-26-away-shirt",
@@ -598,7 +598,7 @@
       "edition": "standard",
       "image": "/products/bolivia-2025-26-away-shirt.jpg",
       "sourceHash": "4b6efd90",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bolivia-2025-26-home-shirt",
@@ -613,7 +613,7 @@
       "edition": "standard",
       "image": "/products/bolivia-2025-26-home-shirt.jpg",
       "sourceHash": "cc26deb4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-dortmund-2025-26-home-shirt",
@@ -628,7 +628,7 @@
       "edition": "standard",
       "image": "/products/borussia-dortmund-2025-26-home-shirt.jpg",
       "sourceHash": "45cabe56",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-dortmund-2026-27-away-shirt",
@@ -643,7 +643,7 @@
       "edition": "standard",
       "image": "/products/borussia-dortmund-2026-27-away-shirt.jpg",
       "sourceHash": "f1aa747347",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-monchengladbach-2025-26-home-shirt",
@@ -673,7 +673,7 @@
       "edition": "standard",
       "image": "/products/bosnia-and-herzegovina-2026-27-away-shirt.jpg",
       "sourceHash": "8349319eec",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bosnia-and-herzegovina-2026-27-home-shirt",
@@ -688,7 +688,7 @@
       "edition": "standard",
       "image": "/products/bosnia-and-herzegovina-2026-27-home-shirt.jpg",
       "sourceHash": "e7bf8c9968",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "brazil-2026-27-away-shirt",
@@ -718,7 +718,7 @@
       "edition": "standard",
       "image": "/products/brazil-2026-27-home-shirt.jpg",
       "sourceHash": "3255369f02",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "brentford-2026-27-home-shirt",
@@ -733,7 +733,7 @@
       "edition": "standard",
       "image": "/products/brentford-2026-27-home-shirt.jpg",
       "sourceHash": "852e099101",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "brighton-hove-albion-2026-27-away-shirt",
@@ -778,7 +778,7 @@
       "edition": "standard",
       "image": "/products/cagliari-2026-27-away-shirt.jpg",
       "sourceHash": "a2f4338bee",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "cameroon-2025-26-away-shirt",
@@ -793,7 +793,7 @@
       "edition": "standard",
       "image": "/products/cameroon-2025-26-away-shirt.jpg",
       "sourceHash": "406e531f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "cameroon-2025-26-home-shirt",
@@ -808,7 +808,7 @@
       "edition": "standard",
       "image": "/products/cameroon-2025-26-home-shirt.jpg",
       "sourceHash": "fc901112",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "cameroon-2025-26-third-shirt",
@@ -823,7 +823,7 @@
       "edition": "standard",
       "image": "/products/cameroon-2025-26-third-shirt.jpg",
       "sourceHash": "7a709b00",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "canada-2026-27-away-shirt",
@@ -838,7 +838,7 @@
       "edition": "standard",
       "image": "/products/canada-2026-27-away-shirt.jpg",
       "sourceHash": "ef6d332692",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "canada-2026-home-shirt",
@@ -853,7 +853,7 @@
       "edition": "standard",
       "image": "/products/canada-2026-home-shirt.jpg",
       "sourceHash": "564b7461",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "celta-vigo-2025-26-home-shirt",
@@ -883,7 +883,7 @@
       "edition": "standard",
       "image": "/products/celta-vigo-2026-27-away-shirt.jpg",
       "sourceHash": "e06bde1e57",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "celta-vigo-2026-27-home-shirt",
@@ -898,7 +898,7 @@
       "edition": "standard",
       "image": "/products/celta-vigo-2026-27-home-shirt.jpg",
       "sourceHash": "95ee3a0f59",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "celta-vigo-2026-27-third-shirt",
@@ -913,7 +913,7 @@
       "edition": "standard",
       "image": "/products/celta-vigo-2026-27-third-shirt.jpg",
       "sourceHash": "5688f65982",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chelsea-2025-26-away-shirt",
@@ -928,7 +928,7 @@
       "edition": "standard",
       "image": "/products/chelsea-2025-26-away-shirt.jpg",
       "sourceHash": "279c622b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chelsea-2025-26-home-shirt",
@@ -958,7 +958,7 @@
       "edition": "standard",
       "image": "/products/chelsea-2026-27-home-shirt.jpg",
       "sourceHash": "0fd869856f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chelsea-2026-27-third-shirt",
@@ -973,7 +973,7 @@
       "edition": "standard",
       "image": "/products/chelsea-2026-27-third-shirt.jpg",
       "sourceHash": "aa1b112974",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chile-2025-26-home-shirt",
@@ -988,7 +988,7 @@
       "edition": "standard",
       "image": "/products/chile-2025-26-home-shirt.jpg",
       "sourceHash": "4d2e7faf",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chile-2026-27-away-shirt",
@@ -1003,7 +1003,7 @@
       "edition": "standard",
       "image": "/products/chile-2026-27-away-shirt.jpg",
       "sourceHash": "f51fdce7",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "colombia-2026-27-away-shirt",
@@ -1018,7 +1018,7 @@
       "edition": "standard",
       "image": "/products/colombia-2026-27-away-shirt.jpg",
       "sourceHash": "d3f4fd51",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "colombia-2026-home-shirt",
@@ -1033,7 +1033,7 @@
       "edition": "standard",
       "image": "/products/colombia-2026-home-shirt.jpg",
       "sourceHash": "baa030e1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "como-2026-27-home-shirt",
@@ -1048,7 +1048,7 @@
       "edition": "standard",
       "image": "/products/como-2026-27-home-shirt.jpg",
       "sourceHash": "733a31ecc1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "congo-2026-27-home-shirt",
@@ -1063,7 +1063,7 @@
       "edition": "standard",
       "image": "/products/congo-2026-27-home-shirt.jpg",
       "sourceHash": "2b03a7eaaa",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "croatia-2026-27-away-shirt",
@@ -1078,7 +1078,7 @@
       "edition": "standard",
       "image": "/products/croatia-2026-27-away-shirt.jpg",
       "sourceHash": "9a3cb970ae",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "croatia-2026-27-home-shirt",
@@ -1093,7 +1093,7 @@
       "edition": "standard",
       "image": "/products/croatia-2026-27-home-shirt.jpg",
       "sourceHash": "b4180fca7f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "curacao-2026-27-home-shirt",
@@ -1108,7 +1108,7 @@
       "edition": "standard",
       "image": "/products/curacao-2026-27-home-shirt.jpg",
       "sourceHash": "7360bc748f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "curacao-2026-away-shirt",
@@ -1123,7 +1123,7 @@
       "edition": "standard",
       "image": "/products/curacao-2026-away-shirt.jpg",
       "sourceHash": "48e72c85f4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "czech-republic-2026-home-shirt",
@@ -1138,7 +1138,7 @@
       "edition": "standard",
       "image": "/products/czech-republic-2026-home-shirt.jpg",
       "sourceHash": "7267a24b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ecuador-2026-away-shirt",
@@ -1153,7 +1153,7 @@
       "edition": "standard",
       "image": "/products/ecuador-2026-away-shirt.jpg",
       "sourceHash": "e3ad8845",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ecuador-2026-home-shirt",
@@ -1168,7 +1168,7 @@
       "edition": "standard",
       "image": "/products/ecuador-2026-home-shirt.jpg",
       "sourceHash": "3dd452bc",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ecuador-2026-third-shirt",
@@ -1183,7 +1183,7 @@
       "edition": "standard",
       "image": "/products/ecuador-2026-third-shirt.jpg",
       "sourceHash": "01c0476e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "egypt-2026-27-home-shirt",
@@ -1198,7 +1198,7 @@
       "edition": "standard",
       "image": "/products/egypt-2026-27-home-shirt.jpg",
       "sourceHash": "495fef776c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "egypt-2026-away-shirt",
@@ -1213,7 +1213,7 @@
       "edition": "standard",
       "image": "/products/egypt-2026-away-shirt.jpg",
       "sourceHash": "6cb32e41",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "eintracht-frankfurt-2025-26-home-shirt",
@@ -1228,7 +1228,7 @@
       "edition": "standard",
       "image": "/products/eintracht-frankfurt-2025-26-home-shirt.jpg",
       "sourceHash": "312cde27",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "eintracht-frankfurt-2026-27-away-shirt",
@@ -1243,7 +1243,7 @@
       "edition": "standard",
       "image": "/products/eintracht-frankfurt-2026-27-away-shirt.jpg",
       "sourceHash": "f5d0774e0d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "el-salvador-2025-26-away-shirt",
@@ -1258,7 +1258,7 @@
       "edition": "standard",
       "image": "/products/el-salvador-2025-26-away-shirt.jpg",
       "sourceHash": "faa6b05c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "el-salvador-2025-26-home-shirt",
@@ -1273,7 +1273,7 @@
       "edition": "standard",
       "image": "/products/el-salvador-2025-26-home-shirt.jpg",
       "sourceHash": "0f9f3bb7",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "england-2026-27-away-shirt",
@@ -1318,7 +1318,7 @@
       "edition": "standard",
       "image": "/products/espanyol-2026-27-home-shirt.jpg",
       "sourceHash": "f3746d51c3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "everton-2026-27-away-shirt",
@@ -1333,7 +1333,7 @@
       "edition": "standard",
       "image": "/products/everton-2026-27-away-shirt.jpg",
       "sourceHash": "9f0c9c6d9a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "everton-2026-27-home-shirt",
@@ -1348,7 +1348,7 @@
       "edition": "standard",
       "image": "/products/everton-2026-27-home-shirt.jpg",
       "sourceHash": "838b11352b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "fc-st-pauli-2026-27-away-shirt",
@@ -1363,7 +1363,7 @@
       "edition": "standard",
       "image": "/products/fc-st-pauli-2026-27-away-shirt.jpg",
       "sourceHash": "5ba73dee0f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "fc-st-pauli-2026-27-home-shirt",
@@ -1378,7 +1378,7 @@
       "edition": "standard",
       "image": "/products/fc-st-pauli-2026-27-home-shirt.jpg",
       "sourceHash": "8b972da0e3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "finland-2026-27-away-shirt",
@@ -1393,7 +1393,7 @@
       "edition": "standard",
       "image": "/products/finland-2026-27-away-shirt.jpg",
       "sourceHash": "cf0eb770d4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "finland-2026-27-home-shirt",
@@ -1408,7 +1408,7 @@
       "edition": "standard",
       "image": "/products/finland-2026-27-home-shirt.jpg",
       "sourceHash": "7d88f2a45f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "fiorentina-2026-27-home-shirt",
@@ -1423,7 +1423,7 @@
       "edition": "standard",
       "image": "/products/fiorentina-2026-27-home-shirt.jpg",
       "sourceHash": "d51320cbc9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "france-2026-27-away-shirt",
@@ -1468,7 +1468,7 @@
       "edition": "standard",
       "image": "/products/fulham-2026-27-home-shirt.jpg",
       "sourceHash": "c0063113dc",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "germany-2026-27-away-shirt",
@@ -1513,7 +1513,7 @@
       "edition": "standard",
       "image": "/products/germany-2026-27-third-shirt.jpg",
       "sourceHash": "7c4476016b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "getafe-2026-27-away-shirt",
@@ -1528,7 +1528,7 @@
       "edition": "standard",
       "image": "/products/getafe-2026-27-away-shirt.jpg",
       "sourceHash": "54d259426a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ghana-2026-away-shirt",
@@ -1543,7 +1543,7 @@
       "edition": "standard",
       "image": "/products/ghana-2026-away-shirt.jpg",
       "sourceHash": "0e3869ab",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ghana-2026-home-shirt",
@@ -1558,7 +1558,7 @@
       "edition": "standard",
       "image": "/products/ghana-2026-home-shirt.jpg",
       "sourceHash": "345028fc",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "guatemala-2025-26-away-shirt",
@@ -1573,7 +1573,7 @@
       "edition": "standard",
       "image": "/products/guatemala-2025-26-away-shirt.jpg",
       "sourceHash": "434f1fdb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "guatemala-2026-27-home-shirt",
@@ -1603,7 +1603,7 @@
       "edition": "standard",
       "image": "/products/haiti-2026-27-away-shirt.jpg",
       "sourceHash": "63149c81",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "haiti-2026-27-home-shirt",
@@ -1618,7 +1618,7 @@
       "edition": "standard",
       "image": "/products/haiti-2026-27-home-shirt.jpg",
       "sourceHash": "ffb9e2b1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "haiti-2026-third-shirt",
@@ -1633,7 +1633,7 @@
       "edition": "standard",
       "image": "/products/haiti-2026-third-shirt.jpg",
       "sourceHash": "571b8dd9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "hamburger-sv-2025-26-away-shirt",
@@ -1648,7 +1648,7 @@
       "edition": "standard",
       "image": "/products/hamburger-sv-2025-26-away-shirt.jpg",
       "sourceHash": "9243f857",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "hellas-verona-2025-26-home-shirt",
@@ -1663,7 +1663,7 @@
       "edition": "anniversary",
       "image": "/products/hellas-verona-2025-26-home-shirt.jpg",
       "sourceHash": "a5d27ee4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "honduras-2026-27-away-shirt",
@@ -1678,7 +1678,7 @@
       "edition": "standard",
       "image": "/products/honduras-2026-27-away-shirt.jpg",
       "sourceHash": "6ba9d4e170",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "honduras-2026-27-home-shirt",
@@ -1708,7 +1708,7 @@
       "edition": "standard",
       "image": "/products/hungary-2025-26-home-shirt.jpg",
       "sourceHash": "1327e707",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "inter-milan-2025-26-away-shirt",
@@ -1723,7 +1723,7 @@
       "edition": "standard",
       "image": "/products/inter-milan-2025-26-away-shirt.jpg",
       "sourceHash": "bedbb7cb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "inter-milan-2025-26-home-shirt",
@@ -1753,7 +1753,7 @@
       "edition": "standard",
       "image": "/products/inter-milan-2026-27-away-shirt.jpg",
       "sourceHash": "c741cceddc",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "italy-2026-27-away-shirt",
@@ -1813,7 +1813,7 @@
       "edition": "standard",
       "image": "/products/japan-2026-27-away-shirt.jpg",
       "sourceHash": "a2ebfd27",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "japan-2026-27-home-shirt",
@@ -1843,7 +1843,7 @@
       "edition": "standard",
       "image": "/products/jordan-2026-away-shirt.jpg",
       "sourceHash": "b412e614",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "jordan-2026-home-shirt",
@@ -1858,7 +1858,7 @@
       "edition": "standard",
       "image": "/products/jordan-2026-home-shirt.jpg",
       "sourceHash": "4e931a93",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "jordan-2026-third-shirt",
@@ -1873,7 +1873,7 @@
       "edition": "standard",
       "image": "/products/jordan-2026-third-shirt.jpg",
       "sourceHash": "3bc048c0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "leeds-united-2026-27-away-shirt",
@@ -1888,7 +1888,7 @@
       "edition": "standard",
       "image": "/products/leeds-united-2026-27-away-shirt.jpg",
       "sourceHash": "307e247e67",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "leeds-united-2026-27-home-shirt",
@@ -1903,7 +1903,7 @@
       "edition": "standard",
       "image": "/products/leeds-united-2026-27-home-shirt.jpg",
       "sourceHash": "87d37a94d1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lens-2026-27-away-shirt",
@@ -1918,7 +1918,7 @@
       "edition": "standard",
       "image": "/products/lens-2026-27-away-shirt.jpg",
       "sourceHash": "3fab0b8a20",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lens-2026-27-home-shirt",
@@ -1933,7 +1933,7 @@
       "edition": "standard",
       "image": "/products/lens-2026-27-home-shirt.jpg",
       "sourceHash": "54e2d25261",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "levante-2025-26-home-shirt",
@@ -1963,7 +1963,7 @@
       "edition": "standard",
       "image": "/products/levante-2026-27-away-shirt.jpg",
       "sourceHash": "585e95966b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "levante-2026-27-home-shirt",
@@ -1978,7 +1978,7 @@
       "edition": "standard",
       "image": "/products/levante-2026-27-home-shirt.jpg",
       "sourceHash": "854aaff077",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lille-2026-27-home-shirt",
@@ -1993,7 +1993,7 @@
       "edition": "standard",
       "image": "/products/lille-2026-27-home-shirt.jpg",
       "sourceHash": "e0ecf81bbc",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lyon-2026-27-home-shirt",
@@ -2008,7 +2008,7 @@
       "edition": "standard",
       "image": "/products/lyon-2026-27-home-shirt.jpg",
       "sourceHash": "29a3fcea8f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lyon-2026-27-third-shirt",
@@ -2023,7 +2023,7 @@
       "edition": "standard",
       "image": "/products/lyon-2026-27-third-shirt.jpg",
       "sourceHash": "7e903e8682",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "malaysia-2025-26-away-shirt",
@@ -2038,7 +2038,7 @@
       "edition": "standard",
       "image": "/products/malaysia-2025-26-away-shirt.jpg",
       "sourceHash": "331da2ed",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "malaysia-2025-26-home-shirt",
@@ -2053,7 +2053,7 @@
       "edition": "standard",
       "image": "/products/malaysia-2025-26-home-shirt.jpg",
       "sourceHash": "a773c5be",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "mallorca-2025-26-home-shirt",
@@ -2068,7 +2068,7 @@
       "edition": "anniversary",
       "image": "/products/mallorca-2025-26-home-shirt.jpg",
       "sourceHash": "2c8b7622",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "mallorca-2026-27-home-shirt",
@@ -2113,7 +2113,7 @@
       "edition": "standard",
       "image": "/products/manchester-city-2025-26-home-shirt.jpg",
       "sourceHash": "836ba85b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-city-2025-26-third-shirt",
@@ -2143,7 +2143,7 @@
       "edition": "standard",
       "image": "/products/manchester-city-2026-27-away-shirt.jpg",
       "sourceHash": "59f7773500",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-city-2026-27-home-shirt",
@@ -2173,7 +2173,7 @@
       "edition": "standard",
       "image": "/products/manchester-city-2026-27-third-shirt.jpg",
       "sourceHash": "b150ce3b3d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-united-2025-26-away-shirt",
@@ -2188,7 +2188,7 @@
       "edition": "standard",
       "image": "/products/manchester-united-2025-26-away-shirt.jpg",
       "sourceHash": "bc3986f7",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-united-2025-26-home-shirt",
@@ -2218,7 +2218,7 @@
       "edition": "standard",
       "image": "/products/manchester-united-2026-27-away-shirt.jpg",
       "sourceHash": "66edeea6be",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-united-2026-27-home-shirt",
@@ -2248,7 +2248,7 @@
       "edition": "standard",
       "image": "/products/manchester-united-2026-27-third-shirt.jpg",
       "sourceHash": "e2244b6ed2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "marseille-2026-27-away-shirt",
@@ -2263,7 +2263,7 @@
       "edition": "standard",
       "image": "/products/marseille-2026-27-away-shirt.jpg",
       "sourceHash": "bd17656cf4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "mexico-2026-27-away-shirt",
@@ -2338,7 +2338,7 @@
       "edition": "standard",
       "image": "/products/monaco-2026-27-home-shirt.jpg",
       "sourceHash": "559d38f163",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "morocco-2026-away-shirt",
@@ -2368,7 +2368,7 @@
       "edition": "standard",
       "image": "/products/morocco-2026-home-shirt.jpg",
       "sourceHash": "e383b0c4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nantes-2026-27-home-shirt",
@@ -2398,7 +2398,7 @@
       "edition": "standard",
       "image": "/products/napoli-2026-27-away-shirt.jpg",
       "sourceHash": "2316f835d1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "napoli-2026-27-home-shirt",
@@ -2413,7 +2413,7 @@
       "edition": "standard",
       "image": "/products/napoli-2026-27-home-shirt.jpg",
       "sourceHash": "8021449aa8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "napoli-2026-27-third-shirt",
@@ -2428,7 +2428,7 @@
       "edition": "standard",
       "image": "/products/napoli-2026-27-third-shirt.jpg",
       "sourceHash": "6f000f0163",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "netherlands-2026-27-away-shirt",
@@ -2473,7 +2473,7 @@
       "edition": "standard",
       "image": "/products/new-zealand-2025-26-home-shirt.jpg",
       "sourceHash": "30622153",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "new-zealand-2026-27-away-shirt",
@@ -2488,7 +2488,7 @@
       "edition": "standard",
       "image": "/products/new-zealand-2026-27-away-shirt.jpg",
       "sourceHash": "1d25e439",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "newcastle-united-2025-26-home-shirt",
@@ -2518,7 +2518,7 @@
       "edition": "standard",
       "image": "/products/newcastle-united-2026-27-away-shirt.jpg",
       "sourceHash": "65ae07c278",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "newcastle-united-2026-27-home-shirt",
@@ -2533,7 +2533,7 @@
       "edition": "standard",
       "image": "/products/newcastle-united-2026-27-home-shirt.jpg",
       "sourceHash": "97c4471caa",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nigeria-2026-27-away-shirt",
@@ -2548,7 +2548,7 @@
       "edition": "standard",
       "image": "/products/nigeria-2026-27-away-shirt.jpg",
       "sourceHash": "ae33c43dd9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nigeria-2026-27-home-shirt",
@@ -2563,7 +2563,7 @@
       "edition": "standard",
       "image": "/products/nigeria-2026-27-home-shirt.jpg",
       "sourceHash": "96d9701b3d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "northern-ireland-2026-home-shirt",
@@ -2578,7 +2578,7 @@
       "edition": "standard",
       "image": "/products/northern-ireland-2026-home-shirt.jpg",
       "sourceHash": "ee517674",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "norway-2026-27-third-shirt",
@@ -2593,7 +2593,7 @@
       "edition": "standard",
       "image": "/products/norway-2026-27-third-shirt.jpg",
       "sourceHash": "18e187955e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "norway-2026-away-shirt",
@@ -2623,7 +2623,7 @@
       "edition": "standard",
       "image": "/products/norway-2026-home-shirt.jpg",
       "sourceHash": "20d1c3f8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nottingham-forest-2026-27-home-shirt",
@@ -2638,7 +2638,7 @@
       "edition": "standard",
       "image": "/products/nottingham-forest-2026-27-home-shirt.jpg",
       "sourceHash": "5ada3b388d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "osasuna-2026-27-away-shirt",
@@ -2653,7 +2653,7 @@
       "edition": "standard",
       "image": "/products/osasuna-2026-27-away-shirt.jpg",
       "sourceHash": "e75de7b9f9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "palestine-2025-26-away-shirt",
@@ -2713,7 +2713,7 @@
       "edition": "standard",
       "image": "/products/paraguay-2026-27-home-shirt.jpg",
       "sourceHash": "74b74096",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paraguay-2026-away-shirt",
@@ -2728,7 +2728,7 @@
       "edition": "standard",
       "image": "/products/paraguay-2026-away-shirt.jpg",
       "sourceHash": "f1a650ca",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paris-saint-germain-2025-26-home-shirt",
@@ -2788,7 +2788,7 @@
       "edition": "standard",
       "image": "/products/parma-2026-27-home-shirt.jpg",
       "sourceHash": "d47c8743ee",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "poland-2026-home-shirt",
@@ -2803,7 +2803,7 @@
       "edition": "standard",
       "image": "/products/poland-2026-home-shirt.jpg",
       "sourceHash": "ce806ba1d8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "portugal-2026-27-away-shirt",
@@ -2848,7 +2848,7 @@
       "edition": "standard",
       "image": "/products/qatar-2026-home-shirt.jpg",
       "sourceHash": "d3c4daaa",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rayo-vallecano-2026-27-away-shirt",
@@ -2938,7 +2938,7 @@
       "edition": "standard",
       "image": "/products/real-betis-2026-27-away-shirt.jpg",
       "sourceHash": "38d9585d60",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-betis-2026-27-home-shirt",
@@ -2953,7 +2953,7 @@
       "edition": "standard",
       "image": "/products/real-betis-2026-27-home-shirt.jpg",
       "sourceHash": "bab992a937",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-betis-2026-27-third-shirt",
@@ -2968,7 +2968,7 @@
       "edition": "standard",
       "image": "/products/real-betis-2026-27-third-shirt.jpg",
       "sourceHash": "9c811a679b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-madrid-2025-26-away-shirt",
@@ -3013,7 +3013,7 @@
       "edition": "standard",
       "image": "/products/real-madrid-2025-26-third-shirt.jpg",
       "sourceHash": "993f0fa9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-madrid-2026-27-away-shirt",
@@ -3058,7 +3058,7 @@
       "edition": "standard",
       "image": "/products/real-oviedo-2026-27-away-shirt.jpg",
       "sourceHash": "1420e06d81",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-oviedo-2026-27-home-shirt",
@@ -3073,7 +3073,7 @@
       "edition": "standard",
       "image": "/products/real-oviedo-2026-27-home-shirt.jpg",
       "sourceHash": "5125092f6b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-oviedo-2026-27-third-shirt",
@@ -3088,7 +3088,7 @@
       "edition": "standard",
       "image": "/products/real-oviedo-2026-27-third-shirt.jpg",
       "sourceHash": "d4bf1ab0ff",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-sociedad-2026-27-home-shirt",
@@ -3103,7 +3103,7 @@
       "edition": "standard",
       "image": "/products/real-sociedad-2026-27-home-shirt.jpg",
       "sourceHash": "d8dfd0490a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-sociedad-2026-27-third-shirt",
@@ -3118,7 +3118,7 @@
       "edition": "standard",
       "image": "/products/real-sociedad-2026-27-third-shirt.jpg",
       "sourceHash": "5b046a430b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "republic-of-ireland-2026-27-away-shirt",
@@ -3148,7 +3148,7 @@
       "edition": "standard",
       "image": "/products/roma-2026-27-away-shirt.jpg",
       "sourceHash": "18bf15c04e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "roma-2026-27-home-shirt",
@@ -3163,7 +3163,7 @@
       "edition": "standard",
       "image": "/products/roma-2026-27-home-shirt.jpg",
       "sourceHash": "7881bac0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "romania-2025-26-home-shirt",
@@ -3178,7 +3178,7 @@
       "edition": "standard",
       "image": "/products/romania-2025-26-home-shirt.jpg",
       "sourceHash": "9240d4fd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "romania-2025-26-third-shirt",
@@ -3193,7 +3193,7 @@
       "edition": "standard",
       "image": "/products/romania-2025-26-third-shirt.jpg",
       "sourceHash": "c7ebeb7c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saudi-arabia-2026-away-shirt",
@@ -3208,7 +3208,7 @@
       "edition": "standard",
       "image": "/products/saudi-arabia-2026-away-shirt.jpg",
       "sourceHash": "d6271dbcba",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saudi-arabia-2026-home-shirt",
@@ -3223,7 +3223,7 @@
       "edition": "standard",
       "image": "/products/saudi-arabia-2026-home-shirt.jpg",
       "sourceHash": "0b6da857",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "scotland-2026-away-shirt",
@@ -3238,7 +3238,7 @@
       "edition": "standard",
       "image": "/products/scotland-2026-away-shirt.jpg",
       "sourceHash": "27306a39",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "scotland-2026-home-shirt",
@@ -3253,7 +3253,7 @@
       "edition": "standard",
       "image": "/products/scotland-2026-home-shirt.jpg",
       "sourceHash": "9384e9b3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "senegal-2026-27-away-shirt",
@@ -3268,7 +3268,7 @@
       "edition": "standard",
       "image": "/products/senegal-2026-27-away-shirt.jpg",
       "sourceHash": "7c3ecf6e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "senegal-2026-27-home-shirt",
@@ -3283,7 +3283,7 @@
       "edition": "standard",
       "image": "/products/senegal-2026-27-home-shirt.jpg",
       "sourceHash": "653ceb23",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sevilla-2026-27-away-shirt",
@@ -3298,7 +3298,7 @@
       "edition": "standard",
       "image": "/products/sevilla-2026-27-away-shirt.jpg",
       "sourceHash": "b443ef52d8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sevilla-2026-27-home-shirt",
@@ -3313,7 +3313,7 @@
       "edition": "standard",
       "image": "/products/sevilla-2026-27-home-shirt.jpg",
       "sourceHash": "0b49a7024a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sevilla-2026-27-third-shirt",
@@ -3328,7 +3328,7 @@
       "edition": "standard",
       "image": "/products/sevilla-2026-27-third-shirt.jpg",
       "sourceHash": "ceca31c124",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-africa-2026-away-shirt",
@@ -3343,7 +3343,7 @@
       "edition": "standard",
       "image": "/products/south-africa-2026-away-shirt.jpg",
       "sourceHash": "4e3a1495",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-africa-2026-home-shirt",
@@ -3373,7 +3373,7 @@
       "edition": "standard",
       "image": "/products/south-korea-2025-26-away-shirt.jpg",
       "sourceHash": "b38f9cf8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-korea-2026-home-shirt",
@@ -3388,7 +3388,7 @@
       "edition": "standard",
       "image": "/products/south-korea-2026-home-shirt.jpg",
       "sourceHash": "bcf0a9bb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "spain-2026-27-away-shirt",
@@ -3403,7 +3403,7 @@
       "edition": "standard",
       "image": "/products/spain-2026-27-away-shirt.jpg",
       "sourceHash": "82691bb4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "spain-2026-27-home-shirt",
@@ -3418,7 +3418,7 @@
       "edition": "standard",
       "image": "/products/spain-2026-27-home-shirt.jpg",
       "sourceHash": "a0db0f60",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "spain-2026-27-third-shirt",
@@ -3433,7 +3433,7 @@
       "edition": "standard",
       "image": "/products/spain-2026-27-third-shirt.jpg",
       "sourceHash": "971f71a31b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sunderland-2026-27-away-shirt",
@@ -3448,7 +3448,7 @@
       "edition": "standard",
       "image": "/products/sunderland-2026-27-away-shirt.jpg",
       "sourceHash": "2269ab1d48",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sunderland-2026-27-home-shirt",
@@ -3463,7 +3463,7 @@
       "edition": "standard",
       "image": "/products/sunderland-2026-27-home-shirt.jpg",
       "sourceHash": "8e3c05b005",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sweden-2026-away-shirt",
@@ -3478,7 +3478,7 @@
       "edition": "standard",
       "image": "/products/sweden-2026-away-shirt.jpg",
       "sourceHash": "6452b26164",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sweden-2026-home-shirt",
@@ -3493,7 +3493,7 @@
       "edition": "standard",
       "image": "/products/sweden-2026-home-shirt.jpg",
       "sourceHash": "27626776",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "switzerland-2026-away-shirt",
@@ -3508,7 +3508,7 @@
       "edition": "standard",
       "image": "/products/switzerland-2026-away-shirt.jpg",
       "sourceHash": "652337f6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tottenham-hotspur-2025-26-away-shirt",
@@ -3523,7 +3523,7 @@
       "edition": "standard",
       "image": "/products/tottenham-hotspur-2025-26-away-shirt.jpg",
       "sourceHash": "b1642998",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tottenham-hotspur-2025-26-home-shirt",
@@ -3538,7 +3538,7 @@
       "edition": "standard",
       "image": "/products/tottenham-hotspur-2025-26-home-shirt.jpg",
       "sourceHash": "b80e60f5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tunisia-2026-27-away-shirt",
@@ -3553,7 +3553,7 @@
       "edition": "standard",
       "image": "/products/tunisia-2026-27-away-shirt.jpg",
       "sourceHash": "18cf4f82ff",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tunisia-2026-27-third-shirt",
@@ -3568,7 +3568,7 @@
       "edition": "standard",
       "image": "/products/tunisia-2026-27-third-shirt.jpg",
       "sourceHash": "7b13f97d3c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tunisia-2026-home-shirt",
@@ -3583,7 +3583,7 @@
       "edition": "standard",
       "image": "/products/tunisia-2026-home-shirt.jpg",
       "sourceHash": "ffc547fc",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "turkey-2026-27-away-shirt",
@@ -3628,7 +3628,7 @@
       "edition": "standard",
       "image": "/products/ukraine-2026-home-shirt.jpg",
       "sourceHash": "40d53065",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "united-arab-emirates-2026-home-shirt",
@@ -3643,7 +3643,7 @@
       "edition": "standard",
       "image": "/products/united-arab-emirates-2026-home-shirt.jpg",
       "sourceHash": "1f5aa4bd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "united-states-2026-27-home-shirt",
@@ -3658,7 +3658,7 @@
       "edition": "standard",
       "image": "/products/united-states-2026-27-home-shirt.jpg",
       "sourceHash": "cee643a61b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "united-states-2026-away-shirt",
@@ -3688,7 +3688,7 @@
       "edition": "standard",
       "image": "/products/uruguay-2026-away-shirt.jpg",
       "sourceHash": "5ee0ad68",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "uruguay-2026-home-shirt",
@@ -3703,7 +3703,7 @@
       "edition": "standard",
       "image": "/products/uruguay-2026-home-shirt.jpg",
       "sourceHash": "3caf4102",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "uzbekistan-2025-26-home-shirt",
@@ -3718,7 +3718,7 @@
       "edition": "standard",
       "image": "/products/uzbekistan-2025-26-home-shirt.jpg",
       "sourceHash": "175cda49",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "valencia-2026-27-third-shirt",
@@ -3733,7 +3733,7 @@
       "edition": "standard",
       "image": "/products/valencia-2026-27-third-shirt.jpg",
       "sourceHash": "158e358bb6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "venezuela-2026-away-shirt",
@@ -3748,7 +3748,7 @@
       "edition": "standard",
       "image": "/products/venezuela-2026-away-shirt.jpg",
       "sourceHash": "db4ac01f81",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "venezuela-2026-home-shirt",
@@ -3763,7 +3763,7 @@
       "edition": "standard",
       "image": "/products/venezuela-2026-home-shirt.jpg",
       "sourceHash": "23adae76",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "vfb-stuttgart-2026-27-home-shirt",
@@ -3778,7 +3778,7 @@
       "edition": "standard",
       "image": "/products/vfb-stuttgart-2026-27-home-shirt.jpg",
       "sourceHash": "1bae17dba2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "villarreal-2026-27-home-shirt",
@@ -3793,7 +3793,7 @@
       "edition": "standard",
       "image": "/products/villarreal-2026-27-home-shirt.jpg",
       "sourceHash": "f44aaae400",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wales-2026-away-shirt",
@@ -3808,7 +3808,7 @@
       "edition": "standard",
       "image": "/products/wales-2026-away-shirt.jpg",
       "sourceHash": "e65d0790",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wales-2026-home-shirt",
@@ -3823,7 +3823,7 @@
       "edition": "standard",
       "image": "/products/wales-2026-home-shirt.jpg",
       "sourceHash": "d3da1f90",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "werder-bremen-2025-26-home-shirt",
@@ -3838,7 +3838,7 @@
       "edition": "standard",
       "image": "/products/werder-bremen-2025-26-home-shirt.jpg",
       "sourceHash": "cadc73b2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "werder-bremen-2026-27-away-shirt",
@@ -3853,7 +3853,7 @@
       "edition": "standard",
       "image": "/products/werder-bremen-2026-27-away-shirt.jpg",
       "sourceHash": "8b4c2d57c0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "werder-bremen-2026-27-third-shirt",
@@ -3868,7 +3868,7 @@
       "edition": "standard",
       "image": "/products/werder-bremen-2026-27-third-shirt.jpg",
       "sourceHash": "9115447b63",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "west-ham-united-2026-27-away-shirt",
@@ -3883,7 +3883,7 @@
       "edition": "standard",
       "image": "/products/west-ham-united-2026-27-away-shirt.jpg",
       "sourceHash": "6607af1759",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "west-ham-united-2026-27-home-shirt",
@@ -3898,7 +3898,7 @@
       "edition": "standard",
       "image": "/products/west-ham-united-2026-27-home-shirt.jpg",
       "sourceHash": "0ed46b075d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wolverhampton-wanderers-2025-26-home-shirt",
@@ -3913,7 +3913,7 @@
       "edition": "anniversary",
       "image": "/products/wolverhampton-wanderers-2025-26-home-shirt.jpg",
       "sourceHash": "5123749c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wolverhampton-wanderers-2026-27-home-shirt",
