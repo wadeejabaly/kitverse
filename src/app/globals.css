@@ -9,9 +9,10 @@
 
    The accent and the gold are both sampled from the KitVerse
    club crest (public/brand/badge.png): the shield navy and the
-   outer ring gold. The crest's electric blue is deliberately NOT
-   a token — it lives inside the badge artwork and nowhere else
-   in the UI.
+   outer ring gold. The crest's electric blue sits outside this
+   sitewide palette everywhere except one deliberate exception —
+   the Floodlight hero, `--flood-*` below — and appears nowhere
+   else in the UI.
    ============================================================ */
 :root {
   --ground: #f5f3ef; /* page background — warm off-white */
@@ -76,6 +77,24 @@
   --band-lo: #101a35;
   --band-glass-hi: rgb(29 43 84 / 0.88);
   --band-glass-lo: rgb(16 26 53 / 0.8);
+
+  /* Floodlight hero tokens. <HeroD/> (the home-page hero) is a
+     self-contained dark stage with its own ground, ink and — the
+     one exception named above — the crest's electric blue. None of
+     these are mapped into @theme and no component outside the
+     Floodlight system may reference one: that is what keeps this an
+     exception rather than a second palette. They do not vary with
+     the light/dark scheme, the same way a product tile is always
+     white — the hero is always this stage. See "THE FLOODLIGHT
+     HERO" further down for the surface itself. */
+  --flood-ground: #0a1024;
+  --flood-ground-2: #0d1530;
+  --flood-blue: #2f6bff;
+  --flood-blue-2: #5b8cff;
+  --flood-gold: #c9a55c;
+  --flood-ink: #f3f5fa;
+  --flood-ink-soft: #9aa3c4;
+  --flood-tile: #121a38;
 
   /* Type stacks arrive as --stack-* custom properties, set on <html> from
      src/lib/fonts.ts (the single source). Fallbacks keep the page readable
@@ -832,13 +851,15 @@ body[lang="ar"] {
 }
 
 /* ============================================================
-   HERO VARIANTS (A / B / C)
+   HERO VARIANTS (A / B / C / D)
 
-   Everything below exists for the three alternative home-page
-   openings in src/components/hero/. It is authored here rather
-   than in the components because the winner is promoted into the
-   home page unchanged, and a hero's type scale and its motion
-   belong in the stylesheet with the rest of the system.
+   Everything below exists for the alternative home-page openings in
+   src/components/hero/. It is authored here rather than in the
+   components because the winner is promoted into the home page
+   unchanged, and a hero's type scale and its motion belong in the
+   stylesheet with the rest of the system. D — Floodlight — is the
+   one live on the home page today; A, B and C stay on
+   /hero-preview for reference.
 
    This block is authored LAST on purpose: the reduced-motion
    override at the bottom has to come after the global
@@ -968,6 +989,157 @@ body[lang="ar"] {
 .btn-band {
   background: var(--band-ink);
   color: var(--band);
+}
+
+/* ============================================================
+   THE FLOODLIGHT HERO
+   Variant D's surface: a stadium-at-night mood scoped to the hero
+   alone, and the one place on the site the crest's electric blue
+   appears outside the badge artwork (see the --flood-* tokens up
+   top). Three layers, painted in DOM order so each sits correctly
+   under the content: the navy ground with an ambient corner wash
+   (.kv-flood-glow), a diagonal beam raking across it
+   (.kv-flood-beam), then the headline/CTA/shirt stage.
+
+   USED EXACTLY ONCE, the same rule THE BAND keeps above: this is a
+   second dark surface on the site, and a second one anywhere else
+   would turn the effect into a pattern instead of an opening
+   statement.
+
+   Both the wash and the beam originate near the headline's own
+   corner, so the light reads as coming from behind the type and
+   spilling across the shirt — which is why they are mirrored by
+   hand for the two reading directions rather than centred and left
+   alone. The mirror lives in custom properties, the same device
+   --band-angle uses and for the same reason: an RTL override that
+   restated the whole background would have to out-specificity the
+   base rule, and a custom property carries the difference with
+   none. */
+.kv-flood {
+  --flood-corner-x: 78%;
+  --flood-corner-x2: 100%;
+  --flood-beam-angle: 115deg;
+  --flood-beam-tilt: 8deg;
+  background: var(--flood-ground);
+  color: var(--flood-ink);
+}
+
+[dir="ltr"] .kv-flood {
+  --flood-corner-x: 22%;
+  --flood-corner-x2: 0%;
+  --flood-beam-angle: 245deg;
+  --flood-beam-tilt: -8deg;
+}
+
+.kv-flood-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      760px 520px at var(--flood-corner-x) -6%,
+      rgb(47 107 255 / 0.55),
+      transparent 60%
+    ),
+    radial-gradient(
+      620px 460px at var(--flood-corner-x2) 30%,
+      rgb(91 140 255 / 0.28),
+      transparent 65%
+    ),
+    linear-gradient(180deg, var(--flood-ground) 0%, var(--flood-ground-2) 100%);
+}
+
+.kv-flood-beam {
+  position: absolute;
+  inset-block-start: -120px;
+  inset-inline-end: -80px;
+  width: 900px;
+  height: 900px;
+  pointer-events: none;
+  background: linear-gradient(
+    var(--flood-beam-angle),
+    rgb(47 107 255 / 0) 40%,
+    rgb(47 107 255 / 0.16) 48%,
+    rgb(47 107 255 / 0) 56%
+  );
+  transform: rotate(var(--flood-beam-tilt));
+}
+
+/* The hero eyebrow on the flood surface. This is not a fifth use of
+   --gold — it is a distinct token for a distinct dark surface, the
+   same relationship --band-ink has to --ink. Unlayered, so it beats
+   .mono-eyebrow's @layer base colour the same way .band-soft does
+   (see the note on that rule, above). */
+.kv-flood-eyebrow {
+  color: var(--flood-gold);
+}
+
+.kv-flood-sub {
+  color: var(--flood-ink-soft);
+}
+
+/* Numerals that need to read as emphasis on the flood surface — the
+   small Fan/Player print beside the CTA. */
+.kv-flood-strong {
+  color: var(--flood-ink);
+  font-weight: 700;
+}
+
+/* The headline's second line: ink fading into the electric blue
+   toward the reading direction's END, mirrored the same way as the
+   glow and the beam above it — the highlight intensifies where the
+   phrase finishes, in both locales. */
+.kv-flood-gradient-text {
+  --flood-text-angle: 270deg;
+  background: linear-gradient(
+    var(--flood-text-angle),
+    var(--flood-ink) -20%,
+    var(--flood-blue-2) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[dir="ltr"] .kv-flood-gradient-text {
+  --flood-text-angle: 90deg;
+}
+
+/* The one button treatment, on the one surface it is allowed a
+   second colour: the flood's own electric blue fill, with the glow
+   the mockup earns from a real box-shadow rather than a second navy
+   button sitting flat on a navy page. */
+.btn-flood {
+  background: var(--flood-blue);
+  color: var(--flood-ground);
+  box-shadow: 0 18px 34px -12px rgb(47 107 255 / 0.6);
+}
+
+/* The local glow behind the shirt itself — distinct from the ambient
+   corner wash above, and unaffected by reading direction since it is
+   centred on the stage rather than the page. */
+.kv-flood-shirt-glow {
+  position: absolute;
+  width: 65%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(47 107 255 / 0.5), rgb(47 107 255 / 0) 70%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* The corner chip naming the shirt on stage — a small dark plate over
+   the image, one hairline lit with the flood blue, echoing the
+   mockup's caption treatment without a caption row underneath. */
+.kv-flood-chip {
+  background: var(--flood-tile);
+  border: 1px solid rgb(91 140 255 / 0.35);
+  color: var(--flood-ink-soft);
+}
+
+.kv-flood-chip strong {
+  color: var(--flood-blue-2);
+  font-weight: 700;
 }
 
 /* Reduced motion: the wall stops and rests at its authored position.
