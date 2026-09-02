@@ -91,6 +91,7 @@ export type CheckoutErrorCode =
   | "cart_empty"
   | "payments_unconfigured"
   | "paypal_failed"
+  | "payplus_failed"
   | "order_not_found"
   | "capture_failed"
   | "rate_limited"

@@ -5,16 +5,19 @@ import { orderReference } from "@/lib/checkout";
 import { notifyOwnerOfPaidOrder, type NotificationItem } from "@/lib/notify";
 import {
   decidePaidTransition,
+  isPaymentProvider,
   type OrderStatus,
   type PaidDecision,
+  type PaymentProvider,
 } from "@/lib/orders";
 import type { OrderItemRow, OrderRow } from "@/lib/supabase";
 
 /**
- * The pending→paid settlement, shared by the two roads that reach it: the
- * browser's onApprove calling /api/checkout/capture-order, and PayPal's
- * webhook. They race routinely — and PayPal re-delivers webhooks it believes
- * failed — so both must end in exactly the same place, exactly once.
+ * The pending→paid settlement, shared by the three roads that reach it: the
+ * browser's PayPal onApprove calling /api/checkout/capture-order, PayPal's
+ * webhook, and PayPlus's callback. The first two race routinely — and both
+ * processors re-deliver a callback they believe failed — so all of them must
+ * end in exactly the same place, exactly once.
  *
  * The decision itself is a pure function in src/lib/orders.ts (unit-tested);
  * this module is only the database and email plumbing around it.
@@ -28,12 +31,39 @@ export interface SettlementResult {
 }
 
 const ORDER_COLUMNS =
-  "id, status, paypal_order_id, paypal_capture_id, customer_name, email, phone, address, city, country, notes, locale, subtotal_ils, shipping_ils, total_ils";
+  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, address, city, country, notes, locale, subtotal_ils, shipping_ils, total_ils";
 
-/** Look an order up by our uuid or by the PayPal order id, in that order. */
+/**
+ * Where each provider records the payment that settled an order. The PayPal
+ * column is the capture; the PayPlus column is the transaction. Both are
+ * unique in the schema, so one payment can never close two orders.
+ */
+const SETTLED_REF_COLUMN: Record<PaymentProvider, keyof OrderRow> = {
+  paypal: "paypal_capture_id",
+  payplus: "payplus_transaction_uid",
+};
+
+/**
+ * The provider recorded on a row. Rows written before migration 0002 have no
+ * column at all; anything unrecognised reads as PayPal, which is what those
+ * rows are — and, being explicit, is what the provider check then enforces.
+ */
+export function providerOf(order: OrderRow): PaymentProvider {
+  return isPaymentProvider(order.payment_provider) ? order.payment_provider : "paypal";
+}
+
+/**
+ * Look an order up by our uuid first, then by whichever provider reference
+ * was supplied. Our own uuid is the preferred route for both processors:
+ * PayPal carries it in custom_id/invoice_id, PayPlus in more_info.
+ */
 export async function findOrder(
   db: SupabaseClient,
-  where: { orderId?: string | null; paypalOrderId?: string | null },
+  where: {
+    orderId?: string | null;
+    paypalOrderId?: string | null;
+    payplusPageRequestUid?: string | null;
+  },
 ): Promise<OrderRow | null> {
   if (where.orderId) {
     const { data } = await db
@@ -50,9 +80,50 @@ export async function findOrder(
       .select(ORDER_COLUMNS)
       .eq("paypal_order_id", where.paypalOrderId)
       .maybeSingle();
+    const row = data as OrderRow | null;
+    if (row) return row;
+  }
+  if (where.payplusPageRequestUid) {
+    const { data } = await db
+      .from("orders")
+      .select(ORDER_COLUMNS)
+      .eq("payplus_page_request_uid", where.payplusPageRequestUid)
+      .maybeSingle();
     return (data as OrderRow | null) ?? null;
   }
   return null;
+}
+
+/**
+ * The confirmation page's one question: is the order behind this reference
+ * paid? Returns the status and NOTHING else — no name, no amount, no email —
+ * because the short reference travels in a URL that gets shared and logged.
+ *
+ * `reference` is a generated column (migration 0002) holding the same eight
+ * characters orderReference() prints. It is not unique: on the astronomically
+ * unlikely collision this declines to answer rather than reporting some other
+ * customer's order, and the page falls back to "we are confirming your
+ * payment".
+ */
+export async function findOrderStatusByReference(
+  db: SupabaseClient,
+  reference: string,
+): Promise<OrderStatus | null> {
+  if (!/^[A-Z0-9]{4,16}$/.test(reference)) return null;
+
+  const { data, error } = await db
+    .from("orders")
+    .select("status")
+    .eq("reference", reference)
+    .limit(2);
+
+  if (error) {
+    console.error(`[orders] reference lookup failed:`, error.message);
+    return null;
+  }
+
+  const rows = (data as { status: OrderStatus }[] | null) ?? [];
+  return rows.length === 1 ? rows[0].status : null;
 }
 
 /**
@@ -67,15 +138,19 @@ export async function findOrder(
 export async function settleOrderPaid(
   db: SupabaseClient,
   order: OrderRow | null,
-  captureId: string | null,
+  reference: string | null,
+  provider: PaymentProvider,
 ): Promise<SettlementResult> {
   const snapshot = order
     ? {
         status: order.status as OrderStatus,
-        paypalCaptureId: order.paypal_capture_id,
+        provider: providerOf(order),
+        settledRef: (order[SETTLED_REF_COLUMN[providerOf(order)]] ?? null) as
+          | string
+          | null,
       }
     : null;
-  const decision = decidePaidTransition(snapshot, captureId);
+  const decision = decidePaidTransition(snapshot, reference, provider);
 
   if (decision.action !== "promote" || !order) {
     return { decision, promoted: false, order };
@@ -83,7 +158,10 @@ export async function settleOrderPaid(
 
   const { data, error } = await db
     .from("orders")
-    .update({ status: "paid", paypal_capture_id: decision.captureId })
+    .update({
+      status: "paid",
+      [SETTLED_REF_COLUMN[provider]]: decision.reference,
+    })
     .eq("id", order.id)
     .eq("status", "pending")
     .select(ORDER_COLUMNS);
@@ -104,7 +182,7 @@ export async function settleOrderPaid(
   // Fire-and-forget, scheduled after the response so a slow email provider
   // cannot delay — or fail — the answer that the money moved.
   after(async () => {
-    await sendOwnerNotification(db, paidOrder, decision.captureId);
+    await sendOwnerNotification(db, paidOrder, provider, decision.reference);
   });
 
   return { decision, promoted: true, order: paidOrder };
@@ -131,7 +209,8 @@ export async function markOrderFailed(
 async function sendOwnerNotification(
   db: SupabaseClient,
   order: OrderRow,
-  captureId: string,
+  provider: PaymentProvider,
+  paymentRef: string,
 ): Promise<void> {
   try {
     const { data } = await db
@@ -170,8 +249,14 @@ async function sendOwnerNotification(
       subtotal: Number(order.subtotal_ils ?? 0),
       shipping: Number(order.shipping_ils ?? 0),
       total: Number(order.total_ils ?? 0),
-      paypalOrderId: order.paypal_order_id ?? "",
-      paypalCaptureId: captureId,
+      provider,
+      // What the processor called this attempt, and what settled it. Named
+      // generically because the owner reads one email for both processors.
+      providerOrderRef:
+        (provider === "paypal"
+          ? order.paypal_order_id
+          : order.payplus_page_request_uid) ?? "",
+      providerPaymentRef: paymentRef,
     });
   } catch (error) {
     console.error(

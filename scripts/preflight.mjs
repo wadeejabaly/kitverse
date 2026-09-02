@@ -5,7 +5,8 @@
  *
  * Checks: leftover placeholder markers · hardcoded absolute domains outside
  * getSiteUrl() · physical-direction Tailwind classes (the #1 RTL bug source) ·
- * the mandatory /privacy + /terms routes · PAYPAL_ENV declared in .env.example.
+ * the mandatory /privacy + /terms routes · PAYPAL_ENV and PAYPLUS_ENV declared
+ * in .env.example.
  *
  * `--template` relaxes the placeholder-marker check. Nothing in this project
  * should need it; it exists only for scratch experiments.
@@ -88,7 +89,7 @@ if (templateMode) {
 // structured data. The rule this check exists for — "the site's own domain
 // lives in exactly one place" — is unaffected.
 //
-// Two integration files additionally carry a third party's FIXED API
+// Three integration files additionally carry a third party's FIXED API
 // endpoints. Those hosts belong to the provider, not to this store, so they
 // cannot derive from getSiteUrl() and are not a deployment domain that could
 // go stale. Each file is allowed only its own named hosts and nothing else,
@@ -107,6 +108,10 @@ const FILE_HOST_ALLOWLIST = new Map([
   [
     join("src", "lib", "paypal.ts"),
     new Set(["api-m.paypal.com", "api-m.sandbox.paypal.com"]),
+  ],
+  [
+    join("src", "lib", "payplus.ts"),
+    new Set(["restapi.payplus.co.il", "restapidev.payplus.co.il"]),
   ],
   [join("src", "lib", "notify.ts"), new Set(["api.resend.com"])],
 ]);
@@ -152,16 +157,19 @@ for (const route of ["privacy", "terms"]) {
     : fail(`missing mandatory /${route} route — the pre-launch gate blocks without it`);
 }
 
-// --- (e) PayPal environment flag declared ------------------------------------
-// This build has no TEST_MODE flag; PAYPAL_ENV is the switch that decides
-// whether real money moves, so it must be an explicit, documented variable.
+// --- (e) Processor environment flags declared --------------------------------
+// This build has no TEST_MODE flag. PAYPAL_ENV and PAYPLUS_ENV are the two
+// switches that decide whether real money moves, so each must be an explicit,
+// documented variable. Both default to sandbox in code; only the exact string
+// "live" flips one over.
 {
   const envExample = join(root, ".env.example");
-  const hasPaypalEnv =
-    existsSync(envExample) && /^PAYPAL_ENV=/m.test(readFileSync(envExample, "utf8"));
-  hasPaypalEnv
-    ? pass("PAYPAL_ENV declared in .env.example — REMINDER: PAYPAL_ENV=live only in Production")
-    : fail("PAYPAL_ENV missing from .env.example — checkout must never guess sandbox vs live");
+  const contents = existsSync(envExample) ? readFileSync(envExample, "utf8") : "";
+  for (const name of ["PAYPAL_ENV", "PAYPLUS_ENV"]) {
+    new RegExp(`^${name}=`, "m").test(contents)
+      ? pass(`${name} declared in .env.example — REMINDER: ${name}=live only in Production`)
+      : fail(`${name} missing from .env.example — checkout must never guess sandbox vs live`);
+  }
 }
 
 console.log("");

@@ -6,29 +6,37 @@ import {
   type CheckoutErrorCode,
 } from "@/lib/checkout";
 import { repriceCart } from "@/lib/orders";
-import { createOrder as createPayPalOrder, isPayPalConfigured } from "@/lib/paypal";
+import { generatePaymentLink, isPayPlusConfigured } from "@/lib/payplus";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { getSiteUrl, localePath } from "@/lib/site";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
 /**
- * POST /api/checkout/create-order — the start of the money path.
+ * POST /api/checkout/payplus/start — the card path's half of the money path.
  *
- * The order of operations is the whole point:
+ * PayPlus clears the card on a hosted page it owns, so this route's job ends
+ * with a URL to send the buyer to. The order of operations is the same one
+ * /api/checkout/create-order follows, and for the same reasons:
  *   1. validate the request shape (Zod, always);
  *   2. RECOMPUTE the cart from the catalogue and pricing.ts, dropping any
  *      line whose handle is not a visible product. No price arrives from the
  *      browser and none would be honoured if it did;
- *   3. write a `pending` order row BEFORE PayPal is told anything, so a
+ *   3. write a `pending` order row BEFORE PayPlus is told anything, so a
  *      payment can never exist without a row to attach it to;
- *   4. create the PayPal order for OUR total, stamped with our order id;
- *   5. store the PayPal order id and hand it back.
+ *   4. mint the payment page for OUR total, stamped with our order id in
+ *      more_info so the callback finds its way home;
+ *   5. store the page request uid and hand back the redirect URL.
  *
  * If step 4 fails the row is marked `failed` and stays as evidence.
+ *
+ * NOTHING about the payment is decided here. This route never learns whether
+ * the card was charged; that is the webhook's job, and only after asking
+ * PayPlus directly.
  */
 
 export const dynamic = "force-dynamic";
 
-/** ~1 order attempt per 6s per IP, bursting to 5. Best effort — see rate-limit.ts. */
+/** Same budget as the PayPal create-order route. Best effort — see rate-limit.ts. */
 const LIMIT = { capacity: 5, refillPerSecond: 1 / 6 };
 
 function errorResponse(code: CheckoutErrorCode, status: number, extra?: ResponseInit) {
@@ -48,10 +56,8 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) return errorResponse("invalid_request", 400);
   const { items, customer, locale } = parsed.data;
 
-  // Both integrations must be present before anything is written: a pending
-  // row with no possible payment is litter.
   const db = getSupabaseAdmin();
-  if (!db || !isPayPalConfigured()) {
+  if (!db || !isPayPlusConfigured()) {
     return errorResponse("payments_unconfigured", 503);
   }
 
@@ -69,9 +75,8 @@ export async function POST(request: NextRequest) {
     .from("orders")
     .insert({
       status: "pending",
-      // Explicit, though the column defaults to it: this row may only ever be
-      // settled by a PayPal capture (see decidePaidTransition).
-      payment_provider: "paypal",
+      // This row may only ever be settled by a PayPlus transaction.
+      payment_provider: "payplus",
       customer_name: customer.name,
       email: customer.email,
       phone: customer.phone,
@@ -93,8 +98,6 @@ export async function POST(request: NextRequest) {
     return errorResponse("server_error", 500);
   }
 
-  // Line snapshots: what was bought, at the price the server computed, frozen
-  // against a later catalogue rebuild.
   const { error: itemsError } = await db.from("order_items").insert(
     cart.lines.map((line) => ({
       order_id: orderId,
@@ -114,30 +117,63 @@ export async function POST(request: NextRequest) {
     return errorResponse("server_error", 500);
   }
 
-  const paypal = await createPayPalOrder(cart.total, orderId);
-  if (!paypal.ok) {
-    console.error(`[checkout] PayPal createOrder failed (${paypal.code}): ${paypal.detail}`);
+  const reference = orderReference(orderId);
+  const site = getSiteUrl();
+
+  const link = await generatePaymentLink({
+    orderId,
+    amount: cart.total,
+    customerName: customer.name,
+    customerEmail: customer.email,
+    // Shipping travels as its own line so the items add up to the amount
+    // charged. A hosted page that lists items totalling less than it bills
+    // for is a support ticket waiting to happen, whether or not PayPlus
+    // itself objects.
+    items: [
+      ...cart.lines.map((line) => ({
+        name: describeLine(line.title, line.size, line.version),
+        quantity: line.qty,
+        price: line.unitPrice,
+      })),
+      { name: "Shipping", quantity: 1, price: cart.shipping },
+    ],
+    // Locale-aware: `ar` lives at `/`, `en` at `/en`. Built from getSiteUrl()
+    // so the domain still lives in exactly one place.
+    successUrl: `${site}${localePath(locale, "/checkout/thank-you")}?ref=${reference}`,
+    failureUrl: `${site}${localePath(locale, "/checkout")}?pay=failed`,
+    cancelUrl: `${site}${localePath(locale, "/checkout")}?pay=cancelled`,
+    callbackUrl: `${site}/api/payplus/webhook`,
+  });
+
+  if (!link.ok) {
+    console.error(`[checkout] PayPlus generateLink failed (${link.code}): ${link.detail}`);
     await db.from("orders").update({ status: "failed" }).eq("id", orderId);
-    return errorResponse("paypal_failed", 502);
+    return errorResponse("payplus_failed", 502);
   }
 
   const { error: linkError } = await db
     .from("orders")
-    .update({ paypal_order_id: paypal.value.paypalOrderId })
+    .update({ payplus_page_request_uid: link.value.pageRequestUid })
     .eq("id", orderId);
   if (linkError) {
-    // Without the link a later capture or webhook could not find this row, so
-    // this is fatal to the attempt even though PayPal has an order.
-    console.error("[checkout] could not store paypal_order_id:", linkError.message);
+    // Without the link the callback could not resolve this row by page uid.
+    // more_info would still carry the order id, but a money path does not run
+    // on one identifier when it was designed for two.
+    console.error("[checkout] could not store payplus_page_request_uid:", linkError.message);
     await db.from("orders").update({ status: "failed" }).eq("id", orderId);
     return errorResponse("server_error", 500);
   }
 
   return NextResponse.json({
-    paypalOrderId: paypal.value.paypalOrderId,
-    reference: orderReference(orderId),
-    // Echoed so the browser can show the customer what the server actually
-    // charged, if the two ever differ. It is the server's number either way.
+    redirectUrl: link.value.paymentPageLink,
+    reference,
+    // Echoed so the browser can show what the server actually charged. It is
+    // the server's number either way.
     total: cart.total,
   });
+}
+
+/** What one line looks like on the hosted page. English: so is the page. */
+function describeLine(title: string, size: string, version: string): string {
+  return `${title} — ${size} / ${version}`.slice(0, 120);
 }

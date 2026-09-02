@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     return errorResponse("capture_failed", 402);
   }
 
-  const settled = await settleOrderPaid(db, order, capture.value.captureId);
+  const settled = await settleOrderPaid(db, order, capture.value.captureId, "paypal");
   if (settled.decision.action === "reject") {
     console.error(
       `[checkout] refusing to settle ${order.id}: ${settled.decision.reason}`,

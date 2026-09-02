@@ -105,43 +105,73 @@ export function repriceCart(items: CheckoutItemInput[]): RepricedCart {
 
 export type OrderStatus = "pending" | "paid" | "failed" | "cancelled";
 
+/**
+ * Which processor owns an order. PayPlus clears Israeli cards and is the
+ * primary method; PayPal is the international one. An order belongs to
+ * exactly one of them for its whole life — see the provider check below.
+ */
+export type PaymentProvider = "paypal" | "payplus";
+
+export const PAYMENT_PROVIDERS: readonly PaymentProvider[] = ["paypal", "payplus"];
+
+export function isPaymentProvider(value: unknown): value is PaymentProvider {
+  return typeof value === "string" && (PAYMENT_PROVIDERS as string[]).includes(value);
+}
+
 /** The order facts the transition decision needs — nothing else. */
 export interface OrderStateSnapshot {
   status: OrderStatus;
-  paypalCaptureId: string | null;
+  /** The processor this order was created for. */
+  provider: PaymentProvider;
+  /** The provider reference already recorded, if the order is settled. */
+  settledRef: string | null;
 }
 
 export type PaidDecision =
   /** Write status='paid' guarded by `WHERE status='pending'`. */
-  | { action: "promote"; captureId: string }
+  | { action: "promote"; reference: string }
   /** Already settled, or settled by another delivery of the same event. */
   | { action: "noop"; reason: "already-paid" | "not-pending" }
   /** Nothing to act on: refuse and say why. */
-  | { action: "reject"; reason: "unknown-order" | "missing-capture-id" };
+  | {
+      action: "reject";
+      reason: "unknown-order" | "missing-reference" | "provider-mismatch";
+    };
 
 /**
  * Should this order become paid?
  *
- * Pure on purpose. The capture route and the webhook both reach a
- * pending→paid moment by different roads, and both must behave identically
- * when the same payment arrives twice — the browser's onApprove and PayPal's
- * webhook routinely race, and PayPal re-delivers webhooks it thinks failed.
- * Keeping the decision here (and unit-testing it) means idempotency is a
- * property of one small function rather than of two network handlers.
+ * Pure on purpose. Three roads reach a pending→paid moment — the browser's
+ * PayPal onApprove, PayPal's webhook, and PayPlus's callback — and they must
+ * behave identically when the same payment arrives twice. PayPal's onApprove
+ * and its webhook routinely race, and both processors re-deliver a callback
+ * they believe failed. Keeping the decision here (and unit-testing it) makes
+ * idempotency a property of one small function rather than of three network
+ * handlers.
  *
- * A "paid" order is never re-promoted, whichever capture id arrives second:
- * the first capture is the one that took the money, and overwriting its id
- * would lose the reference that reconciles the books.
+ * A "paid" order is never re-promoted, whichever reference arrives second:
+ * the first payment is the one that took the money, and overwriting its
+ * reference would lose what reconciles the books.
+ *
+ * THE PROVIDER CHECK is not bookkeeping. Two processors now post to two public
+ * webhooks, and an order created for one of them must not be settleable by an
+ * event from the other — otherwise a forged or misrouted PayPal event could
+ * close a PayPlus order that nobody ever paid for, and vice versa. The
+ * mismatch is a rejection, never a no-op.
  */
 export function decidePaidTransition(
   order: OrderStateSnapshot | null,
-  captureId: string | null,
+  reference: string | null,
+  provider: PaymentProvider,
 ): PaidDecision {
   if (!order) return { action: "reject", reason: "unknown-order" };
+  if (order.provider !== provider) {
+    return { action: "reject", reason: "provider-mismatch" };
+  }
   if (order.status === "paid") return { action: "noop", reason: "already-paid" };
   if (order.status !== "pending") return { action: "noop", reason: "not-pending" };
-  if (!captureId) return { action: "reject", reason: "missing-capture-id" };
-  return { action: "promote", captureId };
+  if (!reference) return { action: "reject", reason: "missing-reference" };
+  return { action: "promote", reference };
 }
 
 /**

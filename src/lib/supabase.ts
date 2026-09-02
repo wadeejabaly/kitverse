@@ -57,8 +57,12 @@ export function getSupabaseAdmin(): SupabaseClient | null {
 export interface OrderRow {
   id: string;
   status: "pending" | "paid" | "failed" | "cancelled";
+  /** 'paypal' | 'payplus' — added in migration 0002, defaulted to 'paypal'. */
+  payment_provider: string | null;
   paypal_order_id: string | null;
   paypal_capture_id: string | null;
+  payplus_page_request_uid: string | null;
+  payplus_transaction_uid: string | null;
   customer_name: string | null;
   email: string | null;
   phone: string | null;

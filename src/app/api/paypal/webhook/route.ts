@@ -67,7 +67,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, handled: false });
   }
 
-  const settled = await settleOrderPaid(db, order, ref.captureId);
+  // Provider-scoped: an order created for PayPlus is never settled by a
+  // PayPal event, whatever the event claims. settleOrderPaid rejects it.
+  const settled = await settleOrderPaid(db, order, ref.captureId, "paypal");
 
   if (settled.decision.action === "reject") {
     console.error(`[webhook] refused to settle ${order.id}: ${settled.decision.reason}`);

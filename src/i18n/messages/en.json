@@ -310,8 +310,8 @@
   "checkout": {
     "eyebrow": "Checkout",
     "title": "Complete your order",
-    "intro": "Fill in your delivery details, then pay with PayPal.",
-    "metaDescription": "Complete your KitVerse order: delivery details and payment by PayPal.",
+    "intro": "Fill in your delivery details, then pay by card or with PayPal.",
+    "metaDescription": "Complete your KitVerse order: delivery details and payment.",
     "detailsTitle": "Delivery details",
     "summaryTitle": "Order summary",
     "fieldName": "Full name",
@@ -334,12 +334,20 @@
     "processing": "Confirming your payment…",
     "termsLine": "By paying you agree to our <terms>terms and cancellation policy</terms>.",
     "demoTitle": "Payments are not set up yet",
-    "demoBody": "PayPal has not been connected to this site yet, so you cannot pay right now. You can still fill in the details and see the total.",
+    "demoBody": "Payments have not been connected to this site yet, so you cannot pay right now. You can still fill in the details and see the total.",
     "errorGeneric": "Something went wrong and we could not place the order. Please try again in a moment.",
     "errorCartEmpty": "There is nothing in your cart we can sell right now. Please check your cart.",
     "errorUnconfigured": "Payment is not available right now. Write to us and we will complete your order.",
     "errorRateLimited": "Too many attempts in a short time. Wait a minute and try again.",
-    "errorCapture": "We could not confirm the payment. If you were charged, write to us straight away and we will sort it out."
+    "errorCapture": "We could not confirm the payment. If you were charged, write to us straight away and we will sort it out.",
+    "payTitle": "Payment",
+    "payCard": "Pay by card",
+    "payCardNote": "Secure card payment. We take you to our payment provider's page to enter your card, then bring you back here.",
+    "payCardLanguage": "The card page may be shown in Hebrew or English.",
+    "payPalNote": "Or pay with PayPal",
+    "redirecting": "Taking you to the payment page…",
+    "returnFailed": "The card payment did not go through, and nothing was charged. You can try again, or pay with PayPal.",
+    "returnCancelled": "You stopped the payment, and nothing was charged. Your cart is still here whenever you are ready."
   },
   "thankYou": {
     "eyebrow": "Order placed",
@@ -349,7 +357,10 @@
     "referenceLabel": "Order reference",
     "delivery": "Delivery is 12 to 25 days with tracking. Shirts printed with a name and number add two days to dispatch.",
     "emailNote": "You will get an email with the order details, then a tracking number as soon as the parcel moves. If anything in the address is wrong, write to us quickly and we will fix it.",
-    "keepShopping": "Keep shopping"
+    "keepShopping": "Keep shopping",
+    "confirmingTitle": "We are confirming your payment",
+    "confirmingIntro": "Your payment is still with the bank. This usually takes a few seconds — refresh this page to check again.",
+    "confirmingNote": "Keep this order reference. If this page still says the same thing in a few minutes, write to us with that reference and we will check it for you."
   },
   "heroPreview": {
     "pageTitle": "Hero variants",

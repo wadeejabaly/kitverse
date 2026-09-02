@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -21,9 +22,14 @@ import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
  * — handle, size, version, personalisation, quantity — and no money at all.
  * The server re-derives the amount from the catalogue and charges that.
  *
- * The PayPal buttons deliberately do not exist until the delivery form
- * validates. A buyer who pays and only then discovers their address was
- * rejected has been failed by the page.
+ * NEITHER payment method exists until the delivery form validates. A buyer who
+ * pays and only then discovers their address was rejected has been failed by
+ * the page.
+ *
+ * Two processors, each shown only when it is configured: PayPlus clears cards
+ * (the primary method — a redirect to a page PayPlus hosts) and PayPal covers
+ * everything else. With neither configured the page still renders in full and
+ * shows the demo panel where the payment controls would be.
  */
 
 type FormValues = {
@@ -51,6 +57,7 @@ const ERROR_CODES: readonly CheckoutErrorCode[] = [
   "cart_empty",
   "payments_unconfigured",
   "paypal_failed",
+  "payplus_failed",
   "order_not_found",
   "capture_failed",
   "rate_limited",
@@ -61,14 +68,23 @@ function isErrorCode(value: unknown): value is CheckoutErrorCode {
   return typeof value === "string" && (ERROR_CODES as readonly string[]).includes(value);
 }
 
+/** What the hosted card page sent us back with, if anything. */
+type ReturnState = "failed" | "cancelled";
+
+function isReturnState(value: unknown): value is ReturnState {
+  return value === "failed" || value === "cancelled";
+}
+
 export function CheckoutView({
   products,
   locale,
   paypalClientId,
+  payplusEnabled,
 }: {
   products: CartProductInfo[];
   locale: string;
   paypalClientId: string | null;
+  payplusEnabled: boolean;
 }) {
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
@@ -76,11 +92,26 @@ export function CheckoutView({
   const tProduct = useTranslations("product");
   const router = useRouter();
   const { items, hydrated, clear } = useCart();
+  const searchParams = useSearchParams();
 
   const [values, setValues] = useState<FormValues>(EMPTY_FORM);
   const [touched, setTouched] = useState<Partial<Record<FieldName, boolean>>>({});
-  const [phase, setPhase] = useState<"form" | "paying" | "done">("form");
+  const [phase, setPhase] = useState<"form" | "paying" | "redirecting" | "done">(
+    "form",
+  );
   const [errorCode, setErrorCode] = useState<CheckoutErrorCode | null>(null);
+
+  /**
+   * The card page's failure and cancel URLs come back here with `?pay=`.
+   * Read once into state so the note can be dismissed as soon as the customer
+   * does anything, rather than sticking to the URL for the rest of the visit.
+   * Neither value is alarming and neither claims a charge: both routes mean
+   * no money moved.
+   */
+  const [returnNotice, setReturnNotice] = useState<ReturnState | null>(() => {
+    const value = searchParams.get("pay");
+    return isReturnState(value) ? value : null;
+  });
 
   const byHandle = useMemo(
     () => new Map(products.map((product) => [product.handle, product])),
@@ -125,26 +156,71 @@ export function CheckoutView({
   function setField(field: FieldName, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
     setErrorCode(null);
+    // The return notice deliberately survives typing: the customer comes back
+    // from a failed payment to an empty form, and the explanation has to stay
+    // on screen while they fill it in again. It clears when they try to pay.
+  }
+
+  /** The cart's CHOICES, which is all either processor is ever sent. */
+  function orderRequestBody() {
+    return JSON.stringify({
+      items: items.map((item) => ({
+        handle: item.handle,
+        size: item.size,
+        version: item.version,
+        badge: item.badge,
+        qty: item.qty,
+        ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
+      })),
+      customer: parsed.success ? parsed.data : null,
+      locale,
+    });
+  }
+
+  /**
+   * The card path. The server prices the cart, writes the pending order and
+   * asks PayPlus for a hosted page; all that comes back here is the URL to
+   * send the customer to.
+   *
+   * The cart is deliberately NOT emptied before leaving: a customer who
+   * cancels on the payment page must come back to the basket they had. It is
+   * cleared on the confirmation page instead, once there is an order behind
+   * it.
+   */
+  async function startCardPayment() {
+    setErrorCode(null);
+    setReturnNotice(null);
+    setPhase("redirecting");
+
+    type StartResponse = { redirectUrl?: unknown; code?: unknown } | null;
+    let payload: StartResponse = null;
+    try {
+      const response = await fetch("/api/checkout/payplus/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: orderRequestBody(),
+      });
+      payload = (await response.json().catch(() => null)) as StartResponse;
+      if (response.ok && typeof payload?.redirectUrl === "string") {
+        window.location.assign(payload.redirectUrl);
+        return;
+      }
+    } catch {
+      // Network failure — handled exactly like a rejected request below.
+    }
+
+    setPhase("form");
+    setErrorCode(isErrorCode(payload?.code) ? payload.code : "server_error");
   }
 
   async function createPayPalOrder(): Promise<string> {
     setErrorCode(null);
+    setReturnNotice(null);
+    // Choices only — never a price. See the note at the top of this file.
     const response = await fetch("/api/checkout/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        // Choices only — never a price. See the note at the top of this file.
-        items: items.map((item) => ({
-          handle: item.handle,
-          size: item.size,
-          version: item.version,
-          badge: item.badge,
-          qty: item.qty,
-          ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
-        })),
-        customer: parsed.success ? parsed.data : null,
-        locale,
-      }),
+      body: orderRequestBody(),
     });
     const body: unknown = await response.json().catch(() => null);
     const payload = body as { paypalOrderId?: unknown; code?: unknown } | null;
@@ -367,41 +443,94 @@ export function CheckoutView({
         </div>
 
         <div className="mt-7">
-          {paypalClientId === null ? (
+          {/* Outside the gating below on purpose. A customer coming back from
+              a failed or cancelled card payment lands on an EMPTY form — the
+              details are not persisted — so a notice rendered only once the
+              form validates is a notice they would never see. */}
+          {returnNotice ? (
+            <p
+              role="status"
+              className="mb-5 border border-rule px-4 py-3.5 text-sm text-ink-soft"
+            >
+              {returnNotice === "failed" ? t("returnFailed") : t("returnCancelled")}
+            </p>
+          ) : null}
+
+          {!payplusEnabled && paypalClientId === null ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : !parsed.success ? (
             <p className="border border-rule px-4 py-3.5 text-sm text-ink-soft">
               {t("formIncomplete")}
             </p>
           ) : (
-            <PayPalScriptProvider
-              options={{
-                clientId: paypalClientId,
-                currency: "ILS",
-                intent: "capture",
-                components: "buttons",
-                // PayPal's own locale codes: ar_EG is the Arabic checkout it
-                // ships; there is no ar_IL.
-                locale: locale === "ar" ? "ar_EG" : "en_US",
-              }}
-            >
-              <PayPalButtons
-                // Re-mount when the amount changes so a stale button can never
-                // create an order for a total the customer has moved on from.
-                forceReRender={[totals.total, locale]}
-                style={{ layout: "vertical", shape: "sharp", label: "pay" }}
-                disabled={phase !== "form"}
-                createOrder={createPayPalOrder}
-                onApprove={async (data) => {
-                  if (typeof data.orderID === "string") await capture(data.orderID);
-                }}
-                onCancel={() => setPhase("form")}
-                onError={() => {
-                  setPhase("form");
-                  setErrorCode((current) => current ?? "server_error");
-                }}
-              />
-            </PayPalScriptProvider>
+            <div className="flex flex-col gap-6">
+              <h3 className="mono-eyebrow text-ink-soft">{t("payTitle")}</h3>
+
+              {payplusEnabled ? (
+                <div>
+                  <button
+                    type="button"
+                    className="btn w-full"
+                    disabled={phase !== "form"}
+                    onClick={startCardPayment}
+                  >
+                    {phase === "redirecting" ? t("redirecting") : t("payCard")}
+                  </button>
+                  <p className="mt-2.5 text-xs text-ink-soft">{t("payCardNote")}</p>
+                  {/* Honest rather than reassuring: the hosted page's Arabic
+                      support is not something this site can promise. */}
+                  <p className="mt-1.5 text-xs text-ink-soft">
+                    {t("payCardLanguage")}
+                  </p>
+                </div>
+              ) : null}
+
+              {paypalClientId !== null ? (
+                <div>
+                  {payplusEnabled ? (
+                    <p className="mb-4 border-t border-rule pt-4 text-xs text-ink-soft">
+                      {t("payPalNote")}
+                    </p>
+                  ) : null}
+                  <PayPalScriptProvider
+                    options={{
+                      clientId: paypalClientId,
+                      currency: "ILS",
+                      intent: "capture",
+                      components: "buttons",
+                      // PayPal offers its own "Debit or Credit Card" button.
+                      // With PayPlus present that is a SECOND card button on
+                      // one screen, pointing at a different processor — so it
+                      // is dropped and cards go to the primary path. With
+                      // PayPlus absent it is the only way to pay by card and
+                      // stays exactly where it was.
+                      ...(payplusEnabled ? { disableFunding: "card" } : {}),
+                      // PayPal's own locale codes: ar_EG is the Arabic checkout
+                      // it ships; there is no ar_IL.
+                      locale: locale === "ar" ? "ar_EG" : "en_US",
+                    }}
+                  >
+                    <PayPalButtons
+                      // Re-mount when the amount changes so a stale button can
+                      // never create an order for a total the customer has
+                      // moved on from.
+                      forceReRender={[totals.total, locale]}
+                      style={{ layout: "vertical", shape: "sharp", label: "pay" }}
+                      disabled={phase !== "form"}
+                      createOrder={createPayPalOrder}
+                      onApprove={async (data) => {
+                        if (typeof data.orderID === "string") await capture(data.orderID);
+                      }}
+                      onCancel={() => setPhase("form")}
+                      onError={() => {
+                        setPhase("form");
+                        setErrorCode((current) => current ?? "server_error");
+                      }}
+                    />
+                  </PayPalScriptProvider>
+                </div>
+              ) : null}
+            </div>
           )}
 
           <p aria-live="polite" className="mt-3 min-h-6 text-sm text-ink-soft">

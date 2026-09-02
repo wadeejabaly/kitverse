@@ -8,6 +8,9 @@ import {
   isHandledWebhookEvent,
   readWebhookOrderRef,
   repriceCart,
+  type OrderStateSnapshot,
+  type OrderStatus,
+  type PaymentProvider,
 } from "@/lib/orders";
 import { MAX_QTY } from "@/components/cart/CartProvider";
 
@@ -18,8 +21,9 @@ import { MAX_QTY } from "@/components/cart/CartProvider";
  *      realistic mixed basket — this is the number that gets charged;
  *   2. a name & number is re-sanitized on the server whatever the browser
  *      sent, and only a name that survives sanitising is billed for;
- *   3. pending → paid happens exactly once, whichever of the two callers
- *      (capture route, webhook) arrives first.
+ *   3. pending → paid happens exactly once, whichever of the three callers
+ *      (PayPal capture route, PayPal webhook, PayPlus callback) arrives
+ *      first — and only for the processor the order was created for.
  */
 
 /** A real visible handle of the requested kind, so the test tracks the catalogue. */
@@ -169,58 +173,102 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
 });
 
 describe("decidePaidTransition — pending → paid, exactly once", () => {
-  it("promotes a pending order that has a capture id", () => {
-    expect(
-      decidePaidTransition({ status: "pending", paypalCaptureId: null }, "CAP-1"),
-    ).toEqual({ action: "promote", captureId: "CAP-1" });
+  /** An order row as the transition sees it. */
+  const order = (
+    status: OrderStatus,
+    provider: PaymentProvider = "paypal",
+    settledRef: string | null = null,
+  ): OrderStateSnapshot => ({ status, provider, settledRef });
+
+  it("promotes a pending order that has a payment reference", () => {
+    expect(decidePaidTransition(order("pending"), "CAP-1", "paypal")).toEqual({
+      action: "promote",
+      reference: "CAP-1",
+    });
   });
 
   it("is a no-op on an order that is already paid — the duplicate webhook case", () => {
     expect(
-      decidePaidTransition({ status: "paid", paypalCaptureId: "CAP-1" }, "CAP-1"),
+      decidePaidTransition(order("paid", "paypal", "CAP-1"), "CAP-1", "paypal"),
     ).toEqual({ action: "noop", reason: "already-paid" });
   });
 
-  it("does not overwrite the capture id when a different capture arrives for a paid order", () => {
-    const decision = decidePaidTransition(
-      { status: "paid", paypalCaptureId: "CAP-1" },
-      "CAP-2",
-    );
-    expect(decision).toEqual({ action: "noop", reason: "already-paid" });
+  it("does not overwrite the reference when a different capture arrives for a paid order", () => {
+    expect(
+      decidePaidTransition(order("paid", "paypal", "CAP-1"), "CAP-2", "paypal"),
+    ).toEqual({ action: "noop", reason: "already-paid" });
   });
 
   it("refuses to resurrect a failed or cancelled order", () => {
-    expect(
-      decidePaidTransition({ status: "failed", paypalCaptureId: null }, "CAP-1"),
-    ).toEqual({ action: "noop", reason: "not-pending" });
-    expect(
-      decidePaidTransition({ status: "cancelled", paypalCaptureId: null }, "CAP-1"),
-    ).toEqual({ action: "noop", reason: "not-pending" });
+    expect(decidePaidTransition(order("failed"), "CAP-1", "paypal")).toEqual({
+      action: "noop",
+      reason: "not-pending",
+    });
+    expect(decidePaidTransition(order("cancelled"), "CAP-1", "paypal")).toEqual({
+      action: "noop",
+      reason: "not-pending",
+    });
   });
 
-  it("rejects an unknown order and a capture event with no capture id", () => {
-    expect(decidePaidTransition(null, "CAP-1")).toEqual({
+  it("rejects an unknown order and a payment event with no reference", () => {
+    expect(decidePaidTransition(null, "CAP-1", "paypal")).toEqual({
       action: "reject",
       reason: "unknown-order",
     });
-    expect(
-      decidePaidTransition({ status: "pending", paypalCaptureId: null }, null),
-    ).toEqual({ action: "reject", reason: "missing-capture-id" });
+    expect(decidePaidTransition(order("pending"), null, "paypal")).toEqual({
+      action: "reject",
+      reason: "missing-reference",
+    });
   });
 
   it("promotes only on the first of two identical deliveries", () => {
     // First delivery sees a pending row.
-    const first = decidePaidTransition(
-      { status: "pending", paypalCaptureId: null },
-      "CAP-9",
-    );
+    const first = decidePaidTransition(order("pending"), "CAP-9", "paypal");
     expect(first.action).toBe("promote");
     // The second sees the row the first one left behind.
     const second = decidePaidTransition(
-      { status: "paid", paypalCaptureId: "CAP-9" },
+      order("paid", "paypal", "CAP-9"),
       "CAP-9",
+      "paypal",
     );
     expect(second.action).toBe("noop");
+  });
+
+  /**
+   * Two processors, two public webhooks. An order belongs to whichever one
+   * created it, and an event from the other must not be able to close it —
+   * otherwise a forged or misrouted event on either endpoint settles an order
+   * nobody paid for.
+   */
+  describe("provider scoping", () => {
+    it("refuses to settle a PayPlus order with a PayPal capture", () => {
+      expect(
+        decidePaidTransition(order("pending", "payplus"), "CAP-1", "paypal"),
+      ).toEqual({ action: "reject", reason: "provider-mismatch" });
+    });
+
+    it("refuses to settle a PayPal order with a PayPlus transaction", () => {
+      expect(
+        decidePaidTransition(order("pending", "paypal"), "TXN-1", "payplus"),
+      ).toEqual({ action: "reject", reason: "provider-mismatch" });
+    });
+
+    it("rejects the mismatch rather than quietly no-opping it", () => {
+      // A no-op would look like a handled duplicate in the logs. This has to
+      // stay loud: it means something posted to the wrong endpoint.
+      const paid = decidePaidTransition(
+        order("paid", "payplus", "TXN-1"),
+        "CAP-1",
+        "paypal",
+      );
+      expect(paid).toEqual({ action: "reject", reason: "provider-mismatch" });
+    });
+
+    it("still promotes when the provider matches", () => {
+      expect(
+        decidePaidTransition(order("pending", "payplus"), "TXN-1", "payplus"),
+      ).toEqual({ action: "promote", reference: "TXN-1" });
+    });
   });
 });
 

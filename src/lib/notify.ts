@@ -1,4 +1,5 @@
 import "server-only";
+import type { PaymentProvider } from "@/lib/orders";
 
 /**
  * Owner notification on a paid order — SERVER ONLY.
@@ -48,8 +49,12 @@ export interface PaidOrderNotification {
   subtotal: number;
   shipping: number;
   total: number;
-  paypalOrderId: string;
-  paypalCaptureId: string;
+  /** Which processor took the money — the store runs two. */
+  provider: PaymentProvider;
+  /** The processor's id for the attempt: a PayPal order, a PayPlus page. */
+  providerOrderRef: string;
+  /** The processor's id for the money: a PayPal capture, a PayPlus transaction. */
+  providerPaymentRef: string;
 }
 
 function config(): { apiKey: string; to: string; from: string } | null {
@@ -93,8 +98,9 @@ export function renderOrderSummary(order: PaidOrderNotification): string {
   lines.push("");
   lines.push("REFERENCES");
   lines.push(`  order id       ${order.orderId}`);
-  lines.push(`  paypal order   ${order.paypalOrderId}`);
-  lines.push(`  paypal capture ${order.paypalCaptureId}`);
+  lines.push(`  processor      ${order.provider}`);
+  lines.push(`  payment page   ${order.providerOrderRef}`);
+  lines.push(`  payment ref    ${order.providerPaymentRef}`);
   lines.push(`  locale         ${order.locale}`);
   return lines.join("\n");
 }
