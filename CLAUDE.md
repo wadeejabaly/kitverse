@@ -195,20 +195,35 @@ Two rules it must keep:
 
 ## Current status
 
-**Wave 1 complete** — foundation only.
+**Build complete through checkout; pre-launch gates open.**
 
-Shipped: project setup, `ar`/`en` locale routing with RTL, design tokens and
-type stacks, site chrome copy in both locales, the legal pages (privacy,
-terms), the consent layer, the footer, a placeholder home page, and preflight.
+Shipped: foundation (locale routing, tokens, legal layer, consent, preflight);
+catalog data layer (`npm run import-catalog` from `vendor/`, 262 products, 207
+visible) with the dev-only `/review` tool; the full storefront (home, shop +
+collections, PDP with name&number/badge, search, cart, size guide, shipping,
+about) in both locales; brand integration (crest badge, navy accent, gold
+micro-accents, icons/OG); the design-elevation pass (frosted header, showcase
+hero with frosted-glass plaque, magazine index, motion system in
+`src/components/motion/`); checkout with Supabase orders + PayPal (Orders v2,
+verified webhook) and PayPlus (hosted page, HMAC+API-verified webhook,
+provider-scoped orders). Repo: private `wadeejabaly/kitverse` on GitHub;
+pushes require `gh auth switch --user wadeejabaly` (terminal normally stays
+on OmarHawari2).
 
-Not built yet: the catalog import and `src/data/*` (types, pricing, catalog
-accessors), the storefront pages (shop, PDP, search, cart), checkout and the
-PayPal integration, the Supabase migration, and the image review tool.
+**Payments posture (owner decision 2026-09-02): PayPal only for now.** The
+PayPlus integration stays in the tree but dormant — no `PAYPLUS_*` env is set
+anywhere, so the card option never renders. Do not set those vars or revive
+the PayPlus signup without an owner go; when it comes, it's env vars +
+migration `0002`, not a build task.
 
-Open items for later waves: the flat domestic shipping rate is a placeholder
-pending owner confirmation; the registered business name, address and contact
-email still need to be added to the legal pages before launch; and all Arabic
-copy needs native review.
+Open launch gates: 20 products pending image review in `/review` (35 rejected
+stay hidden); Supabase project + migrations `0001`/`0002`; PayPal sandbox
+e2e then owner-run `/code-review ultra` on the money path before any live
+charge; flat shipping rate is a ₪35 placeholder pending owner confirmation;
+registered business name/address/contact email missing from legal pages;
+all Arabic copy needs native review; `NEXT_PUBLIC_SITE_URL` on Vercel must
+be the public https origin (payment callbacks depend on it). Vercel deploys
+are done manually by the owner into the wadee account.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
