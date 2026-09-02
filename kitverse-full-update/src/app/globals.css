@@ -1,0 +1,1158 @@
+@import "tailwindcss";
+
+/* ============================================================
+   KitVerse design tokens.
+   Components consume tokens only — never a hex literal.
+   Quiet retail: warm off-white ground, near-black ink, one
+   hairline rule, and a single deep club navy used ONLY for
+   prices and primary buttons. Radius is 0 everywhere.
+
+   The accent and the gold are both sampled from the KitVerse
+   club crest (public/brand/badge.png): the shield navy and the
+   outer ring gold. The crest's electric blue sits outside this
+   sitewide palette everywhere except one deliberate exception —
+   the Floodlight hero, `--flood-*` below — and appears nowhere
+   else in the UI.
+   ============================================================ */
+:root {
+  --ground: #f5f3ef; /* page background — warm off-white */
+  --tile: #ffffff; /* product image tiles and cards */
+  --ink: #14140f; /* text */
+  --ink-soft: #6e6a5f; /* secondary text */
+  --rule: #e3dfd6; /* hairline borders — the only separator used */
+  --accent: #182448; /* crest navy — prices + primary buttons ONLY (13.7:1 on ground) */
+  --accent-ink: #ffffff; /* text on accent (15.2:1) */
+  --chip: #eeebe4; /* quiet fills: tags, inactive option buttons */
+
+  /* Micro-accent. A deep antique gold pulled down from the crest's bright
+     ring until it clears 4.5:1 on the ground (4.87:1) — it lands in the same
+     weight class as --ink-soft (4.94:1), so it reads as a tint of the
+     existing secondary text rather than as decoration. Used in exactly four
+     places: section/page eyebrows, the nav hover underline, the compare-at
+     strikethrough rule, and the footer's top hairline. Nowhere else. */
+  --gold: #856618;
+
+  /* Header glass. The header is the one translucent surface on the site.
+     --header-solid is the tint every browser gets: the crest navy at ~6% over
+     white, which lands at the ground's own lightness but cooled — a blue-grey
+     veil, not a coloured bar. --header-glass is the same tint with alpha, and
+     is applied ONLY where backdrop-filter is supported (see .header-glass). */
+  --header-solid: #f1f2f5;
+  --header-glass: rgb(241 242 245 / 0.78);
+
+  /* The editorial band's own surface. NOT --accent, and that distinction is
+     the whole point: --accent is a text-and-button colour, so in dark mode it
+     is LIFTED to a pale blue in order to stay legible ON the ground. Painting
+     a full-bleed band with it turns the section into a light lavender slab in
+     the middle of a dark page. The band is a surface, so it darkens in dark
+     mode like every other surface, and carries its own ink. */
+  --band: #182448; /* the crest navy, edge to edge */
+  --band-ink: #ffffff; /* 15.2:1 on the band */
+
+  /* The plaque is a MATERIAL, not a fill, and it is described by two pairs.
+     --band-hi/--band-lo are the opaque gradient every browser can draw: the
+     crest navy lifted a little at the near corner and deepened at the far one,
+     so the surface has a direction instead of being a rectangle of one colour.
+     --band-glass-* are the same two stops carrying alpha, used only where a
+     backdrop blur is actually available (see .band-glass).
+
+     The alphas are not a taste call. They are the floor that keeps band-ink
+     legible when the worst-case pixel — a pure white product tile — is what
+     the blur is sampling, and the numbers below are READ OFF THE RENDERED
+     FRAME rather than computed from the token, because a computed background
+     colour says nothing true about a surface whose colour is made at composite
+     time. Method: force the wall behind the plaque to #FFF, hide the plaque's
+     own text, screenshot, and take the LIGHTEST pixel in the surface.
+
+       glass    light  8.39:1 headline / 5.48:1 band-soft
+                dark   8.81:1          / 5.67:1
+       opaque   light 12.92:1          / 7.82:1
+                dark  11.66:1          / 7.12:1
+
+     Everything clears AA; the headline clears AAA on all four. The glass end
+     is dearer than the flat navy it replaced (13.71:1 measured) and that is
+     the trade being made — a surface you can see the shirts through cannot
+     also be a surface nothing reaches. */
+  --band-hi: #1d2b54;
+  --band-lo: #101a35;
+  --band-glass-hi: rgb(29 43 84 / 0.88);
+  --band-glass-lo: rgb(16 26 53 / 0.8);
+
+  /* Floodlight hero tokens. <HeroD/> (the home-page hero) is a
+     self-contained dark stage with its own ground, ink and — the
+     one exception named above — the crest's electric blue. None of
+     these are mapped into @theme and no component outside the
+     Floodlight system may reference one: that is what keeps this an
+     exception rather than a second palette. They do not vary with
+     the light/dark scheme, the same way a product tile is always
+     white — the hero is always this stage. See "THE FLOODLIGHT
+     HERO" further down for the surface itself. */
+  --flood-ground: #0a1024;
+  --flood-ground-2: #0d1530;
+  --flood-blue: #2f6bff;
+  --flood-blue-2: #5b8cff;
+  --flood-gold: #c9a55c;
+  --flood-ink: #f3f5fa;
+  --flood-ink-soft: #9aa3c4;
+  --flood-tile: #121a38;
+
+  /* Type stacks arrive as --stack-* custom properties, set on <html> from
+     src/lib/fonts.ts (the single source). Fallbacks keep the page readable
+     if that style is ever missing. */
+  --type-sans: var(
+    --stack-sans,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    Arial,
+    sans-serif
+  );
+  --type-mono: var(--stack-mono, ui-monospace, "SF Mono", Menlo, monospace);
+  --type-arabic: var(
+    --stack-arabic,
+    "SF Arabic",
+    "Geeza Pro",
+    "Noto Sans Arabic",
+    "Segoe UI",
+    sans-serif
+  );
+}
+
+/* Dark scheme — honored for both the system preference and an explicit
+   [data-theme]. --tile deliberately STAYS white: it is the photo backdrop,
+   and the product shots are cut out on white. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #131310;
+    --ink: #f1efe9;
+    --ink-soft: #9a968b;
+    --rule: #2b2b24;
+    --accent: #8fa5ce; /* crest's blue-lit navy, lifted for dark ground (7.5:1) */
+    --accent-ink: #131310;
+    --chip: #1f1f1a;
+    --gold: #b08f55; /* 6.1:1 — matched to dark --ink-soft's 6.3:1 */
+    --header-solid: #14161f;
+    --header-glass: rgb(20 22 31 / 0.82);
+    --band: #1a2033; /* a cool panel against the warm near-black ground */
+    --band-ink: #f1efe9; /* 14.0:1 on the band */
+    --band-hi: #212a45;
+    --band-lo: #12172a;
+    --band-glass-hi: rgb(33 42 69 / 0.92);
+    --band-glass-lo: rgb(18 23 42 / 0.85);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #131310;
+  --ink: #f1efe9;
+  --ink-soft: #9a968b;
+  --rule: #2b2b24;
+  --accent: #8fa5ce;
+  --accent-ink: #131310;
+  --chip: #1f1f1a;
+  --gold: #b08f55;
+  --header-solid: #14161f;
+  --header-glass: rgb(20 22 31 / 0.82);
+  --band: #1a2033; /* a cool panel against the warm near-black ground */
+  --band-ink: #f1efe9; /* 14.0:1 on the band */
+  --band-hi: #212a45;
+  --band-lo: #12172a;
+  --band-glass-hi: rgb(33 42 69 / 0.92);
+  --band-glass-lo: rgb(18 23 42 / 0.85);
+}
+
+/* Map tokens into Tailwind v4 (CSS-first @theme) →
+   bg-ground, bg-tile, text-ink, text-ink-soft, border-rule, text-accent,
+   bg-accent, text-accent-ink, bg-chip, text-gold/border-gold/decoration-gold,
+   max-w-page, font-sans/mono/arabic. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-tile: var(--tile);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-chip: var(--chip);
+  --color-gold: var(--gold);
+  --color-band: var(--band);
+  --color-band-ink: var(--band-ink);
+
+  --font-sans: var(--type-sans);
+  --font-mono: var(--type-mono);
+  --font-arabic: var(--type-arabic);
+
+  --container-page: 1180px;
+
+  /* The mockup's one custom breakpoint: above it the header shows its full
+     nav and listings go 4-up; below it the hamburger overlay takes over.
+
+     Declared in REM, not px, and that matters. Tailwind orders its breakpoint
+     media queries by value so the larger one wins a conflict, but it can only
+     compare like with like — a px breakpoint among rem defaults sorts ahead of
+     all of them, and `wide:` then loses to `sm:` at every width. That is not
+     theoretical: it is why `sm:grid-cols-3 wide:grid-cols-4` rendered the home
+     listing 3-up on a 1280px desktop. 56.25rem is the same 900px. */
+  --breakpoint-wide: 56.25rem;
+
+  /* Radius 0 is a design decision, not a default — flatten every scale step
+     so a stray rounded-* utility cannot soften a corner. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--type-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings: medium weight, balanced wrapping. The negative tracking is
+   Latin-only — see the Arabic block below. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* ---------- Arabic rendering ----------
+   Arabic gets its own stack, more leading, and ZERO tracking. Letter-spacing
+   breaks the joined script and Arabic has no uppercase, so neither is ever
+   applied. Scoped to the Arabic locale; Latin islands opt back in with
+   lang="en" (see .latin). */
+[lang="ar"] body,
+body[lang="ar"] {
+  font-family: var(--type-arabic);
+  line-height: 1.85;
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+  letter-spacing: normal;
+}
+
+/* A Latin island inside an Arabic page — brand names, model codes, URLs. */
+[lang="ar"] .latin,
+[lang="ar"] [lang="en"] {
+  font-family: var(--type-sans);
+  line-height: 1.6;
+}
+
+/* ---------- Utilities ---------- */
+
+/* Mono eyebrow: uppercase, widely tracked — LATIN ONLY. In Arabic it renders
+   in the Arabic stack at normal tracking and normal case.
+
+   Colour rule: a bare .mono-eyebrow is GOLD, because the eyebrows that carry
+   no colour class are the ones that introduce a page or a section — the label
+   is the signal. Utility eyebrows (result counts, form legends, breadcrumbs,
+   table headers, footer column labels, card meta) opt out with `text-ink-soft`
+   and stay neutral; gold on all of them would read as decoration.
+
+   The gold is colour only. Arabic eyebrows take the gold like any other, and
+   the tracking/case neutralisation below is untouched — colour was never part
+   of that rule. */
+.mono-eyebrow {
+  font-family: var(--type-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* The colour goes in @layer base ON PURPOSE. An unlayered rule outranks every
+   Tailwind utility, so a bare `color:` here would paint the ~30 eyebrows that
+   already say `text-ink-soft` gold too and there would be no way to opt out.
+   In the base layer the utility wins, and the opt-out above is real. */
+@layer base {
+  .mono-eyebrow {
+    color: var(--gold);
+  }
+}
+
+[lang="ar"] .mono-eyebrow:not([lang="en"]):not(.latin) {
+  font-family: var(--type-arabic);
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* The header surface: a frosted, navy-tinted veil over whatever scrolls under
+   it. Every browser gets the opaque --header-solid first; only browsers that
+   actually support backdrop-filter get the translucent version, so an
+   unsupported browser shows a clean tinted bar rather than a see-through one
+   with unreadable text over the product photography behind it.
+
+   The tint is deliberately light on colour. It reads as cooled glass next to
+   the warm ground, never as a blue band. */
+.header-glass {
+  background: var(--header-solid);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .header-glass {
+    background: transparent;
+  }
+
+  /* The blur lives on a pseudo-element, NEVER on the header itself.
+     An element with backdrop-filter becomes the containing block for its
+     position:fixed descendants — and <MobileMenu>'s `fixed inset-0` overlay
+     is rendered inside <header>. Filter the header directly and that overlay
+     stops resolving against the viewport and collapses to the header's own
+     ~76px box, so the mobile menu silently breaks. The pseudo-element carries
+     the effect without changing what the header is a containing block for.
+
+     Do not add transform, filter or perspective to .header-glass either:
+     they create the same containing block and would reintroduce the bug. */
+  .header-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--header-glass);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+}
+
+/* The one button treatment on the site. Accent fill for the primary action
+   (add to cart, checkout, shop all), a hairline outline for anything quieter.
+   Tracked uppercase is a Latin treatment: Arabic drops both and takes the
+   Arabic stack, exactly as the eyebrows do. */
+.btn {
+  display: inline-block;
+  font-family: var(--type-sans);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 15px 34px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-quiet {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+
+.btn-quiet:hover {
+  border-color: var(--ink);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[lang="ar"] .btn {
+  font-family: var(--type-arabic);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* ============================================================
+   EDITORIAL TYPE
+   Three roles only, as everywhere else on the site: display,
+   body, mono label. These add the display end of the scale that
+   the storefront pages did not previously need.
+   ============================================================ */
+
+/* The top of the scale. Every headline on the site — the hero's included —
+   sets here or below.
+
+   Latin gets the tight tracking a grotesk display line wants. Arabic gets
+   neither tracking (it breaks the joined script) nor the tight leading,
+   because the script's ascenders and descenders need the room at this size.
+   Both rules already exist for h1–h6; these restate the leading because a
+   display size needs a tighter value than the 1.85 body default.
+
+   There was a larger `.display` step above this one, for the type-led hero
+   the home page used to open with. That hero is gone — the home page opens on
+   the showcase now — and nothing else on the site ever asked for a 5.25rem
+   line, so the step went with it. */
+.display-sm {
+  font-size: clamp(1.6rem, 3.1vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+[lang="ar"] .display-sm {
+  letter-spacing: normal;
+  line-height: 1.42;
+  font-weight: 400;
+}
+
+/* Oversized mono numerals: the magazine index rows (01–05) and the value
+   strip. Latin-only by construction — these are digits, and digits are
+   always Latin on this site. */
+.index-figure {
+  font-family: var(--type-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+
+/* The footer's ghost logotype. The wordmark is a Latin logotype, so it keeps
+   the tracking and the uppercase in both locales — the same exception the
+   site has always made for it. It is decoration and nothing else: aria-hidden
+   in the markup, and held at a contrast where it reads as a watermark in the
+   paper rather than as a word anyone is asked to read. */
+.ghost-wordmark {
+  font-family: var(--type-sans);
+  font-size: clamp(3.5rem, 15vw, 13rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 0.82;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.05;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* The same idea one step down: a watermark ordinal for the value strip.
+   Like the ghost wordmark it is aria-hidden in the markup and carries no
+   information the list order does not already carry — the sequence is
+   typographic rhythm, not content. That is what lets it sit below text
+   contrast without failing anybody: there is nothing here to read. */
+.ghost-figure {
+  font-family: var(--type-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2.75rem, 5.4vw, 4.25rem);
+  line-height: 1;
+  font-weight: 400;
+  color: var(--ink);
+  opacity: 0.13;
+  user-select: none;
+}
+
+/* ============================================================
+   THE MAGAZINE INDEX
+   Full-width hairline rows. The whole row is the target: on hover
+   the type steps toward the inline start and a gold hairline draws
+   in under it. Transform only, 240ms.
+   ============================================================ */
+.index-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--rule);
+  padding-block: clamp(1.1rem, 2.4vw, 1.9rem);
+  position: relative;
+}
+
+/* The gold underline. Scaled from the inline start so it draws in the
+   reading direction of the locale — transform-origin uses a logical
+   keyword, so RTL mirrors it with no extra rule. */
+.index-row::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[dir="rtl"] .index-row::after {
+  transform-origin: right center;
+}
+
+.index-row:hover::after,
+.index-row:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* A hairline that draws in under a link on hover. Same mechanic as the index
+   row, reusable on any inline heading: scaleX from the inline start, so it
+   grows in the reading direction and mirrors itself in Arabic. Transform
+   only — animating background-size or width would be a layout-thrashing
+   version of the same picture. */
+.underline-draw {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-draw::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[dir="rtl"] .underline-draw::after {
+  transform-origin: right center;
+}
+
+.group:hover .underline-draw::after,
+.group:focus-visible .underline-draw::after {
+  transform: scaleX(1);
+}
+
+.index-row-name {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* translate is direction-aware in the logical sense here: RTL moves the
+   other way, so the row always steps toward its own inline start. */
+.index-row:hover .index-row-name,
+.index-row:focus-visible .index-row-name {
+  transform: translateX(10px);
+}
+
+[dir="rtl"] .index-row:hover .index-row-name,
+[dir="rtl"] .index-row:focus-visible .index-row-name {
+  transform: translateX(-10px);
+}
+
+/* ============================================================
+   THE BAND
+   The one navy surface on the site: crest navy carrying band-ink
+   type and a paper grain. Used exactly once — the hero plaque in
+   <HeroB/>, sitting over the drifting wall of shirts.
+
+   ONCE is the rule, not an accident of the current design. This
+   was originally the Fan/Player explainer's full-bleed band, and
+   for a moment the page carried both. Two navy slabs in one scroll
+   do not read as two emphases; they read as a pattern, and then
+   neither is an event. The explainer went back to the page ground
+   and the hero kept the navy.
+
+   THE BAND IS A MATERIAL, NOT A FILL. Three layers, in order:
+
+     1. the surface — an opaque navy gradient, or, where a backdrop
+        blur is available, a translucent tint over a blurred view of
+        the wall of shirts (see .band-glass);
+     2. the grain — a fractal turbulence tile at ~4.5%, which is
+        also what keeps a 400px-tall two-stop gradient from banding
+        on an 8-bit display;
+     3. the plate frame — a hairline drawn 8–12px inside the edge,
+        so the panel reads as a plate fixed to the wall rather than
+        as a rectangle cut out of it.
+
+   A crest watermark was tried as a fourth layer and dropped: at any
+   alpha where it registered at all, badge.png's wordmark and its
+   electric blue registered too, and both are things this UI has
+   agreed not to say outside the badge artwork itself.
+   ============================================================ */
+
+/* The grain tile, shared by both surfaces. A two-octave fractal
+   feTurbulence, desaturated, with its alpha baked INTO the SVG rather than
+   applied as element `opacity` — an opacity below 1 on the glass layer would
+   dilute its own backdrop-filter result back toward the unfiltered backdrop.
+
+   It is a 240px tile with stitchTiles, repeated by CSS, NOT a full-bleed
+   filtered rect — a viewport-sized SVG filter is genuinely expensive to
+   rasterise on a low-end phone, and this is the same picture for free.
+   Carrying it as a data URI also means its filter id lives in its own tiny
+   document and can never collide with an id on the page. */
+:root {
+  --kv-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='kvGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23kvGrain)' opacity='0.045'/%3E%3C/svg%3E");
+}
+
+.band {
+  /* The gradient's axis is physical, so it is mirrored by hand: it runs from
+     the corner the reading starts in toward the far one, and the eyebrow and
+     headline sit on the densest part of the surface in both locales.
+
+     The mirror is a custom property rather than a second background-image
+     declaration, and that is not a style preference. `[dir="rtl"] .band` is
+     more specific than `.band`, so an RTL override that restated the whole
+     background would outrank the `background-image: none` the glass gate below
+     needs — leaving the Arabic page with an OPAQUE plaque under a translucent
+     one, frosted glass over a wall it cannot see. (It did, for one commit.)
+     A custom property carries the difference with no specificity of its own. */
+  --band-angle: 158deg;
+
+  color: var(--band-ink);
+  position: relative;
+  overflow: hidden;
+  background-color: var(--band);
+  background-image: var(--kv-grain),
+    linear-gradient(var(--band-angle), var(--band-hi), var(--band-lo));
+  background-size:
+    240px 240px,
+    auto;
+  /* One-time entrance, transform only. See the note on kv-plaque-in. */
+  animation: kv-plaque-in 620ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+[dir="rtl"] .band {
+  --band-angle: 202deg;
+}
+
+/* The frosted layer. Hidden by default and switched on only under the
+   @supports/@media gate below, so every path that cannot render it correctly
+   falls back to the opaque gradient instead of to a see-through panel.
+
+   It is a real element rather than a pseudo-element for one reason: the
+   plaque must not create a Backdrop Root above it. `isolation: isolate` (which
+   .band used to carry, so that a z-index:-1 pseudo stayed put) is exactly such
+   a root — with it in place the blur samples only the plaque's own background
+   and the wall of shirts never reaches the glass. Two positioned children in
+   tree order — glass first, content second — give the same painting order with
+   no stacking context at all. */
+.band-glass {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The plate frame. Hairline, band-ink at low alpha, radius 0 like everything
+   else. Drawn last so it sits over the glass, and inset far enough that no
+   glyph ever comes near it. */
+.band::after {
+  content: "";
+  position: absolute;
+  inset: clamp(8px, 1.2vw, 12px);
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--band-ink) 15%, transparent);
+  animation: kv-plate-in 620ms 200ms ease-out backwards;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  /* Desktop only, and that is a performance decision rather than a layout one.
+     The backdrop here is not static the way the header's is — the wall of
+     shirts is translating under it continuously, so the blur re-rasterises
+     every frame for as long as the hero is on screen. On the phone that is a
+     battery and LCP cost against a Lighthouse budget of 90, and the plaque is
+     nearly the full measure there anyway, so there is very little wall left to
+     look through. Phones get the opaque gradient, which is the same material
+     one layer shallower. 56.25rem is the site's `wide` breakpoint. */
+  @media (min-width: 56.25rem) {
+    .band {
+      background-color: transparent;
+      background-image: none;
+    }
+
+    .band-glass {
+      display: block;
+      background-image: var(--kv-grain),
+        linear-gradient(var(--band-angle), var(--band-glass-hi), var(--band-glass-lo));
+      background-size:
+        240px 240px,
+        auto;
+      -webkit-backdrop-filter: blur(18px) saturate(0.85);
+      backdrop-filter: blur(18px) saturate(0.85);
+    }
+  }
+}
+
+/* Transparency is a preference, not a given. A reader who has asked for less
+   of it gets the opaque surface — authored as an override rather than as a
+   condition on the gate above, because an unknown media feature makes a query
+   never match, and gating the frost ON it would silently delete the material
+   in every browser that has not shipped the feature yet. */
+@media (prefers-reduced-transparency: reduce) {
+  .band {
+    background-color: var(--band);
+    background-image: var(--kv-grain),
+      linear-gradient(var(--band-angle), var(--band-hi), var(--band-lo));
+  }
+
+  .band-glass {
+    display: none;
+  }
+}
+
+/* The plaque's one entrance: it rises a little and settles. TRANSFORM ONLY —
+   the headline inside it is the page's LCP element and has to paint at full
+   opacity on the first frame, which is the same reason .line-mask never
+   touches opacity either. `backwards` fill, not `both`: the FROM state applies
+   through the delay and then the animation lets go entirely, so the plaque is
+   not left holding a transform (and therefore a containing block) forever.
+   The frame fades in just behind it — that layer is decoration, so opacity is
+   free there. Nothing here loops. */
+@keyframes kv-plaque-in {
+  from {
+    transform: translateY(16px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes kv-plate-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Secondary text inside the band cannot use --ink-soft: that is a token for
+   the page ground, and the band is a different surface. It is the band's own
+   ink at low alpha, which is correct in both schemes with no extra token, and
+   measures 8.9:1 (light) / 8.2:1 (dark) against the opaque band. On the
+   frosted surface, against the worst white tile the blur can find, the same
+   74% holds 5.48:1 / 5.67:1 — see the --band-glass-* note up top.
+
+   (A matching `.band-rule` used to sit here for hairlines on the band. The
+   only thing that ever drew one was the Fan/Player explainer, which is on the
+   page ground now and uses --rule like every other section.) */
+.band-soft {
+  color: color-mix(in srgb, var(--band-ink) 74%, transparent);
+}
+
+/* Every price and figure — columns of numerals must line up. */
+.price,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bidi isolation helper — wrap numerals, prices, dates, URLs and Latin terms
+   inside RTL copy (or use <bdi>) so they don't reorder. */
+.bidi-isolate {
+  unicode-bidi: isolate;
+  direction: ltr;
+  display: inline-block;
+}
+
+/* RTL discipline: logical properties ONLY, in CSS as in Tailwind classes —
+   margin-inline / padding-inline / inset-inline, text-align: start | end.
+   Preflight greps for physical-direction violations. */
+
+/* ============================================================
+   MOTION
+   House rules: transform/opacity only, ease-out or the studio
+   cubic-bezier, entrances 400–800ms, hovers 200–300ms, stagger
+   60–100ms. No bounce, no overshoot, no scale-up-then-down.
+
+   Everything here is authored VISIBLE BY DEFAULT and enhanced
+   when motion is allowed. Two mechanisms, and both fail safe:
+
+   - CSS entrances (hero, section heads) animate transform only
+     and never touch opacity, so the text is painted at full
+     opacity on the very first frame. That is what keeps the
+     display headline usable as the LCP element.
+   - Scroll reveals (<Reveal>) are applied by JS: the element
+     ships with no reveal styling at all, and the component adds
+     the start state itself. If the bundle never loads, or the
+     observer never fires, the content is simply already there.
+   ============================================================ */
+
+/* ---- Line mask ----
+   A line of display type rising into its own clip box. Transform
+   only. The padding/negative-margin pair widens the clip region so
+   Arabic descenders (ي ج ن) are not shaved off, without changing
+   where the line sits in the layout. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.1em 0.18em;
+  margin-block: -0.1em -0.18em;
+}
+
+.line-mask > * {
+  display: block;
+  animation: kv-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--kv-delay, 0ms);
+}
+
+@keyframes kv-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ---- Scroll reveal ----
+   Applied by <Reveal> only after it has confirmed motion is allowed.
+   `.reveal-idle` is the start state; removing it runs the transition.
+   Opacity is fine here: these are never the LCP element. */
+.reveal-idle {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal-run {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 640ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--kv-delay, 0ms);
+}
+
+/* Mobile gets the same reveal at lower intensity — a shorter throw and a
+   quicker settle. Depth you feel, not a page that moves. */
+@media (max-width: 899px) {
+  .reveal-idle {
+    transform: translateY(10px);
+  }
+
+  .reveal-run {
+    transition-duration: 460ms;
+  }
+}
+
+/* Motion backstop — reduced-motion users must always see the content.
+   The delays matter as much as the durations: an entrance with `both` fill
+   holds its FROM state through the delay, so a 0.01ms duration behind a
+   240ms stagger would still blank a headline for a quarter of a second. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Belt and braces: even if a reveal start state were applied, nothing
+     stays hidden for a reduced-motion reader. */
+  .reveal-idle {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Visible focus — never removed. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   HERO VARIANTS (A / B / C / D)
+
+   Everything below exists for the alternative home-page openings in
+   src/components/hero/. It is authored here rather than in the
+   components because the winner is promoted into the home page
+   unchanged, and a hero's type scale and its motion belong in the
+   stylesheet with the rest of the system. D — Floodlight — is the
+   one live on the home page today; A, B and C stay on
+   /hero-preview for reference.
+
+   This block is authored LAST on purpose: the reduced-motion
+   override at the bottom has to come after the global
+   reduced-motion backstop to beat it (see the note there).
+   ============================================================ */
+
+/* ---- Variant C's headline ----
+   The retired `.display` step at 70% volume: 5.25rem → 3.7rem at the
+   ceiling, 2.5rem → 1.75rem at the floor, and the same 0.7 applied
+   to the vw term so the ramp between them scales too. Leading opens
+   very slightly (1.02 → 1.06) because a smaller display line does
+   not need to be set as tightly. Arabic drops the tracking and takes
+   the same 0.7 off its own scale.
+
+   Used only by <HeroC/>, which is kept on /hero-preview in case the
+   owner revisits the typographic direction. It carries its own
+   numbers rather than deriving them, so it survived `.display`. */
+.display-quiet {
+  font-size: clamp(1.75rem, 4.5vw, 3.7rem);
+  line-height: 1.06;
+  letter-spacing: -0.028em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+[lang="ar"] .display-quiet {
+  letter-spacing: normal;
+  line-height: 1.34;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.05vw, 3.45rem);
+}
+
+/* ---- Variant A's crossfade ----
+   Two shirts occupying one grid cell, swapped on a long timer. The
+   transition is opacity only and it is deliberately slow: at 900ms
+   over a 7s cycle the change is something you notice having
+   happened, not something that pulls the eye. The layers are
+   painted by the server with the first shirt opaque, so a browser
+   that never runs the timer simply shows one shirt. */
+.kv-crossfade {
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Variant B's ambient wall ----
+   A row of product tiles wide enough to overflow its window twice,
+   translated by exactly half its own width. Because the second half
+   is a copy of the first, the end state is pixel-identical to the
+   start and the loop has no seam.
+
+   The translate is a percentage of the ELEMENT, not the viewport, so
+   the loop is correct at every width with no JS measuring anything.
+
+   Duration comes in as --kv-drift per row (two different values, so
+   the rows never fall into step). ~2 minutes for a full pass is the
+   difference between a background and a carousel. */
+.kv-marquee {
+  display: flex;
+  width: max-content;
+  animation: kv-drift var(--kv-drift, 120s) linear infinite;
+}
+
+.kv-marquee-reverse {
+  animation-name: kv-drift-back;
+}
+
+@keyframes kv-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes kv-drift-back {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* The layer the rows live on.
+
+   `direction: ltr` is load-bearing and it has to sit HERE, on the
+   container, not on the strip. A strip 4,500px wide inside a 1,440px
+   window is placed by its containing block's direction: on the Arabic
+   page that pins its RIGHT edge to the window's right edge and hangs
+   the other 3,000px off to the left, so translating it further left
+   walks the whole row off screen within a few seconds. Setting
+   `direction` on the strip itself does not help — an element's own
+   `direction` lays out its CHILDREN, it does not move its own box.
+   The wall carries no text (it is aria-hidden decoration), so it has
+   no reading direction to preserve, and pinning it LTR makes one set
+   of keyframes correct in both locales.
+
+   The mask fades the wall out at the top and bottom of the section
+   instead of ending it on a hard edge. `black`/`transparent` here are
+   opacity stops, not colours — nothing is painted in them — which is
+   why this is not a token violation. */
+.kv-wall {
+  direction: ltr;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 13%,
+    black 87%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 13%,
+    black 87%,
+    transparent
+  );
+}
+
+/* The primary action when it sits ON the band rather than on the page
+   ground. `.btn` fills with --accent, and in light mode --accent and
+   --band are the same navy, so the default button disappears into the
+   panel. Inverting it — the band's own ink as the fill, the band as the
+   label — keeps one button treatment on the site and measures 15.2:1
+   (light) / 14.0:1 (dark) either way. No new token: both values are the
+   band's own pair. */
+.btn-band {
+  background: var(--band-ink);
+  color: var(--band);
+}
+
+/* ============================================================
+   THE FLOODLIGHT HERO
+   Variant D's surface: a stadium-at-night mood scoped to the hero
+   alone, and the one place on the site the crest's electric blue
+   appears outside the badge artwork (see the --flood-* tokens up
+   top). Three layers, painted in DOM order so each sits correctly
+   under the content: the navy ground with an ambient corner wash
+   (.kv-flood-glow), a diagonal beam raking across it
+   (.kv-flood-beam), then the headline/CTA/shirt stage.
+
+   USED EXACTLY ONCE, the same rule THE BAND keeps above: this is a
+   second dark surface on the site, and a second one anywhere else
+   would turn the effect into a pattern instead of an opening
+   statement.
+
+   Both the wash and the beam originate near the headline's own
+   corner, so the light reads as coming from behind the type and
+   spilling across the shirt — which is why they are mirrored by
+   hand for the two reading directions rather than centred and left
+   alone. The mirror lives in custom properties, the same device
+   --band-angle uses and for the same reason: an RTL override that
+   restated the whole background would have to out-specificity the
+   base rule, and a custom property carries the difference with
+   none. */
+.kv-flood {
+  --flood-corner-x: 78%;
+  --flood-corner-x2: 100%;
+  --flood-beam-angle: 115deg;
+  --flood-beam-tilt: 8deg;
+  background: var(--flood-ground);
+  color: var(--flood-ink);
+}
+
+[dir="ltr"] .kv-flood {
+  --flood-corner-x: 22%;
+  --flood-corner-x2: 0%;
+  --flood-beam-angle: 245deg;
+  --flood-beam-tilt: -8deg;
+}
+
+.kv-flood-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      760px 520px at var(--flood-corner-x) -6%,
+      rgb(47 107 255 / 0.55),
+      transparent 60%
+    ),
+    radial-gradient(
+      620px 460px at var(--flood-corner-x2) 30%,
+      rgb(91 140 255 / 0.28),
+      transparent 65%
+    ),
+    linear-gradient(180deg, var(--flood-ground) 0%, var(--flood-ground-2) 100%);
+}
+
+.kv-flood-beam {
+  position: absolute;
+  inset-block-start: -120px;
+  inset-inline-end: -80px;
+  width: 900px;
+  height: 900px;
+  pointer-events: none;
+  background: linear-gradient(
+    var(--flood-beam-angle),
+    rgb(47 107 255 / 0) 40%,
+    rgb(47 107 255 / 0.16) 48%,
+    rgb(47 107 255 / 0) 56%
+  );
+  transform: rotate(var(--flood-beam-tilt));
+}
+
+/* The hero eyebrow on the flood surface. This is not a fifth use of
+   --gold — it is a distinct token for a distinct dark surface, the
+   same relationship --band-ink has to --ink. Unlayered, so it beats
+   .mono-eyebrow's @layer base colour the same way .band-soft does
+   (see the note on that rule, above). */
+.kv-flood-eyebrow {
+  color: var(--flood-gold);
+}
+
+.kv-flood-sub {
+  color: var(--flood-ink-soft);
+}
+
+/* Numerals that need to read as emphasis on the flood surface — the
+   small Fan/Player print beside the CTA. */
+.kv-flood-strong {
+  color: var(--flood-ink);
+  font-weight: 700;
+}
+
+/* The headline's second line: ink fading into the electric blue
+   toward the reading direction's END, mirrored the same way as the
+   glow and the beam above it — the highlight intensifies where the
+   phrase finishes, in both locales. */
+.kv-flood-gradient-text {
+  --flood-text-angle: 270deg;
+  background: linear-gradient(
+    var(--flood-text-angle),
+    var(--flood-ink) -20%,
+    var(--flood-blue-2) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[dir="ltr"] .kv-flood-gradient-text {
+  --flood-text-angle: 90deg;
+}
+
+/* The one button treatment, on the one surface it is allowed a
+   second colour: the flood's own electric blue fill, with the glow
+   the mockup earns from a real box-shadow rather than a second navy
+   button sitting flat on a navy page. */
+.btn-flood {
+  background: var(--flood-blue);
+  color: var(--flood-ground);
+  box-shadow: 0 18px 34px -12px rgb(47 107 255 / 0.6);
+}
+
+/* The local glow behind the shirt itself — distinct from the ambient
+   corner wash above, and unaffected by reading direction since it is
+   centred on the stage rather than the page. */
+.kv-flood-shirt-glow {
+  position: absolute;
+  width: 65%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(47 107 255 / 0.5), rgb(47 107 255 / 0) 70%);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* The corner chip naming the shirt on stage — a small dark plate over
+   the image, one hairline lit with the flood blue, echoing the
+   mockup's caption treatment without a caption row underneath. */
+.kv-flood-chip {
+  background: var(--flood-tile);
+  border: 1px solid rgb(91 140 255 / 0.35);
+  color: var(--flood-ink-soft);
+}
+
+.kv-flood-chip strong {
+  color: var(--flood-blue-2);
+  font-weight: 700;
+}
+
+/* Reduced motion: the wall stops and rests at its authored position.
+
+   This has to be spelled out. The global backstop above zeroes
+   animation-duration with !important, which for an INFINITE animation
+   does not stop it — it snaps it to the 100% keyframe and leaves the
+   strip parked half a width off, so the row would render with a hole
+   in it. `animation: none` puts it back at translate 0. Later in the
+   file and equally specific, so this wins. */
+@media (prefers-reduced-motion: reduce) {
+  .kv-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+}
