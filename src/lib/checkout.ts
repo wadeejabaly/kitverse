@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { SIZES, VERSIONS } from "@/data/pricing";
+import { SIZES, VERSIONS, isDeliveryRegion } from "@/data/pricing";
+import type { DeliveryRegion } from "@/data/pricing";
 import type { Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX } from "@/lib/product";
 
@@ -26,6 +27,9 @@ const SizeSchema = z.custom<Size>(
 const VersionSchema = z.custom<Version>(
   (value) => typeof value === "string" && (VERSIONS as string[]).includes(value),
 );
+// The closed set of delivery regions, checked against pricing.ts — the server
+// must never price shipping from a region it did not itself define.
+const DeliveryRegionSchema = z.custom<DeliveryRegion>(isDeliveryRegion);
 
 /** One cart line as it crosses the wire. Matches CartItem minus any money. */
 export const CheckoutItemSchema = z.object({
@@ -45,6 +49,10 @@ export type CheckoutItemInput = z.infer<typeof CheckoutItemSchema>;
  * Delivery details. Israel only at launch, so `country` is not a form field
  * at all — it is fixed to IL here and on the order row, which is honest about
  * what the store can actually ship.
+ *
+ * `region` IS a form field, and a required one: shipping is priced from it
+ * (pricing.ts → shippingFor), so it has to be a choice the shopper made and a
+ * value from a closed set the server owns.
  */
 export const CustomerSchema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -61,6 +69,9 @@ export const CustomerSchema = z.object({
   email: z.email().max(160),
   address: z.string().trim().min(5).max(200),
   city: z.string().trim().min(2).max(80),
+  // Explicit, shopper-chosen — shipping is priced from this, never inferred
+  // from the free-text city above (too unreliable to bill from).
+  region: DeliveryRegionSchema,
   notes: z.string().trim().max(500).optional(),
 });
 

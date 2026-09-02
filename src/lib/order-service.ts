@@ -31,7 +31,7 @@ export interface SettlementResult {
 }
 
 const ORDER_COLUMNS =
-  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, address, city, country, notes, locale, subtotal_ils, shipping_ils, total_ils";
+  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, address, city, delivery_region, country, notes, locale, subtotal_ils, shipping_ils, total_ils";
 
 /**
  * Where each provider records the payment that settled an order. The PayPal
@@ -242,6 +242,7 @@ async function sendOwnerNotification(
         phone: order.phone ?? "",
         address: order.address ?? "",
         city: order.city ?? "",
+        region: order.delivery_region ?? "",
         country: order.country ?? "IL",
         notes: order.notes,
       },

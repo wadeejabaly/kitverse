@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ADDONS, SIZES, VERSIONS, compareAtFor, priceFor } from "@/data/pricing";
-import type { Kind, Size, Version } from "@/data/types";
+import { ADDONS, SIZES, VERSIONS, isRetroSeason, priceFor, sizeSurcharge } from "@/data/pricing";
+import type { Size, Version } from "@/data/types";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
-import { ComparePrice, Figure, Price } from "@/components/shared/Money";
+import { Figure, Price } from "@/components/shared/Money";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 
 /**
@@ -14,14 +14,20 @@ import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
  *
  * Every figure on screen is computed from src/data/pricing.ts as the reader
  * changes a selection — there is no price in this component's markup and none
- * in the cart item it writes. The size surcharge, the two add-ons and the
- * previous-season compare-at all fall out of that one source, so a price
- * change lands here without anyone editing a component.
+ * in the cart item it writes. The size surcharge and the two add-ons all fall
+ * out of that one source, so a price change lands here without anyone editing
+ * a component.
+ *
+ * Retro (a 2022-and-earlier `season`) has no fan/player choice — it is one
+ * product at one price — so the version fieldset is hidden and every
+ * add-to-cart writes "fan" as the stored version. priceFor ignores `version`
+ * for a retro season, so that stored value can never affect what is charged.
  */
-export function ProductForm({ handle, kind }: { handle: string; kind: Kind }) {
+export function ProductForm({ handle, season }: { handle: string; season: string }) {
   const t = useTranslations("product");
   const tCommon = useTranslations("common");
   const { add } = useCart();
+  const retro = isRetroSeason(season);
 
   const [size, setSize] = useState<Size>("M");
   const [version, setVersion] = useState<Version>("fan");
@@ -35,15 +41,9 @@ export function ProductForm({ handle, kind }: { handle: string; kind: Kind }) {
   const hasName = trimmedName !== "";
 
   const unitPrice =
-    priceFor(kind, size, version) +
+    priceFor(season, size, version) +
     (hasName ? ADDONS.nameNumber : 0) +
     (badge ? ADDONS.badge : 0);
-
-  const baseCompareAt = compareAtFor(kind, size, version);
-  const compareAt =
-    baseCompareAt === null
-      ? null
-      : baseCompareAt + (hasName ? ADDONS.nameNumber : 0) + (badge ? ADDONS.badge : 0);
 
   // The confirmation is a moment, not a state: it clears itself so the page
   // does not sit there claiming something that happened a minute ago.
@@ -69,7 +69,6 @@ export function ProductForm({ handle, kind }: { handle: string; kind: Kind }) {
     <div>
       <p className="mb-7 flex items-baseline gap-3 text-xl text-accent">
         <Price value={unitPrice} />
-        {compareAt === null ? null : <ComparePrice value={compareAt} className="text-base" />}
       </p>
 
       {/* Size */}
@@ -77,7 +76,9 @@ export function ProductForm({ handle, kind }: { handle: string; kind: Kind }) {
         <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("size")}</legend>
         <div className="flex flex-wrap gap-2">
           {SIZES.map((option) => {
-            const surcharge = priceFor(kind, option, version) - priceFor(kind, "S", version);
+            // 3XL and 4XL no longer add the same figure, so the delta is
+            // printed from pricing.ts per size rather than being one string.
+            const surcharge = sizeSurcharge(option);
             return (
               <OptionButton
                 key={option}
@@ -86,7 +87,9 @@ export function ProductForm({ handle, kind }: { handle: string; kind: Kind }) {
               >
                 <span className="latin tabular">{option}</span>
                 {surcharge > 0 ? (
-                  <small className="ms-1.5 text-ink-soft">{t("sizeDelta")}</small>
+                  <small className="ms-1.5 text-ink-soft">
+                    <Figure>+₪{surcharge}</Figure>
+                  </small>
                 ) : null}
               </OptionButton>
             );
@@ -94,24 +97,27 @@ export function ProductForm({ handle, kind }: { handle: string; kind: Kind }) {
         </div>
       </fieldset>
 
-      {/* Version */}
-      <fieldset className="mb-6 border-0 p-0">
-        <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("version")}</legend>
-        <div className="flex flex-wrap gap-2">
-          {VERSIONS.map((option) => (
-            <OptionButton
-              key={option}
-              pressed={version === option}
-              onClick={() => setVersion(option)}
-            >
-              {option === "fan" ? t("versionFan") : t("versionPlayer")}
-              <small className="ms-1.5 text-ink-soft">
-                <Price value={priceFor(kind, size, option)} />
-              </small>
-            </OptionButton>
-          ))}
-        </div>
-      </fieldset>
+      {/* Version — Retro has none: one product, one price, so offering the
+          choice would be a lie about what changes. */}
+      {retro ? null : (
+        <fieldset className="mb-6 border-0 p-0">
+          <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("version")}</legend>
+          <div className="flex flex-wrap gap-2">
+            {VERSIONS.map((option) => (
+              <OptionButton
+                key={option}
+                pressed={version === option}
+                onClick={() => setVersion(option)}
+              >
+                {option === "fan" ? t("versionFan") : t("versionPlayer")}
+                <small className="ms-1.5 text-ink-soft">
+                  <Price value={priceFor(season, size, option)} />
+                </small>
+              </OptionButton>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
       {/* Name and number */}
       <fieldset className="mb-6 border-0 p-0">

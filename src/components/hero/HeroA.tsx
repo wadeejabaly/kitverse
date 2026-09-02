@@ -48,7 +48,7 @@ export async function HeroA({
     image: product.image,
     title: titleFor(product, locale),
     // The "from" price, exactly as the cards state it: smallest size, Fan.
-    price: priceFor(product.kind, "S", "fan"),
+    price: priceFor(product.season, "S", "fan"),
   }));
 
   return (

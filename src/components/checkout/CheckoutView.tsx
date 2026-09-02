@@ -6,7 +6,13 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Link, useRouter } from "@/i18n/navigation";
-import { SHIPPING_ILS_DOMESTIC, cartTotals, priceLine } from "@/data/pricing";
+import {
+  DELIVERY_REGIONS,
+  cartTotals,
+  priceLine,
+  shippingFor,
+  type DeliveryRegion,
+} from "@/data/pricing";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
 import type { CartProductInfo } from "@/components/cart/CartView";
 import { Figure, Price } from "@/components/shared/Money";
@@ -38,6 +44,7 @@ type FormValues = {
   email: string;
   address: string;
   city: string;
+  region: DeliveryRegion | "";
   notes: string;
 };
 
@@ -47,6 +54,7 @@ const EMPTY_FORM: FormValues = {
   email: "",
   address: "",
   city: "",
+  region: "",
   notes: "",
 };
 
@@ -127,7 +135,7 @@ export function CheckoutView({
       return {
         item,
         product,
-        priced: priceLine(product.kind, item.size, item.version, item.qty, {
+        priced: priceLine(product.season, item.size, item.version, item.qty, {
           nameNumber: Boolean(item.nameNumber),
           badge: item.badge,
         }),
@@ -136,7 +144,14 @@ export function CheckoutView({
     })
     .filter((line) => line !== null);
 
-  const totals = cartTotals(lines.map((line) => line.priced));
+  // Shipping needs a region — there is no rate to show until one is picked,
+  // and 0 here is "not yet known", not "free". The order is not submittable
+  // without a region either, because CustomerSchema requires it.
+  const shippingAmount = values.region ? shippingFor(values.region) : 0;
+  const totals = cartTotals(
+    lines.map((line) => line.priced),
+    shippingAmount,
+  );
 
   const parsed = CustomerSchema.safeParse({
     ...values,
@@ -154,7 +169,10 @@ export function CheckoutView({
   }, [parsed]);
 
   function setField(field: FieldName, value: string) {
-    setValues((current) => ({ ...current, [field]: value }));
+    // `region` is narrower than `string` (DeliveryRegion | ""), and every
+    // value this is called with for that field comes from the <select> below,
+    // whose options are exactly DELIVERY_REGIONS plus the empty placeholder.
+    setValues((current) => ({ ...current, [field]: value }) as FormValues);
     setErrorCode(null);
     // The return notice deliberately survives typing: the customer comes back
     // from a failed payment to an empty form, and the explanation has to stay
@@ -345,6 +363,48 @@ export function CheckoutView({
             onBlur={() => setTouched((current) => ({ ...current, city: true }))}
           />
 
+          {/* Delivery region — drives the shipping figure in the summary. A
+              select, never inferred from the free-text city above: guessing a
+              tier from a hand-typed city is exactly the silent mismatch that
+              costs the store money on every order shipped to the wrong one. */}
+          <div>
+            <label
+              htmlFor="checkout-region"
+              className="mono-eyebrow mb-2 block text-ink-soft"
+            >
+              {t("fieldRegion")}
+            </label>
+            <select
+              id="checkout-region"
+              name="region"
+              value={values.region}
+              aria-invalid={touched.region === true && fieldErrors.region === true}
+              onChange={(event) => setField("region", event.target.value)}
+              onBlur={() => setTouched((current) => ({ ...current, region: true }))}
+              className={`w-full border bg-tile px-3.5 py-3 text-sm text-ink ${
+                touched.region === true && fieldErrors.region === true
+                  ? "border-ink"
+                  : "border-rule"
+              }`}
+            >
+              <option value="" disabled>
+                {t("fieldRegionPlaceholder")}
+              </option>
+              {DELIVERY_REGIONS.map((region) => (
+                <option key={region} value={region}>
+                  {/* An <option> label is plain text — <bdi> cannot go here —
+                      so the rate carries the isolation itself, U+2066/U+2069,
+                      which is what <bdi> compiles down to anyway. Without it
+                      the "₪60" can reorder against the Arabic label. */}
+                  {`${tCommon(`region.${region}`)} — ⁦₪${shippingFor(region)}⁩`}
+                </option>
+              ))}
+            </select>
+            {touched.region === true && fieldErrors.region === true ? (
+              <p className="mt-1.5 text-xs text-ink-soft">{t("errorRegion")}</p>
+            ) : null}
+          </div>
+
           {/* Country is not a choice at launch — saying so is more honest than
               a select with one option in it. */}
           <div>
@@ -430,10 +490,14 @@ export function CheckoutView({
             <Price value={totals.subtotal} />
           </Row>
           <Row label={tCart("shipping")}>
-            <span className="flex items-baseline gap-2">
-              <span className="text-ink-soft">{tCart("shippingLabel")}</span>
-              <Price value={SHIPPING_ILS_DOMESTIC} />
-            </span>
+            {values.region ? (
+              <span className="flex items-baseline gap-2">
+                <span className="text-ink-soft">{tCommon(`region.${values.region}`)}</span>
+                <Price value={shippingAmount} />
+              </span>
+            ) : (
+              <span className="text-ink-soft">{tCart("shippingTbd")}</span>
+            )}
           </Row>
           <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
             <span>{tCart("total")}</span>

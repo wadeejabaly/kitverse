@@ -88,7 +88,13 @@
     "total": "Total",
     "menu": "Menu",
     "from": "From",
-    "viewShirt": "View shirt"
+    "viewShirt": "View shirt",
+    "region": {
+      "north": "North & surroundings",
+      "center": "Center",
+      "negev": "Negev",
+      "jerusalem": "Jerusalem, West Bank & Eilat"
+    }
   },
   "notFound": {
     "title": "Page not found",
@@ -213,7 +219,6 @@
   "product": {
     "breadcrumbShop": "Shop",
     "size": "Size",
-    "sizeDelta": "+₪15",
     "version": "Version",
     "versionFan": "Fan",
     "versionPlayer": "Player",
@@ -251,7 +256,7 @@
     "propBadgeYes": "Added",
     "subtotal": "Subtotal",
     "shipping": "Shipping",
-    "shippingLabel": "Flat rate",
+    "shippingTbd": "Calculated by region at checkout",
     "shippingNote": "Israel only for now.",
     "total": "Total",
     "deliveryNote": "Delivery is 12 to 25 days. Printed shirts add two days.",
@@ -279,7 +284,7 @@
     "colLength": "Length (cm)",
     "colFits": "Fits (EU)",
     "note": "Chest is measured flat across the shirt under the arms and doubled. Length runs from the highest point of the shoulder to the hem. The Player version is cut slimmer than the Fan version — take one size up if you prefer a looser fit.",
-    "surcharge": "Sizes 3XL and 4XL add ₪15 to the shirt price."
+    "surcharge": "3XL adds ₪9 to the shirt price and 4XL adds ₪12."
   },
   "shippingPage": {
     "eyebrow": "Shipping and returns",
@@ -288,7 +293,7 @@
     "timingTitle": "Timing",
     "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 12 to 25 days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
     "rateTitle": "Rate and area",
-    "rateBody": "We deliver within Israel only for now, at one flat rate shown in the cart and at checkout. Prices are in shekels and include VAT.",
+    "rateBody": "We deliver within Israel only for now, and the rate depends on your region. Pick your region at checkout and the price shows immediately. Prices are in shekels and include VAT.",
     "trackingTitle": "Tracking",
     "trackingBody": "You get a tracking number by email as soon as the parcel moves. If tracking has not updated in seven days, write to us and we will chase it.",
     "returnsTitle": "Returns",
@@ -319,6 +324,8 @@
     "fieldEmail": "Email",
     "fieldAddress": "Address",
     "fieldCity": "City",
+    "fieldRegion": "Delivery region",
+    "fieldRegionPlaceholder": "Choose your region",
     "fieldCountry": "Country",
     "fieldNotes": "Notes",
     "optional": "optional",
@@ -329,6 +336,7 @@
     "errorEmail": "Please enter a valid email address.",
     "errorAddress": "Please enter the full address, including the house number.",
     "errorCity": "Please enter your city.",
+    "errorRegion": "Choose your delivery region.",
     "errorNotes": "That note is too long.",
     "formIncomplete": "Complete your delivery details and the payment button appears.",
     "processing": "Confirming your payment…",
@@ -365,8 +373,12 @@
   "heroPreview": {
     "pageTitle": "Hero variants",
     "pageLabel": "Hero variants",
-    "pageNote": "Three directions for the opening of the home page. Pick one.",
+    "pageNote": "Four directions for the opening of the home page. Pick one.",
     "live": "live",
+    "d": {
+      "tag": "D",
+      "name": "Floodlight"
+    },
     "a": {
       "tag": "A",
       "name": "Product-forward",

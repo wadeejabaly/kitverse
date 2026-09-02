@@ -49,8 +49,9 @@ photo-forward.
 - Arabic body line-height is **1.85** (Latin is 1.6). Handled in `globals.css`.
 - **Wrap numerals, prices, dates, URLs and Latin terms in bidi isolation**
   inside RTL text — `<bdi>` or an inline `dir="ltr"` span. Prices render as
-  `₪169` with LTR digits.
-- **Latin numerals always** — `2026`, `₪169`, never `٢٠٢٦`. Watch for
+  `₪95` with LTR digits. A `<select>`'s `<option>` cannot carry a `<bdi>`, so
+  the checkout region options embed U+2066/U+2069 around the rate by hand.
+- **Latin numerals always** — `2026`, `₪95`, never `٢٠٢٦`. Watch for
   `next-intl` number formatting silently producing Arabic-Indic digits: format
   the year as a string.
 - Arabic punctuation in Arabic copy: `،` and `؟`.
@@ -61,12 +62,29 @@ photo-forward.
 
 ## Owner decisions (confirmed — do not re-litigate)
 
-1. **Pricing (ILS, VAT-inclusive).** Current-season and national: Fan 169 /
-   Player 219. Previous-season: Fan 129 / Player 169, with compare-at 169/219.
-   Sizes 3XL and 4XL add +15. Add-ons: name & number 39, badge patch 19.
+1. **Pricing (ILS, VAT-inclusive) — updated 2026-09-02.** Flat by product
+   type: Fan 95 / Player 110, and **Retro 135** for any shirt whose season is
+   2022 or earlier. Retro is derived from the product's `season`, **not** from
+   `kind` — `kind` (national/current/previous) is a browsing category and no
+   longer touches money. Retro is not a version the shopper picks: the PDP
+   hides the Fan/Player fieldset on a retro product and stores `"fan"`, which
+   `priceFor` ignores there anyway. Sizes 3XL +9, 4XL +12. Add-ons unchanged:
+   name & number 39, badge patch 19. **There is no compare-at / sale pricing
+   anywhere** — `compareAtFor()` and `<ComparePrice>` are gone, not disabled.
+   `FUTURE_PRICES` in `pricing.ts` parks the owner's confirmed figures for
+   product types that have no catalogue data yet (kids kit 200, adult kit 300,
+   NBA 160, long-sleeve 105/120/145); nothing reads them.
 2. **Locales.** `ar` default (RTL) at `/`, `en` at `/en`.
    `localePrefix: "as-needed"`, `localeDetection: false`.
-3. **Shipping at launch.** Israel only, one flat domestic rate.
+3. **Shipping at launch — updated 2026-09-02.** Israel only, priced **by
+   region**, not flat: north 50 / center 60 / negev 70 / jerusalem 100 (that
+   last tier covers Jerusalem, the West Bank and Eilat). The shopper picks a
+   region from a required select at checkout — it is never inferred from the
+   free-text city — and the same closed set is revalidated server-side before
+   anything is priced. The cart page shows no figure at all ("calculated by
+   region at checkout"), because it has no region to price from.
+   `orders.delivery_region` records the choice (migration `0003`), both
+   payment-start routes write it, and it appears in the owner notification.
 4. **Catalog gate.** A product renders only if its image review state is
    `approved`. Everything else is hidden from the storefront.
 5. **Orders** live in Supabase (`orders` + `order_items` only). The catalog is
@@ -91,10 +109,14 @@ The accent and the gold are sampled from the club crest
 blue is **not** a token and appears nowhere in the UI; it lives inside the
 badge artwork only.
 
-`--gold` is a micro-accent with exactly four uses, and no fifth may be added
-without a design decision: section/page eyebrows (a bare `.mono-eyebrow`;
-utility eyebrows opt out with `text-ink-soft`), the nav hover underline, the
-compare-at strikethrough rule, and the footer's top hairline.
+`--gold` is a micro-accent with exactly **three** uses, and no fourth may be
+added without a design decision: section/page eyebrows (a bare `.mono-eyebrow`;
+utility eyebrows opt out with `text-ink-soft`), the nav hover underline, and
+the footer's top hairline. It was four — the compare-at strikethrough rule
+retired with compare-at pricing itself, and that slot was **not** reissued.
+(`--flood-gold`, the Floodlight hero's eyebrow colour, is a separate token for
+a separate dark surface, the way `--band-ink` relates to `--ink`. It is not a
+use of `--gold`.)
 
 Brand assets: `public/brand/badge.png` (transparent crest, used by
 `<BrandBadge>` in the header, mobile overlay and footer), `public/brand/og.png`
@@ -132,6 +154,25 @@ description: the hero plaque in `<HeroB/>`. The Fan/Player explainer used to
 be a second, full-bleed band, and a page carrying both read as a pattern
 instead of two emphases — so the explainer went back to the page ground. Do
 not paint a second navy surface without retiring the first.
+
+That "exactly once" now lives on `/hero-preview` rather than on the home page.
+The home hero is `<HeroD/>` — **Floodlight** — and its stage
+(`.kv-flood`, the `--flood-*` tokens) is a *different* dark surface from the
+band, so promoting it retired the band from the storefront rather than joining
+it. **Floodlight is the page's one navy moment**; `<HeroB/>` and its plaque
+survive only as a reference variant on `/hero-preview`, which is the only
+route where `.band` / `.band-glass` still render. The Fan/Player explainer
+stays on the page ground for the same reason it did before — the rule is one
+dark surface per scroll, and the Floodlight stage is now the one holding it.
+
+Floodlight is also the single sanctioned exception to "the crest's electric
+blue is not a token": `--flood-blue` / `--flood-blue-2` exist for that hero
+and nothing outside the Floodlight system may reference them. The `--flood-*`
+set is deliberately **not** mapped into `@theme` and does not vary with the
+light/dark scheme — like `--tile`, the stage is always the stage. The block
+carries no `backdrop-filter` and no `isolation`, because the hero sits under
+the sticky translucent header and MobileMenu's `fixed` overlay and either
+property would re-parent them (the same header bug documented below).
 
 Because `--accent` and `--band` are the same navy in light mode, a `.btn`
 inside the band disappears into it. The primary action on the band is
@@ -202,11 +243,22 @@ catalog data layer (`npm run import-catalog` from `vendor/`, 262 products, 207
 visible) with the dev-only `/review` tool; the full storefront (home, shop +
 collections, PDP with name&number/badge, search, cart, size guide, shipping,
 about) in both locales; brand integration (crest badge, navy accent, gold
-micro-accents, icons/OG); the design-elevation pass (frosted header, showcase
-hero with frosted-glass plaque, magazine index, motion system in
-`src/components/motion/`); checkout with Supabase orders + PayPal (Orders v2,
-verified webhook) and PayPlus (hosted page, HMAC+API-verified webhook,
-provider-scoped orders). Repo: private `wadeejabaly/kitverse` on GitHub;
+micro-accents, icons/OG); the design-elevation pass (frosted header, magazine
+index, motion system in `src/components/motion/`); checkout with Supabase
+orders + PayPal (Orders v2, verified webhook) and PayPlus (hosted page,
+HMAC+API-verified webhook, provider-scoped orders).
+
+The home hero is **`<HeroD/>` — Floodlight** (`src/components/hero/HeroD.tsx`
++ `FloodStage.tsx`): a stadium-at-night stage scoped to the section, with
+three shirts crossfading behind the headline. `/hero-preview` carries all four
+variants with D tagged live. The 2026-09-02 owner decisions — the flat
+Fan 95 / Player 110 / Retro 135 ladder with compare-at removed, and regional
+shipping (50/60/70/100) with a required region select at checkout — are
+implemented end to end: PDP, cards, cart, checkout, `repriceCart`, and both
+payment-start routes. Project path is `Client Sites/KitVerseWebsite`; the
+`vendor/` source data moved with it and the import script resolves relative to
+the repo root, so it runs unchanged from the new location. Repo: private
+`wadeejabaly/kitverse` on GitHub;
 pushes require `gh auth switch --user wadeejabaly` (terminal normally stays
 on OmarHawari2).
 
@@ -217,9 +269,11 @@ the PayPlus signup without an owner go; when it comes, it's env vars +
 migration `0002`, not a build task.
 
 Open launch gates: 20 products pending image review in `/review` (35 rejected
-stay hidden); Supabase project + migrations `0001`/`0002`; PayPal sandbox
-e2e then owner-run `/code-review ultra` on the money path before any live
-charge; flat shipping rate is a ₪35 placeholder pending owner confirmation;
+stay hidden); Supabase project + migrations `0001`/`0002`/**`0003`** — `0003`
+(`delivery_region`) must be applied **before** this code deploys, because both
+payment-start routes now write that column and a database still on `0002`
+fails every checkout with an unknown-column error; PayPal sandbox e2e then
+owner-run `/code-review ultra` on the money path before any live charge;
 registered business name/address/contact email missing from legal pages;
 all Arabic copy needs native review; `NEXT_PUBLIC_SITE_URL` on Vercel must
 be the public https origin (payment callbacks depend on it). Vercel deploys

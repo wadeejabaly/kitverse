@@ -68,6 +68,8 @@ export interface OrderRow {
   phone: string | null;
   address: string | null;
   city: string | null;
+  /** Added in migration 0003. NULL on any order written before it. */
+  delivery_region: string | null;
   country: string | null;
   notes: string | null;
   locale: string | null;

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 /**
  * Bidi-isolated numeric display primitives.
  *
- * Inside RTL copy an unisolated "₪169" reorders — the shekel sign jumps to the
+ * Inside RTL copy an unisolated "₪95" reorders — the shekel sign jumps to the
  * wrong end of the number, and a price next to Arabic text can end up reading
  * backwards. Every price, every season and every figure on this storefront
  * goes through one of these, so the isolation is structural rather than
@@ -20,31 +20,6 @@ export function Price({
 }) {
   return (
     <bdi dir="ltr" className={cn("tabular", className)}>
-      ₪{value}
-    </bdi>
-  );
-}
-
-/**
- * A struck-through compare-at price (previous-season products only).
- *
- * The sale signal is the strike itself, in the crest gold: the numerals stay
- * ink-soft so the old price keeps receding, and only the rule through them
- * carries the colour. This was chosen over a gold "save ₪40" tag — the tag
- * shouts, the rule states.
- */
-export function ComparePrice({
-  value,
-  className,
-}: {
-  value: number;
-  className?: string;
-}) {
-  return (
-    <bdi
-      dir="ltr"
-      className={cn("tabular text-ink-soft line-through decoration-gold", className)}
-    >
       ₪{value}
     </bdi>
   );

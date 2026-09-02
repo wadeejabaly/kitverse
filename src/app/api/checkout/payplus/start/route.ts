@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 
   // The server's own arithmetic. Whatever the browser displayed is irrelevant
   // from here on.
-  const cart = repriceCart(items);
+  const cart = repriceCart(items, customer.region);
   if (cart.dropped.length > 0) {
     console.warn(`[checkout] dropped unavailable handles: ${cart.dropped.join(", ")}`);
   }
@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
       phone: customer.phone,
       address: customer.address,
       city: customer.city,
+      delivery_region: customer.region,
       country: FIXED_COUNTRY,
       notes: customer.notes ?? null,
       locale,

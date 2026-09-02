@@ -57,7 +57,6 @@ export default async function CheckoutPage({
     titleAr: product.titleAr,
     season: product.season,
     image: product.image,
-    kind: product.kind,
   }));
 
   const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? null;

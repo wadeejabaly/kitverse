@@ -1,4 +1,10 @@
-import { cartTotals, priceLine, type PricedLine } from "@/data/pricing";
+import {
+  cartTotals,
+  priceLine,
+  shippingFor,
+  type DeliveryRegion,
+  type PricedLine,
+} from "@/data/pricing";
 import type { Size, Version } from "@/data/types";
 import { getProduct } from "@/data/catalog";
 import { sanitizeNameNumber } from "@/lib/product";
@@ -55,8 +61,18 @@ export interface RepricedCart {
  *
  * The addon flags follow the sanitized value: an empty name after sanitising
  * is no personalisation, so it is not charged for.
+ *
+ * Shipping is priced here too, from the `region` the request declared — which
+ * CustomerSchema has already checked against pricing.ts's closed set, so an
+ * unknown region never reaches this function and no order can be shipped at a
+ * rate the store did not publish. The line price itself comes from the
+ * PRODUCT'S OWN `season` read out of the catalogue, never from anything the
+ * browser sent.
  */
-export function repriceCart(items: CheckoutItemInput[]): RepricedCart {
+export function repriceCart(
+  items: CheckoutItemInput[],
+  region: DeliveryRegion,
+): RepricedCart {
   const lines: RepricedLine[] = [];
   const dropped: string[] = [];
 
@@ -73,7 +89,7 @@ export function repriceCart(items: CheckoutItemInput[]): RepricedCart {
     const hasName = nameNumber !== "";
     const qty = Math.min(MAX_QTY_SERVER, Math.max(1, Math.floor(item.qty)));
 
-    const priced = priceLine(product.kind, item.size, item.version, qty, {
+    const priced = priceLine(product.season, item.size, item.version, qty, {
       nameNumber: hasName,
       badge: item.badge,
     });
@@ -96,7 +112,7 @@ export function repriceCart(items: CheckoutItemInput[]): RepricedCart {
     qty: line.qty,
     lineTotal: line.lineTotal,
   }));
-  const totals = cartTotals(priced);
+  const totals = cartTotals(priced, shippingFor(region));
 
   return { lines, dropped, ...totals };
 }

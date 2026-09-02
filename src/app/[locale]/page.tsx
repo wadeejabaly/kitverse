@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { byKind, getLeagues, getVisibleProducts } from "@/data/catalog";
 import { priceFor } from "@/data/pricing";
-import { HeroB } from "@/components/hero/HeroB";
+import { HeroD } from "@/components/hero/HeroD";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { Figure, Price } from "@/components/shared/Money";
@@ -26,12 +26,13 @@ export async function generateMetadata({
 /**
  * Home — the statement page.
  *
- * It opens on <HeroB/>: a full-bleed wall of drifting product tiles with the
- * pitch on a navy plaque over it. That plaque is now the ONE navy moment on
- * the page, which is why the Fan/Player explainer below it no longer paints
- * itself as a band — two navy slabs in one scroll and neither is an event.
- * The explainer keeps its copy and its structure and states them on the page
- * ground instead.
+ * It opens on <HeroD/>: the Floodlight stage, a stadium-at-night navy surface
+ * scoped to the hero alone, with the crest's electric blue lighting a single
+ * shirt from behind (see "THE FLOODLIGHT HERO" in globals.css). That stage is
+ * the ONE navy moment on the page — it replaced HeroB's plaque rather than
+ * joining it — which is why the Fan/Player explainer below it stays on the
+ * page ground instead of painting itself as a band. Two navy slabs in one
+ * scroll and neither is an event.
  *
  * After the hero it is a rhythm of one-idea sections separated by a lot of
  * air, and the leagues are a magazine index rather than a grid of boxes.
@@ -73,11 +74,11 @@ export default async function HomePage({
   return (
     <>
       {/* ─────────── HERO ───────────
-          The full-bleed showcase. It is a complete component so that the
-          hero can be swapped, compared or reverted without this page
-          knowing anything about how it is built. See HeroB for the wall,
-          the plaque and the contrast reasoning. */}
-      <HeroB priority />
+          The Floodlight stage. It is a complete component so that the hero
+          can be swapped, compared or reverted without this page knowing
+          anything about how it is built. See HeroD for the surface, the
+          RTL/LTR mirroring and the contrast reasoning. */}
+      <HeroD locale={locale} priority />
 
       {/* ─────────── THE THREE WAYS IN ───────────
           Was a bordered three-up box grid. Boxes are what a store template
@@ -170,7 +171,9 @@ export default async function HomePage({
                       {t(`explainer.${version}Title`)}
                     </h3>
                     <span className="text-[15px] text-accent">
-                      <Price value={priceFor("current", "S", version)} />
+                      {/* Illustrative, not a real product — any non-retro
+                          season prices Fan/Player the same flat way. */}
+                      <Price value={priceFor("2026/27", "S", version)} />
                     </span>
                   </div>
                   <p className="max-w-[48ch] text-sm text-ink-soft">

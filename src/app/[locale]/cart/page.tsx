@@ -42,7 +42,6 @@ export default async function CartPage({
     titleAr: product.titleAr,
     season: product.season,
     image: product.image,
-    kind: product.kind,
   }));
 
   return (

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SHIPPING_ILS_DOMESTIC, cartTotals, priceLine } from "@/data/pricing";
+import { cartTotals, priceLine, shippingFor } from "@/data/pricing";
 import { getAllProducts, getProduct } from "@/data/catalog";
 import type { CheckoutItemInput } from "@/lib/checkout";
 import {
@@ -39,50 +39,59 @@ function hiddenHandle(): string {
   return product.handle;
 }
 
+/** The region every test here checks out to, unless it varies it on purpose. */
+const REGION = "center";
+
 describe("repriceCart — the server's own arithmetic", () => {
   it("prices a mixed basket (surcharge size + both add-ons) exactly as cartTotals does", () => {
-    const previous = visibleHandle("previous");
-    const national = visibleHandle("national");
+    const previousHandle = visibleHandle("previous");
+    const nationalHandle = visibleHandle("national");
+    const previousSeason = getProduct(previousHandle)!.season;
+    const nationalSeason = getProduct(nationalHandle)!.season;
 
     const items: CheckoutItemInput[] = [
-      // previous season, 4XL (+15), name & number (+39), qty 2
+      // 4XL (+12), name & number (+39), qty 2
       {
-        handle: previous,
+        handle: previousHandle,
         size: "4XL",
         version: "player",
         nameNumber: "HAALAND 9",
         badge: false,
         qty: 2,
       },
-      // national, 3XL (+15), badge (+19), qty 1
-      { handle: national, size: "3XL", version: "fan", badge: true, qty: 1 },
+      // 3XL (+9), badge (+19), qty 1
+      { handle: nationalHandle, size: "3XL", version: "fan", badge: true, qty: 1 },
       // plain line, no add-ons
-      { handle: previous, size: "M", version: "fan", badge: false, qty: 3 },
+      { handle: previousHandle, size: "M", version: "fan", badge: false, qty: 3 },
     ];
 
-    const cart = repriceCart(items);
+    const cart = repriceCart(items, REGION);
     expect(cart.lines).toHaveLength(3);
     expect(cart.dropped).toEqual([]);
 
-    const expected = cartTotals([
-      priceLine("previous", "4XL", "player", 2, { nameNumber: true }),
-      priceLine("national", "3XL", "fan", 1, { badge: true }),
-      priceLine("previous", "M", "fan", 3),
-    ]);
+    const expected = cartTotals(
+      [
+        priceLine(previousSeason, "4XL", "player", 2, { nameNumber: true }),
+        priceLine(nationalSeason, "3XL", "fan", 1, { badge: true }),
+        priceLine(previousSeason, "M", "fan", 3),
+      ],
+      shippingFor(REGION),
+    );
 
     expect(cart.subtotal).toBe(expected.subtotal);
-    expect(cart.shipping).toBe(SHIPPING_ILS_DOMESTIC);
+    expect(cart.shipping).toBe(shippingFor(REGION));
     expect(cart.total).toBe(expected.total);
 
-    // previous player 169 + 15 surcharge + 39 print
-    expect(cart.lines[0].unitPrice).toBe(223);
-    expect(cart.lines[0].lineTotal).toBe(446);
-    // national fan 169 + 15 surcharge + 19 badge
-    expect(cart.lines[1].unitPrice).toBe(203);
+    // player 110 + 12 surcharge + 39 print
+    expect(cart.lines[0].unitPrice).toBe(161);
+    expect(cart.lines[0].lineTotal).toBe(322);
+    // fan 95 + 9 surcharge + 19 badge
+    expect(cart.lines[1].unitPrice).toBe(123);
   });
 
   it("ignores any price-shaped field the client tries to send", () => {
     const handle = visibleHandle("previous");
+    const season = getProduct(handle)!.season;
     const tampered = {
       handle,
       size: "M",
@@ -94,32 +103,71 @@ describe("repriceCart — the server's own arithmetic", () => {
       total: 1,
     } as unknown as CheckoutItemInput;
 
-    const cart = repriceCart([tampered]);
+    const cart = repriceCart([tampered], REGION);
     const product = getProduct(handle);
     expect(product).toBeDefined();
-    expect(cart.lines[0].unitPrice).toBe(priceLine("previous", "M", "fan", 1).unitPrice);
-    expect(cart.total).toBe(129 + SHIPPING_ILS_DOMESTIC);
+    expect(cart.lines[0].unitPrice).toBe(priceLine(season, "M", "fan", 1).unitPrice);
+    expect(cart.total).toBe(95 + shippingFor(REGION));
   });
 
   it("drops a hidden handle and an unknown handle rather than pricing them", () => {
-    const cart = repriceCart([
-      { handle: hiddenHandle(), size: "M", version: "fan", badge: false, qty: 1 },
-      { handle: "not-a-real-handle", size: "M", version: "fan", badge: false, qty: 1 },
-    ]);
+    const cart = repriceCart(
+      [
+        { handle: hiddenHandle(), size: "M", version: "fan", badge: false, qty: 1 },
+        { handle: "not-a-real-handle", size: "M", version: "fan", badge: false, qty: 1 },
+      ],
+      REGION,
+    );
     expect(cart.lines).toHaveLength(0);
     expect(cart.dropped).toHaveLength(2);
     // No lines means no shipping either — an empty order costs nothing.
     expect(cart.total).toBe(0);
   });
 
+  it("prices shipping by the region passed in, not a flat figure", () => {
+    const handle = visibleHandle("national");
+    const forRegion = (region: Parameters<typeof shippingFor>[0]) =>
+      repriceCart([{ handle, size: "M", version: "fan", badge: false, qty: 1 }], region)
+        .shipping;
+    expect(forRegion("north")).toBe(50);
+    expect(forRegion("center")).toBe(60);
+    expect(forRegion("negev")).toBe(70);
+    expect(forRegion("jerusalem")).toBe(100);
+  });
+
+  it("prices a line from the catalogue's season, ignoring the product's kind", () => {
+    // kind no longer drives price: two visible products of DIFFERENT kinds but
+    // the same season must reprice to the same unit price.
+    const byKindAndSeason = new Map<string, string>();
+    for (const product of getAllProducts()) {
+      if (!product.visible) continue;
+      const existing = byKindAndSeason.get(product.season);
+      if (existing && getProduct(existing)!.kind !== product.kind) {
+        const a = repriceCart(
+          [{ handle: existing, size: "M", version: "fan", badge: false, qty: 1 }],
+          REGION,
+        );
+        const b = repriceCart(
+          [{ handle: product.handle, size: "M", version: "fan", badge: false, qty: 1 }],
+          REGION,
+        );
+        expect(a.lines[0].unitPrice).toBe(b.lines[0].unitPrice);
+        return;
+      }
+      if (!existing) byKindAndSeason.set(product.season, product.handle);
+    }
+  });
+
   it("clamps quantity to the cart's 1..10 bound", () => {
     const handle = visibleHandle("previous");
-    const over = repriceCart([
-      { handle, size: "M", version: "fan", badge: false, qty: 999 },
-    ]);
-    const under = repriceCart([
-      { handle, size: "M", version: "fan", badge: false, qty: 0 },
-    ]);
+    const over = repriceCart(
+      [{ handle, size: "M", version: "fan", badge: false, qty: 999 }],
+      REGION,
+    );
+    const under = repriceCart(
+      [{ handle, size: "M", version: "fan", badge: false, qty: 0 }],
+      REGION,
+    );
     expect(over.lines[0].qty).toBe(MAX_QTY_SERVER);
     expect(under.lines[0].qty).toBe(1);
   });
@@ -132,43 +180,50 @@ describe("repriceCart — the server's own arithmetic", () => {
 describe("repriceCart — sanitizeNameNumber on the server path", () => {
   it("re-sanitizes whatever the client sent: case, punctuation, spacing, length", () => {
     const handle = visibleHandle("previous");
-    const cart = repriceCart([
-      {
-        handle,
-        size: "M",
-        version: "fan",
-        nameNumber: "  o'dea    <script>7  ",
-        badge: false,
-        qty: 1,
-      },
-    ]);
+    const cart = repriceCart(
+      [
+        {
+          handle,
+          size: "M",
+          version: "fan",
+          nameNumber: "  o'dea    <script>7  ",
+          badge: false,
+          qty: 1,
+        },
+      ],
+      REGION,
+    );
     expect(cart.lines[0].nameNumber).toBe("ODEA SCRIPT7");
   });
 
   it("truncates to the 18-character print limit", () => {
     const handle = visibleHandle("previous");
-    const cart = repriceCart([
-      {
-        handle,
-        size: "M",
-        version: "fan",
-        nameNumber: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        badge: false,
-        qty: 1,
-      },
-    ]);
+    const cart = repriceCart(
+      [
+        {
+          handle,
+          size: "M",
+          version: "fan",
+          nameNumber: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+          badge: false,
+          qty: 1,
+        },
+      ],
+      REGION,
+    );
     expect(cart.lines[0].nameNumber).toBe("ABCDEFGHIJKLMNOPQR");
     expect(cart.lines[0].nameNumber?.length).toBe(18);
   });
 
   it("does not charge for a name that sanitises away to nothing", () => {
     const handle = visibleHandle("previous");
-    const cart = repriceCart([
-      { handle, size: "M", version: "fan", nameNumber: "!!! ???", badge: false, qty: 1 },
-    ]);
+    const cart = repriceCart(
+      [{ handle, size: "M", version: "fan", nameNumber: "!!! ???", badge: false, qty: 1 }],
+      REGION,
+    );
     expect(cart.lines[0].nameNumber).toBeNull();
-    // 129, not 129 + 39.
-    expect(cart.lines[0].unitPrice).toBe(129);
+    // Fan 95, not 95 + 39.
+    expect(cart.lines[0].unitPrice).toBe(95);
   });
 });
 

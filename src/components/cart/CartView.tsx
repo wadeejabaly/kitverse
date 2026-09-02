@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { SHIPPING_ILS_DOMESTIC, cartTotals, priceLine } from "@/data/pricing";
-import type { Kind } from "@/data/types";
+import { cartTotals, priceLine } from "@/data/pricing";
 import { lineKey, useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 
@@ -15,17 +14,22 @@ export interface CartProductInfo {
   titleAr: string;
   season: string;
   image: string;
-  kind: Kind;
 }
 
 /**
  * The cart.
  *
  * Nothing about money is stored: each line's price is recomputed here from the
- * product's `kind` plus the options on the line, through the same priceLine()
- * the server will use when the order is written. A line whose handle is no
- * longer in the approved catalogue is skipped entirely — it cannot be priced
- * honestly, so it is not shown and not charged for.
+ * product's `season` plus the options on the line, through the same
+ * priceLine() the server will use when the order is written. A line whose
+ * handle is no longer in the approved catalogue is skipped entirely — it
+ * cannot be priced honestly, so it is not shown and not charged for.
+ *
+ * Shipping is NOT shown as a figure here: it depends on the delivery region,
+ * which this page does not collect (checkout does). Printing a number would
+ * either be wrong for most shoppers or force a region choice before they have
+ * started on an address — so the cart totals the basket and says where the
+ * rate comes from instead.
  */
 export function CartView({
   products,
@@ -45,7 +49,7 @@ export function CartView({
     .map((item) => {
       const product = byHandle.get(item.handle);
       if (!product) return null;
-      const priced = priceLine(product.kind, item.size, item.version, item.qty, {
+      const priced = priceLine(product.season, item.size, item.version, item.qty, {
         nameNumber: Boolean(item.nameNumber),
         badge: item.badge,
       });
@@ -163,19 +167,13 @@ export function CartView({
       {/* Totals sit at the inline end — margin-inline-start:auto in the
           mockup, which mirrors correctly in Arabic without a second rule. */}
       <div className="flex max-w-[340px] flex-col gap-2.5 pt-6 pb-10 ms-auto">
-        <Row label={t("subtotal")}>
-          <Price value={totals.subtotal} />
-        </Row>
         <Row label={t("shipping")}>
-          <span className="flex items-baseline gap-2">
-            <span className="text-ink-soft">{t("shippingLabel")}</span>
-            <Price value={SHIPPING_ILS_DOMESTIC} />
-          </span>
+          <span className="text-ink-soft">{t("shippingTbd")}</span>
         </Row>
         <p className="text-xs text-ink-soft">{t("shippingNote")}</p>
         <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
-          <span>{t("total")}</span>
-          <Price value={totals.total} />
+          <span>{t("subtotal")}</span>
+          <Price value={totals.subtotal} />
         </div>
 
         {/* /checkout arrives in the next wave; the link is live now so the

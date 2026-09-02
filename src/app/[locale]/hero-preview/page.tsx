@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { HeroA } from "@/components/hero/HeroA";
 import { HeroB } from "@/components/hero/HeroB";
 import { HeroC } from "@/components/hero/HeroC";
+import { HeroD } from "@/components/hero/HeroD";
 
 export async function generateMetadata({
   params,
@@ -24,15 +25,16 @@ export async function generateMetadata({
 /**
  * Hero variants — an internal comparison page, not part of the storefront.
  *
- * Three complete, production-quality openings for the home page, stacked one
+ * Four complete, production-quality openings for the home page, stacked one
  * viewport each and separated by the site's one hairline. Each is the real
  * component from src/components/hero/, rendered exactly as it would render at
  * the top of the home page, so whichever one is chosen moves across unchanged.
+ * Variant D — Floodlight — is shown first because it is the one actually live
+ * on the home page; A, B and C stay below it for comparison.
  *
- * Only Variant A gets `priority` on its imagery: on this page it is the one
- * hero actually in the first viewport, and marking all three would have the
- * browser fight itself over the LCP. On the home page the winner would carry
- * it instead.
+ * Only Variant D gets `priority` on its imagery: on this page it is the one
+ * hero actually in the first viewport, and marking all four would have the
+ * browser fight itself over the LCP.
  */
 export default async function HeroPreviewPage({
   params,
@@ -50,11 +52,15 @@ export default async function HeroPreviewPage({
         <span className="text-sm text-ink-soft">{t("pageNote")}</span>
       </div>
 
-      <Variant tag={t("a.tag")} name={t("a.name")}>
-        <HeroA locale={locale} priority />
+      <Variant tag={t("d.tag")} name={t("d.name")} live={t("live")}>
+        <HeroD locale={locale} priority />
       </Variant>
 
-      <Variant tag={t("b.tag")} name={t("b.name")} live={t("live")}>
+      <Variant tag={t("a.tag")} name={t("a.name")}>
+        <HeroA locale={locale} />
+      </Variant>
+
+      <Variant tag={t("b.tag")} name={t("b.name")}>
         <HeroB />
       </Variant>
 

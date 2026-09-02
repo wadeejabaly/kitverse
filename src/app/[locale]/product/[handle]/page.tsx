@@ -93,7 +93,7 @@ export default async function ProductPage({
     offers: {
       "@type": "Offer",
       priceCurrency: "ILS",
-      price: String(priceFor(product.kind, "S", "fan")),
+      price: String(priceFor(product.season, "S", "fan")),
       availability: "https://schema.org/InStock",
       url: localeUrl(locale, `/product/${product.handle}`),
     },
@@ -166,7 +166,7 @@ export default async function ProductPage({
           </span>
           <h1 className="mt-2.5 mb-1.5 text-[28px] leading-tight">{title}</h1>
 
-          <ProductForm handle={product.handle} kind={product.kind} />
+          <ProductForm handle={product.handle} season={product.season} />
 
           <div className="mt-8 border-t border-rule">
             <Accordion summary={t("accordionShipping")} open>

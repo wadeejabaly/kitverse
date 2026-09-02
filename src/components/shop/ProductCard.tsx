@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { compareAtFor, priceFor } from "@/data/pricing";
+import { priceFor } from "@/data/pricing";
 import type { Product } from "@/data/types";
 import { Reveal } from "@/components/motion/Reveal";
-import { ComparePrice, Price, Season } from "@/components/shared/Money";
+import { Price, Season } from "@/components/shared/Money";
 import { shortSeason, titleFor } from "@/lib/product";
 
 /**
@@ -27,9 +27,10 @@ export function ProductCard({
 }) {
   const t = useTranslations("common");
   const title = titleFor(product, locale);
-  // The "from" price: smallest size, Fan version. Selections on the PDP move it.
-  const price = priceFor(product.kind, "S", "fan");
-  const compareAt = compareAtFor(product.kind, "S", "fan");
+  // The "from" price: smallest size, Fan version — or the single Retro price
+  // for a 2022-and-earlier season, since priceFor ignores "fan" there.
+  // Selections on the PDP move it.
+  const price = priceFor(product.season, "S", "fan");
 
   return (
     <Link href={`/product/${product.handle}`} className="group block text-start">
@@ -64,12 +65,8 @@ export function ProductCard({
             {t("viewShirt")}
           </span>
         </span>
-        {/* Live price leads, the struck compare-at follows it — the order
-            retail readers expect, and it mirrors correctly in RTL because
-            flex order is logical, not physical. */}
         <span className="flex items-baseline gap-2 text-sm text-accent">
           <Price value={price} />
-          {compareAt === null ? null : <ComparePrice value={compareAt} className="text-xs" />}
         </span>
       </div>
     </Link>

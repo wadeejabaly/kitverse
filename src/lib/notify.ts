@@ -42,6 +42,8 @@ export interface PaidOrderNotification {
     phone: string;
     address: string;
     city: string;
+    /** 'north' | 'center' | 'negev' | 'jerusalem', or "" for a pre-migration order. */
+    region: string;
     country: string;
     notes: string | null;
   };
@@ -92,6 +94,7 @@ export function renderOrderSummary(order: PaidOrderNotification): string {
   lines.push(`  ${order.customer.name}`);
   lines.push(`  ${order.customer.address}`);
   lines.push(`  ${order.customer.city}, ${order.customer.country}`);
+  if (order.customer.region) lines.push(`  region: ${order.customer.region}`);
   lines.push(`  phone: ${order.customer.phone}`);
   lines.push(`  email: ${order.customer.email}`);
   if (order.customer.notes) lines.push(`  notes: ${order.customer.notes}`);

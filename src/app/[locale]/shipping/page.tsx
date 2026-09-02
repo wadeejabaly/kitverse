@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { SHIPPING_ILS_DOMESTIC } from "@/data/pricing";
+import { DELIVERY_REGIONS, shippingFor } from "@/data/pricing";
 import { Price } from "@/components/shared/Money";
 import {
   PageLede,
@@ -38,6 +38,7 @@ export default async function ShippingPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("shippingPage");
+  const tCommon = await getTranslations("common");
 
   return (
     <Wrap>
@@ -48,11 +49,16 @@ export default async function ShippingPage({
 
         <ProseHeading>{t("rateTitle")}</ProseHeading>
         <ProseParagraph>{t("rateBody")}</ProseParagraph>
-        {/* The rate itself comes from pricing.ts, so this page can never
-            quote a figure the cart disagrees with. */}
-        <p className="mb-3.5 text-ink">
-          <Price value={SHIPPING_ILS_DOMESTIC} />
-        </p>
+        {/* The rates come straight from pricing.ts, so this page can never
+            quote a figure checkout disagrees with. */}
+        <ul className="mb-3.5 flex max-w-[36ch] flex-col gap-1.5 text-ink">
+          {DELIVERY_REGIONS.map((region) => (
+            <li key={region} className="flex items-baseline justify-between gap-4">
+              <span className="text-ink-soft">{tCommon(`region.${region}`)}</span>
+              <Price value={shippingFor(region)} />
+            </li>
+          ))}
+        </ul>
 
         <ProseHeading>{t("trackingTitle")}</ProseHeading>
         <ProseParagraph>{t("trackingBody")}</ProseParagraph>
