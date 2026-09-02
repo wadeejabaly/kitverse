@@ -1,0 +1,408 @@
+{
+  "meta": {
+    "title": "KitVerse",
+    "description": "Club and national team football shirts in Fan and Player versions. Clear prices, delivery nationwide."
+  },
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "search": "Search",
+    "cart": "Cart",
+    "sizeGuide": "Size guide",
+    "shipping": "Shipping & returns",
+    "about": "About",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "nationalTeams": "National teams",
+    "leagues": "Leagues",
+    "menuBrowse": "Browse",
+    "menuHelp": "Help",
+    "toArabic": "العربية",
+    "toEnglish": "English",
+    "cartWithCount": "Cart ({count})"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "The full catalogue",
+      "titleA": "Every shirt,",
+      "titleB": "in one place.",
+      "sub": "Clubs and national teams from the major leagues — home, away and third, this season and last.",
+      "cta": "Browse the catalogue"
+    },
+    "browseEyebrow": "Browse",
+    "kinds": {
+      "national": {
+        "title": "National teams",
+        "body": "Every side heading to the 2026 tournament, home and away."
+      },
+      "current": {
+        "title": "This season",
+        "body": "The 2026/27 club kits, as the clubs released them."
+      },
+      "previous": {
+        "title": "Last season",
+        "body": "The 2025/26 shirts, reduced while they last."
+      }
+    },
+    "newIn": "New in",
+    "leaguesEyebrow": "Shop by league",
+    "explainer": {
+      "eyebrow": "Fan or Player",
+      "title": "The same shirt, cut two ways",
+      "fanTitle": "Fan",
+      "fanBody": "A relaxed cut with a woven badge. The version most people wear, and the one we sell most of.",
+      "playerTitle": "Player",
+      "playerBody": "The athletic cut the squad wears: slimmer through the body, lighter fabric, heat-pressed badge."
+    },
+    "valuesEyebrow": "How we work",
+    "values": {
+      "one": {
+        "title": "Authentic-look replicas",
+        "body": "We sell replicas, and we say so. Same design, same badge placement, honest photographs of the shirt you receive."
+      },
+      "two": {
+        "title": "12 to 25 days, tracked",
+        "body": "Shipped from our supplier with a tracking number as soon as the parcel moves. No dates we cannot keep."
+      },
+      "three": {
+        "title": "Name and number printing",
+        "body": "Any name, any number, printed to order. Adds ₪39 to the shirt and two days before dispatch."
+      }
+    },
+    "empty": "The catalogue is being photographed. Shirts appear here as soon as their images are approved."
+  },
+  "common": {
+    "addToCart": "Add to cart",
+    "checkout": "Checkout",
+    "continueShopping": "Continue shopping",
+    "viewAll": "View all",
+    "back": "Back",
+    "close": "Close",
+    "remove": "Remove",
+    "search": "Search",
+    "loading": "Loading…",
+    "quantity": "Quantity",
+    "size": "Size",
+    "price": "Price",
+    "total": "Total",
+    "menu": "Menu",
+    "from": "From",
+    "viewShirt": "View shirt",
+    "region": {
+      "north": "North & surroundings",
+      "center": "Center",
+      "negev": "Negev",
+      "jerusalem": "Jerusalem, West Bank & Eilat"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The link may have changed or been mistyped. Try a search, or head back to the home page.",
+    "backHome": "Back to home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred on our end. Please try again — and if it keeps happening, get in touch.",
+    "retry": "Try again"
+  },
+  "footer": {
+    "rights": "© {year} KitVerse. All rights reserved.",
+    "tagline": "Football shirts for clubs and national teams.",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "cookieSettings": "Cookie settings",
+    "shopGroup": "Shop",
+    "helpGroup": "Help",
+    "legalGroup": "Legal",
+    "contactGroup": "Contact",
+    "emailUs": "Email us"
+  },
+  "consent": {
+    "message": "We use essential cookies to run the site and your cart. Non-essential analytics or marketing tools only run after you accept, and you can change your choice at any time from \"Cookie settings\" at the bottom of the page.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "settingsTitle": "Cookie settings"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "updated": "Last updated: 1 September 2026",
+    "intro": "This page explains, in plain language, what information we collect when you buy from KitVerse, why we collect it, who processes it, and how long we keep it. We collect the minimum: only what the purchase and the delivery actually need.",
+    "sections": {
+      "collect": {
+        "title": "What we collect",
+        "body": "When you place an order we collect your name, email address, phone number and delivery address, along with the order itself: the products, sizes, version, and any name and number you asked us to print on the shirt.\n\nWe never collect or store your card details. Payment happens entirely at the payment provider, and all we receive back is confirmation of whether it succeeded.\n\nYour cart is stored in your own browser, not on our servers."
+      },
+      "use": {
+        "title": "Why we use it",
+        "body": "We use this information to fulfil and ship your order, to send you an order confirmation and tracking number, and to reply to you if something goes wrong with an order or a return. We do not sell your information, and we do not share it with anyone outside the processors listed below."
+      },
+      "processors": {
+        "title": "Who processes it",
+        "body": "We work with a small set of providers, and each one receives only what its job requires:\n\nPayPal — payment processing. Receives the payment details and the amount.\n\nSupabase — the orders database. Stores order and delivery details.\n\nResend — sends order confirmation and tracking emails.\n\nOur hosting provider, which runs the site and processes ordinary technical logs such as IP addresses on a short-term basis."
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "body": "Order records are kept for seven years, because they form part of the accounting records we are legally required to hold. Correspondence and general enquiries are kept for 12 months and then deleted."
+      },
+      "rights": {
+        "title": "Your rights: access and deletion",
+        "body": "You have the right to ask what information we hold about you, to have it corrected, or to have it deleted. Send the request from the contact page and we will reply within two business days. Please note that order records cannot be deleted before the legal retention period above has passed."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "body": "We use essential cookies only, to run the site and your cart — without them the site does not work. Any analytics or marketing tool that sets non-essential cookies runs only after you accept it in the cookie banner, and you can withdraw that consent at any time."
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of use",
+    "updated": "Last updated: 1 September 2026",
+    "intro": "These terms govern the use of the KitVerse website and any purchase made through it. By buying from the site you confirm that you have read and accepted them.",
+    "sections": {
+      "use": {
+        "title": "Using the site",
+        "body": "The site's content and product images are provided for the purpose of presenting and selling our products. Misuse of the site, or any attempt to gain unauthorised access to any part of it, is prohibited.\n\nOur products are sports shirts from our own sources. We are not officially affiliated with, and do not represent, any club, federation or manufacturer."
+      },
+      "prices": {
+        "title": "Prices",
+        "body": "All prices are in Israeli shekels and include VAT. The price shown on a product page is the final price for that product; shipping is added separately and shown at checkout before you pay.\n\nWe may change prices at any time, but the price that applied to your order at the time of purchase is the binding one."
+      },
+      "payment": {
+        "title": "Payment",
+        "body": "Payment is made through PayPal, either with a PayPal account or with a credit card through it. An order is only confirmed once we receive confirmation of payment.\n\nWe never see or store your card details — the whole transaction takes place at the payment provider."
+      },
+      "delivery": {
+        "title": "Delivery and shipping",
+        "body": "We currently ship within Israel only, at a single flat delivery rate shown at checkout.\n\nExpected delivery is 12 to 25 days from order confirmation, with a tracking number emailed to you once the order ships. Shirts printed with a name and number need two extra days of preparation before dispatch."
+      },
+      "cancellation": {
+        "title": "Cancellation and returns",
+        "body": "A purchase through this site is a distance sale under Israeli consumer protection law.\n\nYou may return a product within 14 days of receiving it, provided it is unworn, in its original condition, and with all tags still attached.\n\nShirts printed with a name or number are made to order and cannot be returned or exchanged — unless they arrive with a manufacturing defect or a printing error on our side.\n\nIf an item arrives damaged or incorrect, send us photos within 48 hours of delivery and we will put it right at our expense.\n\nRefunds are issued within 5 business days of the returned item reaching us and being inspected, to the original payment method. Cancellation fees are capped at 5% of the transaction value or 100 shekels, whichever is lower.\n\nThe cost of returning an item is borne by the buyer, except in cases of a defect or an error on our side."
+      },
+      "warranty": {
+        "title": "Warranty and liability",
+        "body": "We guarantee that your item arrives intact and matching the description and images on the site. Any manufacturing defect found on delivery will be resolved with a replacement or a full refund.\n\nThe warranty does not cover ordinary wear from use, or damage caused by washing contrary to the care instructions supplied with the shirt. Our liability is in all cases limited to the value of the order."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "For any question about an order, a return, or privacy, get in touch from the contact page on the site and we will reply within two business days.\n\nOur registered business details and address appear at the bottom of this page and on the invoice for every order."
+      },
+      "law": {
+        "title": "Governing law",
+        "body": "These terms are governed by the law of the State of Israel, and the competent courts of Israel have exclusive jurisdiction."
+      }
+    }
+  },
+  "shop": {
+    "eyebrow": "All shirts",
+    "title": "Shop the catalogue",
+    "intro": "Clubs from the big five leagues and every national side, in Fan and Player versions.",
+    "metaDescription": "Browse every KitVerse football shirt: clubs, national teams, Fan and Player versions, with prices in shekels including VAT.",
+    "filters": "Filters",
+    "kind": "Season",
+    "league": "League",
+    "team": "Team",
+    "all": "All",
+    "allTeams": "All teams",
+    "clear": "Clear filters",
+    "kinds": {
+      "national": "National teams",
+      "current": "This season",
+      "previous": "Last season"
+    },
+    "showing": "Showing {count} of {total}",
+    "count": "{count, plural, =0 {No shirts} one {{countText} shirt} other {{countText} shirts}}",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "No shirts match this filter right now. Clear it, or try another league."
+  },
+  "product": {
+    "breadcrumbShop": "Shop",
+    "size": "Size",
+    "sizeDelta": "+₪15",
+    "version": "Version",
+    "versionFan": "Fan",
+    "versionPlayer": "Player",
+    "nameNumber": "Name and number — optional",
+    "nameNumberToggle": "Add a name and number",
+    "nameNumberLabel": "Name and number",
+    "nameNumberHint": "Printed to order. Adds ₪39 and two days to dispatch.",
+    "badge": "Badge patch",
+    "badgeToggle": "Add the competition badge patch",
+    "badgeHint": "Sewn-on league or tournament patch. Adds ₪19.",
+    "quantity": "Quantity",
+    "added": "Added to your cart.",
+    "viewCart": "View cart",
+    "was": "Was",
+    "accordionShipping": "Shipping",
+    "accordionShippingBody": "Shirts ship from our supplier and take 12 to 25 days to arrive, tracked door to door. Printed shirts add two days before dispatch.",
+    "accordionReturns": "Returns",
+    "accordionReturnsBody": "Fourteen days from delivery on unworn shirts with tags attached. Printed shirts can only be returned if the print is wrong or the shirt is faulty.",
+    "accordionSizing": "Sizing",
+    "accordionSizingBody": "Sizing runs about one size smaller than European. Between sizes, take the larger one. Player version is cut slimmer than Fan.",
+    "accordionSizingLink": "Full measurements",
+    "related": "More from {team}",
+    "metaDescription": "{title} — Fan and Player versions, sizes S to 4XL, optional name and number printing. Prices in shekels including VAT."
+  },
+  "cart": {
+    "eyebrow": "Cart",
+    "title": "Your cart",
+    "metaDescription": "The shirts in your KitVerse cart.",
+    "emptyTitle": "Your cart is empty",
+    "emptyBody": "Nothing added yet. Have a look at the new season, or search for your club.",
+    "propSize": "Size",
+    "propVersion": "Version",
+    "propNameNumber": "Name and number",
+    "propBadge": "Badge patch",
+    "propBadgeYes": "Added",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingTbd": "Calculated by region at checkout",
+    "shippingNote": "Israel only for now.",
+    "total": "Total",
+    "deliveryNote": "Delivery is 12 to 25 days. Printed shirts add two days.",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "unavailable": "This shirt is no longer available and was removed from your cart."
+  },
+  "search": {
+    "eyebrow": "Search",
+    "title": "Find a shirt",
+    "metaDescription": "Search KitVerse for a club, a national team, or a season.",
+    "placeholder": "Arsenal, Brazil, Bayern…",
+    "label": "Search shirts",
+    "prompt": "Type a club or a country to start.",
+    "results": "{count, plural, =0 {No results for “{query}”} one {{countText} result for “{query}”} other {{countText} results for “{query}”}}",
+    "empty": "Nothing matched “{query}”. Try the club's short name."
+  },
+  "sizeGuide": {
+    "eyebrow": "Size guide",
+    "title": "Measurements",
+    "metaDescription": "KitVerse size guide: chest and length measurements in centimetres for sizes S to 4XL, and how they compare to European sizing.",
+    "intro": "Shirts are cut to Asian sizing and run about one size smaller than European. Measure a shirt you already own flat, and match the chest figure.",
+    "colSize": "Size",
+    "colChest": "Chest (cm)",
+    "colLength": "Length (cm)",
+    "colFits": "Fits (EU)",
+    "note": "Chest is measured flat across the shirt under the arms and doubled. Length runs from the highest point of the shoulder to the hem. The Player version is cut slimmer than the Fan version — take one size up if you prefer a looser fit.",
+    "surcharge": "Sizes 3XL and 4XL add ₪15 to the shirt price."
+  },
+  "shippingPage": {
+    "eyebrow": "Shipping and returns",
+    "title": "How delivery works",
+    "metaDescription": "KitVerse shipping and returns: 12 to 25 day tracked delivery, 14-day returns, and how customs are handled.",
+    "timingTitle": "Timing",
+    "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 12 to 25 days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
+    "rateTitle": "Rate and area",
+    "rateBody": "We deliver within Israel only for now, and the rate depends on your region. Pick your region at checkout and the price shows immediately. Prices are in shekels and include VAT.",
+    "trackingTitle": "Tracking",
+    "trackingBody": "You get a tracking number by email as soon as the parcel moves. If tracking has not updated in seven days, write to us and we will chase it.",
+    "returnsTitle": "Returns",
+    "returnsBody": "Fourteen days from delivery, on unworn shirts with tags still attached. Printed shirts cannot be returned for a change of mind — only if the print is wrong or the shirt is faulty. Refunds are issued within 5 business days of the return reaching us. If an item arrives damaged, send photos within 48 hours.",
+    "customsTitle": "Customs",
+    "customsBody": "Orders delivered outside Israel may attract import duty on arrival. That charge is set by the destination country, not by us, and is not included in the price shown here."
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "Shirts, described honestly",
+    "metaDescription": "What KitVerse sells: replica football shirts for clubs and national teams, in Fan and Player versions, with honest photographs and honest delivery dates.",
+    "body1": "KitVerse sells football shirts for clubs from the big five leagues and for national teams, in two versions: Fan and Player. Sizes run from S to 4XL, and any shirt can be printed with a name and number.",
+    "body2": "These are replicas, not licensed merchandise, and we would rather say that on the front page than leave you to work it out. The design, the badge placement and the fabric are made to match the original closely; the shirt is not sold by the club. Every product photograph on this site is of the actual shirt we ship.",
+    "body3": "Prices are in shekels and include VAT. Delivery is 12 to 25 days with tracking, inside Israel for now.",
+    "contactTitle": "Contact",
+    "contactBody": "Questions about an order, a size, or a return — write to us and we reply within two business days.",
+    "email": "hello@kitverse.co.il"
+  },
+  "checkout": {
+    "eyebrow": "Checkout",
+    "title": "Complete your order",
+    "intro": "Fill in your delivery details, then pay by card or with PayPal.",
+    "metaDescription": "Complete your KitVerse order: delivery details and payment.",
+    "detailsTitle": "Delivery details",
+    "summaryTitle": "Order summary",
+    "fieldName": "Full name",
+    "fieldPhone": "Phone number",
+    "fieldEmail": "Email",
+    "fieldAddress": "Address",
+    "fieldCity": "City",
+    "fieldRegion": "Delivery region",
+    "fieldRegionPlaceholder": "Choose your region",
+    "fieldCountry": "Country",
+    "fieldNotes": "Notes",
+    "optional": "optional",
+    "countryValue": "Israel",
+    "countryNote": "We deliver within Israel only for now.",
+    "errorName": "Please enter your full name.",
+    "errorPhone": "Please enter a phone number we can reach you on.",
+    "errorEmail": "Please enter a valid email address.",
+    "errorAddress": "Please enter the full address, including the house number.",
+    "errorCity": "Please enter your city.",
+    "errorRegion": "Choose your delivery region.",
+    "errorNotes": "That note is too long.",
+    "formIncomplete": "Complete your delivery details and the payment button appears.",
+    "processing": "Confirming your payment…",
+    "termsLine": "By paying you agree to our <terms>terms and cancellation policy</terms>.",
+    "demoTitle": "Payments are not set up yet",
+    "demoBody": "Payments have not been connected to this site yet, so you cannot pay right now. You can still fill in the details and see the total.",
+    "errorGeneric": "Something went wrong and we could not place the order. Please try again in a moment.",
+    "errorCartEmpty": "There is nothing in your cart we can sell right now. Please check your cart.",
+    "errorUnconfigured": "Payment is not available right now. Write to us and we will complete your order.",
+    "errorRateLimited": "Too many attempts in a short time. Wait a minute and try again.",
+    "errorCapture": "We could not confirm the payment. If you were charged, write to us straight away and we will sort it out.",
+    "payTitle": "Payment",
+    "payCard": "Pay by card",
+    "payCardNote": "Secure card payment. We take you to our payment provider's page to enter your card, then bring you back here.",
+    "payCardLanguage": "The card page may be shown in Hebrew or English.",
+    "payPalNote": "Or pay with PayPal",
+    "redirecting": "Taking you to the payment page…",
+    "returnFailed": "The card payment did not go through, and nothing was charged. You can try again, or pay with PayPal.",
+    "returnCancelled": "You stopped the payment, and nothing was charged. Your cart is still here whenever you are ready."
+  },
+  "thankYou": {
+    "eyebrow": "Order placed",
+    "title": "Thank you — we have your order",
+    "intro": "Payment received, and we have started getting your order ready.",
+    "metaDescription": "Your KitVerse order confirmation.",
+    "referenceLabel": "Order reference",
+    "delivery": "Delivery is 12 to 25 days with tracking. Shirts printed with a name and number add two days to dispatch.",
+    "emailNote": "You will get an email with the order details, then a tracking number as soon as the parcel moves. If anything in the address is wrong, write to us quickly and we will fix it.",
+    "keepShopping": "Keep shopping",
+    "confirmingTitle": "We are confirming your payment",
+    "confirmingIntro": "Your payment is still with the bank. This usually takes a few seconds — refresh this page to check again.",
+    "confirmingNote": "Keep this order reference. If this page still says the same thing in a few minutes, write to us with that reference and we will check it for you."
+  },
+  "heroPreview": {
+    "pageTitle": "Hero variants",
+    "pageLabel": "Hero variants",
+    "pageNote": "Four directions for the opening of the home page. Pick one.",
+    "live": "live",
+    "d": {
+      "tag": "D",
+      "name": "Floodlight"
+    },
+    "a": {
+      "tag": "A",
+      "name": "Product-forward",
+      "eyebrow": "This season's kits",
+      "titleA": "Your team's shirt,",
+      "titleB": "printed to order.",
+      "sub": "Fan or Player, in every size, with your name and number if you want them. The price you see includes VAT.",
+      "cta": "Shop all shirts"
+    },
+    "b": {
+      "tag": "B",
+      "name": "Full-bleed showcase"
+    },
+    "c": {
+      "tag": "C",
+      "name": "Typographic, quieter",
+      "eyebrow": "This season's kits",
+      "titleA": "Your team's shirt,",
+      "titleB": "in your size,",
+      "titleC": "with your name on it.",
+      "sub": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing.",
+      "cta": "Shop all shirts",
+      "ctaSecondary": "National teams"
+    }
+  }
+}
