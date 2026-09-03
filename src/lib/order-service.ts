@@ -2,13 +2,16 @@ import "server-only";
 import { after } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { orderReference } from "@/lib/checkout";
-import { notifyOwnerOfPaidOrder, type NotificationItem } from "@/lib/notify";
+import { notifyOwnerOfOrder, type NotificationItem } from "@/lib/notify";
 import {
+  COD_PROVIDER,
   decidePaidTransition,
   isPaymentProvider,
+  isSettleableProvider,
   type OrderStatus,
   type PaidDecision,
   type PaymentProvider,
+  type SettleableProvider,
 } from "@/lib/orders";
 import type { OrderItemRow, OrderRow } from "@/lib/supabase";
 
@@ -31,17 +34,25 @@ export interface SettlementResult {
 }
 
 const ORDER_COLUMNS =
-  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, address, city, delivery_region, country, notes, locale, subtotal_ils, shipping_ils, total_ils";
+  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, address, city, delivery_region, country, notes, locale, subtotal_ils, shipping_ils, total_ils, deposit_ils";
 
 /**
- * Where each provider records the payment that settled an order. The PayPal
- * column is the capture; the PayPlus column is the transaction. Both are
- * unique in the schema, so one payment can never close two orders.
+ * Where each settleable provider records the payment that closed an order. The
+ * PayPal column is the capture; the PayPlus column is the transaction. Both
+ * are unique in the schema, so one payment can never close two orders.
+ *
+ * `bit_cod` is absent by construction — it is not a SettleableProvider, has no
+ * reference column, and is settled by the owner in the dashboard.
  */
-const SETTLED_REF_COLUMN: Record<PaymentProvider, keyof OrderRow> = {
+const SETTLED_REF_COLUMN: Record<SettleableProvider, keyof OrderRow> = {
   paypal: "paypal_capture_id",
   payplus: "payplus_transaction_uid",
 };
+
+/** The settled-reference column for a provider, or null for a manual rail. */
+function settledRefColumn(provider: PaymentProvider): keyof OrderRow | null {
+  return isSettleableProvider(provider) ? SETTLED_REF_COLUMN[provider] : null;
+}
 
 /**
  * The provider recorded on a row. Rows written before migration 0002 have no
@@ -94,10 +105,28 @@ export async function findOrder(
   return null;
 }
 
+/** What the confirmation page is allowed to learn from a reference in a URL. */
+export interface OrderStateByReference {
+  status: OrderStatus;
+  provider: PaymentProvider;
+  /** COD only: the Bit deposit this order is waiting for. Null otherwise. */
+  deposit: number | null;
+}
+
 /**
- * The confirmation page's one question: is the order behind this reference
- * paid? Returns the status and NOTHING else — no name, no amount, no email —
- * because the short reference travels in a URL that gets shared and logged.
+ * The confirmation page's question: what state is the order behind this
+ * reference in? Returns the status, the rail, and — for cash on delivery
+ * only — the deposit figure, and NOTHING else. No name, no email, no address,
+ * and not the order total, because the short reference travels in a URL that
+ * gets shared and logged.
+ *
+ * The deposit is here because the COD confirmation cannot be written without
+ * it: the buyer has to be told the exact amount to send by Bit, and the page
+ * must read it from the row the server wrote rather than trust a figure the
+ * browser carried over from checkout. It is one of three fixed tier values, so
+ * it discloses only a coarse band of the order total to anyone holding the
+ * reference — which is the price of the page working at all, and is paid only
+ * on COD orders.
  *
  * `reference` is a generated column (migration 0002) holding the same eight
  * characters orderReference() prints. It is not unique: on the astronomically
@@ -105,15 +134,15 @@ export async function findOrder(
  * customer's order, and the page falls back to "we are confirming your
  * payment".
  */
-export async function findOrderStatusByReference(
+export async function findOrderStateByReference(
   db: SupabaseClient,
   reference: string,
-): Promise<OrderStatus | null> {
+): Promise<OrderStateByReference | null> {
   if (!/^[A-Z0-9]{4,16}$/.test(reference)) return null;
 
   const { data, error } = await db
     .from("orders")
-    .select("status")
+    .select("status, payment_provider, deposit_ils")
     .eq("reference", reference)
     .limit(2);
 
@@ -122,8 +151,23 @@ export async function findOrderStatusByReference(
     return null;
   }
 
-  const rows = (data as { status: OrderStatus }[] | null) ?? [];
-  return rows.length === 1 ? rows[0].status : null;
+  const rows =
+    (data as
+      | { status: OrderStatus; payment_provider: string | null; deposit_ils: number | null }[]
+      | null) ?? [];
+  if (rows.length !== 1) return null;
+
+  const row = rows[0];
+  const provider: PaymentProvider = isPaymentProvider(row.payment_provider)
+    ? row.payment_provider
+    : "paypal";
+  const deposit = row.deposit_ils === null ? null : Number(row.deposit_ils);
+
+  return {
+    status: row.status,
+    provider,
+    deposit: provider === "bit_cod" && Number.isFinite(deposit) ? deposit : null,
+  };
 }
 
 /**
@@ -139,15 +183,16 @@ export async function settleOrderPaid(
   db: SupabaseClient,
   order: OrderRow | null,
   reference: string | null,
-  provider: PaymentProvider,
+  provider: SettleableProvider,
 ): Promise<SettlementResult> {
   const snapshot = order
     ? {
         status: order.status as OrderStatus,
         provider: providerOf(order),
-        settledRef: (order[SETTLED_REF_COLUMN[providerOf(order)]] ?? null) as
-          | string
-          | null,
+        settledRef: (() => {
+          const column = settledRefColumn(providerOf(order));
+          return column ? ((order[column] ?? null) as string | null) : null;
+        })(),
       }
     : null;
   const decision = decidePaidTransition(snapshot, reference, provider);
@@ -202,9 +247,46 @@ export async function markOrderFailed(
 }
 
 /**
+ * Announce a cash-on-delivery order to the owner the moment it is created.
+ *
+ * This is the one notification that does NOT wait for money. It cannot: a COD
+ * order is settled by the owner recognising a Bit transfer, so if they are not
+ * told the order exists there is nothing for the deposit to be matched
+ * against. The card paths stay the other way round — they notify on payment,
+ * because until then nothing has happened worth an email.
+ *
+ * Reads the row back rather than trusting what the route had in hand, so the
+ * email describes what was actually written. Swallows every failure: an order
+ * that exists is not un-made by a mail provider having a bad minute.
+ */
+export async function announceCodOrder(
+  db: SupabaseClient,
+  orderId: string,
+): Promise<void> {
+  try {
+    const { data } = await db
+      .from("orders")
+      .select(ORDER_COLUMNS)
+      .eq("id", orderId)
+      .maybeSingle();
+    const order = data as OrderRow | null;
+    if (!order) {
+      console.error(`[orders] COD notification: order ${orderId} vanished`);
+      return;
+    }
+    await sendOwnerNotification(db, order, COD_PROVIDER, "");
+  } catch (error) {
+    console.error(
+      `[orders] COD notification for ${orderId} failed:`,
+      error instanceof Error ? error.message : error,
+    );
+  }
+}
+
+/**
  * Build and send the owner's order email. Wrapped end to end: a failure to
  * read the lines back, or to send, is logged and swallowed — the order is
- * paid either way.
+ * paid (or, for COD, placed) either way.
  */
 async function sendOwnerNotification(
   db: SupabaseClient,
@@ -232,7 +314,7 @@ async function sendOwnerNotification(
       qty: Number(row.qty ?? 0),
     }));
 
-    await notifyOwnerOfPaidOrder({
+    await notifyOwnerOfOrder({
       reference: orderReference(order.id),
       orderId: order.id,
       locale: order.locale ?? "ar",
@@ -250,13 +332,19 @@ async function sendOwnerNotification(
       subtotal: Number(order.subtotal_ils ?? 0),
       shipping: Number(order.shipping_ils ?? 0),
       total: Number(order.total_ils ?? 0),
+      // COD only. The email leads with it, because it is the one figure the
+      // owner has to match against their Bit account by hand.
+      deposit: order.deposit_ils === null ? null : Number(order.deposit_ils),
       provider,
       // What the processor called this attempt, and what settled it. Named
-      // generically because the owner reads one email for both processors.
+      // generically because the owner reads one email for every rail; both are
+      // empty on COD, which has no processor references at all.
       providerOrderRef:
         (provider === "paypal"
           ? order.paypal_order_id
-          : order.payplus_page_request_uid) ?? "",
+          : provider === "payplus"
+            ? order.payplus_page_request_uid
+            : null) ?? "",
       providerPaymentRef: paymentRef,
     });
   } catch (error) {

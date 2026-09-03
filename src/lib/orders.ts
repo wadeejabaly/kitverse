@@ -1,4 +1,5 @@
 import {
+  bitDepositFor,
   cartTotals,
   priceLine,
   shippingFor,
@@ -119,19 +120,124 @@ export function repriceCart(
 
 /* ------------------------------------------------------ paid transition -- */
 
-export type OrderStatus = "pending" | "paid" | "failed" | "cancelled";
+/**
+ * `awaiting_deposit` (migration 0004) belongs to cash on delivery and to
+ * nothing else: the order is placed and reserved, and it is waiting for a Bit
+ * transfer that arrives OUTSIDE this application. The owner sees the money in
+ * their own Bit account and flips the row to `paid` by hand in the Supabase
+ * dashboard — no code path promotes it, which is exactly why the automated
+ * settlement below refuses to touch such an order at all.
+ */
+export type OrderStatus =
+  | "pending"
+  | "awaiting_deposit"
+  | "paid"
+  | "failed"
+  | "cancelled";
 
 /**
- * Which processor owns an order. PayPlus clears Israeli cards and is the
- * primary method; PayPal is the international one. An order belongs to
- * exactly one of them for its whole life — see the provider check below.
+ * A processor that settles an order over the wire, by a callback this
+ * application verifies. PayPlus clears Israeli cards; PayPal is the
+ * international one. An order belongs to exactly one of them for its whole
+ * life — see the provider check below.
  */
-export type PaymentProvider = "paypal" | "payplus";
+export type SettleableProvider = "paypal" | "payplus";
 
-export const PAYMENT_PROVIDERS: readonly PaymentProvider[] = ["paypal", "payplus"];
+/**
+ * Which rail owns an order. `bit_cod` is deliberately NOT settleable: Bit has
+ * no API here, there is no callback to verify and therefore no automated road
+ * from `awaiting_deposit` to `paid`. Keeping it out of SettleableProvider
+ * means the type system, not a runtime check, is what stops a card webhook
+ * from being handed a COD order.
+ */
+export type PaymentProvider = SettleableProvider | "bit_cod";
+
+export const SETTLEABLE_PROVIDERS: readonly SettleableProvider[] = [
+  "paypal",
+  "payplus",
+];
+
+export const PAYMENT_PROVIDERS: readonly PaymentProvider[] = [
+  ...SETTLEABLE_PROVIDERS,
+  "bit_cod",
+];
 
 export function isPaymentProvider(value: unknown): value is PaymentProvider {
   return typeof value === "string" && (PAYMENT_PROVIDERS as string[]).includes(value);
+}
+
+export function isSettleableProvider(value: unknown): value is SettleableProvider {
+  return (
+    typeof value === "string" && (SETTLEABLE_PROVIDERS as string[]).includes(value)
+  );
+}
+
+/* -------------------------------------------------- cash on delivery -- */
+
+/** The provider and status every COD order is created with, and the only ones. */
+export const COD_PROVIDER = "bit_cod" as const satisfies PaymentProvider;
+export const COD_INITIAL_STATUS = "awaiting_deposit" as const satisfies OrderStatus;
+
+export interface CodOrderRow {
+  status: typeof COD_INITIAL_STATUS;
+  payment_provider: typeof COD_PROVIDER;
+  deposit_ils: number;
+}
+
+/**
+ * The provider-and-money half of a cash-on-delivery order row.
+ *
+ * It lives here rather than inline in the route so it can be unit-tested: the
+ * route has no other provider literal in it, so proving this function returns
+ * `bit_cod` for every input is proving the COD path cannot create a card
+ * order. The deposit is computed from the total the SERVER just repriced —
+ * `bitDepositFor` is never handed a figure that came off the wire.
+ */
+export function codOrderRow(serverTotal: number): CodOrderRow {
+  return {
+    status: COD_INITIAL_STATUS,
+    payment_provider: COD_PROVIDER,
+    deposit_ils: bitDepositFor(serverTotal),
+  };
+}
+
+/** The order facts the confirmation page reads back for a reference. */
+export interface OrderStateForConfirmation {
+  status: OrderStatus;
+  provider: PaymentProvider;
+  deposit: number | null;
+}
+
+/** Everything the buyer needs in order to pay: where, and how much. */
+export interface CodConfirmation {
+  deposit: number;
+  phone: string;
+}
+
+/**
+ * Should the confirmation page show the "send your Bit deposit" state?
+ *
+ * Only when all four facts line up: the order exists, it is on the COD rail,
+ * it is still waiting for the deposit, a deposit was actually recorded on the
+ * row, and the store has a number to send it to. Anything short of that is
+ * null, and the page falls back to its holding copy rather than inventing
+ * instructions or naming an amount it cannot source from the database.
+ *
+ * Pure, so the gate is unit-tested rather than only reachable through a live
+ * Supabase project. NOTE what is NOT an input: anything the browser carried
+ * over from checkout. Both the deposit and the phone number come from the
+ * server — the order row and server-only env respectively.
+ */
+export function codConfirmationFor(
+  state: OrderStateForConfirmation | null,
+  bitPhone: string | null,
+): CodConfirmation | null {
+  if (!state) return null;
+  if (state.provider !== COD_PROVIDER) return null;
+  if (state.status !== COD_INITIAL_STATUS) return null;
+  if (state.deposit === null || !(state.deposit > 0)) return null;
+  if (!bitPhone) return null;
+  return { deposit: state.deposit, phone: bitPhone };
 }
 
 /** The order facts the transition decision needs — nothing else. */
@@ -151,7 +257,12 @@ export type PaidDecision =
   /** Nothing to act on: refuse and say why. */
   | {
       action: "reject";
-      reason: "unknown-order" | "missing-reference" | "provider-mismatch";
+      reason:
+        | "unknown-order"
+        | "missing-reference"
+        | "provider-mismatch"
+        /** A cash-on-delivery order. Settled by hand, never by a callback. */
+        | "manual-provider";
     };
 
 /**
@@ -174,13 +285,22 @@ export type PaidDecision =
  * event from the other — otherwise a forged or misrouted PayPal event could
  * close a PayPlus order that nobody ever paid for, and vice versa. The
  * mismatch is a rejection, never a no-op.
+ *
+ * THE MANUAL-PROVIDER CHECK is the same argument for the cash-on-delivery
+ * rail. A `bit_cod` order is settled by a human reading their Bit account,
+ * so no callback on any endpoint may promote one — and the check is written
+ * against the ORDER's provider rather than the caller's, so it holds even if
+ * some future caller passes a provider it should not have.
  */
 export function decidePaidTransition(
   order: OrderStateSnapshot | null,
   reference: string | null,
-  provider: PaymentProvider,
+  provider: SettleableProvider,
 ): PaidDecision {
   if (!order) return { action: "reject", reason: "unknown-order" };
+  if (!isSettleableProvider(order.provider)) {
+    return { action: "reject", reason: "manual-provider" };
+  }
   if (order.provider !== provider) {
     return { action: "reject", reason: "provider-mismatch" };
   }

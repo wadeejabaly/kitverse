@@ -18,7 +18,8 @@ import type { Size, Version } from "./types";
  * (national/current/previous), which stays a browsing/display category and no
  * longer drives price at all.
  *
- * Add-ons are unchanged from the previous ladder: name & number 39, badge 19.
+ * Add-ons dropped with the same owner decision: name & number 20 (was 39),
+ * badge patch 12 (was 19).
  */
 
 export const SIZES: Size[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
@@ -86,7 +87,7 @@ export function priceFor(season: string, size: Size, version: Version): number {
   return base + sizeSurcharge(size);
 }
 
-export const ADDONS = { nameNumber: 39, badge: 19 } as const;
+export const ADDONS = { nameNumber: 20, badge: 12 } as const;
 
 /* ------------------------------------------------------------- delivery -- */
 
@@ -170,4 +171,41 @@ export function cartTotals(
   const subtotal = items.reduce((sum, line) => sum + line.lineTotal, 0);
   const appliedShipping = items.length > 0 ? shipping : 0;
   return { subtotal, shipping: appliedShipping, total: subtotal + appliedShipping };
+}
+
+/* -------------------------------------------- cash on delivery (Bit) -- */
+
+/**
+ * The Bit deposit that reserves a cash-on-delivery order (owner decision
+ * 2026-09-02).
+ *
+ * COD is a MANUAL rail: there is no Bit API. The buyer sends this figure by
+ * Bit to the owner's own number, the owner sees it arrive and flips the order
+ * from `awaiting_deposit` to `paid` by hand in the Supabase dashboard. The
+ * deposit exists because a refused delivery costs the store the courier leg
+ * either way — it comes off the cash due to the courier on a completed
+ * delivery, and it is not refunded on a refused one.
+ *
+ * The tiers are on the ORDER TOTAL (goods + shipping), which is the figure the
+ * server computed — never a total a browser sent:
+ *   under 150   → 35
+ *   under 220   → 40
+ *   220 and up  → 50
+ *
+ * The boundaries are exclusive on the low side, so a total of exactly 150
+ * pays 40 and exactly 220 pays 50.
+ */
+export const BIT_DEPOSIT_TIERS: { under: number; deposit: number }[] = [
+  { under: 150, deposit: 35 },
+  { under: 220, deposit: 40 },
+];
+
+/** The deposit for any total at or above the last tier's ceiling. */
+export const BIT_DEPOSIT_MAX = 50;
+
+export function bitDepositFor(totalIls: number): number {
+  for (const tier of BIT_DEPOSIT_TIERS) {
+    if (totalIls < tier.under) return tier.deposit;
+  }
+  return BIT_DEPOSIT_MAX;
 }

@@ -67,7 +67,7 @@
       },
       "three": {
         "title": "Name and number printing",
-        "body": "Any name, any number, printed to order. Adds ₪39 to the shirt and two days before dispatch."
+        "body": "Any name, any number, printed to order. Adds ₪20 to the shirt and two days before dispatch."
       }
     },
     "empty": "The catalogue is being photographed. Shirts appear here as soon as their images are approved."
@@ -225,10 +225,10 @@
     "nameNumber": "Name and number — optional",
     "nameNumberToggle": "Add a name and number",
     "nameNumberLabel": "Name and number",
-    "nameNumberHint": "Printed to order. Adds ₪39 and two days to dispatch.",
+    "nameNumberHint": "Printed to order. Adds ₪20 and two days to dispatch.",
     "badge": "Badge patch",
     "badgeToggle": "Add the competition badge patch",
-    "badgeHint": "Sewn-on league or tournament patch. Adds ₪19.",
+    "badgeHint": "Sewn-on league or tournament patch. Adds ₪12.",
     "quantity": "Quantity",
     "added": "Added to your cart.",
     "viewCart": "View cart",
@@ -315,7 +315,7 @@
   "checkout": {
     "eyebrow": "Checkout",
     "title": "Complete your order",
-    "intro": "Fill in your delivery details, then pay by card or with PayPal.",
+    "intro": "Fill in your delivery details, then choose how you want to pay.",
     "metaDescription": "Complete your KitVerse order: delivery details and payment.",
     "detailsTitle": "Delivery details",
     "summaryTitle": "Order summary",
@@ -355,7 +355,12 @@
     "payPalNote": "Or pay with PayPal",
     "redirecting": "Taking you to the payment page…",
     "returnFailed": "The card payment did not go through, and nothing was charged. You can try again, or pay with PayPal.",
-    "returnCancelled": "You stopped the payment, and nothing was charged. Your cart is still here whenever you are ready."
+    "returnCancelled": "You stopped the payment, and nothing was charged. Your cart is still here whenever you are ready.",
+    "payCodIntro": "Or pay cash on delivery",
+    "payCod": "Order with cash on delivery",
+    "payCodPlacing": "Placing your order…",
+    "payCodDeposit": "Send a ₪{amount} deposit by Bit to reserve this order. The rest is paid in cash to the courier.",
+    "payCodTerms": "We show you the Bit number on the next page. The deposit comes off the cash you pay on delivery, and it is not refunded if you refuse the parcel."
   },
   "thankYou": {
     "eyebrow": "Order placed",
@@ -368,7 +373,15 @@
     "keepShopping": "Keep shopping",
     "confirmingTitle": "We are confirming your payment",
     "confirmingIntro": "Your payment is still with the bank. This usually takes a few seconds — refresh this page to check again.",
-    "confirmingNote": "Keep this order reference. If this page still says the same thing in a few minutes, write to us with that reference and we will check it for you."
+    "confirmingNote": "Keep this order reference. If this page still says the same thing in a few minutes, write to us with that reference and we will check it for you.",
+    "codEyebrow": "Order reserved",
+    "codTitle": "Send your Bit deposit",
+    "codIntro": "Your order is reserved. It ships once your deposit is confirmed.",
+    "codPhoneLabel": "Bit number",
+    "codAmountLabel": "Deposit",
+    "codNoteLabel": "Write in the Bit note",
+    "codBody": "Open Bit, send ₪{amount} to the number above, and put the order reference in the note so we can match it to your order. Your order ships once the deposit is confirmed.",
+    "codTerms": "The deposit comes off the cash you pay the courier on delivery. It is not refunded if the delivery is refused."
   },
   "heroPreview": {
     "pageTitle": "Hero variants",

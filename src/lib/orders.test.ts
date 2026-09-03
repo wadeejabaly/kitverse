@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { cartTotals, priceLine, shippingFor } from "@/data/pricing";
+import { bitDepositFor, cartTotals, priceLine, shippingFor } from "@/data/pricing";
 import { getAllProducts, getProduct } from "@/data/catalog";
 import type { CheckoutItemInput } from "@/lib/checkout";
 import {
+  COD_PROVIDER,
   MAX_QTY_SERVER,
+  SETTLEABLE_PROVIDERS,
+  codConfirmationFor,
+  codOrderRow,
   decidePaidTransition,
   isHandledWebhookEvent,
+  isPaymentProvider,
+  isSettleableProvider,
   readWebhookOrderRef,
   repriceCart,
   type OrderStateSnapshot,
@@ -50,7 +56,7 @@ describe("repriceCart — the server's own arithmetic", () => {
     const nationalSeason = getProduct(nationalHandle)!.season;
 
     const items: CheckoutItemInput[] = [
-      // 4XL (+12), name & number (+39), qty 2
+      // 4XL (+12), name & number (+20), qty 2
       {
         handle: previousHandle,
         size: "4XL",
@@ -59,7 +65,7 @@ describe("repriceCart — the server's own arithmetic", () => {
         badge: false,
         qty: 2,
       },
-      // 3XL (+9), badge (+19), qty 1
+      // 3XL (+9), badge (+12), qty 1
       { handle: nationalHandle, size: "3XL", version: "fan", badge: true, qty: 1 },
       // plain line, no add-ons
       { handle: previousHandle, size: "M", version: "fan", badge: false, qty: 3 },
@@ -82,11 +88,11 @@ describe("repriceCart — the server's own arithmetic", () => {
     expect(cart.shipping).toBe(shippingFor(REGION));
     expect(cart.total).toBe(expected.total);
 
-    // player 110 + 12 surcharge + 39 print
-    expect(cart.lines[0].unitPrice).toBe(161);
-    expect(cart.lines[0].lineTotal).toBe(322);
-    // fan 95 + 9 surcharge + 19 badge
-    expect(cart.lines[1].unitPrice).toBe(123);
+    // player 110 + 12 surcharge + 20 print
+    expect(cart.lines[0].unitPrice).toBe(142);
+    expect(cart.lines[0].lineTotal).toBe(284);
+    // fan 95 + 9 surcharge + 12 badge
+    expect(cart.lines[1].unitPrice).toBe(116);
   });
 
   it("ignores any price-shaped field the client tries to send", () => {
@@ -222,7 +228,7 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
       REGION,
     );
     expect(cart.lines[0].nameNumber).toBeNull();
-    // Fan 95, not 95 + 39.
+    // Fan 95, not 95 + 20.
     expect(cart.lines[0].unitPrice).toBe(95);
   });
 });
@@ -324,6 +330,156 @@ describe("decidePaidTransition — pending → paid, exactly once", () => {
         decidePaidTransition(order("pending", "payplus"), "TXN-1", "payplus"),
       ).toEqual({ action: "promote", reference: "TXN-1" });
     });
+  });
+
+  /**
+   * Cash on delivery is a MANUAL rail. Bit has no callback, so no webhook on
+   * any endpoint may move a COD order to paid — only the owner can, by hand,
+   * after seeing the transfer. These tests are the proof that a card event
+   * cannot reach one, whatever status the row happens to be in.
+   */
+  describe("cash on delivery is out of reach of every callback", () => {
+    for (const settling of SETTLEABLE_PROVIDERS) {
+      for (const status of [
+        "awaiting_deposit",
+        "pending",
+        "paid",
+        "failed",
+      ] as OrderStatus[]) {
+        it(`refuses a ${settling} settlement of a ${status} bit_cod order`, () => {
+          expect(
+            decidePaidTransition(order(status, COD_PROVIDER, null), "REF-1", settling),
+          ).toEqual({ action: "reject", reason: "manual-provider" });
+        });
+      }
+    }
+
+    it("rejects rather than no-ops, so a misrouted event stays loud in the logs", () => {
+      const decision = decidePaidTransition(
+        order("awaiting_deposit", COD_PROVIDER),
+        "CAP-1",
+        "paypal",
+      );
+      expect(decision.action).toBe("reject");
+    });
+
+    it("keeps bit_cod out of the settleable set entirely", () => {
+      expect(isSettleableProvider(COD_PROVIDER)).toBe(false);
+      expect(SETTLEABLE_PROVIDERS).toEqual(["paypal", "payplus"]);
+      // …while still being a provider the application recognises on a row.
+      expect(isPaymentProvider(COD_PROVIDER)).toBe(true);
+    });
+
+    it("leaves an awaiting_deposit card order untouched too — the status is not pending", () => {
+      // Belt and braces: even if a row somehow carried a card provider with
+      // the COD status, no callback promotes it.
+      expect(
+        decidePaidTransition(order("awaiting_deposit", "paypal"), "CAP-1", "paypal"),
+      ).toEqual({ action: "noop", reason: "not-pending" });
+    });
+  });
+});
+
+/**
+ * The COD route's whole provider-and-money decision, extracted so it can be
+ * asserted. The route contains no other provider or status literal, so what is
+ * proved here is proved of the route: a cash-on-delivery checkout cannot
+ * create a card-provider order, and the deposit is always derived from the
+ * total the server itself computed.
+ */
+describe("codOrderRow — what a cash-on-delivery checkout writes", () => {
+  it("always writes the COD rail and the COD status, for any total", () => {
+    for (const total of [1, 95, 149, 150, 219, 220, 500, 12_345]) {
+      const row = codOrderRow(total);
+      expect(row.payment_provider).toBe("bit_cod");
+      expect(row.status).toBe("awaiting_deposit");
+    }
+  });
+
+  it("can never produce a card provider or a settleable status", () => {
+    for (const total of [0, 100, 1000]) {
+      const row = codOrderRow(total);
+      expect(isSettleableProvider(row.payment_provider)).toBe(false);
+      expect(row.status).not.toBe("pending");
+      expect(row.status).not.toBe("paid");
+    }
+  });
+
+  it("records the deposit the pricing tiers dictate for the given total", () => {
+    for (const total of [95, 149, 150, 219, 220, 900]) {
+      expect(codOrderRow(total).deposit_ils).toBe(bitDepositFor(total));
+    }
+    expect(codOrderRow(145).deposit_ils).toBe(35);
+    expect(codOrderRow(200).deposit_ils).toBe(40);
+    expect(codOrderRow(300).deposit_ils).toBe(50);
+  });
+
+  it("round-trips into the confirmation gate: what it writes is what the page shows", () => {
+    const row = codOrderRow(300);
+    expect(
+      codConfirmationFor(
+        {
+          status: row.status,
+          provider: row.payment_provider,
+          deposit: row.deposit_ils,
+        },
+        "050-1234567",
+      ),
+    ).toEqual({ deposit: 50, phone: "050-1234567" });
+  });
+
+  it("derives the deposit from a repriced cart total, not from anything on the wire", () => {
+    const handle = visibleHandle("national");
+    // A cart the browser could have lied about in any way it liked: the row is
+    // built from repriceCart's own total.
+    const cart = repriceCart(
+      [{ handle, size: "M", version: "fan", badge: false, qty: 3 }],
+      "jerusalem",
+    );
+    expect(codOrderRow(cart.total).deposit_ils).toBe(bitDepositFor(cart.total));
+  });
+});
+
+/**
+ * The confirmation page's COD gate. It decides whether a buyer is shown a
+ * phone number and told to send money, so it fails closed on every missing or
+ * inconsistent fact rather than guessing.
+ */
+describe("codConfirmationFor — when the thank-you page shows Bit instructions", () => {
+  const PHONE = "050-1234567";
+  const ok = { status: "awaiting_deposit", provider: "bit_cod", deposit: 40 } as const;
+
+  it("shows the instructions for a bit_cod order awaiting its deposit", () => {
+    expect(codConfirmationFor({ ...ok }, PHONE)).toEqual({
+      deposit: 40,
+      phone: PHONE,
+    });
+  });
+
+  it("shows nothing when there is no order behind the reference", () => {
+    expect(codConfirmationFor(null, PHONE)).toBeNull();
+  });
+
+  it("shows nothing for a card order, whatever its status", () => {
+    for (const provider of SETTLEABLE_PROVIDERS) {
+      expect(codConfirmationFor({ ...ok, provider }, PHONE)).toBeNull();
+    }
+  });
+
+  it("shows nothing once the owner has marked the COD order paid", () => {
+    expect(codConfirmationFor({ ...ok, status: "paid" }, PHONE)).toBeNull();
+    expect(codConfirmationFor({ ...ok, status: "failed" }, PHONE)).toBeNull();
+    expect(codConfirmationFor({ ...ok, status: "cancelled" }, PHONE)).toBeNull();
+  });
+
+  it("refuses to name an amount the row does not carry", () => {
+    expect(codConfirmationFor({ ...ok, deposit: null }, PHONE)).toBeNull();
+    expect(codConfirmationFor({ ...ok, deposit: 0 }, PHONE)).toBeNull();
+  });
+
+  it("refuses to ask for money with no number to send it to", () => {
+    expect(codConfirmationFor({ ...ok }, null)).toBeNull();
+    expect(codConfirmationFor({ ...ok }, "")).toBeNull();
   });
 });
 

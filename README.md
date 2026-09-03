@@ -1,7 +1,8 @@
 # KitVerse
 
 An Arabic-first online store for soccer jerseys. Arabic (RTL) is the default
-language and lives at `/`; English lives at `/en`. Checkout runs on PayPal.
+language and lives at `/`; English lives at `/en`. Checkout runs on PayPal and
+on cash on delivery reserved by a Bit deposit.
 The catalog is a small dropship set built into the site at build time — no
 inventory tracking, no customer accounts.
 
@@ -25,9 +26,10 @@ cp .env.example .env.local   # then fill in what you need
 npm run dev                  # http://localhost:3000
 ```
 
-The site builds and runs with no environment variables set. Without PayPal
-credentials, checkout renders a "payments not configured" state instead of
-failing.
+The site builds and runs with no environment variables set. Each payment
+method appears only when its own variables are present — PayPal needs its
+credentials, cash on delivery needs `BIT_PHONE_NUMBER` — and with none of them
+set checkout renders a "payments not configured" state instead of failing.
 
 ## Scripts
 

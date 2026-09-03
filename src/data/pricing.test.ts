@@ -5,6 +5,7 @@ import {
   SHIPPING_ILS_BY_REGION,
   SIZES,
   VERSIONS,
+  bitDepositFor,
   cartTotals,
   isDeliveryRegion,
   isRetroSeason,
@@ -110,8 +111,45 @@ describe("priceFor — 3XL/4XL surcharge", () => {
 
 describe("ADDONS", () => {
   it("exposes the confirmed addon prices", () => {
-    expect(ADDONS.nameNumber).toBe(39);
-    expect(ADDONS.badge).toBe(19);
+    expect(ADDONS.nameNumber).toBe(20);
+    expect(ADDONS.badge).toBe(12);
+  });
+});
+
+describe("bitDepositFor — the cash-on-delivery Bit deposit", () => {
+  it("charges the confirmed tier for a total in the middle of each band", () => {
+    expect(bitDepositFor(95)).toBe(35);
+    expect(bitDepositFor(180)).toBe(40);
+    expect(bitDepositFor(400)).toBe(50);
+  });
+
+  it("uses exclusive lower boundaries — 149→35, 150→40, 219→40, 220→50", () => {
+    expect(bitDepositFor(149)).toBe(35);
+    expect(bitDepositFor(150)).toBe(40);
+    expect(bitDepositFor(219)).toBe(40);
+    expect(bitDepositFor(220)).toBe(50);
+  });
+
+  it("never exceeds the order total it is a deposit against", () => {
+    // A real order always clears the cheapest line plus regional shipping
+    // (95 + 50 = 145), so the smallest deposit is always a fraction of it.
+    const smallestRealOrder = priceLine("2026/27", "S", "fan", 1).lineTotal + 50;
+    expect(bitDepositFor(smallestRealOrder)).toBeLessThan(smallestRealOrder);
+  });
+
+  it("is monotonic: a bigger order never asks for a smaller deposit", () => {
+    let previous = 0;
+    for (let total = 0; total <= 500; total += 1) {
+      const deposit = bitDepositFor(total);
+      expect(deposit).toBeGreaterThanOrEqual(previous);
+      previous = deposit;
+    }
+  });
+
+  it("only ever returns one of the three confirmed figures", () => {
+    for (let total = 0; total <= 1000; total += 7) {
+      expect([35, 40, 50]).toContain(bitDepositFor(total));
+    }
   });
 });
 
@@ -147,14 +185,14 @@ describe("priceLine + cartTotals — addon math and totals", () => {
 
   it("priceLine adds nameNumber and badge onto the unit price before multiplying by qty", () => {
     const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, badge: true });
-    expect(line.unitPrice).toBe(95 + 39 + 19);
-    expect(line.lineTotal).toBe((95 + 39 + 19) * 3);
+    expect(line.unitPrice).toBe(95 + 20 + 12);
+    expect(line.lineTotal).toBe((95 + 20 + 12) * 3);
   });
 
   it("priceLine respects the size surcharge together with addons", () => {
     const line = priceLine("2026/27", "4XL", "player", 1, { nameNumber: true });
-    // player base 110 + 12 surcharge + 39 name&number
-    expect(line.unitPrice).toBe(110 + 12 + 39);
+    // player base 110 + 12 surcharge + 20 name&number
+    expect(line.unitPrice).toBe(110 + 12 + 20);
   });
 
   it("priceLine on a retro season ignores the version argument", () => {
@@ -170,7 +208,7 @@ describe("priceLine + cartTotals — addon math and totals", () => {
       priceLine("2022", "L", "player", 2, { badge: true }),
     ];
     const totals = cartTotals(lines, shippingFor("center"));
-    const expectedSubtotal = 95 + (135 + 19) * 2;
+    const expectedSubtotal = 95 + (135 + 12) * 2;
     expect(totals.subtotal).toBe(expectedSubtotal);
     expect(totals.shipping).toBe(60);
     expect(totals.total).toBe(expectedSubtotal + 60);

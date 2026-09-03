@@ -1,7 +1,8 @@
 # KitVerse — working agreement
 
 An Arabic-first online store for soccer jerseys. Arabic (RTL) is the default
-language at `/`; English is secondary at `/en`. Checkout is PayPal only. The
+language at `/`; English is secondary at `/en`. Checkout is PayPal plus cash
+on delivery against a Bit deposit (PayPlus dormant — see decision 1b). The
 catalog is a small dropship set (~329 products) built into the site as static
 JSON — no inventory tracking, no customer accounts, no custom admin (orders are
 read in the Supabase dashboard). The aesthetic is quiet retail: fast, plain,
@@ -68,12 +69,34 @@ photo-forward.
    `kind` — `kind` (national/current/previous) is a browsing category and no
    longer touches money. Retro is not a version the shopper picks: the PDP
    hides the Fan/Player fieldset on a retro product and stores `"fan"`, which
-   `priceFor` ignores there anyway. Sizes 3XL +9, 4XL +12. Add-ons unchanged:
-   name & number 39, badge patch 19. **There is no compare-at / sale pricing
+   `priceFor` ignores there anyway. Sizes 3XL +9, 4XL +12. Add-ons dropped
+   with the same decision: name & number **20** (was 39), badge patch **12**
+   (was 19). **There is no compare-at / sale pricing
    anywhere** — `compareAtFor()` and `<ComparePrice>` are gone, not disabled.
    `FUTURE_PRICES` in `pricing.ts` parks the owner's confirmed figures for
    product types that have no catalogue data yet (kids kit 200, adult kit 300,
    NBA 160, long-sleeve 105/120/145); nothing reads them.
+1b. **Cash on delivery via Bit deposit (2026-09-02).** A third checkout method
+   beside PayPal. The buyer reserves the order with a Bit deposit priced off
+   the order total — **under 150 → 35, under 220 → 40, else 50**
+   (`bitDepositFor()` in `pricing.ts`, computed server-side from the repriced
+   total). The deposit is deducted from the cash the courier collects, and is
+   **not refunded if the delivery is refused** — the buyer is told both, at
+   checkout, before committing. **Bit is a manual rail: there is no API.** The
+   order is written `status='awaiting_deposit'`, `payment_provider='bit_cod'`,
+   `deposit_ils` recorded (migration `0004`), the owner is emailed
+   **immediately on creation** (unlike the card rails, which email on
+   payment — the owner has to recognise an incoming transfer), the buyer sends
+   the deposit by Bit to `BIT_PHONE_NUMBER`, and **the owner flips the row to
+   `paid` by hand in the Supabase dashboard.** Nothing in the application can:
+   `bit_cod` is excluded from `SettleableProvider`, so `decidePaidTransition`
+   rejects any webhook aimed at a COD order (`manual-provider`) and no card
+   event can settle one. An `awaiting_deposit` order whose deposit never
+   arrives is simply never shipped — there is no expiry job and none is wanted.
+   `BIT_PHONE_NUMBER` is server-only and **never** `NEXT_PUBLIC_`: the method
+   is hidden when it is unset, and the number reaches a browser in exactly one
+   place — rendered server-side into the confirmation page of an order that has
+   just been placed.
 2. **Locales.** `ar` default (RTL) at `/`, `en` at `/en`.
    `localePrefix: "as-needed"`, `localeDetection: false`.
 3. **Shipping at launch — updated 2026-09-02.** Israel only, priced **by
@@ -232,7 +255,10 @@ Two rules it must keep:
 - Absolute URLs are assembled in exactly one place: `getSiteUrl()` in
   `src/lib/site.ts`.
 - Secrets are server-only. The one PayPal value the browser may see is
-  `NEXT_PUBLIC_PAYPAL_CLIENT_ID`.
+  `NEXT_PUBLIC_PAYPAL_CLIENT_ID`. `BIT_PHONE_NUMBER` is not a secret but is
+  still server-only — it is a personal phone number, so it is read through
+  `src/lib/bit.ts` (`server-only`) and rendered into exactly one page: the
+  confirmation of an order that has just been placed.
 
 ## Current status
 
@@ -245,16 +271,18 @@ collections, PDP with name&number/badge, search, cart, size guide, shipping,
 about) in both locales; brand integration (crest badge, navy accent, gold
 micro-accents, icons/OG); the design-elevation pass (frosted header, magazine
 index, motion system in `src/components/motion/`); checkout with Supabase
-orders + PayPal (Orders v2, verified webhook) and PayPlus (hosted page,
-HMAC+API-verified webhook, provider-scoped orders).
+orders + PayPal (Orders v2, verified webhook), PayPlus (hosted page,
+HMAC+API-verified webhook, provider-scoped orders) and cash on delivery by Bit
+deposit (`/api/checkout/bit/start`, migration `0004`, settled by hand).
 
 The home hero is **`<HeroD/>` — Floodlight** (`src/components/hero/HeroD.tsx`
 + `FloodStage.tsx`): a stadium-at-night stage scoped to the section, with
 three shirts crossfading behind the headline. `/hero-preview` carries all four
 variants with D tagged live. The 2026-09-02 owner decisions — the flat
-Fan 95 / Player 110 / Retro 135 ladder with compare-at removed, and regional
-shipping (50/60/70/100) with a required region select at checkout — are
-implemented end to end: PDP, cards, cart, checkout, `repriceCart`, and both
+Fan 95 / Player 110 / Retro 135 ladder with compare-at removed, add-ons at
+20 / 12, regional shipping (50/60/70/100) with a required region select at
+checkout, and cash on delivery with the 35/40/50 Bit deposit — are implemented
+end to end: PDP, cards, cart, checkout, `repriceCart`, and all three
 payment-start routes. Project path is `Client Sites/KitVerseWebsite`; the
 `vendor/` source data moved with it and the import script resolves relative to
 the repo root, so it runs unchanged from the new location. Repo: private
@@ -262,22 +290,31 @@ the repo root, so it runs unchanged from the new location. Repo: private
 pushes require `gh auth switch --user wadeejabaly` (terminal normally stays
 on OmarHawari2).
 
-**Payments posture (owner decision 2026-09-02): PayPal only for now.** The
-PayPlus integration stays in the tree but dormant — no `PAYPLUS_*` env is set
-anywhere, so the card option never renders. Do not set those vars or revive
-the PayPlus signup without an owner go; when it comes, it's env vars +
-migration `0002`, not a build task.
+**Payments posture (owner decision 2026-09-02): PayPal + Bit cash-on-delivery
+are the live paths; PayPlus stays dormant.** The PayPlus integration stays in
+the tree but no `PAYPLUS_*` env is set anywhere, so the card option never
+renders. Do not set those vars or revive the PayPlus signup without an owner
+go; when it comes, it's env vars + migration `0002`, not a build task. COD is
+live in the code and gated on one input the owner still owes us: setting
+`BIT_PHONE_NUMBER` turns the method on, leaving it unset keeps it invisible.
 
 Open launch gates: 20 products pending image review in `/review` (35 rejected
-stay hidden); Supabase project + migrations `0001`/`0002`/**`0003`** — `0003`
-(`delivery_region`) must be applied **before** this code deploys, because both
-payment-start routes now write that column and a database still on `0002`
-fails every checkout with an unknown-column error; PayPal sandbox e2e then
-owner-run `/code-review ultra` on the money path before any live charge;
-registered business name/address/contact email missing from legal pages;
-all Arabic copy needs native review; `NEXT_PUBLIC_SITE_URL` on Vercel must
-be the public https origin (payment callbacks depend on it). Vercel deploys
-are done manually by the owner into the wadee account.
+stay hidden); Supabase project + migrations `0001`/`0002`/**`0003`**/**`0004`**
+— `0003` (`delivery_region`) and `0004` (`bit_cod`: the `payment_provider` and
+`status` checks plus `deposit_ils`) must both be applied **before** this code
+deploys, because the payment-start routes write those columns and values and a
+database still on `0002` fails every checkout with an unknown-column error, one
+still on `0003` fails every COD checkout with a check-constraint violation;
+**`BIT_PHONE_NUMBER` (the owner's Bit-registered phone) is a client input we do
+not have yet** — cash on delivery does not render until it is set, in Preview
+and Production both; PayPal sandbox e2e then owner-run `/code-review ultra` on
+the money path before any live charge; **the owner must know that a COD order
+sits at `awaiting_deposit` until they set it to `paid` by hand in the Supabase
+dashboard** — nothing else ever will; registered business name/address/contact
+email missing from legal pages; all Arabic copy needs native review;
+`NEXT_PUBLIC_SITE_URL` on Vercel must be the public https origin (payment
+callbacks depend on it). Vercel deploys are done manually by the owner into the
+wadee account.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

@@ -8,6 +8,7 @@ import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Link, useRouter } from "@/i18n/navigation";
 import {
   DELIVERY_REGIONS,
+  bitDepositFor,
   cartTotals,
   priceLine,
   shippingFor,
@@ -32,10 +33,17 @@ import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
  * pays and only then discovers their address was rejected has been failed by
  * the page.
  *
- * Two processors, each shown only when it is configured: PayPlus clears cards
- * (the primary method — a redirect to a page PayPlus hosts) and PayPal covers
- * everything else. With neither configured the page still renders in full and
- * shows the demo panel where the payment controls would be.
+ * Three methods, each shown only when it is configured: PayPlus clears cards
+ * (a redirect to a page PayPlus hosts), PayPal covers everything else, and
+ * cash on delivery reserves the order with a Bit deposit. With none configured
+ * the page still renders in full and shows the demo panel where the payment
+ * controls would be.
+ *
+ * The COD deposit shown below is computed here from pricing.ts, exactly like
+ * the line prices — a display of a number the server will compute for itself
+ * from its own total. It is shown BEFORE the buyer commits, with the terms
+ * attached, because a deposit is a condition of the sale and not a surprise
+ * for the confirmation page.
  */
 
 type FormValues = {
@@ -88,11 +96,13 @@ export function CheckoutView({
   locale,
   paypalClientId,
   payplusEnabled,
+  bitCodEnabled,
 }: {
   products: CartProductInfo[];
   locale: string;
   paypalClientId: string | null;
   payplusEnabled: boolean;
+  bitCodEnabled: boolean;
 }) {
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
@@ -104,9 +114,9 @@ export function CheckoutView({
 
   const [values, setValues] = useState<FormValues>(EMPTY_FORM);
   const [touched, setTouched] = useState<Partial<Record<FieldName, boolean>>>({});
-  const [phase, setPhase] = useState<"form" | "paying" | "redirecting" | "done">(
-    "form",
-  );
+  const [phase, setPhase] = useState<
+    "form" | "paying" | "redirecting" | "placing" | "done"
+  >("form");
   const [errorCode, setErrorCode] = useState<CheckoutErrorCode | null>(null);
 
   /**
@@ -152,6 +162,12 @@ export function CheckoutView({
     lines.map((line) => line.priced),
     shippingAmount,
   );
+
+  // The deposit for THIS order, from the same function the server will use on
+  // its own total. Shown only inside the payment block, which renders only
+  // once the form validates — so the total it is derived from is final (a
+  // region has been chosen and shipping is priced).
+  const codDeposit = bitDepositFor(totals.total);
 
   const parsed = CustomerSchema.safeParse({
     ...values,
@@ -221,6 +237,46 @@ export function CheckoutView({
       payload = (await response.json().catch(() => null)) as StartResponse;
       if (response.ok && typeof payload?.redirectUrl === "string") {
         window.location.assign(payload.redirectUrl);
+        return;
+      }
+    } catch {
+      // Network failure — handled exactly like a rejected request below.
+    }
+
+    setPhase("form");
+    setErrorCode(isErrorCode(payload?.code) ? payload.code : "server_error");
+  }
+
+  /**
+   * The cash-on-delivery path. Nothing is charged: the server writes an
+   * `awaiting_deposit` order, emails the owner, and hands back the reference.
+   * The buyer then sends the deposit by Bit, and the confirmation page tells
+   * them where to send it — reading the amount and the number from the order
+   * the server just wrote, not from anything decided here.
+   */
+  async function placeCodOrder() {
+    setErrorCode(null);
+    setReturnNotice(null);
+    setPhase("placing");
+
+    type CodResponse = { reference?: unknown; code?: unknown } | null;
+    let payload: CodResponse = null;
+    try {
+      const response = await fetch("/api/checkout/bit/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: orderRequestBody(),
+      });
+      payload = (await response.json().catch(() => null)) as CodResponse;
+      if (response.ok && typeof payload?.reference === "string") {
+        // Same order as the PayPal path: hold the "done" phase, empty the
+        // cart, then hand over — so an emptied cart never flashes an "your
+        // cart is empty" screen at someone who has just ordered.
+        setPhase("done");
+        clear();
+        router.push(
+          `/checkout/thank-you?ref=${encodeURIComponent(payload.reference)}`,
+        );
         return;
       }
     } catch {
@@ -520,7 +576,7 @@ export function CheckoutView({
             </p>
           ) : null}
 
-          {!payplusEnabled && paypalClientId === null ? (
+          {!payplusEnabled && !bitCodEnabled && paypalClientId === null ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : !parsed.success ? (
             <p className="border border-rule px-4 py-3.5 text-sm text-ink-soft">
@@ -592,6 +648,32 @@ export function CheckoutView({
                       }}
                     />
                   </PayPalScriptProvider>
+                </div>
+              ) : null}
+
+              {/* Cash on delivery — last, because it is the slowest to
+                  fulfil: the order does not move until a deposit the buyer
+                  sends by hand arrives. The amount and the terms are both
+                  above the button, not behind it. */}
+              {bitCodEnabled ? (
+                <div>
+                  {payplusEnabled || paypalClientId !== null ? (
+                    <p className="mb-4 border-t border-rule pt-4 text-xs text-ink-soft">
+                      {t("payCodIntro")}
+                    </p>
+                  ) : null}
+                  <p className="mb-2 text-sm">
+                    {t("payCodDeposit", { amount: String(codDeposit) })}
+                  </p>
+                  <p className="mb-4 text-xs text-ink-soft">{t("payCodTerms")}</p>
+                  <button
+                    type="button"
+                    className="btn w-full"
+                    disabled={phase !== "form"}
+                    onClick={placeCodOrder}
+                  >
+                    {phase === "placing" ? t("payCodPlacing") : t("payCod")}
+                  </button>
                 </div>
               ) : null}
             </div>

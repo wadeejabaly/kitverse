@@ -56,8 +56,12 @@ export function getSupabaseAdmin(): SupabaseClient | null {
 /** The columns this application reads back from `orders`. */
 export interface OrderRow {
   id: string;
-  status: "pending" | "paid" | "failed" | "cancelled";
-  /** 'paypal' | 'payplus' — added in migration 0002, defaulted to 'paypal'. */
+  /** 'awaiting_deposit' is cash-on-delivery only — added in migration 0004. */
+  status: "pending" | "awaiting_deposit" | "paid" | "failed" | "cancelled";
+  /**
+   * 'paypal' | 'payplus' — added in migration 0002, defaulted to 'paypal' —
+   * plus 'bit_cod' from migration 0004.
+   */
   payment_provider: string | null;
   paypal_order_id: string | null;
   paypal_capture_id: string | null;
@@ -76,6 +80,11 @@ export interface OrderRow {
   subtotal_ils: number | null;
   shipping_ils: number | null;
   total_ils: number | null;
+  /**
+   * Added in migration 0004. The Bit deposit on a cash-on-delivery order,
+   * computed server-side from total_ils. NULL on every card order.
+   */
+  deposit_ils: number | null;
 }
 
 /** The columns this application reads back from `order_items`. */

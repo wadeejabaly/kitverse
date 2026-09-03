@@ -2,7 +2,12 @@ import "server-only";
 import type { PaymentProvider } from "@/lib/orders";
 
 /**
- * Owner notification on a paid order — SERVER ONLY.
+ * Owner notification on an order — SERVER ONLY.
+ *
+ * Two moments send one: a card order becoming paid, and a cash-on-delivery
+ * order being placed. COD notifies on creation because it has to — the owner
+ * matches an incoming Bit transfer against an order they can only know about
+ * from this email.
  *
  * THE ONE RULE: this must never affect the money path. A capture that
  * succeeded has taken the customer's money and the order is paid whether or
@@ -32,7 +37,7 @@ export interface NotificationItem {
   qty: number;
 }
 
-export interface PaidOrderNotification {
+export interface OrderNotification {
   reference: string;
   orderId: string;
   locale: string;
@@ -51,11 +56,17 @@ export interface PaidOrderNotification {
   subtotal: number;
   shipping: number;
   total: number;
-  /** Which processor took the money — the store runs two. */
+  /**
+   * Cash on delivery only: the Bit deposit the buyer was told to send. Null on
+   * every card order. This is the figure the owner matches by hand against
+   * their Bit account before flipping the row to `paid`.
+   */
+  deposit?: number | null;
+  /** Which rail this order is on — the store runs three. */
   provider: PaymentProvider;
-  /** The processor's id for the attempt: a PayPal order, a PayPlus page. */
+  /** The processor's id for the attempt: a PayPal order, a PayPlus page. "" for COD. */
   providerOrderRef: string;
-  /** The processor's id for the money: a PayPal capture, a PayPlus transaction. */
+  /** The processor's id for the money: a PayPal capture, a PayPlus transaction. "" for COD. */
   providerPaymentRef: string;
 }
 
@@ -73,9 +84,25 @@ function config(): { apiKey: string; to: string; from: string } | null {
  * badge is spelled out, along with the address to send it to and a phone
  * number for the courier.
  */
-export function renderOrderSummary(order: PaidOrderNotification): string {
+export function renderOrderSummary(order: OrderNotification): string {
+  const cod = order.provider === "bit_cod";
+  const deposit = order.deposit ?? 0;
+
   const lines: string[] = [];
-  lines.push(`New paid order — ${order.reference}`);
+  lines.push(
+    cod
+      ? `New CASH-ON-DELIVERY order — ${order.reference} — AWAITING BIT DEPOSIT`
+      : `New paid order — ${order.reference}`,
+  );
+  if (cod) {
+    lines.push("");
+    lines.push(`  Bit deposit due   ILS ${deposit}`);
+    lines.push(`  Cash on delivery  ILS ${order.total - deposit}`);
+    lines.push(
+      "  NOT SHIPPED YET. When the deposit lands in your Bit account, set this",
+    );
+    lines.push("  order's status to 'paid' in the Supabase dashboard.");
+  }
   lines.push("");
   lines.push("ITEMS");
   for (const item of order.items) {
@@ -89,6 +116,10 @@ export function renderOrderSummary(order: PaidOrderNotification): string {
   lines.push(`Subtotal  ILS ${order.subtotal}`);
   lines.push(`Shipping  ILS ${order.shipping}`);
   lines.push(`TOTAL     ILS ${order.total}`);
+  if (cod) {
+    lines.push(`  of which deposit by Bit   ILS ${deposit}`);
+    lines.push(`  collect in cash on delivery ILS ${order.total - deposit}`);
+  }
   lines.push("");
   lines.push("SHIP TO");
   lines.push(`  ${order.customer.name}`);
@@ -102,19 +133,22 @@ export function renderOrderSummary(order: PaidOrderNotification): string {
   lines.push("REFERENCES");
   lines.push(`  order id       ${order.orderId}`);
   lines.push(`  processor      ${order.provider}`);
-  lines.push(`  payment page   ${order.providerOrderRef}`);
-  lines.push(`  payment ref    ${order.providerPaymentRef}`);
+  // COD has no processor references — printing two empty labels would only
+  // look like something failed.
+  if (order.providerOrderRef) lines.push(`  payment page   ${order.providerOrderRef}`);
+  if (order.providerPaymentRef) {
+    lines.push(`  payment ref    ${order.providerPaymentRef}`);
+  }
   lines.push(`  locale         ${order.locale}`);
   return lines.join("\n");
 }
 
 /**
- * Send the owner their order. Resolves in every case — a thrown error here
- * would be an unhandled rejection in a fire-and-forget call site.
+ * Send the owner their order — a paid card order, or a cash-on-delivery order
+ * the moment it is placed. Resolves in every case: a thrown error here would
+ * be an unhandled rejection in a fire-and-forget call site.
  */
-export async function notifyOwnerOfPaidOrder(
-  order: PaidOrderNotification,
-): Promise<void> {
+export async function notifyOwnerOfOrder(order: OrderNotification): Promise<void> {
   const summary = renderOrderSummary(order);
   const settings = config();
 
@@ -122,6 +156,11 @@ export async function notifyOwnerOfPaidOrder(
     console.info(`[notify] email not configured — order summary follows\n${summary}`);
     return;
   }
+
+  const subject =
+    order.provider === "bit_cod"
+      ? `KitVerse COD order ${order.reference} — Bit deposit ILS ${order.deposit ?? 0} of ILS ${order.total}`
+      : `KitVerse order ${order.reference} — ILS ${order.total}`;
 
   try {
     const response = await fetch(RESEND_ENDPOINT, {
@@ -134,7 +173,7 @@ export async function notifyOwnerOfPaidOrder(
         from: settings.from,
         to: [settings.to],
         reply_to: order.customer.email,
-        subject: `KitVerse order ${order.reference} — ILS ${order.total}`,
+        subject,
         text: summary,
       }),
       cache: "no-store",

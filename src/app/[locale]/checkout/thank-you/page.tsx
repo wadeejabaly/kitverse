@@ -9,7 +9,9 @@ import {
   ProseParagraph,
   Wrap,
 } from "@/components/shared/PageLede";
-import { findOrderStatusByReference } from "@/lib/order-service";
+import { getBitPhoneNumber } from "@/lib/bit";
+import { findOrderStateByReference } from "@/lib/order-service";
+import { codConfirmationFor } from "@/lib/orders";
 import { alternatesFor } from "@/lib/site";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
@@ -40,14 +42,23 @@ export async function generateMetadata({
  * only that:
  *
  *   paid                 → "we have your order", the confirmed copy;
+ *   awaiting_deposit on
+ *   a bit_cod order      → the cash-on-delivery instructions;
  *   anything else, or an
  *   order it cannot find → "we are confirming your payment", with a refresh.
  *
+ * The COD state is built ENTIRELY from server-side facts: the status, the
+ * rail and the deposit come out of the order row, and the Bit number comes
+ * from server-only env. Nothing about it is carried over from the checkout
+ * screen's state, so a buyer who reloads, or opens the link on their phone to
+ * pay, sees the same instructions and the same amount — and a browser can
+ * never talk this page into naming a deposit the server did not record.
+ *
  * The query string carries the short reference and nothing else, and the
- * lookup returns the status and nothing else, so a shared or guessed URL
- * discloses no name, no amount and no email. Reaching the page with no
- * reference at all (a bookmark, a stray link) keeps the plain copy it always
- * had.
+ * lookup returns the status, the rail and (for COD only) the deposit tier, so
+ * a shared or guessed URL discloses no name, no address, no email and not the
+ * order total. Reaching the page with no reference at all (a bookmark, a stray
+ * link) keeps the plain copy it always had.
  */
 export default async function ThankYouPage({
   params,
@@ -69,19 +80,42 @@ export default async function ThankYouPage({
   // No reference: nothing to look up and nothing to claim either way.
   // A reference we cannot confirm as paid gets the honest holding copy.
   const db = reference === "" ? null : getSupabaseAdmin();
-  const status = db ? await findOrderStatusByReference(db, reference) : null;
-  const confirmed = reference === "" || status === "paid";
+  const state = db ? await findOrderStateByReference(db, reference) : null;
+
+  // The COD gate is a pure function in src/lib/orders.ts so it can be
+  // unit-tested: it shows the deposit instructions only when the row is a
+  // bit_cod order still awaiting its deposit, with a deposit recorded and a
+  // number to send it to. Anything less falls through to the holding copy.
+  const cod = codConfirmationFor(state, getBitPhoneNumber());
+
+  const confirmed = reference === "" || state?.status === "paid";
 
   return (
     <Wrap>
       <PageLede
-        eyebrow={t("eyebrow")}
-        title={confirmed ? t("title") : t("confirmingTitle")}
-        intro={confirmed ? t("intro") : t("confirmingIntro")}
+        eyebrow={cod ? t("codEyebrow") : t("eyebrow")}
+        title={cod ? t("codTitle") : confirmed ? t("title") : t("confirmingTitle")}
+        intro={cod ? t("codIntro") : confirmed ? t("intro") : t("confirmingIntro")}
       />
       <Prose>
         <OrderReference reference={reference} />
-        {confirmed ? (
+        {cod ? (
+          <>
+            {/* The three facts the buyer needs to pay, laid out rather than
+                buried in a sentence: where to send it, how much, and what to
+                write in the note so the owner can match it to this order. */}
+            <dl className="mb-6 grid gap-3 border border-rule bg-chip px-4 py-4 text-sm">
+              <CodFact label={t("codPhoneLabel")} value={cod.phone} />
+              <CodFact label={t("codAmountLabel")} value={`₪${cod.deposit}`} />
+              <CodFact label={t("codNoteLabel")} value={reference} />
+            </dl>
+            <ProseParagraph>
+              {t("codBody", { amount: String(cod.deposit) })}
+            </ProseParagraph>
+            <ProseParagraph>{t("codTerms")}</ProseParagraph>
+            <ProseParagraph>{t("delivery")}</ProseParagraph>
+          </>
+        ) : confirmed ? (
           <>
             <ProseParagraph>{t("delivery")}</ProseParagraph>
             <ProseParagraph>{t("emailNote")}</ProseParagraph>
@@ -95,5 +129,23 @@ export default async function ThankYouPage({
       </Prose>
       {reference === "" ? null : <ClearCartOnOrder />}
     </Wrap>
+  );
+}
+
+/**
+ * One label/value pair of the Bit payment card. Every value here is Latin —
+ * a phone number, an amount, a reference code — so each is isolated and
+ * tabular inside the Arabic page.
+ */
+function CodFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-wrap items-baseline gap-2">
+      <dt className="text-ink-soft">{label}</dt>
+      <dd className="m-0">
+        <bdi dir="ltr" className="latin tabular text-base">
+          {value}
+        </bdi>
+      </dd>
+    </div>
   );
 }
