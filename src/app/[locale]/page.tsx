@@ -26,13 +26,12 @@ export async function generateMetadata({
 /**
  * Home — the statement page.
  *
- * It opens on <HeroD/>: the Floodlight stage, a stadium-at-night navy surface
- * scoped to the hero alone, with the crest's electric blue lighting a single
- * shirt from behind (see "THE FLOODLIGHT HERO" in globals.css). That stage is
- * the ONE navy moment on the page — it replaced HeroB's plaque rather than
- * joining it — which is why the Fan/Player explainer below it stays on the
- * page ground instead of painting itself as a band. Two navy slabs in one
- * scroll and neither is an event.
+ * It opens on <HeroD/>: the Floodlight redesign, a stadium-at-night navy
+ * stage scoped to the hero alone with the crest's electric blue lighting a
+ * single shirt from behind (see "THE FLOODLIGHT HERO" in globals.css). That
+ * navy stage is the ONE dark moment on the page, which is why the Fan/Player
+ * explainer below it stays on the page ground rather than painting a second
+ * navy band — two navy slabs in one scroll and neither is an event.
  *
  * After the hero it is a rhythm of one-idea sections separated by a lot of
  * air, and the leagues are a magazine index rather than a grid of boxes.
@@ -76,8 +75,8 @@ export default async function HomePage({
       {/* ─────────── HERO ───────────
           The Floodlight stage. It is a complete component so that the hero
           can be swapped, compared or reverted without this page knowing
-          anything about how it is built. See HeroD for the surface, the
-          RTL/LTR mirroring and the contrast reasoning. */}
+          anything about how it is built. See HeroD for the surface and the
+          RTL/LTR mirroring reasoning. */}
       <HeroD locale={locale} priority />
 
       {/* ─────────── THE THREE WAYS IN ───────────
