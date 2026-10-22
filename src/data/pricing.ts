@@ -9,11 +9,11 @@ import type { Size, Version } from "./types";
  * vs previous-season split, and the compare-at that went with it, are gone:
  *   Fan                                 95
  *   Player                             110
- *   Retro (2022 and earlier, any cut)  135
+ *   Retro (2023 and earlier, any cut)  135
  * Size 3XL adds +9, 4XL adds +12.
  *
  * "Retro" is not a version the shopper picks — it is what any jersey from
- * 2022 or earlier IS, whatever its fan/player cut. priceFor() derives that
+ * 2023 or earlier IS, whatever its fan/player cut. priceFor() derives that
  * from the product's `season`, NOT from the catalogue's `kind` field
  * (national/current/previous), which stays a browsing/display category and no
  * longer drives price at all.
@@ -32,8 +32,10 @@ export function sizeSurcharge(size: Size): number {
   return SIZE_SURCHARGE[size] ?? 0;
 }
 
-/** A jersey from this year or earlier is Retro, whatever kind/version it was. */
-export const RETRO_CUTOFF_YEAR = 2022;
+/** A jersey from this year or earlier is Retro, whatever kind/version it was.
+ *  Owner correction 2026-10-22: cutoff moved from 2022 to 2023 — 2024 and
+ *  newer seasons are always Fan/Player, never Retro. */
+export const RETRO_CUTOFF_YEAR = 2023;
 
 /** The first four-digit year in a season string like "2026/27", "2022/23". */
 export function seasonYear(season: string): number {

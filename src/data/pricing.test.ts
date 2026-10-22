@@ -21,8 +21,8 @@ const NON_SURCHARGE_SIZES: Size[] = ["S", "M", "L", "XL", "XXL"];
 
 // Real, non-retro seasons as they appear in the catalogue.
 const CURRENT_SEASONS = ["2026/27", "2026", "2025/26"];
-// 2022 and earlier — Retro, whatever the exact string shape.
-const RETRO_SEASONS = ["2022", "2021/22", "2020", "1998/99"];
+// 2023 and earlier — Retro, whatever the exact string shape.
+const RETRO_SEASONS = ["2023", "2022", "2021/22", "2020", "1998/99"];
 
 describe("seasonYear + isRetroSeason", () => {
   it("reads the first four-digit year out of a season string", () => {
@@ -31,11 +31,11 @@ describe("seasonYear + isRetroSeason", () => {
     expect(seasonYear("2026")).toBe(2026);
   });
 
-  it("is Retro at 2022 and earlier, not Retro at 2023 and later", () => {
+  it("is Retro at 2023 and earlier, not Retro at 2024 and later", () => {
     for (const season of RETRO_SEASONS) expect(isRetroSeason(season)).toBe(true);
     for (const season of CURRENT_SEASONS) expect(isRetroSeason(season)).toBe(false);
-    expect(isRetroSeason("2023")).toBe(false);
-    expect(isRetroSeason("2022/23")).toBe(true); // year read is 2022
+    expect(isRetroSeason("2024")).toBe(false);
+    expect(isRetroSeason("2023/24")).toBe(true); // year read is 2023
   });
 
   it("treats an unparseable season as NOT retro, so it never over-charges", () => {
