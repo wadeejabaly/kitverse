@@ -27,6 +27,7 @@ export function generateStaticParams() {
 
 function collectionName(collection: Collection, locale: string, t: (key: string) => string) {
   if (collection.type === "kind") return t(`kinds.${collection.kind}`);
+  if (collection.type === "retro") return t("kinds.retro");
   return locale === "ar" ? collection.nameAr : collection.name;
 }
 
@@ -65,7 +66,9 @@ export default async function CollectionPage({
       ? t("league")
       : collection.type === "team"
         ? t("team")
-        : t("kind");
+        : collection.type === "retro"
+          ? t("category")
+          : t("kind");
 
   return (
     <Wrap>

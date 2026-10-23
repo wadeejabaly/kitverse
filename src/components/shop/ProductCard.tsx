@@ -28,7 +28,7 @@ export function ProductCard({
   const t = useTranslations("common");
   const title = titleFor(product, locale);
   // The "from" price: smallest size, Fan version — or the single Retro price
-  // for a 2022-and-earlier season, since priceFor ignores "fan" there.
+  // for a 2023-and-earlier season, since priceFor ignores "fan" there.
   // Selections on the PDP move it.
   const price = priceFor(product.season, "S", "fan");
 

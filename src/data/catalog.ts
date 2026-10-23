@@ -1,5 +1,6 @@
 import catalogData from "./catalog.json";
 import collectionsData from "./collections.json";
+import { isRetroSeason } from "./pricing";
 import { slugify } from "./slug";
 import type { Kind, Product } from "./types";
 
@@ -64,6 +65,18 @@ export function byTeam(slug: string): Product[] {
 /** Visible products of a given kind (national | current | previous). */
 export function byKind(kind: Kind): Product[] {
   return getVisibleProducts().filter((p) => p.kind === kind);
+}
+
+/**
+ * Visible products that are Retro — derived from `season` via
+ * `isRetroSeason()`, the same rule `priceFor()` uses, NOT from `kind`.
+ * A retro product keeps whatever `kind` it was (national/current/previous);
+ * Retro is a cross-cutting browsing view over all three, not a fourth kind —
+ * mirroring the pricing decision that Retro is what a jersey IS by age, not a
+ * category someone assigns it. See pricing.ts for the cutoff year.
+ */
+export function retroProducts(): Product[] {
+  return getVisibleProducts().filter((p) => isRetroSeason(p.season));
 }
 
 /** Lightweight index for client-side search — visible products only. */

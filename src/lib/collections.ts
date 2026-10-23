@@ -1,4 +1,4 @@
-import { byKind, byLeague, byTeam, getLeagues, getTeams } from "@/data/catalog";
+import { byKind, byLeague, byTeam, getLeagues, getTeams, retroProducts } from "@/data/catalog";
 import type { Kind, Product } from "@/data/types";
 
 /**
@@ -23,8 +23,12 @@ export const SLUG_FOR_KIND: Record<Kind, KindSlug> = {
   previous: "last-season",
 };
 
+/** The one retro slug — not in KIND_SLUGS, because Retro isn't a Kind. */
+export const RETRO_SLUG = "retro" as const;
+
 export type Collection =
   | { type: "kind"; slug: KindSlug; kind: Kind; products: Product[] }
+  | { type: "retro"; slug: typeof RETRO_SLUG; products: Product[] }
   | { type: "league"; slug: string; name: string; nameAr: string; products: Product[] }
   | { type: "team"; slug: string; name: string; nameAr: string; products: Product[] };
 
@@ -33,9 +37,15 @@ export type Collection =
  *
  * A valid-but-empty collection still resolves: a league whose products are all
  * awaiting image review is a real page that should render its own empty state,
- * not a 404. Only an unknown slug is a miss.
+ * not a 404. Only an unknown slug is a miss. Retro resolves the same way even
+ * before a single retro-aged product exists — it is a standing section of the
+ * shop, not something that appears only once there is stock for it.
  */
 export function resolveCollection(slug: string): Collection | undefined {
+  if (slug === RETRO_SLUG) {
+    return { type: "retro", slug: RETRO_SLUG, products: retroProducts() };
+  }
+
   if (slug in KIND_SLUGS) {
     const kindSlug = slug as KindSlug;
     const kind = KIND_SLUGS[kindSlug];
@@ -79,6 +89,7 @@ export function collectionParams(): string[] {
       .map((team) => team.slug),
   );
   return [
+    RETRO_SLUG,
     ...Object.keys(KIND_SLUGS),
     ...getLeagues().map((league) => league.slug),
     ...teamSlugs,

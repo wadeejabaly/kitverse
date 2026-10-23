@@ -32,7 +32,14 @@ import { MAX_QTY } from "@/components/cart/CartProvider";
  *      first — and only for the processor the order was created for.
  */
 
-/** A real visible handle of the requested kind, so the test tracks the catalogue. */
+/**
+ * A real visible handle of the requested kind, so the test tracks the
+ * catalogue. Kind no longer drives price, so these tests only need two
+ * visible products of *different* kinds to prove that — which kind doesn't
+ * matter. Call sites below use "current" + "national" because the 2026/27
+ * rebuild has not re-added a "previous"-season kit yet (owner's rollout
+ * plan adds 2025/26 next); "previous" stays in the type for when it does.
+ */
 function visibleHandle(kind: "previous" | "current" | "national"): string {
   const product = getAllProducts().find((p) => p.visible && p.kind === kind);
   if (!product) throw new Error(`no visible ${kind} product in the catalogue`);
@@ -50,15 +57,15 @@ const REGION = "center";
 
 describe("repriceCart — the server's own arithmetic", () => {
   it("prices a mixed basket (surcharge size + both add-ons) exactly as cartTotals does", () => {
-    const previousHandle = visibleHandle("previous");
+    const otherKindHandle = visibleHandle("current");
     const nationalHandle = visibleHandle("national");
-    const previousSeason = getProduct(previousHandle)!.season;
+    const otherKindSeason = getProduct(otherKindHandle)!.season;
     const nationalSeason = getProduct(nationalHandle)!.season;
 
     const items: CheckoutItemInput[] = [
       // 4XL (+12), name & number (+20), qty 2
       {
-        handle: previousHandle,
+        handle: otherKindHandle,
         size: "4XL",
         version: "player",
         nameNumber: "HAALAND 9",
@@ -68,7 +75,7 @@ describe("repriceCart — the server's own arithmetic", () => {
       // 3XL (+9), badge (+12), qty 1
       { handle: nationalHandle, size: "3XL", version: "fan", badge: true, qty: 1 },
       // plain line, no add-ons
-      { handle: previousHandle, size: "M", version: "fan", badge: false, qty: 3 },
+      { handle: otherKindHandle, size: "M", version: "fan", badge: false, qty: 3 },
     ];
 
     const cart = repriceCart(items, REGION);
@@ -77,9 +84,9 @@ describe("repriceCart — the server's own arithmetic", () => {
 
     const expected = cartTotals(
       [
-        priceLine(previousSeason, "4XL", "player", 2, { nameNumber: true }),
+        priceLine(otherKindSeason, "4XL", "player", 2, { nameNumber: true }),
         priceLine(nationalSeason, "3XL", "fan", 1, { badge: true }),
-        priceLine(previousSeason, "M", "fan", 3),
+        priceLine(otherKindSeason, "M", "fan", 3),
       ],
       shippingFor(REGION),
     );
@@ -96,7 +103,7 @@ describe("repriceCart — the server's own arithmetic", () => {
   });
 
   it("ignores any price-shaped field the client tries to send", () => {
-    const handle = visibleHandle("previous");
+    const handle = visibleHandle("current");
     const season = getProduct(handle)!.season;
     const tampered = {
       handle,
@@ -165,7 +172,7 @@ describe("repriceCart — the server's own arithmetic", () => {
   });
 
   it("clamps quantity to the cart's 1..10 bound", () => {
-    const handle = visibleHandle("previous");
+    const handle = visibleHandle("current");
     const over = repriceCart(
       [{ handle, size: "M", version: "fan", badge: false, qty: 999 }],
       REGION,
@@ -185,7 +192,7 @@ describe("repriceCart — the server's own arithmetic", () => {
 
 describe("repriceCart — sanitizeNameNumber on the server path", () => {
   it("re-sanitizes whatever the client sent: case, punctuation, spacing, length", () => {
-    const handle = visibleHandle("previous");
+    const handle = visibleHandle("current");
     const cart = repriceCart(
       [
         {
@@ -203,7 +210,7 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
   });
 
   it("truncates to the 18-character print limit", () => {
-    const handle = visibleHandle("previous");
+    const handle = visibleHandle("current");
     const cart = repriceCart(
       [
         {
@@ -222,7 +229,7 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
   });
 
   it("does not charge for a name that sanitises away to nothing", () => {
-    const handle = visibleHandle("previous");
+    const handle = visibleHandle("current");
     const cart = repriceCart(
       [{ handle, size: "M", version: "fan", nameNumber: "!!! ???", badge: false, qty: 1 }],
       REGION,

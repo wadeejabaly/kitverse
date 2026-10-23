@@ -11,9 +11,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/manchester-united-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b5cfc644",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-united-2026-27-away-shirt",
@@ -26,9 +26,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/manchester-united-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "623fef9d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-united-2026-27-third-shirt",
@@ -41,9 +41,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/manchester-united-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c947e2e6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-city-2026-27-home-shirt",
@@ -56,9 +56,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/manchester-city-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "8c33060b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-city-2026-27-away-shirt",
@@ -71,9 +71,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/manchester-city-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3e02025d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "manchester-city-2026-27-third-shirt",
@@ -86,9 +86,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/manchester-city-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "46bfd855",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "liverpool-2026-27-home-shirt",
@@ -101,9 +101,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/liverpool-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "374cad59",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "liverpool-2026-27-away-shirt",
@@ -116,9 +116,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/liverpool-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c37a64b5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "liverpool-2026-27-third-shirt",
@@ -131,9 +131,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/liverpool-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bcaadc57",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "arsenal-2026-27-home-shirt",
@@ -146,9 +146,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/arsenal-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d818ba3c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "arsenal-2026-27-away-shirt",
@@ -161,9 +161,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/arsenal-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "aae8a132",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "arsenal-2026-27-third-shirt",
@@ -176,9 +176,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/arsenal-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1b9d59c8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chelsea-2026-27-home-shirt",
@@ -191,9 +191,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/chelsea-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "32430bd3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chelsea-2026-27-away-shirt",
@@ -206,9 +206,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/chelsea-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b5ad8cda",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "chelsea-2026-27-third-shirt",
@@ -221,9 +221,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/chelsea-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ed558ace",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tottenham-hotspur-2026-27-home-shirt",
@@ -236,9 +236,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/tottenham-hotspur-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "090c548e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tottenham-hotspur-2026-27-away-shirt",
@@ -251,9 +251,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/tottenham-hotspur-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9333b558",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tottenham-hotspur-2026-27-third-shirt",
@@ -266,9 +266,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/tottenham-hotspur-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2d4333ff",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "newcastle-united-2026-27-home-shirt",
@@ -281,9 +281,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/newcastle-united-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3ec7b5f3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "newcastle-united-2026-27-away-shirt",
@@ -296,9 +296,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/newcastle-united-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0d90d763",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "newcastle-united-2026-27-third-shirt",
@@ -311,9 +311,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/newcastle-united-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d3efecd8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "west-ham-united-2026-27-home-shirt",
@@ -326,9 +326,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/west-ham-united-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "daa60788",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "west-ham-united-2026-27-away-shirt",
@@ -341,9 +341,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/west-ham-united-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3ba4e207",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "west-ham-united-2026-27-third-shirt",
@@ -356,9 +356,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/west-ham-united-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "89a222bf",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "aston-villa-2026-27-home-shirt",
@@ -371,9 +371,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/aston-villa-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d7d7a27c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "aston-villa-2026-27-away-shirt",
@@ -386,9 +386,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/aston-villa-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7d5a5d92",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "aston-villa-2026-27-third-shirt",
@@ -401,9 +401,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/aston-villa-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c81ee9d8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "everton-2026-27-home-shirt",
@@ -416,9 +416,9 @@
       "kit": "Home",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/everton-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f83a8144",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "everton-2026-27-away-shirt",
@@ -431,9 +431,9 @@
       "kit": "Away",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/everton-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "987342d6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "everton-2026-27-third-shirt",
@@ -446,9 +446,9 @@
       "kit": "Third",
       "league": "premier-league",
       "edition": "standard",
-      "image": "/products/everton-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "629145e8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-madrid-2026-27-home-shirt",
@@ -461,9 +461,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-madrid-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "cdd74a24",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-madrid-2026-27-away-shirt",
@@ -476,9 +476,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-madrid-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4854e1c0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-madrid-2026-27-third-shirt",
@@ -491,9 +491,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-madrid-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2e08cfe5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "barcelona-2026-27-home-shirt",
@@ -506,9 +506,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/barcelona-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f32b8df1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "barcelona-2026-27-away-shirt",
@@ -521,9 +521,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/barcelona-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1ae43c5f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "barcelona-2026-27-third-shirt",
@@ -536,9 +536,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/barcelona-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "356a1996",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atletico-madrid-2026-27-home-shirt",
@@ -551,9 +551,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/atletico-madrid-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a039630c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atletico-madrid-2026-27-away-shirt",
@@ -566,9 +566,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/atletico-madrid-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ba428ab1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atletico-madrid-2026-27-third-shirt",
@@ -581,9 +581,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/atletico-madrid-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7dffdf40",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sevilla-2026-27-home-shirt",
@@ -596,9 +596,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/sevilla-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3b66ec55",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sevilla-2026-27-away-shirt",
@@ -611,9 +611,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/sevilla-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "40357f75",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sevilla-2026-27-third-shirt",
@@ -626,9 +626,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/sevilla-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7bed353b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "valencia-2026-27-home-shirt",
@@ -641,9 +641,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/valencia-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "40403d8c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "valencia-2026-27-away-shirt",
@@ -656,9 +656,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/valencia-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a584f04c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "valencia-2026-27-third-shirt",
@@ -671,9 +671,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/valencia-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0634b8b0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "athletic-bilbao-2026-27-home-shirt",
@@ -686,9 +686,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/athletic-bilbao-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3fafa5b9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "athletic-bilbao-2026-27-away-shirt",
@@ -701,9 +701,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/athletic-bilbao-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "15d2bc58",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "athletic-bilbao-2026-27-third-shirt",
@@ -716,9 +716,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/athletic-bilbao-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f43b6e15",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-betis-2026-27-home-shirt",
@@ -731,9 +731,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-betis-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a2f12123",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-betis-2026-27-away-shirt",
@@ -746,9 +746,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-betis-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "61f6a010",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-betis-2026-27-third-shirt",
@@ -761,9 +761,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-betis-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bb1cd5bd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-sociedad-2026-27-home-shirt",
@@ -776,9 +776,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-sociedad-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4d04611d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-sociedad-2026-27-away-shirt",
@@ -791,9 +791,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-sociedad-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d82e411a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "real-sociedad-2026-27-third-shirt",
@@ -806,9 +806,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/real-sociedad-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b3f93ca8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "villarreal-2026-27-home-shirt",
@@ -821,9 +821,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/villarreal-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0e083742",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "villarreal-2026-27-away-shirt",
@@ -836,9 +836,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/villarreal-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b5f7093e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "villarreal-2026-27-third-shirt",
@@ -851,9 +851,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/villarreal-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a2d50111",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "celta-vigo-2026-27-home-shirt",
@@ -866,9 +866,9 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/celta-vigo-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d8ad63a0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "celta-vigo-2026-27-away-shirt",
@@ -881,9 +881,9 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/celta-vigo-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f7cb56fe",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "celta-vigo-2026-27-third-shirt",
@@ -896,9 +896,9 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/celta-vigo-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0499fa66",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "juventus-2026-27-home-shirt",
@@ -911,9 +911,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/juventus-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "635228ac",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "juventus-2026-27-away-shirt",
@@ -926,9 +926,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/juventus-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "56752d0d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "juventus-2026-27-third-shirt",
@@ -941,9 +941,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/juventus-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f7c75ed0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "inter-milan-2026-27-home-shirt",
@@ -956,9 +956,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/inter-milan-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3620e29e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "inter-milan-2026-27-away-shirt",
@@ -971,9 +971,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/inter-milan-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5f0910c6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "inter-milan-2026-27-third-shirt",
@@ -986,9 +986,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/inter-milan-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d2630364",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ac-milan-2026-27-home-shirt",
@@ -1001,9 +1001,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/ac-milan-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "30323dc0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ac-milan-2026-27-away-shirt",
@@ -1016,9 +1016,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/ac-milan-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c85d8c94",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ac-milan-2026-27-third-shirt",
@@ -1031,9 +1031,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/ac-milan-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "38e0fe01",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "napoli-2026-27-home-shirt",
@@ -1046,9 +1046,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/napoli-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "27f735a9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "napoli-2026-27-away-shirt",
@@ -1061,9 +1061,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/napoli-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "edbddc54",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "napoli-2026-27-third-shirt",
@@ -1076,9 +1076,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/napoli-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0bd8c194",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "as-roma-2026-27-home-shirt",
@@ -1091,9 +1091,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/as-roma-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a01f1901",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "as-roma-2026-27-away-shirt",
@@ -1106,9 +1106,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/as-roma-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "8688104b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "as-roma-2026-27-third-shirt",
@@ -1121,9 +1121,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/as-roma-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bead632b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lazio-2026-27-home-shirt",
@@ -1136,9 +1136,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/lazio-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3eef9b03",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lazio-2026-27-away-shirt",
@@ -1151,9 +1151,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/lazio-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d566b4ad",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lazio-2026-27-third-shirt",
@@ -1166,9 +1166,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/lazio-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "62486f52",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "fiorentina-2026-27-home-shirt",
@@ -1181,9 +1181,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/fiorentina-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b86fbcfd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "fiorentina-2026-27-away-shirt",
@@ -1196,9 +1196,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/fiorentina-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a3804991",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "fiorentina-2026-27-third-shirt",
@@ -1211,9 +1211,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/fiorentina-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c2155901",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atalanta-2026-27-home-shirt",
@@ -1226,9 +1226,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/atalanta-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "208fa318",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atalanta-2026-27-away-shirt",
@@ -1241,9 +1241,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/atalanta-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f8b3a314",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "atalanta-2026-27-third-shirt",
@@ -1256,9 +1256,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/atalanta-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3912736e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "torino-2026-27-home-shirt",
@@ -1271,9 +1271,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/torino-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a1497ac6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "torino-2026-27-away-shirt",
@@ -1286,9 +1286,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/torino-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c3b5117f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "torino-2026-27-third-shirt",
@@ -1301,9 +1301,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/torino-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "887a9255",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bologna-2026-27-home-shirt",
@@ -1316,9 +1316,9 @@
       "kit": "Home",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/bologna-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ea0c4704",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bologna-2026-27-away-shirt",
@@ -1331,9 +1331,9 @@
       "kit": "Away",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/bologna-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "291d7dea",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bologna-2026-27-third-shirt",
@@ -1346,9 +1346,9 @@
       "kit": "Third",
       "league": "serie-a",
       "edition": "standard",
-      "image": "/products/bologna-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c573b726",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bayern-munich-2026-27-home-shirt",
@@ -1361,9 +1361,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/bayern-munich-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a7c43f43",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bayern-munich-2026-27-away-shirt",
@@ -1376,9 +1376,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/bayern-munich-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "104e4bdf",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bayern-munich-2026-27-third-shirt",
@@ -1391,9 +1391,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/bayern-munich-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9380fa0e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-dortmund-2026-27-home-shirt",
@@ -1406,9 +1406,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/borussia-dortmund-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c043c064",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-dortmund-2026-27-away-shirt",
@@ -1421,9 +1421,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/borussia-dortmund-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5066dc2a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-dortmund-2026-27-third-shirt",
@@ -1436,9 +1436,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/borussia-dortmund-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "8c138250",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rb-leipzig-2026-27-home-shirt",
@@ -1451,9 +1451,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/rb-leipzig-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "46192788",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rb-leipzig-2026-27-away-shirt",
@@ -1466,9 +1466,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/rb-leipzig-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7b05077f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rb-leipzig-2026-27-third-shirt",
@@ -1481,9 +1481,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/rb-leipzig-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6cbf9d8a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bayer-leverkusen-2026-27-home-shirt",
@@ -1496,9 +1496,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/bayer-leverkusen-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ed0b3d47",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bayer-leverkusen-2026-27-away-shirt",
@@ -1511,9 +1511,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/bayer-leverkusen-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "cc014533",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "bayer-leverkusen-2026-27-third-shirt",
@@ -1526,9 +1526,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/bayer-leverkusen-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "05ad04a9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "schalke-04-2026-27-home-shirt",
@@ -1541,9 +1541,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/schalke-04-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "34174a11",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "schalke-04-2026-27-away-shirt",
@@ -1556,9 +1556,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/schalke-04-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a4056927",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "schalke-04-2026-27-third-shirt",
@@ -1571,9 +1571,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/schalke-04-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f5693a33",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-monchengladbach-2026-27-home-shirt",
@@ -1586,9 +1586,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/borussia-monchengladbach-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bc66105e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-monchengladbach-2026-27-away-shirt",
@@ -1601,9 +1601,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/borussia-monchengladbach-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "65649ab8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "borussia-monchengladbach-2026-27-third-shirt",
@@ -1616,9 +1616,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/borussia-monchengladbach-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4e117330",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "eintracht-frankfurt-2026-27-home-shirt",
@@ -1631,9 +1631,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/eintracht-frankfurt-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ade94deb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "eintracht-frankfurt-2026-27-away-shirt",
@@ -1646,9 +1646,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/eintracht-frankfurt-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d4151109",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "eintracht-frankfurt-2026-27-third-shirt",
@@ -1661,9 +1661,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/eintracht-frankfurt-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "96b63854",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "vfb-stuttgart-2026-27-home-shirt",
@@ -1676,9 +1676,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/vfb-stuttgart-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "63eced75",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "vfb-stuttgart-2026-27-away-shirt",
@@ -1691,9 +1691,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/vfb-stuttgart-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "dfabbd5e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "vfb-stuttgart-2026-27-third-shirt",
@@ -1706,9 +1706,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/vfb-stuttgart-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4f521d98",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "werder-bremen-2026-27-home-shirt",
@@ -1721,9 +1721,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/werder-bremen-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "45c37ff2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "werder-bremen-2026-27-away-shirt",
@@ -1736,9 +1736,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/werder-bremen-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "914f283b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "werder-bremen-2026-27-third-shirt",
@@ -1751,9 +1751,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/werder-bremen-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9fbc8a0a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "hamburger-sv-2026-27-home-shirt",
@@ -1766,9 +1766,9 @@
       "kit": "Home",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/hamburger-sv-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "aef984c0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "hamburger-sv-2026-27-away-shirt",
@@ -1781,9 +1781,9 @@
       "kit": "Away",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/hamburger-sv-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e429c849",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "hamburger-sv-2026-27-third-shirt",
@@ -1796,9 +1796,9 @@
       "kit": "Third",
       "league": "bundesliga",
       "edition": "standard",
-      "image": "/products/hamburger-sv-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "72087404",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paris-saint-germain-2026-27-home-shirt",
@@ -1811,9 +1811,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/paris-saint-germain-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3f6fb88a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paris-saint-germain-2026-27-away-shirt",
@@ -1826,9 +1826,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/paris-saint-germain-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "fe2139ad",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paris-saint-germain-2026-27-third-shirt",
@@ -1841,9 +1841,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/paris-saint-germain-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "67d520d9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "olympique-marseille-2026-27-home-shirt",
@@ -1856,9 +1856,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/olympique-marseille-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bb4b298e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "olympique-marseille-2026-27-away-shirt",
@@ -1871,9 +1871,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/olympique-marseille-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "05773e8d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "olympique-marseille-2026-27-third-shirt",
@@ -1886,9 +1886,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/olympique-marseille-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "533f9ce8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "olympique-lyonnais-2026-27-home-shirt",
@@ -1901,9 +1901,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/olympique-lyonnais-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6dae5466",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "olympique-lyonnais-2026-27-away-shirt",
@@ -1916,9 +1916,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/olympique-lyonnais-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a40bff47",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "olympique-lyonnais-2026-27-third-shirt",
@@ -1931,9 +1931,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/olympique-lyonnais-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "770774cf",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "as-monaco-2026-27-home-shirt",
@@ -1946,9 +1946,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/as-monaco-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d7b48351",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "as-monaco-2026-27-away-shirt",
@@ -1961,9 +1961,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/as-monaco-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "adeefb5f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "as-monaco-2026-27-third-shirt",
@@ -1976,9 +1976,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/as-monaco-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0d61007e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lille-2026-27-home-shirt",
@@ -1991,9 +1991,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/lille-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0b91fc62",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lille-2026-27-away-shirt",
@@ -2006,9 +2006,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/lille-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b6cfce38",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lille-2026-27-third-shirt",
@@ -2021,9 +2021,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/lille-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2dfbf8a2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saint-etienne-2026-27-home-shirt",
@@ -2036,9 +2036,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/saint-etienne-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "48f5b1d1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saint-etienne-2026-27-away-shirt",
@@ -2051,9 +2051,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/saint-etienne-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "17a844ee",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saint-etienne-2026-27-third-shirt",
@@ -2066,9 +2066,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/saint-etienne-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2688d3a8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nice-2026-27-home-shirt",
@@ -2081,9 +2081,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/nice-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c7fd7bbe",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nice-2026-27-away-shirt",
@@ -2096,9 +2096,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/nice-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "64092211",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nice-2026-27-third-shirt",
@@ -2111,9 +2111,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/nice-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6bddc27d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rennes-2026-27-home-shirt",
@@ -2126,9 +2126,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/rennes-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e4888caa",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rennes-2026-27-away-shirt",
@@ -2141,9 +2141,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/rennes-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "aafb4bc9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "rennes-2026-27-third-shirt",
@@ -2156,9 +2156,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/rennes-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ad4f52f4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lens-2026-27-home-shirt",
@@ -2171,9 +2171,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/lens-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ba457951",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lens-2026-27-away-shirt",
@@ -2186,9 +2186,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/lens-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e6a059b1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "lens-2026-27-third-shirt",
@@ -2201,9 +2201,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/lens-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "24b96171",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nantes-2026-27-home-shirt",
@@ -2216,9 +2216,9 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/nantes-2026-27-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "85686d7a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nantes-2026-27-away-shirt",
@@ -2231,9 +2231,9 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/nantes-2026-27-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a1c9a7ef",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "nantes-2026-27-third-shirt",
@@ -2246,9 +2246,9 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/nantes-2026-27-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "77b454f0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "qatar-2026-home-shirt",
@@ -2261,9 +2261,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/qatar-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5b2389b9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "qatar-2026-away-shirt",
@@ -2276,9 +2276,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/qatar-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c6ab271d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "qatar-2026-third-shirt",
@@ -2291,9 +2291,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/qatar-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6b897feb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ecuador-2026-home-shirt",
@@ -2306,9 +2306,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/ecuador-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "86aa61a5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ecuador-2026-away-shirt",
@@ -2321,9 +2321,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/ecuador-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d161a93b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ecuador-2026-third-shirt",
@@ -2336,9 +2336,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/ecuador-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "fa8c7bf6",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "senegal-2026-home-shirt",
@@ -2351,9 +2351,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/senegal-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2dbe3a36",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "senegal-2026-away-shirt",
@@ -2366,9 +2366,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/senegal-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ce2a1b25",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "senegal-2026-third-shirt",
@@ -2381,9 +2381,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/senegal-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7477f53b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "netherlands-2026-home-shirt",
@@ -2396,9 +2396,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/netherlands-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a60bc1d1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "netherlands-2026-away-shirt",
@@ -2411,9 +2411,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/netherlands-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b9396008",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "netherlands-2026-third-shirt",
@@ -2426,9 +2426,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/netherlands-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5a68b3ec",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "england-2026-home-shirt",
@@ -2441,9 +2441,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/england-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f80af5c9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "england-2026-away-shirt",
@@ -2456,9 +2456,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/england-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "28574f30",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "england-2026-third-shirt",
@@ -2471,9 +2471,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/england-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6ff1cd3e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "iran-2026-home-shirt",
@@ -2486,9 +2486,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/iran-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "afff700d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "iran-2026-away-shirt",
@@ -2501,9 +2501,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/iran-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "48f85fc5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "iran-2026-third-shirt",
@@ -2516,9 +2516,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/iran-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5bdb56d1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "usa-2026-home-shirt",
@@ -2531,9 +2531,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/usa-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "462c3bf5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "usa-2026-away-shirt",
@@ -2546,9 +2546,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/usa-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a66729a4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "usa-2026-third-shirt",
@@ -2561,9 +2561,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/usa-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0945f75d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wales-2026-home-shirt",
@@ -2576,9 +2576,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/wales-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c3bac829",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wales-2026-away-shirt",
@@ -2591,9 +2591,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/wales-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "8a03f3d4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "wales-2026-third-shirt",
@@ -2606,9 +2606,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/wales-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "db926239",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "argentina-2026-home-shirt",
@@ -2621,9 +2621,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/argentina-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "99291f99",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "argentina-2026-away-shirt",
@@ -2636,9 +2636,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/argentina-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5b8cacf3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "argentina-2026-third-shirt",
@@ -2651,9 +2651,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/argentina-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "68731378",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saudi-arabia-2026-home-shirt",
@@ -2666,9 +2666,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/saudi-arabia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3418da1f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saudi-arabia-2026-away-shirt",
@@ -2681,9 +2681,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/saudi-arabia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4cde45ec",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "saudi-arabia-2026-third-shirt",
@@ -2696,9 +2696,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/saudi-arabia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "49721a65",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "mexico-2026-home-shirt",
@@ -2711,9 +2711,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/mexico-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "41823119",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "mexico-2026-away-shirt",
@@ -2726,9 +2726,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/mexico-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bed392fe",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "mexico-2026-third-shirt",
@@ -2741,9 +2741,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/mexico-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6ce4860b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "poland-2026-home-shirt",
@@ -2756,9 +2756,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/poland-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e6edbd46",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "poland-2026-away-shirt",
@@ -2771,9 +2771,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/poland-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "6c0c23cd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "poland-2026-third-shirt",
@@ -2786,9 +2786,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/poland-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "dfd923a0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "france-2026-home-shirt",
@@ -2801,9 +2801,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/france-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "38f477a4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "france-2026-away-shirt",
@@ -2816,9 +2816,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/france-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4cbb2ace",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "france-2026-third-shirt",
@@ -2831,9 +2831,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/france-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7303a208",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "australia-2026-home-shirt",
@@ -2846,9 +2846,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/australia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "37c5e37d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "australia-2026-away-shirt",
@@ -2861,9 +2861,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/australia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3b7679e0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "australia-2026-third-shirt",
@@ -2876,9 +2876,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/australia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "31d8c52f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "denmark-2026-home-shirt",
@@ -2891,9 +2891,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/denmark-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "67ab9ec7",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "denmark-2026-away-shirt",
@@ -2906,9 +2906,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/denmark-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f57717c2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "denmark-2026-third-shirt",
@@ -2921,9 +2921,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/denmark-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e91d86e5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tunisia-2026-home-shirt",
@@ -2936,9 +2936,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/tunisia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e32e7920",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tunisia-2026-away-shirt",
@@ -2951,9 +2951,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/tunisia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "464874e8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "tunisia-2026-third-shirt",
@@ -2966,9 +2966,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/tunisia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5c539ec7",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "spain-2026-home-shirt",
@@ -2981,9 +2981,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/spain-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "16998539",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "spain-2026-away-shirt",
@@ -2996,9 +2996,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/spain-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1e1ed1a0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "spain-2026-third-shirt",
@@ -3011,9 +3011,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/spain-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "07716fab",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "costa-rica-2026-home-shirt",
@@ -3026,9 +3026,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/costa-rica-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "bceaad28",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "costa-rica-2026-away-shirt",
@@ -3041,9 +3041,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/costa-rica-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9b94e238",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "costa-rica-2026-third-shirt",
@@ -3056,9 +3056,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/costa-rica-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d9ed4758",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "germany-2026-home-shirt",
@@ -3071,9 +3071,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/germany-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "fa3b7935",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "germany-2026-away-shirt",
@@ -3086,9 +3086,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/germany-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2a1ab583",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "germany-2026-third-shirt",
@@ -3101,9 +3101,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/germany-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1ff78fda",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "japan-2026-home-shirt",
@@ -3116,9 +3116,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/japan-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a35d910a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "japan-2026-away-shirt",
@@ -3131,9 +3131,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/japan-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c8555347",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "japan-2026-third-shirt",
@@ -3146,9 +3146,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/japan-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "07fceb7e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "belgium-2026-home-shirt",
@@ -3161,9 +3161,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/belgium-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "84928d88",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "belgium-2026-away-shirt",
@@ -3176,9 +3176,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/belgium-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "83d800a0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "belgium-2026-third-shirt",
@@ -3191,9 +3191,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/belgium-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5e50a3ee",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "canada-2026-home-shirt",
@@ -3206,9 +3206,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/canada-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0e002633",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "canada-2026-away-shirt",
@@ -3221,9 +3221,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/canada-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7a63869a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "canada-2026-third-shirt",
@@ -3236,9 +3236,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/canada-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c8522e02",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "morocco-2026-home-shirt",
@@ -3251,9 +3251,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/morocco-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "aa52945e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "morocco-2026-away-shirt",
@@ -3266,9 +3266,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/morocco-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b3beaa89",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "morocco-2026-third-shirt",
@@ -3281,9 +3281,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/morocco-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "8e47fddd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "croatia-2026-home-shirt",
@@ -3296,9 +3296,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/croatia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d10de4f9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "croatia-2026-away-shirt",
@@ -3311,9 +3311,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/croatia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "cb3030b3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "croatia-2026-third-shirt",
@@ -3326,9 +3326,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/croatia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2eab0175",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "brazil-2026-home-shirt",
@@ -3341,9 +3341,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/brazil-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "02eeaaa4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "brazil-2026-away-shirt",
@@ -3356,9 +3356,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/brazil-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "b31a3931",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "brazil-2026-third-shirt",
@@ -3371,9 +3371,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/brazil-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "39c0a7f4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "serbia-2026-home-shirt",
@@ -3386,9 +3386,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/serbia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ff28fbbf",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "serbia-2026-away-shirt",
@@ -3401,9 +3401,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/serbia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "eb3e6d94",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "serbia-2026-third-shirt",
@@ -3416,9 +3416,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/serbia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1d77ac0e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "switzerland-2026-home-shirt",
@@ -3431,9 +3431,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/switzerland-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e1418f31",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "switzerland-2026-away-shirt",
@@ -3446,9 +3446,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/switzerland-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c8e33910",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "switzerland-2026-third-shirt",
@@ -3461,9 +3461,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/switzerland-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a2c06ca1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "cameroon-2026-home-shirt",
@@ -3476,9 +3476,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/cameroon-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "cedccb50",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "cameroon-2026-away-shirt",
@@ -3491,9 +3491,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/cameroon-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5c6fe4ed",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "cameroon-2026-third-shirt",
@@ -3506,9 +3506,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/cameroon-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f5775cf7",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "portugal-2026-home-shirt",
@@ -3521,9 +3521,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/portugal-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "401166e9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "portugal-2026-away-shirt",
@@ -3536,9 +3536,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/portugal-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "3c63dd9c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "portugal-2026-third-shirt",
@@ -3551,9 +3551,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/portugal-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1b6eb946",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ghana-2026-home-shirt",
@@ -3566,9 +3566,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/ghana-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4b77089c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ghana-2026-away-shirt",
@@ -3581,9 +3581,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/ghana-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "531ddc57",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ghana-2026-third-shirt",
@@ -3596,9 +3596,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/ghana-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "cf92092a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "uruguay-2026-home-shirt",
@@ -3611,9 +3611,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/uruguay-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "7505b939",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "uruguay-2026-away-shirt",
@@ -3626,9 +3626,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/uruguay-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "809dff63",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "uruguay-2026-third-shirt",
@@ -3641,9 +3641,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/uruguay-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2c42c86c",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-korea-2026-home-shirt",
@@ -3656,9 +3656,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/south-korea-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d69dd77b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-korea-2026-away-shirt",
@@ -3671,9 +3671,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/south-korea-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "056b4396",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-korea-2026-third-shirt",
@@ -3686,9 +3686,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/south-korea-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "20173b63",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "czechia-2026-home-shirt",
@@ -3701,9 +3701,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/czechia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a5770bc2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "czechia-2026-away-shirt",
@@ -3716,9 +3716,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/czechia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "108b6fce",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "czechia-2026-third-shirt",
@@ -3731,9 +3731,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/czechia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "755a32ac",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "scotland-2026-home-shirt",
@@ -3746,9 +3746,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/scotland-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0f63ac18",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "scotland-2026-away-shirt",
@@ -3761,9 +3761,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/scotland-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0011d2bd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "scotland-2026-third-shirt",
@@ -3776,9 +3776,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/scotland-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c2e7daad",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "turkey-2026-home-shirt",
@@ -3791,9 +3791,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/turkey-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2ed320c8",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "turkey-2026-away-shirt",
@@ -3806,9 +3806,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/turkey-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "75504d14",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "turkey-2026-third-shirt",
@@ -3821,9 +3821,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/turkey-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a1f3a123",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sweden-2026-home-shirt",
@@ -3836,9 +3836,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/sweden-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d7ad4f0a",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sweden-2026-away-shirt",
@@ -3851,9 +3851,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/sweden-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5e1d44c9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "sweden-2026-third-shirt",
@@ -3866,9 +3866,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/sweden-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c5aa4fa5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "norway-2026-home-shirt",
@@ -3881,9 +3881,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/norway-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "a47e6bf3",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "norway-2026-away-shirt",
@@ -3896,9 +3896,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/norway-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5eda9604",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "norway-2026-third-shirt",
@@ -3911,9 +3911,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/norway-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "57b8c3a1",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "austria-2026-home-shirt",
@@ -3926,9 +3926,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/austria-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "1b6c1dea",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "austria-2026-away-shirt",
@@ -3941,9 +3941,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/austria-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9fb13254",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "austria-2026-third-shirt",
@@ -3956,9 +3956,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/austria-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "11c8ca7d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-africa-2026-home-shirt",
@@ -3971,9 +3971,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/south-africa-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "72e5ce3f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-africa-2026-away-shirt",
@@ -3986,9 +3986,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/south-africa-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "c849844e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "south-africa-2026-third-shirt",
@@ -4001,9 +4001,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/south-africa-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ada97da4",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paraguay-2026-home-shirt",
@@ -4016,9 +4016,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/paraguay-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9e52f359",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paraguay-2026-away-shirt",
@@ -4031,9 +4031,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/paraguay-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "0cbd62fd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "paraguay-2026-third-shirt",
@@ -4046,9 +4046,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/paraguay-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "25d882cf",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ivory-coast-2026-home-shirt",
@@ -4061,9 +4061,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/ivory-coast-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "118d35fb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ivory-coast-2026-away-shirt",
@@ -4076,9 +4076,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/ivory-coast-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "03c9a516",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "ivory-coast-2026-third-shirt",
@@ -4091,9 +4091,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/ivory-coast-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "11ee1722",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "egypt-2026-home-shirt",
@@ -4106,9 +4106,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/egypt-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "9b319949",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "egypt-2026-away-shirt",
@@ -4121,9 +4121,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/egypt-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "23ad506b",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "egypt-2026-third-shirt",
@@ -4136,9 +4136,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/egypt-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "e47547f5",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "algeria-2026-home-shirt",
@@ -4151,9 +4151,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/algeria-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "f859d816",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "algeria-2026-away-shirt",
@@ -4166,9 +4166,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/algeria-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "78dea0bd",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "algeria-2026-third-shirt",
@@ -4181,9 +4181,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/algeria-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5c9e982d",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "jordan-2026-home-shirt",
@@ -4196,9 +4196,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/jordan-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "2f5591f2",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "jordan-2026-away-shirt",
@@ -4211,9 +4211,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/jordan-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "177d82f9",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "jordan-2026-third-shirt",
@@ -4226,9 +4226,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/jordan-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "aeb4223e",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "colombia-2026-home-shirt",
@@ -4241,9 +4241,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/colombia-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "d945f7c0",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "colombia-2026-away-shirt",
@@ -4256,9 +4256,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/colombia-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "5451c940",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "colombia-2026-third-shirt",
@@ -4271,9 +4271,9 @@
       "kit": "Third",
       "league": null,
       "edition": "standard",
-      "image": "/products/colombia-2026-third-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "ccb85f9f",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "iraq-2026-home-shirt",
@@ -4286,9 +4286,9 @@
       "kit": "Home",
       "league": null,
       "edition": "standard",
-      "image": "/products/iraq-2026-home-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "185080eb",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "iraq-2026-away-shirt",
@@ -4301,9 +4301,9 @@
       "kit": "Away",
       "league": null,
       "edition": "standard",
-      "image": "/products/iraq-2026-away-shirt.jpg",
+      "image": "/products/_placeholder.jpg",
       "sourceHash": "4b5946ee",
-      "visible": false
+      "visible": true
     },
     {
       "handle": "iraq-2026-third-shirt",

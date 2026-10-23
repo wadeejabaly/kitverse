@@ -32,6 +32,10 @@
     },
     "browseEyebrow": "Browse",
     "kinds": {
+      "retro": {
+        "title": "Retro",
+        "body": "Shirts from the 2023 season and earlier, at one flat price."
+      },
       "national": {
         "title": "National teams",
         "body": "Every side heading to the 2026 tournament, home and away."
@@ -201,12 +205,14 @@
     "metaDescription": "Browse every KitVerse football shirt: clubs, national teams, Fan and Player versions, with prices in shekels including VAT.",
     "filters": "Filters",
     "kind": "Season",
+    "category": "Category",
     "league": "League",
     "team": "Team",
     "all": "All",
     "allTeams": "All teams",
     "clear": "Clear filters",
     "kinds": {
+      "retro": "Retro",
       "national": "National teams",
       "current": "This season",
       "previous": "Last season"

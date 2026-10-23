@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { byKind, getLeagues, getVisibleProducts } from "@/data/catalog";
+import { byKind, getLeagues, getVisibleProducts, retroProducts } from "@/data/catalog";
 import { priceFor } from "@/data/pricing";
 import { HeroD } from "@/components/hero/HeroD";
 import { Reveal } from "@/components/motion/Reveal";
@@ -61,15 +61,24 @@ export default async function HomePage({
     }))
     .filter((league) => league.count > 0);
 
-  const kinds = (["national", "current", "previous"] as const)
-    .map((kind) => ({ kind, count: byKind(kind).length }))
-    .filter((entry) => entry.count > 0);
+  // Retro leads the row and is never filtered out by its count, unlike the
+  // three kinds below it — it's a standing section of the shop (there just
+  // isn't stock old enough to BE Retro yet), not something that should wink
+  // in and out as inventory changes. See retroProducts() in catalog.ts: it's
+  // a cross-cutting view over `season`, not a fourth Kind.
+  const retroTile = { kind: "retro" as const, count: retroProducts().length, href: "/shop/retro" };
 
   const kindHref = {
     national: "/shop/national-teams",
     current: "/shop/new-season",
     previous: "/shop/last-season",
   } as const;
+
+  const kindTiles = (["national", "current", "previous"] as const)
+    .map((kind) => ({ kind, count: byKind(kind).length, href: kindHref[kind] }))
+    .filter((entry) => entry.count > 0);
+
+  const ways = [retroTile, ...kindTiles];
 
   return (
     <>
@@ -80,19 +89,23 @@ export default async function HomePage({
           RTL/LTR mirroring and the contrast reasoning. */}
       <HeroD locale={locale} priority />
 
-      {/* ─────────── THE THREE WAYS IN ───────────
+      {/* ─────────── THE WAYS IN ───────────
           Was a bordered three-up box grid. Boxes are what a store template
           reaches for; here the hairline above the row and the space between
-          the columns do the same job, and the type carries the hierarchy. */}
-      {kinds.length > 0 ? (
+          the columns do the same job, and the type carries the hierarchy.
+          Retro leads the row, then whichever of national/current/previous
+          actually has stock — see `ways` above for why Retro alone ignores
+          its own count. Four possible tiles now, not three, so the grid
+          steps up to wide:grid-cols-4 with a tighter gap to match. */}
+      {ways.length > 0 ? (
         <Wrap>
           <Reveal
             as="section"
             stagger={80}
-            className="grid gap-10 border-t border-rule pt-10 pb-[clamp(72px,11vw,140px)] wide:grid-cols-3 wide:gap-14"
+            className="grid gap-10 border-t border-rule pt-10 pb-[clamp(72px,11vw,140px)] wide:grid-cols-4 wide:gap-10"
           >
-            {kinds.map(({ kind, count }) => (
-              <Link key={kind} href={kindHref[kind]} className="group block text-start">
+            {ways.map(({ kind, count, href }) => (
+              <Link key={kind} href={href} className="group block text-start">
                 <span className="mono-eyebrow latin text-ink-soft">
                   <Figure>{count}</Figure>
                 </span>

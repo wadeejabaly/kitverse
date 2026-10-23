@@ -18,7 +18,7 @@ import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
  * out of that one source, so a price change lands here without anyone editing
  * a component.
  *
- * Retro (a 2022-and-earlier `season`) has no fan/player choice — it is one
+ * Retro (a 2023-and-earlier `season`) has no fan/player choice — it is one
  * product at one price — so the version fieldset is hidden and every
  * add-to-cart writes "fan" as the stored version. priceFor ignores `version`
  * for a retro season, so that stored value can never affect what is charged.
