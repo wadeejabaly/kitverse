@@ -1128,16 +1128,39 @@ body[lang="ar"] {
    this palette takes it to 5.97:1 with no new token and no darker
    type (the site has no pure black to reach for). The GLOW stays
    --flood-blue, so the deeper electric blue is still the light
-   source — it just stopped being the thing type sits on. */
+   source — it just stopped being the thing type sits on.
+
+   Owner request 2026-10-23 ("the best hero in the world"): the glow now
+   breathes (`kv-pulse-flood` below) — a small, slow idle pulse so the one
+   button on the one coloured surface feels lit rather than printed. The
+   keyframes are symmetric (0% === 100%), so the global reduced-motion
+   backstop's one-iteration/near-zero-duration rule already lands exactly
+   back on this rule's own static value — no separate override needed, the
+   way `.kv-marquee` at the end of this file does. */
 .btn-flood {
   background: var(--flood-blue-2);
   color: var(--flood-ground);
   box-shadow: 0 18px 34px -12px rgb(47 107 255 / 0.6);
+  animation: kv-pulse-flood 4s ease-in-out infinite;
+}
+
+@keyframes kv-pulse-flood {
+  0%,
+  100% {
+    box-shadow: 0 18px 34px -12px rgb(47 107 255 / 0.6);
+  }
+  50% {
+    box-shadow: 0 20px 44px -10px rgb(47 107 255 / 0.8);
+  }
 }
 
 /* The local glow behind the shirt itself — distinct from the ambient
    corner wash above, and unaffected by reading direction since it is
-   centred on the stage rather than on the page. */
+   centred on the stage rather than on the page.
+
+   `kv-breathe` is the same symmetric-keyframe trick as the button's pulse
+   above: a slow scale+opacity cycle that reads as a stage light rather than
+   a flat halo, with no reduced-motion override needed for the same reason. */
 .kv-flood-shirt-glow {
   position: absolute;
   width: 65%;
@@ -1146,6 +1169,19 @@ body[lang="ar"] {
   background: radial-gradient(circle, rgb(47 107 255 / 0.5), rgb(47 107 255 / 0) 70%);
   filter: blur(2px);
   pointer-events: none;
+  animation: kv-breathe 6.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+@keyframes kv-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.07);
+    opacity: 0.68;
+  }
 }
 
 /* The corner chip naming the shirt on stage — a small dark plate over
@@ -1159,6 +1195,90 @@ body[lang="ar"] {
 .kv-flood-chip strong {
   color: var(--flood-blue-2);
   font-weight: 700;
+}
+
+/* ---- Floodlight, pushed further (owner request 2026-10-23) ----
+   Four additions, each cheap on purpose — this hero is the page's LCP
+   section, so nothing here is a new network request of real weight, a new
+   JS dependency, or an unconditional animation that a phone pays for. */
+
+/* A fixed, faint noise texture over the whole stage — the cheapest
+   "filmic" signal there is: one inline SVG turbulence filter, no extra
+   request, nothing to blur or decode, nothing for a scroll or a pointer to
+   drive. Painted last in the DOM so the blend reaches the gradients below
+   it AND the content above them; pointer-events: none keeps the headline
+   link, the CTA and the shirt fully clickable underneath it. */
+.kv-flood-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* The crest as atmosphere rather than as a mark: public/brand/badge-glow.png
+   (generated once from the real badge — heavy Gaussian blur, alpha cut to
+   ~14% — not blurred live with a CSS filter, so there is no runtime cost),
+   centred on the shirt stage so it stays on the correct side of the layout
+   in both reading directions without a mirrored rule of its own. It is
+   brand presence, not a logo anyone is meant to read — low enough contrast
+   that it never competes with the shirt or the chip naming it. */
+.kv-flood-crest-mark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.kv-flood-crest-mark img {
+  width: 160%;
+  max-width: 820px;
+  height: auto;
+}
+
+/* A bigger, bolder headline — scoped to Floodlight alone. The retired
+   `.display` step near the top of this file was removed because nothing
+   else asked for a 5.25rem line; this is a deliberate new ask for THIS
+   hero only, not that step reinstated, so it stays local rather than
+   rejoining the shared scale other pages could pick up by accident. */
+.kv-flood-display {
+  font-size: clamp(2.3rem, 5.6vw, 4.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.026em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+[lang="ar"] .kv-flood-display {
+  letter-spacing: normal;
+  line-height: 1.32;
+  font-weight: 400;
+}
+
+/* Cursor tilt for the shirt stage. FloodStage sets --kv-rx / --kv-ry
+   (−1..1) from the pointer position itself, desktop-pointer-only — see its
+   own note; everywhere else these custom properties are simply never set,
+   so the calc()s below resolve to their zero fallback and this rule is an
+   inert no-op. Transform only, and a transition slow enough to feel like
+   weight settling rather than the stage tracking the cursor. */
+.kv-flood-tilt {
+  transform: perspective(1200px) rotateX(calc(var(--kv-ry, 0) * -5deg))
+    rotateY(calc(var(--kv-rx, 0) * 5deg));
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* The shirt's own double shadow: the original black lift-off-the-stage
+   shadow, plus a second, blue-tinted one so the card reads as lit by the
+   flood rather than merely placed in front of it. Two `drop-shadow()`
+   functions inside one `filter`, not two Tailwind utilities — Tailwind's
+   `drop-shadow-*` utilities share a single filter slot, so stacking a
+   second one would replace the first rather than add to it. */
+.kv-flood-shirt-shadow {
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 55px rgba(47, 107, 255, 0.38));
 }
 
 /* Reduced motion: the wall stops and rests at its authored position.
