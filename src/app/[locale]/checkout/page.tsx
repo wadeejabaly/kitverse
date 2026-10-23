@@ -5,9 +5,9 @@ import { getVisibleProducts } from "@/data/catalog";
 import type { CartProductInfo } from "@/components/cart/CartView";
 import { CheckoutView } from "@/components/checkout/CheckoutView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
-import { isBitCodConfigured } from "@/lib/bit";
 import { isPayPlusConfigured } from "@/lib/payplus";
 import { alternatesFor } from "@/lib/site";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 export async function generateMetadata({
   params,
@@ -39,11 +39,9 @@ export async function generateMetadata({
  * the boundary — "is the card method available?" — because the browser never
  * calls PayPlus: it is redirected to a page this server asked for.
  *
- * Cash on delivery is gated the same way and for a stronger reason: what makes
- * it available is the owner's own Bit phone number, which is server-only and
- * must not be in a client bundle. A boolean crosses; the number itself appears
- * exactly once, rendered server-side on the confirmation page of an order that
- * has just been placed.
+ * Cash on delivery (owner decision 2026-10-23: plain, no deposit) needs
+ * nothing beyond Supabase itself — there is no owner phone number to gate on
+ * any more, so it is simply available whenever the orders database is.
  *
  * Each method is gated independently, and with none configured the page still
  * renders in full and shows a quiet "payments are not configured yet" panel
@@ -82,7 +80,7 @@ export default async function CheckoutPage({
           locale={locale}
           paypalClientId={paypalClientId}
           payplusEnabled={isPayPlusConfigured()}
-          bitCodEnabled={isBitCodConfigured()}
+          cashEnabled={isSupabaseConfigured()}
         />
       </Suspense>
     </Wrap>

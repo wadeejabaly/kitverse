@@ -1,4 +1,4 @@
-import type { Size, Version } from "./types";
+import type { Patch, Size, Version } from "./types";
 
 /**
  * KitVerse pricing — single source of truth (owner-confirmed 2026-09-02).
@@ -19,7 +19,9 @@ import type { Size, Version } from "./types";
  * longer drives price at all.
  *
  * Add-ons dropped with the same owner decision: name & number 20 (was 39),
- * badge patch 12 (was 19).
+ * badge patch 12 (was 19). The badge patch itself was later replaced by the
+ * official-patch choice (owner decision 2026-10-23) at ₪11.99 — this file's
+ * first fractional price, see round2() below.
  */
 
 export const SIZES: Size[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
@@ -89,7 +91,28 @@ export function priceFor(season: string, size: Size, version: Version): number {
   return base + sizeSurcharge(size);
 }
 
-export const ADDONS = { nameNumber: 20, badge: 12 } as const;
+/**
+ * Round to the nearest cent. Every ILS figure this file produces by adding or
+ * multiplying money passes through this — not because the ladder itself has
+ * fractions (it doesn't: Fan/Player/Retro and the surcharges are all whole
+ * shekels), but because two add-ons now are NOT whole shekels (ADDONS.patch
+ * and GIFT_BOX_PRICE, both ₪x.99), and floating-point multiplication of a
+ * value like 11.99 drifts (11.99 * 3 is not exactly 35.97 in IEEE 754).
+ * Rounding after every sum/product keeps every displayed and charged figure
+ * exact to the cent instead of accumulating drift across a multi-line cart.
+ */
+export function round2(value: number): number {
+  return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
+/**
+ * Add-ons (owner decisions 2026-09-02 and 2026-10-23). `patch` replaced the
+ * old flat `badge` boolean add-on: it is charged once whenever a shirt's
+ * chosen Patch is anything other than "none" — the league patch and the
+ * Champions League patch cost the same, by owner decision 2026-10-23
+ * ("make it 11.99 for all patches").
+ */
+export const ADDONS = { nameNumber: 20, patch: 11.99 } as const;
 
 /* ------------------------------------------------------------- delivery -- */
 
@@ -127,9 +150,9 @@ export function isDeliveryRegion(value: unknown): value is DeliveryRegion {
 
 /**
  * One cart line, already priced. `unitPrice` is `priceFor(...)` plus any
- * addons selected for that line (name & number, badge patch); `lineTotal` is
- * `unitPrice * qty`. Building a PricedLine from a raw CartItem + its Product
- * is the caller's job (the cart reads the product's `season` from the
+ * addons selected for that line (name & number, official patch); `lineTotal`
+ * is `unitPrice * qty`. Building a PricedLine from a raw CartItem + its
+ * Product is the caller's job (the cart reads the product's `season` from the
  * catalog, calls `priceFor`, and adds ADDONS.* for whichever options the
  * line has selected) — pricing.ts only owns the money math, not cart state.
  */
@@ -145,13 +168,14 @@ export function priceLine(
   size: Size,
   version: Version,
   qty: number,
-  addons: { nameNumber?: boolean; badge?: boolean } = {},
+  addons: { nameNumber?: boolean; patch?: Patch } = {},
 ): PricedLine {
-  const unitPrice =
+  const unitPrice = round2(
     priceFor(season, size, version) +
-    (addons.nameNumber ? ADDONS.nameNumber : 0) +
-    (addons.badge ? ADDONS.badge : 0);
-  return { unitPrice, qty, lineTotal: unitPrice * qty };
+      (addons.nameNumber ? ADDONS.nameNumber : 0) +
+      (addons.patch && addons.patch !== "none" ? ADDONS.patch : 0),
+  );
+  return { unitPrice, qty, lineTotal: round2(unitPrice * qty) };
 }
 
 /**
@@ -161,53 +185,52 @@ export function priceLine(
  * shopper's region, and checkout computes `shippingFor(region)` once the
  * delivery form has one. Defaulting to 0 is what lets the cart page total a
  * basket honestly without inventing a rate.
+ *
+ * `giftBoxQty` (owner decision 2026-10-23) is the CHECKOUT-only gift-box
+ * add-on — it does not exist on the cart page, only at checkout, which is why
+ * it defaults to 0 and every pre-checkout call site is unaffected. It is a
+ * per-ORDER quantity, not a per-shirt line: one box can hold more than one
+ * shirt, so the shopper picks how many boxes they want, not whether each
+ * shirt gets one.
  */
 export function cartTotals(
   items: PricedLine[],
   shipping = 0,
+  giftBoxQty = 0,
 ): {
   subtotal: number;
   shipping: number;
+  giftBox: number;
   total: number;
 } {
-  const subtotal = items.reduce((sum, line) => sum + line.lineTotal, 0);
+  const subtotal = round2(items.reduce((sum, line) => sum + line.lineTotal, 0));
   const appliedShipping = items.length > 0 ? shipping : 0;
-  return { subtotal, shipping: appliedShipping, total: subtotal + appliedShipping };
+  const giftBox = items.length > 0 ? giftBoxTotalFor(giftBoxQty) : 0;
+  return {
+    subtotal,
+    shipping: appliedShipping,
+    giftBox,
+    total: round2(subtotal + appliedShipping + giftBox),
+  };
 }
 
-/* -------------------------------------------- cash on delivery (Bit) -- */
+/* ------------------------------------------------------------ gift box -- */
 
 /**
- * The Bit deposit that reserves a cash-on-delivery order (owner decision
- * 2026-09-02).
- *
- * COD is a MANUAL rail: there is no Bit API. The buyer sends this figure by
- * Bit to the owner's own number, the owner sees it arrive and flips the order
- * from `awaiting_deposit` to `paid` by hand in the Supabase dashboard. The
- * deposit exists because a refused delivery costs the store the courier leg
- * either way — it comes off the cash due to the courier on a completed
- * delivery, and it is not refunded on a refused one.
- *
- * The tiers are on the ORDER TOTAL (goods + shipping), which is the figure the
- * server computed — never a total a browser sent:
- *   under 150   → 35
- *   under 220   → 40
- *   220 and up  → 50
- *
- * The boundaries are exclusive on the low side, so a total of exactly 150
- * pays 40 and exactly 220 pays 50.
+ * The gift-box add-on (owner decision 2026-10-23): a box for the shirts in
+ * the order, offered at checkout only. It is priced PER ORDER, not per shirt
+ * — "one per order, but they can get as many as they like, the box fits more
+ * than 1 shirt" — so the shopper picks a quantity of boxes (0 = none), and
+ * each box is ₪34.99 exactly: the owner's explicit choice, overriding this
+ * file's usual whole-shekel convention and the first fractional price on the
+ * site (the official patch, ADDONS.patch, followed the same decision).
  */
-export const BIT_DEPOSIT_TIERS: { under: number; deposit: number }[] = [
-  { under: 150, deposit: 35 },
-  { under: 220, deposit: 40 },
-];
+export const GIFT_BOX_PRICE = 34.99;
 
-/** The deposit for any total at or above the last tier's ceiling. */
-export const BIT_DEPOSIT_MAX = 50;
+/** A generous but finite ceiling — mirrors the per-line MAX_QTY (10). */
+export const GIFT_BOX_MAX_QTY = 10;
 
-export function bitDepositFor(totalIls: number): number {
-  for (const tier of BIT_DEPOSIT_TIERS) {
-    if (totalIls < tier.under) return tier.deposit;
-  }
-  return BIT_DEPOSIT_MAX;
+export function giftBoxTotalFor(qty: number): number {
+  const clamped = Math.min(GIFT_BOX_MAX_QTY, Math.max(0, Math.floor(qty)));
+  return round2(GIFT_BOX_PRICE * clamped);
 }

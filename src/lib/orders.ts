@@ -1,12 +1,11 @@
 import {
-  bitDepositFor,
   cartTotals,
   priceLine,
   shippingFor,
   type DeliveryRegion,
   type PricedLine,
 } from "@/data/pricing";
-import type { Size, Version } from "@/data/types";
+import type { Patch, Size, Version } from "@/data/types";
 import { getProduct } from "@/data/catalog";
 import { sanitizeNameNumber } from "@/lib/product";
 import type { CheckoutItemInput } from "@/lib/checkout";
@@ -35,7 +34,7 @@ export interface RepricedLine {
   size: Size;
   version: Version;
   nameNumber: string | null;
-  badge: boolean;
+  patch: Patch;
   qty: number;
   unitPrice: number;
   lineTotal: number;
@@ -45,6 +44,9 @@ export interface RepricedCart {
   lines: RepricedLine[];
   subtotal: number;
   shipping: number;
+  /** The checkout-only gift-box add-on (owner decision 2026-10-23). */
+  giftBoxQty: number;
+  giftBox: number;
   total: number;
   /** Handles that were dropped, for server-side logging only. */
   dropped: string[];
@@ -69,10 +71,20 @@ export interface RepricedCart {
  * rate the store did not publish. The line price itself comes from the
  * PRODUCT'S OWN `season` read out of the catalogue, never from anything the
  * browser sent.
+ *
+ * The patch choice is re-checked against the catalogue too: a patch is only
+ * ever billable on a CLUB product (`product.league !== null`), so a national
+ * team handle has its `patch` forced to "none" here regardless of what the
+ * client sent — the same defence as sanitizeNameNumber above, applied to the
+ * other add-on.
+ *
+ * `giftBoxQty` (owner decision 2026-10-23) is a per-ORDER quantity, not a
+ * per-line one, so it is priced once by cartTotals rather than per CheckoutItemInput.
  */
 export function repriceCart(
   items: CheckoutItemInput[],
   region: DeliveryRegion,
+  giftBoxQty = 0,
 ): RepricedCart {
   const lines: RepricedLine[] = [];
   const dropped: string[] = [];
@@ -89,10 +101,11 @@ export function repriceCart(
       : "";
     const hasName = nameNumber !== "";
     const qty = Math.min(MAX_QTY_SERVER, Math.max(1, Math.floor(item.qty)));
+    const patch: Patch = product.league !== null ? item.patch : "none";
 
     const priced = priceLine(product.season, item.size, item.version, qty, {
       nameNumber: hasName,
-      badge: item.badge,
+      patch,
     });
 
     lines.push({
@@ -101,7 +114,7 @@ export function repriceCart(
       size: item.size,
       version: item.version,
       nameNumber: hasName ? nameNumber : null,
-      badge: item.badge,
+      patch,
       qty,
       unitPrice: priced.unitPrice,
       lineTotal: priced.lineTotal,
@@ -113,27 +126,26 @@ export function repriceCart(
     qty: line.qty,
     lineTotal: line.lineTotal,
   }));
-  const totals = cartTotals(priced, shippingFor(region));
+  const totals = cartTotals(priced, shippingFor(region), giftBoxQty);
 
-  return { lines, dropped, ...totals };
+  return { lines, dropped, giftBoxQty: lines.length > 0 ? giftBoxQty : 0, ...totals };
 }
 
 /* ------------------------------------------------------ paid transition -- */
 
 /**
- * `awaiting_deposit` (migration 0004) belongs to cash on delivery and to
- * nothing else: the order is placed and reserved, and it is waiting for a Bit
- * transfer that arrives OUTSIDE this application. The owner sees the money in
- * their own Bit account and flips the row to `paid` by hand in the Supabase
- * dashboard — no code path promotes it, which is exactly why the automated
- * settlement below refuses to touch such an order at all.
+ * Owner decision 2026-10-23 replaced the Bit-deposit cash-on-delivery rail
+ * (status `awaiting_deposit`, a deposit the buyer sent by Bit before
+ * shipping) with PLAIN cash on delivery: no deposit at all, the buyer simply
+ * pays the courier in full on arrival. A cash order is therefore written
+ * straight to `pending` — the SAME status a freshly-created card order
+ * starts in — and nothing below has to special-case it, because the
+ * provider check two blocks down (`isSettleableProvider`) already refuses to
+ * let any webhook settle a `cash` order regardless of its status. That one
+ * check is what used to be carried by the `awaiting_deposit` status; it
+ * still holds with one fewer status to reason about.
  */
-export type OrderStatus =
-  | "pending"
-  | "awaiting_deposit"
-  | "paid"
-  | "failed"
-  | "cancelled";
+export type OrderStatus = "pending" | "paid" | "failed" | "cancelled";
 
 /**
  * A processor that settles an order over the wire, by a callback this
@@ -144,13 +156,16 @@ export type OrderStatus =
 export type SettleableProvider = "paypal" | "payplus";
 
 /**
- * Which rail owns an order. `bit_cod` is deliberately NOT settleable: Bit has
- * no API here, there is no callback to verify and therefore no automated road
- * from `awaiting_deposit` to `paid`. Keeping it out of SettleableProvider
- * means the type system, not a runtime check, is what stops a card webhook
- * from being handed a COD order.
+ * Which rail owns an order. `cash` is deliberately NOT settleable: a cash
+ * order is paid by the courier collecting money that never touches this
+ * application, so there is no callback and therefore no automated road to
+ * `paid` — the owner sets it by hand once they know the delivery went
+ * through (or simply leaves it; nothing depends on a cash order ever
+ * reaching `paid`). Keeping it out of SettleableProvider means the type
+ * system, not a runtime check, is what stops a card webhook from being
+ * handed a cash order.
  */
-export type PaymentProvider = SettleableProvider | "bit_cod";
+export type PaymentProvider = SettleableProvider | "cash";
 
 export const SETTLEABLE_PROVIDERS: readonly SettleableProvider[] = [
   "paypal",
@@ -159,7 +174,7 @@ export const SETTLEABLE_PROVIDERS: readonly SettleableProvider[] = [
 
 export const PAYMENT_PROVIDERS: readonly PaymentProvider[] = [
   ...SETTLEABLE_PROVIDERS,
-  "bit_cod",
+  "cash",
 ];
 
 export function isPaymentProvider(value: unknown): value is PaymentProvider {
@@ -174,70 +189,25 @@ export function isSettleableProvider(value: unknown): value is SettleableProvide
 
 /* -------------------------------------------------- cash on delivery -- */
 
-/** The provider and status every COD order is created with, and the only ones. */
-export const COD_PROVIDER = "bit_cod" as const satisfies PaymentProvider;
-export const COD_INITIAL_STATUS = "awaiting_deposit" as const satisfies OrderStatus;
+/** The provider and status every cash order is created with. */
+export const CASH_PROVIDER = "cash" as const satisfies PaymentProvider;
+export const CASH_INITIAL_STATUS = "pending" as const satisfies OrderStatus;
 
-export interface CodOrderRow {
-  status: typeof COD_INITIAL_STATUS;
-  payment_provider: typeof COD_PROVIDER;
-  deposit_ils: number;
+export interface CashOrderRow {
+  status: typeof CASH_INITIAL_STATUS;
+  payment_provider: typeof CASH_PROVIDER;
 }
 
 /**
- * The provider-and-money half of a cash-on-delivery order row.
+ * The provider half of a cash-on-delivery order row.
  *
- * It lives here rather than inline in the route so it can be unit-tested: the
- * route has no other provider literal in it, so proving this function returns
- * `bit_cod` for every input is proving the COD path cannot create a card
- * order. The deposit is computed from the total the SERVER just repriced —
- * `bitDepositFor` is never handed a figure that came off the wire.
+ * It lives here, rather than as a literal inline in the route, so it can be
+ * unit-tested: the route has no other provider literal in it, so proving
+ * this function always returns `cash` is proving the cash-on-delivery path
+ * cannot create a card-provider order.
  */
-export function codOrderRow(serverTotal: number): CodOrderRow {
-  return {
-    status: COD_INITIAL_STATUS,
-    payment_provider: COD_PROVIDER,
-    deposit_ils: bitDepositFor(serverTotal),
-  };
-}
-
-/** The order facts the confirmation page reads back for a reference. */
-export interface OrderStateForConfirmation {
-  status: OrderStatus;
-  provider: PaymentProvider;
-  deposit: number | null;
-}
-
-/** Everything the buyer needs in order to pay: where, and how much. */
-export interface CodConfirmation {
-  deposit: number;
-  phone: string;
-}
-
-/**
- * Should the confirmation page show the "send your Bit deposit" state?
- *
- * Only when all four facts line up: the order exists, it is on the COD rail,
- * it is still waiting for the deposit, a deposit was actually recorded on the
- * row, and the store has a number to send it to. Anything short of that is
- * null, and the page falls back to its holding copy rather than inventing
- * instructions or naming an amount it cannot source from the database.
- *
- * Pure, so the gate is unit-tested rather than only reachable through a live
- * Supabase project. NOTE what is NOT an input: anything the browser carried
- * over from checkout. Both the deposit and the phone number come from the
- * server — the order row and server-only env respectively.
- */
-export function codConfirmationFor(
-  state: OrderStateForConfirmation | null,
-  bitPhone: string | null,
-): CodConfirmation | null {
-  if (!state) return null;
-  if (state.provider !== COD_PROVIDER) return null;
-  if (state.status !== COD_INITIAL_STATUS) return null;
-  if (state.deposit === null || !(state.deposit > 0)) return null;
-  if (!bitPhone) return null;
-  return { deposit: state.deposit, phone: bitPhone };
+export function cashOrderRow(): CashOrderRow {
+  return { status: CASH_INITIAL_STATUS, payment_provider: CASH_PROVIDER };
 }
 
 /** The order facts the transition decision needs — nothing else. */
@@ -287,10 +257,11 @@ export type PaidDecision =
  * mismatch is a rejection, never a no-op.
  *
  * THE MANUAL-PROVIDER CHECK is the same argument for the cash-on-delivery
- * rail. A `bit_cod` order is settled by a human reading their Bit account,
- * so no callback on any endpoint may promote one — and the check is written
- * against the ORDER's provider rather than the caller's, so it holds even if
- * some future caller passes a provider it should not have.
+ * rail. A `cash` order is paid to the courier, not through any processor this
+ * application can verify, so no callback on any endpoint may promote one —
+ * and the check is written against the ORDER's provider rather than the
+ * caller's, so it holds even if some future caller passes a provider it
+ * should not have.
  */
 export function decidePaidTransition(
   order: OrderStateSnapshot | null,

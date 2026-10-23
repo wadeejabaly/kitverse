@@ -10,6 +10,18 @@ import { cn } from "@/lib/utils";
  * something a component author has to remember.
  */
 
+/**
+ * Formats an ILS amount: whole shekels print bare ("95"), anything with
+ * cents prints to exactly two decimals ("34.99", "106.99"). Almost every
+ * price on this site is a whole number, so this only ever bites on the two
+ * fractional add-ons (the official patch, the gift box) and any total that
+ * includes one of them — it never turns an ordinary "95" into "95.00".
+ */
+function formatIls(value: number): string {
+  const rounded = Math.round((value + Number.EPSILON) * 100) / 100;
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2);
+}
+
 /** A price in shekels: always LTR, always tabular. */
 export function Price({
   value,
@@ -20,7 +32,7 @@ export function Price({
 }) {
   return (
     <bdi dir="ltr" className={cn("tabular", className)}>
-      ₪{value}
+      ₪{formatIls(value)}
     </bdi>
   );
 }

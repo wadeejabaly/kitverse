@@ -8,7 +8,8 @@ import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Link, useRouter } from "@/i18n/navigation";
 import {
   DELIVERY_REGIONS,
-  bitDepositFor,
+  GIFT_BOX_MAX_QTY,
+  GIFT_BOX_PRICE,
   cartTotals,
   priceLine,
   shippingFor,
@@ -35,22 +36,22 @@ import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
  *
  * Three methods, each shown only when it is configured: PayPlus clears cards
  * (a redirect to a page PayPlus hosts), PayPal covers everything else, and
- * cash on delivery reserves the order with a Bit deposit. With none configured
- * the page still renders in full and shows the demo panel where the payment
- * controls would be.
+ * cash on delivery (owner decision 2026-10-23: plain, no deposit — the buyer
+ * pays the courier in full on arrival). With none configured the page still
+ * renders in full and shows the demo panel where the payment controls would
+ * be.
  *
- * The COD deposit shown below is computed here from pricing.ts, exactly like
- * the line prices — a display of a number the server will compute for itself
- * from its own total. It is shown BEFORE the buyer commits, with the terms
- * attached, because a deposit is a condition of the sale and not a surprise
- * for the confirmation page.
+ * The gift-box add-on (owner decision 2026-10-23) lives only here, at
+ * checkout, not on the cart page: one box per order at most, but
+ * quantity-selectable, because a single box can hold more than one shirt.
  */
 
 type FormValues = {
   name: string;
   phone: string;
   email: string;
-  address: string;
+  street: string;
+  houseNumber: string;
   city: string;
   region: DeliveryRegion | "";
   notes: string;
@@ -60,7 +61,8 @@ const EMPTY_FORM: FormValues = {
   name: "",
   phone: "",
   email: "",
-  address: "",
+  street: "",
+  houseNumber: "",
   city: "",
   region: "",
   notes: "",
@@ -96,13 +98,13 @@ export function CheckoutView({
   locale,
   paypalClientId,
   payplusEnabled,
-  bitCodEnabled,
+  cashEnabled,
 }: {
   products: CartProductInfo[];
   locale: string;
   paypalClientId: string | null;
   payplusEnabled: boolean;
-  bitCodEnabled: boolean;
+  cashEnabled: boolean;
 }) {
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
@@ -118,6 +120,9 @@ export function CheckoutView({
     "form" | "paying" | "redirecting" | "placing" | "done"
   >("form");
   const [errorCode, setErrorCode] = useState<CheckoutErrorCode | null>(null);
+  // The gift-box add-on (owner decision 2026-10-23): a per-ORDER quantity,
+  // not a per-shirt flag — 0 means no box at all.
+  const [giftBoxQty, setGiftBoxQty] = useState(0);
 
   /**
    * The card page's failure and cancel URLs come back here with `?pay=`.
@@ -147,7 +152,7 @@ export function CheckoutView({
         product,
         priced: priceLine(product.season, item.size, item.version, item.qty, {
           nameNumber: Boolean(item.nameNumber),
-          badge: item.badge,
+          patch: item.patch,
         }),
         key: lineKey(item),
       };
@@ -161,13 +166,8 @@ export function CheckoutView({
   const totals = cartTotals(
     lines.map((line) => line.priced),
     shippingAmount,
+    giftBoxQty,
   );
-
-  // The deposit for THIS order, from the same function the server will use on
-  // its own total. Shown only inside the payment block, which renders only
-  // once the form validates — so the total it is derived from is final (a
-  // region has been chosen and shipping is priced).
-  const codDeposit = bitDepositFor(totals.total);
 
   const parsed = CustomerSchema.safeParse({
     ...values,
@@ -202,12 +202,13 @@ export function CheckoutView({
         handle: item.handle,
         size: item.size,
         version: item.version,
-        badge: item.badge,
+        patch: item.patch,
         qty: item.qty,
         ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
       })),
       customer: parsed.success ? parsed.data : null,
       locale,
+      giftBoxQty,
     });
   }
 
@@ -248,26 +249,25 @@ export function CheckoutView({
   }
 
   /**
-   * The cash-on-delivery path. Nothing is charged: the server writes an
-   * `awaiting_deposit` order, emails the owner, and hands back the reference.
-   * The buyer then sends the deposit by Bit, and the confirmation page tells
-   * them where to send it — reading the amount and the number from the order
-   * the server just wrote, not from anything decided here.
+   * The cash-on-delivery path (owner decision 2026-10-23: plain cash, no
+   * deposit). Nothing is charged at all — the server writes a `pending`
+   * order, emails the owner immediately, and hands back the reference. The
+   * buyer simply pays the courier in full when the order arrives.
    */
-  async function placeCodOrder() {
+  async function placeCashOrder() {
     setErrorCode(null);
     setReturnNotice(null);
     setPhase("placing");
 
-    type CodResponse = { reference?: unknown; code?: unknown } | null;
-    let payload: CodResponse = null;
+    type CashResponse = { reference?: unknown; code?: unknown } | null;
+    let payload: CashResponse = null;
     try {
-      const response = await fetch("/api/checkout/bit/start", {
+      const response = await fetch("/api/checkout/cash/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: orderRequestBody(),
       });
-      payload = (await response.json().catch(() => null)) as CodResponse;
+      payload = (await response.json().catch(() => null)) as CashResponse;
       if (response.ok && typeof payload?.reference === "string") {
         // Same order as the PayPal path: hold the "done" phase, empty the
         // cart, then hand over — so an emptied cart never flashes an "your
@@ -398,15 +398,27 @@ export function CheckoutView({
             onChange={setField}
             onBlur={() => setTouched((current) => ({ ...current, email: true }))}
           />
+          {/* Split into Street and House/apartment number (owner decision
+              2026-10-23), replacing the single free-text address field. */}
           <Field
-            name="address"
-            label={t("fieldAddress")}
-            value={values.address}
-            invalid={touched.address === true && fieldErrors.address === true}
-            error={t("errorAddress")}
-            autoComplete="street-address"
+            name="street"
+            label={t("fieldStreet")}
+            value={values.street}
+            invalid={touched.street === true && fieldErrors.street === true}
+            error={t("errorStreet")}
+            autoComplete="address-line1"
             onChange={setField}
-            onBlur={() => setTouched((current) => ({ ...current, address: true }))}
+            onBlur={() => setTouched((current) => ({ ...current, street: true }))}
+          />
+          <Field
+            name="houseNumber"
+            label={t("fieldHouseNumber")}
+            value={values.houseNumber}
+            invalid={touched.houseNumber === true && fieldErrors.houseNumber === true}
+            error={t("errorHouseNumber")}
+            autoComplete="address-line2"
+            onChange={setField}
+            onBlur={() => setTouched((current) => ({ ...current, houseNumber: true }))}
           />
           <Field
             name="city"
@@ -528,9 +540,10 @@ export function CheckoutView({
                     </bdi>
                   </span>
                 ) : null}
-                {item.badge ? (
+                {item.patch !== "none" ? (
                   <span className="block text-ink-soft">
-                    {tCart("propBadge")}: {tCart("propBadgeYes")}
+                    {tCart("propPatch")}:{" "}
+                    {item.patch === "ucl" ? tCart("propPatchUcl") : tCart("propPatchLeague")}
                   </span>
                 ) : null}
               </span>
@@ -540,6 +553,37 @@ export function CheckoutView({
             </li>
           ))}
         </ul>
+
+        {/* Gift box (owner decision 2026-10-23) — one per order, but
+            quantity-selectable, since a single box can hold more than one
+            shirt. Checkout-only: the cart page has no equivalent. */}
+        <div className="border-b border-rule py-5">
+          <label
+            htmlFor="checkout-gift-box"
+            className="mono-eyebrow mb-2.5 block text-ink-soft"
+          >
+            {t("giftBoxLegend")}
+          </label>
+          <p className="mb-2.5 text-xs text-ink-soft">
+            {t("giftBoxHint", { price: String(GIFT_BOX_PRICE) })}
+          </p>
+          <select
+            id="checkout-gift-box"
+            dir="ltr"
+            value={giftBoxQty}
+            onChange={(event) => setGiftBoxQty(Number(event.target.value))}
+            className="tabular w-32 border border-rule bg-tile px-3 py-2.5 text-sm text-ink"
+          >
+            <option value={0}>{t("giftBoxNone")}</option>
+            {Array.from({ length: GIFT_BOX_MAX_QTY }, (_, index) => index + 1).map(
+              (value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ),
+            )}
+          </select>
+        </div>
 
         <div className="flex flex-col gap-2.5 pt-5">
           <Row label={tCart("subtotal")}>
@@ -555,6 +599,11 @@ export function CheckoutView({
               <span className="text-ink-soft">{tCart("shippingTbd")}</span>
             )}
           </Row>
+          {giftBoxQty > 0 ? (
+            <Row label={t("giftBoxRow", { qty: String(giftBoxQty) })}>
+              <Price value={totals.giftBox} />
+            </Row>
+          ) : null}
           <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
             <span>{tCart("total")}</span>
             <Price value={totals.total} />
@@ -576,7 +625,7 @@ export function CheckoutView({
             </p>
           ) : null}
 
-          {!payplusEnabled && !bitCodEnabled && paypalClientId === null ? (
+          {!payplusEnabled && !cashEnabled && paypalClientId === null ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : !parsed.success ? (
             <p className="border border-rule px-4 py-3.5 text-sm text-ink-soft">
@@ -651,26 +700,22 @@ export function CheckoutView({
                 </div>
               ) : null}
 
-              {/* Cash on delivery — last, because it is the slowest to
-                  fulfil: the order does not move until a deposit the buyer
-                  sends by hand arrives. The amount and the terms are both
-                  above the button, not behind it. */}
-              {bitCodEnabled ? (
+              {/* Cash on delivery — last, and plain (owner decision
+                  2026-10-23): no deposit, nothing charged here at all. The
+                  buyer pays the courier in full when the order arrives. */}
+              {cashEnabled ? (
                 <div>
                   {payplusEnabled || paypalClientId !== null ? (
                     <p className="mb-4 border-t border-rule pt-4 text-xs text-ink-soft">
                       {t("payCodIntro")}
                     </p>
                   ) : null}
-                  <p className="mb-2 text-sm">
-                    {t("payCodDeposit", { amount: String(codDeposit) })}
-                  </p>
-                  <p className="mb-4 text-xs text-ink-soft">{t("payCodTerms")}</p>
+                  <p className="mb-4 text-xs text-ink-soft">{t("payCashNote")}</p>
                   <button
                     type="button"
                     className="btn w-full"
                     disabled={phase !== "form"}
-                    onClick={placeCodOrder}
+                    onClick={placeCashOrder}
                   >
                     {phase === "placing" ? t("payCodPlacing") : t("payCod")}
                   </button>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ADDONS, SIZES, VERSIONS, isRetroSeason, priceFor, sizeSurcharge } from "@/data/pricing";
-import type { Size, Version } from "@/data/types";
+import type { Patch, Size, Version } from "@/data/types";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
@@ -22,8 +22,22 @@ import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
  * product at one price — so the version fieldset is hidden and every
  * add-to-cart writes "fan" as the stored version. priceFor ignores `version`
  * for a retro season, so that stored value can never affect what is charged.
+ *
+ * The patch fieldset (owner decision 2026-10-23, replacing the old generic
+ * "badge" checkbox) only exists on a CLUB product — `leagueName` is null for
+ * a national team, and the whole fieldset is skipped, so a national shirt
+ * never offers (and can never be billed for) a patch at all.
  */
-export function ProductForm({ handle, season }: { handle: string; season: string }) {
+export function ProductForm({
+  handle,
+  season,
+  leagueName,
+}: {
+  handle: string;
+  season: string;
+  /** The shopper's-locale league name, or null for a national-team product. */
+  leagueName: string | null;
+}) {
   const t = useTranslations("product");
   const tCommon = useTranslations("common");
   const { add } = useCart();
@@ -33,7 +47,7 @@ export function ProductForm({ handle, season }: { handle: string; season: string
   const [version, setVersion] = useState<Version>("fan");
   const [personalise, setPersonalise] = useState(false);
   const [nameNumber, setNameNumber] = useState("");
-  const [badge, setBadge] = useState(false);
+  const [patch, setPatch] = useState<Patch>("none");
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -43,7 +57,7 @@ export function ProductForm({ handle, season }: { handle: string; season: string
   const unitPrice =
     priceFor(season, size, version) +
     (hasName ? ADDONS.nameNumber : 0) +
-    (badge ? ADDONS.badge : 0);
+    (patch !== "none" ? ADDONS.patch : 0);
 
   // The confirmation is a moment, not a state: it clears itself so the page
   // does not sit there claiming something that happened a minute ago.
@@ -58,7 +72,7 @@ export function ProductForm({ handle, season }: { handle: string; season: string
       handle,
       size,
       version,
-      badge,
+      patch,
       qty,
       ...(hasName ? { nameNumber: trimmedName } : {}),
     });
@@ -157,20 +171,51 @@ export function ProductForm({ handle, season }: { handle: string; season: string
         ) : null}
       </fieldset>
 
-      {/* Badge patch */}
-      <fieldset className="mb-6 border-0 p-0">
-        <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("badge")}</legend>
-        <label className="flex items-start gap-2.5 text-sm">
-          <input
-            type="checkbox"
-            checked={badge}
-            onChange={(event) => setBadge(event.target.checked)}
-            className="mt-1 accent-accent"
-          />
-          <span>{t("badgeToggle")}</span>
-        </label>
-        <p className="mt-2 text-xs text-ink-soft">{t("badgeHint")}</p>
-      </fieldset>
+      {/* Official patch (owner decision 2026-10-23) — a national-team product
+          has no leagueName and skips this fieldset entirely: there is no
+          league patch to offer and no Champions League patch either, since
+          the feature is scoped to club shirts. One patch per shirt, never
+          both: this is a radio group, not two checkboxes. */}
+      {leagueName ? (
+        <fieldset className="mb-6 border-0 p-0">
+          <legend className="mono-eyebrow mb-2.5 block text-ink-soft">
+            {t("patchLegend")}
+          </legend>
+          <div className="flex flex-col gap-2 text-sm">
+            <label className="flex items-start gap-2.5">
+              <input
+                type="radio"
+                name="patch"
+                checked={patch === "none"}
+                onChange={() => setPatch("none")}
+                className="mt-1 accent-accent"
+              />
+              <span>{t("patchNone")}</span>
+            </label>
+            <label className="flex items-start gap-2.5">
+              <input
+                type="radio"
+                name="patch"
+                checked={patch === "league"}
+                onChange={() => setPatch("league")}
+                className="mt-1 accent-accent"
+              />
+              <span>{t("patchLeague", { league: leagueName })}</span>
+            </label>
+            <label className="flex items-start gap-2.5">
+              <input
+                type="radio"
+                name="patch"
+                checked={patch === "ucl"}
+                onChange={() => setPatch("ucl")}
+                className="mt-1 accent-accent"
+              />
+              <span>{t("patchUcl")}</span>
+            </label>
+          </div>
+          <p className="mt-2 text-xs text-ink-soft">{t("patchHint")}</p>
+        </fieldset>
+      ) : null}
 
       {/* Quantity */}
       <div className="mb-7">

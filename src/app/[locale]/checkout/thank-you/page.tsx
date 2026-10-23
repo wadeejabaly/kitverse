@@ -9,9 +9,7 @@ import {
   ProseParagraph,
   Wrap,
 } from "@/components/shared/PageLede";
-import { getBitPhoneNumber } from "@/lib/bit";
 import { findOrderStateByReference } from "@/lib/order-service";
-import { codConfirmationFor } from "@/lib/orders";
 import { alternatesFor } from "@/lib/site";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
@@ -41,24 +39,21 @@ export async function generateMetadata({
  * So the page asks the database what the order's status actually is and says
  * only that:
  *
- *   paid                 → "we have your order", the confirmed copy;
- *   awaiting_deposit on
- *   a bit_cod order      → the cash-on-delivery instructions;
+ *   a `cash` order        → confirmed immediately — there is no payment to
+ *                           wait for, the buyer pays the courier on arrival
+ *                           (owner decision 2026-10-23: plain cash, no
+ *                           deposit, so there is nothing more to tell them
+ *                           than that the order is placed);
+ *   paid (any card order) → "we have your order", the confirmed copy;
  *   anything else, or an
- *   order it cannot find → "we are confirming your payment", with a refresh.
- *
- * The COD state is built ENTIRELY from server-side facts: the status, the
- * rail and the deposit come out of the order row, and the Bit number comes
- * from server-only env. Nothing about it is carried over from the checkout
- * screen's state, so a buyer who reloads, or opens the link on their phone to
- * pay, sees the same instructions and the same amount — and a browser can
- * never talk this page into naming a deposit the server did not record.
+ *   order it cannot find  → "we are confirming your payment", with a refresh.
  *
  * The query string carries the short reference and nothing else, and the
- * lookup returns the status, the rail and (for COD only) the deposit tier, so
- * a shared or guessed URL discloses no name, no address, no email and not the
- * order total. Reaching the page with no reference at all (a bookmark, a stray
- * link) keeps the plain copy it always had.
+ * lookup returns only the status and the rail, so a shared or guessed URL
+ * discloses no name, no address, no email and not the order total — not even
+ * for a cash order, which keeps the same privacy posture a card order has
+ * always had here. Reaching the page with no reference at all (a bookmark, a
+ * stray link) keeps the plain copy it always had.
  */
 export default async function ThankYouPage({
   params,
@@ -82,37 +77,24 @@ export default async function ThankYouPage({
   const db = reference === "" ? null : getSupabaseAdmin();
   const state = db ? await findOrderStateByReference(db, reference) : null;
 
-  // The COD gate is a pure function in src/lib/orders.ts so it can be
-  // unit-tested: it shows the deposit instructions only when the row is a
-  // bit_cod order still awaiting its deposit, with a deposit recorded and a
-  // number to send it to. Anything less falls through to the holding copy.
-  const cod = codConfirmationFor(state, getBitPhoneNumber());
-
-  const confirmed = reference === "" || state?.status === "paid";
+  // A cash order (owner decision 2026-10-23) is confirmed the moment it is
+  // placed — there is no payment to wait for, so its `pending` status reads
+  // as "confirmed" here, unlike a card order's `pending`.
+  const isCash = state?.provider === "cash";
+  const confirmed = reference === "" || state?.status === "paid" || isCash;
 
   return (
     <Wrap>
       <PageLede
-        eyebrow={cod ? t("codEyebrow") : t("eyebrow")}
-        title={cod ? t("codTitle") : confirmed ? t("title") : t("confirmingTitle")}
-        intro={cod ? t("codIntro") : confirmed ? t("intro") : t("confirmingIntro")}
+        eyebrow={isCash ? t("cashEyebrow") : t("eyebrow")}
+        title={isCash ? t("cashTitle") : confirmed ? t("title") : t("confirmingTitle")}
+        intro={isCash ? t("cashIntro") : confirmed ? t("intro") : t("confirmingIntro")}
       />
       <Prose>
         <OrderReference reference={reference} />
-        {cod ? (
+        {isCash ? (
           <>
-            {/* The three facts the buyer needs to pay, laid out rather than
-                buried in a sentence: where to send it, how much, and what to
-                write in the note so the owner can match it to this order. */}
-            <dl className="mb-6 grid gap-3 border border-rule bg-chip px-4 py-4 text-sm">
-              <CodFact label={t("codPhoneLabel")} value={cod.phone} />
-              <CodFact label={t("codAmountLabel")} value={`₪${cod.deposit}`} />
-              <CodFact label={t("codNoteLabel")} value={reference} />
-            </dl>
-            <ProseParagraph>
-              {t("codBody", { amount: String(cod.deposit) })}
-            </ProseParagraph>
-            <ProseParagraph>{t("codTerms")}</ProseParagraph>
+            <ProseParagraph>{t("cashNote")}</ProseParagraph>
             <ProseParagraph>{t("delivery")}</ProseParagraph>
           </>
         ) : confirmed ? (
@@ -129,23 +111,5 @@ export default async function ThankYouPage({
       </Prose>
       {reference === "" ? null : <ClearCartOnOrder />}
     </Wrap>
-  );
-}
-
-/**
- * One label/value pair of the Bit payment card. Every value here is Latin —
- * a phone number, an amount, a reference code — so each is isolated and
- * tabular inside the Arabic page.
- */
-function CodFact({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-wrap items-baseline gap-2">
-      <dt className="text-ink-soft">{label}</dt>
-      <dd className="m-0">
-        <bdi dir="ltr" className="latin tabular text-base">
-          {value}
-        </bdi>
-      </dd>
-    </div>
   );
 }

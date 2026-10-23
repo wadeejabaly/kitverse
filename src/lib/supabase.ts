@@ -56,11 +56,17 @@ export function getSupabaseAdmin(): SupabaseClient | null {
 /** The columns this application reads back from `orders`. */
 export interface OrderRow {
   id: string;
-  /** 'awaiting_deposit' is cash-on-delivery only — added in migration 0004. */
+  /**
+   * 'awaiting_deposit' (migration 0004) is retired — the application no
+   * longer writes it (owner decision 2026-10-23 replaced the Bit-deposit rail
+   * with plain cash on delivery, which uses 'pending' like a card order) —
+   * but the column keeps allowing it for any pre-existing row.
+   */
   status: "pending" | "awaiting_deposit" | "paid" | "failed" | "cancelled";
   /**
    * 'paypal' | 'payplus' — added in migration 0002, defaulted to 'paypal' —
-   * plus 'bit_cod' from migration 0004.
+   * plus 'bit_cod' from migration 0004 (retired, kept for old rows) and
+   * 'cash' from migration 0005 (owner decision 2026-10-23).
    */
   payment_provider: string | null;
   paypal_order_id: string | null;
@@ -70,6 +76,14 @@ export interface OrderRow {
   customer_name: string | null;
   email: string | null;
   phone: string | null;
+  /**
+   * Added in migration 0005, replacing the single free-text `address` field
+   * (owner decision 2026-10-23). `address` itself stays in the schema and is
+   * still written, concatenated from these two, for anything still reading
+   * the old column — but street/house_number are what the application reads.
+   */
+  street: string | null;
+  house_number: string | null;
   address: string | null;
   city: string | null;
   /** Added in migration 0003. NULL on any order written before it. */
@@ -79,12 +93,10 @@ export interface OrderRow {
   locale: string | null;
   subtotal_ils: number | null;
   shipping_ils: number | null;
+  /** Added in migration 0005: the checkout-only gift-box add-on. */
+  gift_box_qty: number | null;
+  gift_box_ils: number | null;
   total_ils: number | null;
-  /**
-   * Added in migration 0004. The Bit deposit on a cash-on-delivery order,
-   * computed server-side from total_ils. NULL on every card order.
-   */
-  deposit_ils: number | null;
 }
 
 /** The columns this application reads back from `order_items`. */
@@ -94,7 +106,12 @@ export interface OrderItemRow {
   size: string | null;
   version: string | null;
   name_number: string | null;
-  badge: boolean | null;
+  /**
+   * Added in migration 0005, replacing the old `badge` boolean (owner
+   * decision 2026-10-23): 'league' | 'ucl' | null. The `badge` column stays
+   * in the schema for old rows but is no longer written.
+   */
+  patch: string | null;
   unit_price_ils: number | null;
   qty: number | null;
 }

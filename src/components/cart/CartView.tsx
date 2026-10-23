@@ -51,7 +51,7 @@ export function CartView({
       if (!product) return null;
       const priced = priceLine(product.season, item.size, item.version, item.qty, {
         nameNumber: Boolean(item.nameNumber),
-        badge: item.badge,
+        patch: item.patch,
       });
       return { item, product, priced, key: lineKey(item) };
     })
@@ -122,8 +122,10 @@ export function CartView({
                     </bdi>
                   </Prop>
                 ) : null}
-                {item.badge ? (
-                  <Prop label={t("propBadge")}>{t("propBadgeYes")}</Prop>
+                {item.patch !== "none" ? (
+                  <Prop label={t("propPatch")}>
+                    {item.patch === "ucl" ? t("propPatchUcl") : t("propPatchLeague")}
+                  </Prop>
                 ) : null}
               </dl>
 

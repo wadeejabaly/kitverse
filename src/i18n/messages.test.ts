@@ -102,7 +102,11 @@ describe("pluralised count messages", () => {
      */
     const LRI = "⁦";
     const PDI = "⁩";
-    const AMOUNT = /\+?₪\d+/g;
+    // Owner decision 2026-10-23 introduced the site's first fractional ILS
+    // prices (₪11.99 patch, ₪34.99 gift box), so the amount a regex must
+    // swallow whole — digits, then an optional ".NN" — or it stops matching
+    // partway through and flags the isolate as missing after the decimal.
+    const AMOUNT = /\+?₪\d+(?:\.\d+)?/g;
 
     const strings = (value: unknown, prefix = ""): [string, string][] =>
       typeof value === "object" && value !== null

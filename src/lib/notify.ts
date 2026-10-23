@@ -5,9 +5,10 @@ import type { PaymentProvider } from "@/lib/orders";
  * Owner notification on an order — SERVER ONLY.
  *
  * Two moments send one: a card order becoming paid, and a cash-on-delivery
- * order being placed. COD notifies on creation because it has to — the owner
- * matches an incoming Bit transfer against an order they can only know about
- * from this email.
+ * order being placed. Cash notifies on creation, like the card rails do on
+ * payment, because that is the moment something worth packing has happened —
+ * there is no later "paid" moment to wait for; the money changes hands at
+ * the door.
  *
  * THE ONE RULE: this must never affect the money path. A capture that
  * succeeded has taken the customer's money and the order is paid whether or
@@ -32,7 +33,8 @@ export interface NotificationItem {
   size: string;
   version: string;
   nameNumber: string | null;
-  badge: boolean;
+  /** 'none' | 'league' | 'ucl' — the official-patch add-on (replaces `badge`). */
+  patch: "none" | "league" | "ucl";
   unitPrice: number;
   qty: number;
 }
@@ -45,7 +47,8 @@ export interface OrderNotification {
     name: string;
     email: string;
     phone: string;
-    address: string;
+    street: string;
+    houseNumber: string;
     city: string;
     /** 'north' | 'center' | 'negev' | 'jerusalem', or "" for a pre-migration order. */
     region: string;
@@ -55,13 +58,10 @@ export interface OrderNotification {
   items: NotificationItem[];
   subtotal: number;
   shipping: number;
+  /** The checkout-only gift-box add-on (owner decision 2026-10-23). */
+  giftBoxQty: number;
+  giftBox: number;
   total: number;
-  /**
-   * Cash on delivery only: the Bit deposit the buyer was told to send. Null on
-   * every card order. This is the figure the owner matches by hand against
-   * their Bit account before flipping the row to `paid`.
-   */
-  deposit?: number | null;
   /** Which rail this order is on — the store runs three. */
   provider: PaymentProvider;
   /** The processor's id for the attempt: a PayPal order, a PayPlus page. "" for COD. */
@@ -81,27 +81,22 @@ function config(): { apiKey: string; to: string; from: string } | null {
 /**
  * The whole order as plain text. Deliberately complete: the owner packs and
  * ships from this message, so every line's size, version, printed name and
- * badge is spelled out, along with the address to send it to and a phone
+ * patch is spelled out, along with the address to send it to and a phone
  * number for the courier.
  */
 export function renderOrderSummary(order: OrderNotification): string {
-  const cod = order.provider === "bit_cod";
-  const deposit = order.deposit ?? 0;
+  const cash = order.provider === "cash";
 
   const lines: string[] = [];
   lines.push(
-    cod
-      ? `New CASH-ON-DELIVERY order — ${order.reference} — AWAITING BIT DEPOSIT`
+    cash
+      ? `New CASH-ON-DELIVERY order — ${order.reference} — PAID TO COURIER ON ARRIVAL`
       : `New paid order — ${order.reference}`,
   );
-  if (cod) {
+  if (cash) {
     lines.push("");
-    lines.push(`  Bit deposit due   ILS ${deposit}`);
-    lines.push(`  Cash on delivery  ILS ${order.total - deposit}`);
-    lines.push(
-      "  NOT SHIPPED YET. When the deposit lands in your Bit account, set this",
-    );
-    lines.push("  order's status to 'paid' in the Supabase dashboard.");
+    lines.push(`  Collect in cash on delivery   ILS ${order.total}`);
+    lines.push("  No deposit — the full amount is paid to the courier.");
   }
   lines.push("");
   lines.push("ITEMS");
@@ -109,21 +104,23 @@ export function renderOrderSummary(order: OrderNotification): string {
     lines.push(`  ${item.qty} x ${item.title}`);
     lines.push(`      size ${item.size} / ${item.version} version`);
     if (item.nameNumber) lines.push(`      print: ${item.nameNumber}`);
-    if (item.badge) lines.push("      badge patch: yes");
+    if (item.patch === "league") lines.push("      patch: league (official)");
+    if (item.patch === "ucl") lines.push("      patch: Champions League");
     lines.push(`      unit ILS ${item.unitPrice} — line ILS ${item.unitPrice * item.qty}`);
   }
-  lines.push("");
-  lines.push(`Subtotal  ILS ${order.subtotal}`);
-  lines.push(`Shipping  ILS ${order.shipping}`);
-  lines.push(`TOTAL     ILS ${order.total}`);
-  if (cod) {
-    lines.push(`  of which deposit by Bit   ILS ${deposit}`);
-    lines.push(`  collect in cash on delivery ILS ${order.total - deposit}`);
+  if (order.giftBoxQty > 0) {
+    lines.push(`  ${order.giftBoxQty} x Gift box`);
+    lines.push(`      line ILS ${order.giftBox}`);
   }
+  lines.push("");
+  lines.push(`Subtotal   ILS ${order.subtotal}`);
+  lines.push(`Shipping   ILS ${order.shipping}`);
+  if (order.giftBoxQty > 0) lines.push(`Gift box   ILS ${order.giftBox}`);
+  lines.push(`TOTAL      ILS ${order.total}`);
   lines.push("");
   lines.push("SHIP TO");
   lines.push(`  ${order.customer.name}`);
-  lines.push(`  ${order.customer.address}`);
+  lines.push(`  ${order.customer.street} ${order.customer.houseNumber}`.trimEnd());
   lines.push(`  ${order.customer.city}, ${order.customer.country}`);
   if (order.customer.region) lines.push(`  region: ${order.customer.region}`);
   lines.push(`  phone: ${order.customer.phone}`);
@@ -133,7 +130,7 @@ export function renderOrderSummary(order: OrderNotification): string {
   lines.push("REFERENCES");
   lines.push(`  order id       ${order.orderId}`);
   lines.push(`  processor      ${order.provider}`);
-  // COD has no processor references — printing two empty labels would only
+  // Cash has no processor references — printing two empty labels would only
   // look like something failed.
   if (order.providerOrderRef) lines.push(`  payment page   ${order.providerOrderRef}`);
   if (order.providerPaymentRef) {
@@ -158,8 +155,8 @@ export async function notifyOwnerOfOrder(order: OrderNotification): Promise<void
   }
 
   const subject =
-    order.provider === "bit_cod"
-      ? `KitVerse COD order ${order.reference} — Bit deposit ILS ${order.deposit ?? 0} of ILS ${order.total}`
+    order.provider === "cash"
+      ? `KitVerse cash-on-delivery order ${order.reference} — ILS ${order.total}`
       : `KitVerse order ${order.reference} — ILS ${order.total}`;
 
   try {

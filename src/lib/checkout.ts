@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { SIZES, VERSIONS, isDeliveryRegion } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS, isDeliveryRegion } from "@/data/pricing";
 import type { DeliveryRegion } from "@/data/pricing";
-import type { Size, Version } from "@/data/types";
+import type { Patch, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX } from "@/lib/product";
 
 /**
@@ -30,6 +30,7 @@ const VersionSchema = z.custom<Version>(
 // The closed set of delivery regions, checked against pricing.ts — the server
 // must never price shipping from a region it did not itself define.
 const DeliveryRegionSchema = z.custom<DeliveryRegion>(isDeliveryRegion);
+const PatchSchema = z.enum(["none", "league", "ucl"]) satisfies z.ZodType<Patch>;
 
 /** One cart line as it crosses the wire. Matches CartItem minus any money. */
 export const CheckoutItemSchema = z.object({
@@ -37,7 +38,11 @@ export const CheckoutItemSchema = z.object({
   size: SizeSchema,
   version: VersionSchema,
   nameNumber: z.string().max(NAME_NUMBER_MAX * 2).optional(),
-  badge: z.boolean(),
+  // Replaces the old `badge: boolean` (owner decision 2026-10-23). Whether
+  // "league"/"ucl" is actually billable for this handle is re-checked
+  // server-side against the catalogue in repriceCart — a national-team
+  // product (no league) is never charged for a patch, whatever is sent here.
+  patch: PatchSchema,
   // Clamped rather than rejected server-side; the bound here is a sanity
   // ceiling so an absurd number never reaches the clamp.
   qty: z.number().int().min(1).max(1000),
@@ -53,6 +58,10 @@ export type CheckoutItemInput = z.infer<typeof CheckoutItemSchema>;
  * `region` IS a form field, and a required one: shipping is priced from it
  * (pricing.ts → shippingFor), so it has to be a choice the shopper made and a
  * value from a closed set the server owns.
+ *
+ * `street` + `houseNumber` replace the old single `address` field (owner
+ * decision 2026-10-23) — two fields instead of one free-text one, same as the
+ * database (migration 0005) and the order-notification email.
  */
 export const CustomerSchema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -67,7 +76,8 @@ export const CustomerSchema = z.object({
     .regex(/^[+()\-\s0-9]+$/)
     .refine((value) => (value.match(/\d/g) ?? []).length >= 7),
   email: z.email().max(160),
-  address: z.string().trim().min(5).max(200),
+  street: z.string().trim().min(2).max(140),
+  houseNumber: z.string().trim().min(1).max(20),
   city: z.string().trim().min(2).max(80),
   // Explicit, shopper-chosen — shipping is priced from this, never inferred
   // from the free-text city above (too unreliable to bill from).
@@ -81,6 +91,10 @@ export const CreateOrderRequestSchema = z.object({
   items: z.array(CheckoutItemSchema).min(1).max(MAX_CART_LINES),
   customer: CustomerSchema,
   locale: z.enum(["ar", "en"]),
+  // The checkout-only gift-box add-on (owner decision 2026-10-23): how many
+  // boxes, not a per-shirt flag. Optional on the wire so an older client
+  // omitting it still prices as "no gift box" rather than failing validation.
+  giftBoxQty: z.number().int().min(0).max(GIFT_BOX_MAX_QTY).optional().default(0),
 });
 
 export type CreateOrderRequest = z.infer<typeof CreateOrderRequestSchema>;

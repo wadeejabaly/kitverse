@@ -11,6 +11,16 @@ export type Kit = "Home" | "Away" | "Third";
 export type Size = "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "4XL";
 export type Version = "fan" | "player";
 
+/**
+ * The official-patch add-on (owner decision 2026-10-23, replacing the single
+ * generic "badge" boolean). A shopper picks AT MOST ONE patch per shirt:
+ * their club's own domestic league patch, or a Champions League patch — never
+ * both (one patch per shirt, confirmed). Only ever offered on a CLUB product
+ * (`Product.league !== null`); national-team shirts have no patch option at
+ * all, so their line is always "none".
+ */
+export type Patch = "none" | "league" | "ucl";
+
 export interface Product {
   handle: string; // normalized, ASCII, unique
   title: string; // EN
@@ -45,6 +55,6 @@ export interface CartItem {
   size: Size;
   version: Version;
   nameNumber?: string; // <=18 chars, trimmed, uppercase-latin+digits+space allowed
-  badge: boolean;
+  patch: Patch;
   qty: number; // 1..10
 }

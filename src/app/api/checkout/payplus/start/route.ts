@@ -5,6 +5,7 @@ import {
   orderReference,
   type CheckoutErrorCode,
 } from "@/lib/checkout";
+import { GIFT_BOX_PRICE } from "@/data/pricing";
 import { repriceCart } from "@/lib/orders";
 import { generatePaymentLink, isPayPlusConfigured } from "@/lib/payplus";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
   const json = await request.json().catch(() => null);
   const parsed = CreateOrderRequestSchema.safeParse(json);
   if (!parsed.success) return errorResponse("invalid_request", 400);
-  const { items, customer, locale } = parsed.data;
+  const { items, customer, locale, giftBoxQty } = parsed.data;
 
   const db = getSupabaseAdmin();
   if (!db || !isPayPlusConfigured()) {
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
 
   // The server's own arithmetic. Whatever the browser displayed is irrelevant
   // from here on.
-  const cart = repriceCart(items, customer.region);
+  const cart = repriceCart(items, customer.region, giftBoxQty);
   if (cart.dropped.length > 0) {
     console.warn(`[checkout] dropped unavailable handles: ${cart.dropped.join(", ")}`);
   }
@@ -80,7 +81,10 @@ export async function POST(request: NextRequest) {
       customer_name: customer.name,
       email: customer.email,
       phone: customer.phone,
-      address: customer.address,
+      street: customer.street,
+      house_number: customer.houseNumber,
+      // Legacy combined column, kept in step for anything still reading it.
+      address: `${customer.street} ${customer.houseNumber}`.trim(),
       city: customer.city,
       delivery_region: customer.region,
       country: FIXED_COUNTRY,
@@ -88,6 +92,8 @@ export async function POST(request: NextRequest) {
       locale,
       subtotal_ils: cart.subtotal,
       shipping_ils: cart.shipping,
+      gift_box_qty: cart.giftBoxQty,
+      gift_box_ils: cart.giftBox,
       total_ils: cart.total,
     })
     .select("id")
@@ -107,7 +113,7 @@ export async function POST(request: NextRequest) {
       size: line.size,
       version: line.version,
       name_number: line.nameNumber,
-      badge: line.badge,
+      patch: line.patch === "none" ? null : line.patch,
       unit_price_ils: line.unitPrice,
       qty: line.qty,
     })),
@@ -137,6 +143,11 @@ export async function POST(request: NextRequest) {
         price: line.unitPrice,
       })),
       { name: "Shipping", quantity: 1, price: cart.shipping },
+      // Only when chosen — an empty "Gift box x0" line would be clutter on
+      // the hosted page for the common case of no gift box at all.
+      ...(cart.giftBoxQty > 0
+        ? [{ name: "Gift box", quantity: cart.giftBoxQty, price: GIFT_BOX_PRICE }]
+        : []),
     ],
     // Locale-aware: `ar` lives at `/`, `en` at `/en`. Built from getSiteUrl()
     // so the domain still lives in exactly one place.

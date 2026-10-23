@@ -1,8 +1,8 @@
 # KitVerse — working agreement
 
 An Arabic-first online store for soccer jerseys. Arabic (RTL) is the default
-language at `/`; English is secondary at `/en`. Checkout is PayPal plus cash
-on delivery against a Bit deposit (PayPlus dormant — see decision 1b). The
+language at `/`; English is secondary at `/en`. Checkout is PayPal plus plain
+cash on delivery, no deposit (PayPlus dormant — see decision 1b). The
 catalog is a small dropship set (~329 products) built into the site as static
 JSON — no inventory tracking, no customer accounts, no custom admin (orders are
 read in the Supabase dashboard). The aesthetic is quiet retail: fast, plain,
@@ -70,33 +70,66 @@ photo-forward.
    longer touches money. Retro is not a version the shopper picks: the PDP
    hides the Fan/Player fieldset on a retro product and stores `"fan"`, which
    `priceFor` ignores there anyway. Sizes 3XL +9, 4XL +12. Add-ons dropped
-   with the same decision: name & number **20** (was 39), badge patch **12**
-   (was 19). **There is no compare-at / sale pricing
+   with the same decision: name & number **20** (was 39). The flat badge-patch
+   add-on from this decision was itself superseded on 2026-10-23 — see 1c.
+   **There is no compare-at / sale pricing
    anywhere** — `compareAtFor()` and `<ComparePrice>` are gone, not disabled.
    `FUTURE_PRICES` in `pricing.ts` parks the owner's confirmed figures for
    product types that have no catalogue data yet (kids kit 200, adult kit 300,
    NBA 160, long-sleeve 105/120/145); nothing reads them.
-1b. **Cash on delivery via Bit deposit (2026-09-02).** A third checkout method
-   beside PayPal. The buyer reserves the order with a Bit deposit priced off
-   the order total — **under 150 → 35, under 220 → 40, else 50**
-   (`bitDepositFor()` in `pricing.ts`, computed server-side from the repriced
-   total). The deposit is deducted from the cash the courier collects, and is
-   **not refunded if the delivery is refused** — the buyer is told both, at
-   checkout, before committing. **Bit is a manual rail: there is no API.** The
-   order is written `status='awaiting_deposit'`, `payment_provider='bit_cod'`,
-   `deposit_ils` recorded (migration `0004`), the owner is emailed
+1b. **Cash on delivery, plain — updated 2026-10-23 (re-litigated; see below).**
+   A second checkout method beside PayPal, available whenever Supabase is
+   configured. The buyer pays the courier the full order total on arrival —
+   **no deposit of any kind.** This replaces the 2026-09-02 Bit-deposit
+   mechanic below, which the owner explicitly asked to re-open and remove.
+   The order is written `payment_provider='cash'`, `status='pending'` — the
+   same initial status a fresh card order gets — and the owner is emailed
    **immediately on creation** (unlike the card rails, which email on
-   payment — the owner has to recognise an incoming transfer), the buyer sends
-   the deposit by Bit to `BIT_PHONE_NUMBER`, and **the owner flips the row to
-   `paid` by hand in the Supabase dashboard.** Nothing in the application can:
-   `bit_cod` is excluded from `SettleableProvider`, so `decidePaidTransition`
-   rejects any webhook aimed at a COD order (`manual-provider`) and no card
-   event can settle one. An `awaiting_deposit` order whose deposit never
-   arrives is simply never shipped — there is no expiry job and none is wanted.
-   `BIT_PHONE_NUMBER` is server-only and **never** `NEXT_PUBLIC_`: the method
-   is hidden when it is unset, and the number reaches a browser in exactly one
-   place — rendered server-side into the confirmation page of an order that has
-   just been placed.
+   payment — the owner has to recognise that the money changes hands at the
+   door, not in this system). This is safe without a distinct
+   `awaiting_deposit` status because `decidePaidTransition()`
+   (`src/lib/orders.ts`) rejects any settlement attempt on a non-settleable
+   provider **before it ever looks at status** — `cash` is excluded from
+   `SettleableProvider`, so no webhook can touch a cash order regardless of
+   what status string it holds. The owner still updates a cash order to
+   `paid` by hand in the Supabase dashboard once it's delivered and collected;
+   nothing in the application does this automatically. There is no
+   `BIT_PHONE_NUMBER` env var, no Bit integration, and no deposit math —
+   `bitDepositFor()` and the `BIT_DEPOSIT_*` tables are deleted, not disabled.
+   The original 2026-09-02 Bit-deposit decision (kept here for history; no
+   longer implemented): a Bit deposit priced off the order total (under 150 →
+   35, under 220 → 40, else 50), deducted from the cash collected and **not**
+   refunded on a refused delivery, with the order sitting at
+   `status='awaiting_deposit'`, `payment_provider='bit_cod'` until the owner
+   flipped it by hand. Old rows written under that mechanic keep reading
+   correctly — migration `0005` is additive — the application simply never
+   writes `awaiting_deposit` / `bit_cod` / `deposit_ils` again.
+1c. **Official patch add-on, replacing the flat badge patch — owner decision
+   2026-10-23.** A club product (one with a league) offers a radio choice of
+   **at most one** patch per shirt: no patch, that club's own league's
+   official patch, or the Champions League patch — never both, and the
+   Champions League option is offered on every club product regardless of
+   whether that club plays in the real UCL (any league, any season). Both
+   choices cost the same flat **₪11.99** (`ADDONS.patch` in `pricing.ts`,
+   the site's first fractional ILS price — see `round2()`). A national-team
+   product has no league, so it never shows the patch fieldset and the server
+   force-zeroes `patch` to `"none"` for one regardless of what a client
+   sends, mirroring the existing `sanitizeNameNumber` defense-in-depth
+   pattern. `CartItem.patch: "none" | "league" | "ucl"` replaces the old
+   `badge: boolean`; `order_items.patch` (text) replaces `order_items.badge`
+   in migration `0005`.
+1d. **Gift box add-on — owner decision 2026-10-23.** Checkout-only (not on
+   the cart page), **₪34.99** per box (`GIFT_BOX_PRICE`), quantity-selectable
+   up to `GIFT_BOX_MAX_QTY` — a box can hold more than one shirt, so this is
+   not one-per-item. Stored as `orders.gift_box_qty` / `orders.gift_box_ils`
+   (migration `0005`), applied once per order on top of subtotal and
+   shipping, never on an empty cart.
+1e. **Address split — owner decision 2026-10-23.** The single free-text
+   `address` field is replaced at checkout by separate **Street** and
+   **House/apartment number** fields (`street` / `houseNumber` in the
+   checkout schema, `orders.street` / `orders.house_number` in migration
+   `0005`). The legacy `orders.address` column is still written, concatenated
+   from the two new fields, for anything that still reads it.
 2. **Locales.** `ar` default (RTL) at `/`, `en` at `/en`.
    `localePrefix: "as-needed"`, `localeDetection: false`.
 3. **Shipping at launch — updated 2026-09-02.** Israel only, priced **by
@@ -255,10 +288,9 @@ Two rules it must keep:
 - Absolute URLs are assembled in exactly one place: `getSiteUrl()` in
   `src/lib/site.ts`.
 - Secrets are server-only. The one PayPal value the browser may see is
-  `NEXT_PUBLIC_PAYPAL_CLIENT_ID`. `BIT_PHONE_NUMBER` is not a secret but is
-  still server-only — it is a personal phone number, so it is read through
-  `src/lib/bit.ts` (`server-only`) and rendered into exactly one page: the
-  confirmation of an order that has just been placed.
+  `NEXT_PUBLIC_PAYPAL_CLIENT_ID`. Cash on delivery (decision 1b) has no
+  personal-data secret of its own any more — `src/lib/bit.ts` and
+  `BIT_PHONE_NUMBER` are deleted, not disabled.
 
 ## Current status
 
@@ -267,50 +299,58 @@ Two rules it must keep:
 Shipped: foundation (locale routing, tokens, legal layer, consent, preflight);
 catalog data layer (`npm run import-catalog` from `vendor/`, 262 products, 207
 visible) with the dev-only `/review` tool; the full storefront (home, shop +
-collections, PDP with name&number/badge, search, cart, size guide, shipping,
-about) in both locales; brand integration (crest badge, navy accent, gold
-micro-accents, icons/OG); the design-elevation pass (frosted header, magazine
-index, motion system in `src/components/motion/`); checkout with Supabase
-orders + PayPal (Orders v2, verified webhook), PayPlus (hosted page,
-HMAC+API-verified webhook, provider-scoped orders) and cash on delivery by Bit
-deposit (`/api/checkout/bit/start`, migration `0004`, settled by hand).
+collections, PDP with name&number/official patch, search, cart, size guide,
+shipping, about) in both locales; brand integration (crest badge — sized 2x
+as of 2026-10-23 — navy accent, gold micro-accents, icons/OG); the
+design-elevation pass (frosted header, magazine index, motion system in
+`src/components/motion/`); checkout with Supabase orders + PayPal (Orders v2,
+verified webhook), PayPlus (hosted page, HMAC+API-verified webhook,
+provider-scoped orders) and plain cash on delivery, no deposit
+(`/api/checkout/cash/start`, migration `0005`, settled by hand once
+delivered). The 2026-10-23 owner decisions (1b–1e above) — plain cash on
+delivery replacing the Bit-deposit rail, the official-patch radio choice at
+₪11.99, the ₪34.99 quantity-selectable gift box, and the street/house-number
+address split — are implemented end to end: PDP, cart, checkout, repriceCart,
+the cash/create-order/payplus payment-start routes, and the owner
+notification email.
 
 The home hero is **`<HeroD/>` — Floodlight** (`src/components/hero/HeroD.tsx`
 + `FloodStage.tsx`): a stadium-at-night stage scoped to the section, with
 three shirts crossfading behind the headline. `/hero-preview` carries all four
 variants with D tagged live. The 2026-09-02 owner decisions — the flat
-Fan 95 / Player 110 / Retro 135 ladder with compare-at removed, add-ons at
-20 / 12, regional shipping (50/60/70/100) with a required region select at
-checkout, and cash on delivery with the 35/40/50 Bit deposit — are implemented
-end to end: PDP, cards, cart, checkout, `repriceCart`, and all three
-payment-start routes. Project path is `Client Sites/KitVerseWebsite`; the
+Fan 95 / Player 110 / Retro 135 ladder with compare-at removed, name & number
+at 20, and regional shipping (50/60/70/100) with a required region select at
+checkout — are implemented end to end, as are the 2026-10-23 decisions above.
+Project path is `Client Sites/KitVerseWebsite`; the
 `vendor/` source data moved with it and the import script resolves relative to
 the repo root, so it runs unchanged from the new location. Repo: private
 `wadeejabaly/kitverse` on GitHub;
 pushes require `gh auth switch --user wadeejabaly` (terminal normally stays
 on OmarHawari2).
 
-**Payments posture (owner decision 2026-09-02): PayPal + Bit cash-on-delivery
+**Payments posture (updated 2026-10-23): PayPal + plain cash-on-delivery
 are the live paths; PayPlus stays dormant.** The PayPlus integration stays in
 the tree but no `PAYPLUS_*` env is set anywhere, so the card option never
 renders. Do not set those vars or revive the PayPlus signup without an owner
-go; when it comes, it's env vars + migration `0002`, not a build task. COD is
-live in the code and gated on one input the owner still owes us: setting
-`BIT_PHONE_NUMBER` turns the method on, leaving it unset keeps it invisible.
+go; when it comes, it's env vars + migration `0002`, not a build task. Cash
+on delivery is live in the code and gated only on Supabase being configured —
+no separate client input is owed (the old Bit-deposit mechanic's
+`BIT_PHONE_NUMBER` requirement no longer exists).
 
 Open launch gates: 20 products pending image review in `/review` (35 rejected
-stay hidden); Supabase project + migrations `0001`/`0002`/**`0003`**/**`0004`**
-— `0003` (`delivery_region`) and `0004` (`bit_cod`: the `payment_provider` and
-`status` checks plus `deposit_ils`) must both be applied **before** this code
-deploys, because the payment-start routes write those columns and values and a
-database still on `0002` fails every checkout with an unknown-column error, one
-still on `0003` fails every COD checkout with a check-constraint violation;
-**`BIT_PHONE_NUMBER` (the owner's Bit-registered phone) is a client input we do
-not have yet** — cash on delivery does not render until it is set, in Preview
-and Production both; PayPal sandbox e2e then owner-run `/code-review ultra` on
-the money path before any live charge; **the owner must know that a COD order
-sits at `awaiting_deposit` until they set it to `paid` by hand in the Supabase
-dashboard** — nothing else ever will; registered business name/address/contact
+stay hidden); Supabase project + migrations
+`0001`/`0002`/`0003`/`0004`/**`0005`** — `0003` (`delivery_region`), `0004`
+(superseded columns, kept for old rows) and **`0005`** (plain cash: the
+`payment_provider` check gains `'cash'`; `street`, `house_number`,
+`gift_box_qty`, `gift_box_ils` on `orders`; `patch` on `order_items`) must all
+be applied **before** this code deploys, because the payment-start routes
+write those columns and values and a database still on an earlier migration
+fails every checkout with an unknown-column or check-constraint error;
+PayPal sandbox e2e then owner-run `/code-review ultra` on
+the money path before any live charge; **the owner must know that a cash
+order is marked `paid` only by hand in the Supabase dashboard, once the
+shirt and money have actually changed hands** — nothing else ever will;
+registered business name/address/contact
 email missing from legal pages; all Arabic copy needs native review;
 `NEXT_PUBLIC_SITE_URL` on Vercel must be the public https origin (payment
 callbacks depend on it). Vercel deploys are done manually by the owner into the

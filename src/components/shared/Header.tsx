@@ -34,9 +34,10 @@ export async function Header() {
         <MobileMenu leagues={leagues} />
 
         {/* The crest alone. Nothing else names the link, so the badge keeps
-            its alt and becomes the link's accessible name. */}
+            its alt and becomes the link's accessible name. Sized at 2x the
+            original 32px per owner request (2026-10-23). */}
         <Link href="/" className="flex shrink-0 items-center">
-          <BrandBadge size={32} priority />
+          <BrandBadge size={64} priority />
         </Link>
 
         <nav className="hidden flex-1 gap-6 text-sm wide:flex">

@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { SIZES, VERSIONS } from "@/data/pricing";
-import type { CartItem, Size, Version } from "@/data/types";
+import type { CartItem, Patch, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 
 /**
@@ -18,10 +18,10 @@ import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
  * Two rules shape this file.
  *
  * 1. Prices are NEVER persisted. A stored line is {handle, size, version,
- *    nameNumber, badge, qty} and nothing else — every figure the customer sees
- *    is recomputed from src/data/pricing.ts at render time, so a price change
- *    can never be stale in someone's browser and a tampered localStorage entry
- *    cannot move money.
+ *    nameNumber, patch, qty} and nothing else — every figure the customer
+ *    sees is recomputed from src/data/pricing.ts at render time, so a price
+ *    change can never be stale in someone's browser and a tampered
+ *    localStorage entry cannot move money.
  *
  * 2. Hydration safety. The server has no localStorage, so the first client
  *    render must match the server's HTML exactly: we start empty with
@@ -49,7 +49,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 /**
  * A line's identity: the same shirt in the same size, version, personalisation
- * and badge choice is one line whose quantity grows. Change any option and it
+ * and patch choice is one line whose quantity grows. Change any option and it
  * is a different line, because it is a different physical product.
  */
 export function lineKey(item: CartItem): string {
@@ -58,12 +58,13 @@ export function lineKey(item: CartItem): string {
     item.size,
     item.version,
     item.nameNumber ?? "",
-    item.badge ? "badge" : "plain",
+    item.patch,
   ].join("|");
 }
 
 const SIZE_SET = new Set<string>(SIZES);
 const VERSION_SET = new Set<string>(VERSIONS);
+const PATCH_SET = new Set<string>(["none", "league", "ucl"]);
 
 /**
  * Anything read back from localStorage is untrusted input — another tab, an
@@ -94,12 +95,23 @@ function parseStoredCart(raw: string | null): CartItem[] {
       typeof value.nameNumber === "string" && value.nameNumber.trim() !== ""
         ? sanitizeNameNumber(value.nameNumber).slice(0, NAME_NUMBER_MAX)
         : undefined;
+    // `patch` replaced the old `badge: boolean` (owner decision 2026-10-23).
+    // A cart saved by an earlier release has `badge: true/false` and no
+    // `patch` at all — migrate it on read: `badge: true` becomes the generic
+    // "league" patch (the closest match to the old single generic add-on),
+    // `badge: false`/absent becomes "none".
+    const patch: Patch =
+      typeof value.patch === "string" && PATCH_SET.has(value.patch)
+        ? (value.patch as Patch)
+        : value.badge === true
+          ? "league"
+          : "none";
 
     items.push({
       handle: value.handle,
       size: value.size as Size,
       version: value.version as Version,
-      badge: value.badge === true,
+      patch,
       qty,
       ...(nameNumber ? { nameNumber } : {}),
     });

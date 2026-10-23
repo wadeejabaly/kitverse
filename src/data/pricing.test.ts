@@ -2,15 +2,18 @@ import { describe, expect, it } from "vitest";
 import {
   ADDONS,
   DELIVERY_REGIONS,
+  GIFT_BOX_MAX_QTY,
+  GIFT_BOX_PRICE,
   SHIPPING_ILS_BY_REGION,
   SIZES,
   VERSIONS,
-  bitDepositFor,
   cartTotals,
+  giftBoxTotalFor,
   isDeliveryRegion,
   isRetroSeason,
   priceFor,
   priceLine,
+  round2,
   seasonYear,
   shippingFor,
   sizeSurcharge,
@@ -112,43 +115,23 @@ describe("priceFor — 3XL/4XL surcharge", () => {
 describe("ADDONS", () => {
   it("exposes the confirmed addon prices", () => {
     expect(ADDONS.nameNumber).toBe(20);
-    expect(ADDONS.badge).toBe(12);
+    // Owner decision 2026-10-23: the official patch (replacing the old flat
+    // `badge` boolean add-on) is ₪11.99 for either patch choice.
+    expect(ADDONS.patch).toBe(11.99);
   });
 });
 
-describe("bitDepositFor — the cash-on-delivery Bit deposit", () => {
-  it("charges the confirmed tier for a total in the middle of each band", () => {
-    expect(bitDepositFor(95)).toBe(35);
-    expect(bitDepositFor(180)).toBe(40);
-    expect(bitDepositFor(400)).toBe(50);
+describe("round2 — cent-exact rounding for the fractional add-ons", () => {
+  it("rounds to the nearest cent", () => {
+    expect(round2(11.99 * 3)).toBe(35.97);
+    expect(round2(34.99 * 2)).toBe(69.98);
+    expect(round2(95)).toBe(95);
   });
 
-  it("uses exclusive lower boundaries — 149→35, 150→40, 219→40, 220→50", () => {
-    expect(bitDepositFor(149)).toBe(35);
-    expect(bitDepositFor(150)).toBe(40);
-    expect(bitDepositFor(219)).toBe(40);
-    expect(bitDepositFor(220)).toBe(50);
-  });
-
-  it("never exceeds the order total it is a deposit against", () => {
-    // A real order always clears the cheapest line plus regional shipping
-    // (95 + 50 = 145), so the smallest deposit is always a fraction of it.
-    const smallestRealOrder = priceLine("2026/27", "S", "fan", 1).lineTotal + 50;
-    expect(bitDepositFor(smallestRealOrder)).toBeLessThan(smallestRealOrder);
-  });
-
-  it("is monotonic: a bigger order never asks for a smaller deposit", () => {
-    let previous = 0;
-    for (let total = 0; total <= 500; total += 1) {
-      const deposit = bitDepositFor(total);
-      expect(deposit).toBeGreaterThanOrEqual(previous);
-      previous = deposit;
-    }
-  });
-
-  it("only ever returns one of the three confirmed figures", () => {
-    for (let total = 0; total <= 1000; total += 7) {
-      expect([35, 40, 50]).toContain(bitDepositFor(total));
+  it("never leaves floating-point drift in a displayed total", () => {
+    for (let qty = 1; qty <= 10; qty += 1) {
+      const total = round2(11.99 * qty);
+      expect(Number(total.toFixed(2))).toBe(total);
     }
   });
 });
@@ -183,10 +166,24 @@ describe("priceLine + cartTotals — addon math and totals", () => {
     expect(line.lineTotal).toBe(190);
   });
 
-  it("priceLine adds nameNumber and badge onto the unit price before multiplying by qty", () => {
-    const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, badge: true });
-    expect(line.unitPrice).toBe(95 + 20 + 12);
-    expect(line.lineTotal).toBe((95 + 20 + 12) * 3);
+  it("priceLine adds nameNumber and a patch onto the unit price before multiplying by qty", () => {
+    const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, patch: "league" });
+    expect(line.unitPrice).toBe(round2(95 + 20 + 11.99));
+    expect(line.lineTotal).toBe(round2((95 + 20 + 11.99) * 3));
+  });
+
+  it("the league patch and the Champions League patch cost exactly the same", () => {
+    const league = priceLine("2026/27", "M", "fan", 1, { patch: "league" });
+    const ucl = priceLine("2026/27", "M", "fan", 1, { patch: "ucl" });
+    expect(league.unitPrice).toBe(ucl.unitPrice);
+    expect(league.unitPrice).toBe(round2(95 + 11.99));
+  });
+
+  it('a patch of "none" charges nothing, same as omitting it', () => {
+    const withNone = priceLine("2026/27", "M", "fan", 1, { patch: "none" });
+    const omitted = priceLine("2026/27", "M", "fan", 1);
+    expect(withNone.unitPrice).toBe(95);
+    expect(withNone.unitPrice).toBe(omitted.unitPrice);
   });
 
   it("priceLine respects the size surcharge together with addons", () => {
@@ -205,25 +202,28 @@ describe("priceLine + cartTotals — addon math and totals", () => {
   it("cartTotals sums line totals into subtotal and adds the given shipping once", () => {
     const lines = [
       priceLine("2026/27", "M", "fan", 1),
-      priceLine("2022", "L", "player", 2, { badge: true }),
+      priceLine("2022", "L", "player", 2, { patch: "league" }),
     ];
     const totals = cartTotals(lines, shippingFor("center"));
-    const expectedSubtotal = 95 + (135 + 12) * 2;
+    const expectedSubtotal = round2(95 + round2(135 + 11.99) * 2);
     expect(totals.subtotal).toBe(expectedSubtotal);
     expect(totals.shipping).toBe(60);
-    expect(totals.total).toBe(expectedSubtotal + 60);
+    expect(totals.giftBox).toBe(0);
+    expect(totals.total).toBe(round2(expectedSubtotal + 60));
   });
 
-  it("cartTotals charges no shipping for an empty cart even if a rate is passed", () => {
-    const totals = cartTotals([], shippingFor("jerusalem"));
+  it("cartTotals charges no shipping or gift box for an empty cart even if given", () => {
+    const totals = cartTotals([], shippingFor("jerusalem"), 3);
     expect(totals.subtotal).toBe(0);
     expect(totals.shipping).toBe(0);
+    expect(totals.giftBox).toBe(0);
     expect(totals.total).toBe(0);
   });
 
-  it("cartTotals defaults shipping to 0 when none is given (the cart page, pre-checkout)", () => {
+  it("cartTotals defaults shipping and gift box to 0 when omitted (the cart page, pre-checkout)", () => {
     const totals = cartTotals([priceLine("2026/27", "S", "fan", 1)]);
     expect(totals.shipping).toBe(0);
+    expect(totals.giftBox).toBe(0);
     expect(totals.total).toBe(95);
   });
 
@@ -231,5 +231,42 @@ describe("priceLine + cartTotals — addon math and totals", () => {
     const totals = cartTotals([priceLine("2026/27", "S", "fan", 1)], shippingFor("north"));
     expect(totals.shipping).toBe(50);
     expect(totals.total).toBe(95 + 50);
+  });
+
+  it("cartTotals adds the gift box exactly once, on top of subtotal and shipping", () => {
+    const totals = cartTotals(
+      [priceLine("2026/27", "S", "fan", 1)],
+      shippingFor("north"),
+      2,
+    );
+    expect(totals.giftBox).toBe(round2(GIFT_BOX_PRICE * 2));
+    expect(totals.total).toBe(round2(95 + 50 + GIFT_BOX_PRICE * 2));
+  });
+});
+
+describe("giftBoxTotalFor — the checkout-only gift-box add-on", () => {
+  it("is free for a quantity of zero", () => {
+    expect(giftBoxTotalFor(0)).toBe(0);
+  });
+
+  it("charges the confirmed ₪34.99 per box", () => {
+    expect(GIFT_BOX_PRICE).toBe(34.99);
+    expect(giftBoxTotalFor(1)).toBe(34.99);
+    expect(giftBoxTotalFor(2)).toBe(69.98);
+    expect(giftBoxTotalFor(3)).toBe(round2(34.99 * 3));
+  });
+
+  it("clamps to 0..GIFT_BOX_MAX_QTY rather than throwing or over-charging", () => {
+    expect(giftBoxTotalFor(-5)).toBe(0);
+    expect(giftBoxTotalFor(GIFT_BOX_MAX_QTY + 50)).toBe(
+      round2(GIFT_BOX_PRICE * GIFT_BOX_MAX_QTY),
+    );
+  });
+
+  it("never leaves a fractional-cent result", () => {
+    for (let qty = 0; qty <= GIFT_BOX_MAX_QTY; qty += 1) {
+      const total = giftBoxTotalFor(qty);
+      expect(Number(total.toFixed(2))).toBe(total);
+    }
   });
 });

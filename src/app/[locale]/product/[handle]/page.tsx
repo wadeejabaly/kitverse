@@ -158,7 +158,11 @@ export default async function ProductPage({
           </span>
           <h1 className="mt-2.5 mb-1.5 text-[28px] leading-tight">{title}</h1>
 
-          <ProductForm handle={product.handle} season={product.season} />
+          <ProductForm
+            handle={product.handle}
+            season={product.season}
+            leagueName={leagueName}
+          />
 
           <div className="mt-8 border-t border-rule">
             <Accordion summary={t("accordionShipping")} open>

@@ -4,7 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { orderReference } from "@/lib/checkout";
 import { notifyOwnerOfOrder, type NotificationItem } from "@/lib/notify";
 import {
-  COD_PROVIDER,
+  CASH_PROVIDER,
   decidePaidTransition,
   isPaymentProvider,
   isSettleableProvider,
@@ -34,15 +34,16 @@ export interface SettlementResult {
 }
 
 const ORDER_COLUMNS =
-  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, address, city, delivery_region, country, notes, locale, subtotal_ils, shipping_ils, total_ils, deposit_ils";
+  "id, status, payment_provider, paypal_order_id, paypal_capture_id, payplus_page_request_uid, payplus_transaction_uid, customer_name, email, phone, street, house_number, address, city, delivery_region, country, notes, locale, subtotal_ils, shipping_ils, gift_box_qty, gift_box_ils, total_ils";
 
 /**
  * Where each settleable provider records the payment that closed an order. The
  * PayPal column is the capture; the PayPlus column is the transaction. Both
  * are unique in the schema, so one payment can never close two orders.
  *
- * `bit_cod` is absent by construction — it is not a SettleableProvider, has no
- * reference column, and is settled by the owner in the dashboard.
+ * `cash` is absent by construction — it is not a SettleableProvider, has no
+ * reference column, and is paid to the courier, not through any processor
+ * this application verifies.
  */
 const SETTLED_REF_COLUMN: Record<SettleableProvider, keyof OrderRow> = {
   paypal: "paypal_capture_id",
@@ -109,24 +110,13 @@ export async function findOrder(
 export interface OrderStateByReference {
   status: OrderStatus;
   provider: PaymentProvider;
-  /** COD only: the Bit deposit this order is waiting for. Null otherwise. */
-  deposit: number | null;
 }
 
 /**
  * The confirmation page's question: what state is the order behind this
- * reference in? Returns the status, the rail, and — for cash on delivery
- * only — the deposit figure, and NOTHING else. No name, no email, no address,
- * and not the order total, because the short reference travels in a URL that
- * gets shared and logged.
- *
- * The deposit is here because the COD confirmation cannot be written without
- * it: the buyer has to be told the exact amount to send by Bit, and the page
- * must read it from the row the server wrote rather than trust a figure the
- * browser carried over from checkout. It is one of three fixed tier values, so
- * it discloses only a coarse band of the order total to anyone holding the
- * reference — which is the price of the page working at all, and is paid only
- * on COD orders.
+ * reference in? Returns the status and the rail, and NOTHING else — no name,
+ * no email, no address, and not the order total, because the short reference
+ * travels in a URL that gets shared and logged.
  *
  * `reference` is a generated column (migration 0002) holding the same eight
  * characters orderReference() prints. It is not unique: on the astronomically
@@ -142,7 +132,7 @@ export async function findOrderStateByReference(
 
   const { data, error } = await db
     .from("orders")
-    .select("status, payment_provider, deposit_ils")
+    .select("status, payment_provider")
     .eq("reference", reference)
     .limit(2);
 
@@ -152,22 +142,15 @@ export async function findOrderStateByReference(
   }
 
   const rows =
-    (data as
-      | { status: OrderStatus; payment_provider: string | null; deposit_ils: number | null }[]
-      | null) ?? [];
+    (data as { status: OrderStatus; payment_provider: string | null }[] | null) ?? [];
   if (rows.length !== 1) return null;
 
   const row = rows[0];
   const provider: PaymentProvider = isPaymentProvider(row.payment_provider)
     ? row.payment_provider
     : "paypal";
-  const deposit = row.deposit_ils === null ? null : Number(row.deposit_ils);
 
-  return {
-    status: row.status,
-    provider,
-    deposit: provider === "bit_cod" && Number.isFinite(deposit) ? deposit : null,
-  };
+  return { status: row.status, provider };
 }
 
 /**
@@ -249,17 +232,16 @@ export async function markOrderFailed(
 /**
  * Announce a cash-on-delivery order to the owner the moment it is created.
  *
- * This is the one notification that does NOT wait for money. It cannot: a COD
- * order is settled by the owner recognising a Bit transfer, so if they are not
- * told the order exists there is nothing for the deposit to be matched
- * against. The card paths stay the other way round — they notify on payment,
- * because until then nothing has happened worth an email.
+ * This is the one notification that does NOT wait for money, because cash
+ * orders have none to wait for yet — the buyer pays the courier on delivery,
+ * not this application. The card paths stay the other way round — they
+ * notify on payment, because until then nothing has happened worth an email.
  *
  * Reads the row back rather than trusting what the route had in hand, so the
  * email describes what was actually written. Swallows every failure: an order
  * that exists is not un-made by a mail provider having a bad minute.
  */
-export async function announceCodOrder(
+export async function announceCashOrder(
   db: SupabaseClient,
   orderId: string,
 ): Promise<void> {
@@ -271,13 +253,13 @@ export async function announceCodOrder(
       .maybeSingle();
     const order = data as OrderRow | null;
     if (!order) {
-      console.error(`[orders] COD notification: order ${orderId} vanished`);
+      console.error(`[orders] cash order notification: order ${orderId} vanished`);
       return;
     }
-    await sendOwnerNotification(db, order, COD_PROVIDER, "");
+    await sendOwnerNotification(db, order, CASH_PROVIDER, "");
   } catch (error) {
     console.error(
-      `[orders] COD notification for ${orderId} failed:`,
+      `[orders] cash order notification for ${orderId} failed:`,
       error instanceof Error ? error.message : error,
     );
   }
@@ -286,7 +268,7 @@ export async function announceCodOrder(
 /**
  * Build and send the owner's order email. Wrapped end to end: a failure to
  * read the lines back, or to send, is logged and swallowed — the order is
- * paid (or, for COD, placed) either way.
+ * paid (or, for cash, placed) either way.
  */
 async function sendOwnerNotification(
   db: SupabaseClient,
@@ -298,7 +280,7 @@ async function sendOwnerNotification(
     const { data } = await db
       .from("order_items")
       .select(
-        "handle, title_snapshot, size, version, name_number, badge, unit_price_ils, qty",
+        "handle, title_snapshot, size, version, name_number, patch, unit_price_ils, qty",
       )
       .eq("order_id", order.id);
 
@@ -309,7 +291,7 @@ async function sendOwnerNotification(
       size: row.size ?? "",
       version: row.version ?? "",
       nameNumber: row.name_number,
-      badge: row.badge === true,
+      patch: row.patch === "league" || row.patch === "ucl" ? row.patch : "none",
       unitPrice: Number(row.unit_price_ils ?? 0),
       qty: Number(row.qty ?? 0),
     }));
@@ -322,7 +304,8 @@ async function sendOwnerNotification(
         name: order.customer_name ?? "",
         email: order.email ?? "",
         phone: order.phone ?? "",
-        address: order.address ?? "",
+        street: order.street ?? "",
+        houseNumber: order.house_number ?? "",
         city: order.city ?? "",
         region: order.delivery_region ?? "",
         country: order.country ?? "IL",
@@ -331,14 +314,13 @@ async function sendOwnerNotification(
       items,
       subtotal: Number(order.subtotal_ils ?? 0),
       shipping: Number(order.shipping_ils ?? 0),
+      giftBoxQty: Number(order.gift_box_qty ?? 0),
+      giftBox: Number(order.gift_box_ils ?? 0),
       total: Number(order.total_ils ?? 0),
-      // COD only. The email leads with it, because it is the one figure the
-      // owner has to match against their Bit account by hand.
-      deposit: order.deposit_ils === null ? null : Number(order.deposit_ils),
       provider,
       // What the processor called this attempt, and what settled it. Named
-      // generically because the owner reads one email for every rail; both are
-      // empty on COD, which has no processor references at all.
+      // generically because the owner reads one email for every rail; both
+      // are empty on cash, which has no processor references at all.
       providerOrderRef:
         (provider === "paypal"
           ? order.paypal_order_id

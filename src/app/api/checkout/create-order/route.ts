@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
   const json = await request.json().catch(() => null);
   const parsed = CreateOrderRequestSchema.safeParse(json);
   if (!parsed.success) return errorResponse("invalid_request", 400);
-  const { items, customer, locale } = parsed.data;
+  const { items, customer, locale, giftBoxQty } = parsed.data;
 
   // Both integrations must be present before anything is written: a pending
   // row with no possible payment is litter.
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
   // The server's own arithmetic. Whatever the browser displayed is irrelevant
   // from here on.
-  const cart = repriceCart(items, customer.region);
+  const cart = repriceCart(items, customer.region, giftBoxQty);
   if (cart.dropped.length > 0) {
     console.warn(`[checkout] dropped unavailable handles: ${cart.dropped.join(", ")}`);
   }
@@ -75,7 +75,10 @@ export async function POST(request: NextRequest) {
       customer_name: customer.name,
       email: customer.email,
       phone: customer.phone,
-      address: customer.address,
+      street: customer.street,
+      house_number: customer.houseNumber,
+      // Legacy combined column, kept in step for anything still reading it.
+      address: `${customer.street} ${customer.houseNumber}`.trim(),
       city: customer.city,
       delivery_region: customer.region,
       country: FIXED_COUNTRY,
@@ -83,6 +86,8 @@ export async function POST(request: NextRequest) {
       locale,
       subtotal_ils: cart.subtotal,
       shipping_ils: cart.shipping,
+      gift_box_qty: cart.giftBoxQty,
+      gift_box_ils: cart.giftBox,
       total_ils: cart.total,
     })
     .select("id")
@@ -104,7 +109,7 @@ export async function POST(request: NextRequest) {
       size: line.size,
       version: line.version,
       name_number: line.nameNumber,
-      badge: line.badge,
+      patch: line.patch === "none" ? null : line.patch,
       unit_price_ils: line.unitPrice,
       qty: line.qty,
     })),

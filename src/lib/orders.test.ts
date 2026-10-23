@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { bitDepositFor, cartTotals, priceLine, shippingFor } from "@/data/pricing";
+import { cartTotals, priceLine, shippingFor } from "@/data/pricing";
 import { getAllProducts, getProduct } from "@/data/catalog";
 import type { CheckoutItemInput } from "@/lib/checkout";
 import {
-  COD_PROVIDER,
+  CASH_PROVIDER,
   MAX_QTY_SERVER,
   SETTLEABLE_PROVIDERS,
-  codConfirmationFor,
-  codOrderRow,
+  cashOrderRow,
   decidePaidTransition,
   isHandledWebhookEvent,
   isPaymentProvider,
@@ -26,10 +25,12 @@ import { MAX_QTY } from "@/components/cart/CartProvider";
  *   1. the server's recomputation of a cart agrees with cartTotals() for a
  *      realistic mixed basket — this is the number that gets charged;
  *   2. a name & number is re-sanitized on the server whatever the browser
- *      sent, and only a name that survives sanitising is billed for;
+ *      sent, and only a name that survives sanitising is billed for, and a
+ *      patch is only ever billable on a club product;
  *   3. pending → paid happens exactly once, whichever of the three callers
  *      (PayPal capture route, PayPal webhook, PayPlus callback) arrives
- *      first — and only for the processor the order was created for.
+ *      first — and only for the processor the order was created for, and
+ *      NEVER for cash on delivery.
  */
 
 /**
@@ -57,25 +58,28 @@ const REGION = "center";
 
 describe("repriceCart — the server's own arithmetic", () => {
   it("prices a mixed basket (surcharge size + both add-ons) exactly as cartTotals does", () => {
-    const otherKindHandle = visibleHandle("current");
+    const clubHandle = visibleHandle("current");
     const nationalHandle = visibleHandle("national");
-    const otherKindSeason = getProduct(otherKindHandle)!.season;
+    const clubSeason = getProduct(clubHandle)!.season;
     const nationalSeason = getProduct(nationalHandle)!.season;
 
     const items: CheckoutItemInput[] = [
       // 4XL (+12), name & number (+20), qty 2
       {
-        handle: otherKindHandle,
+        handle: clubHandle,
         size: "4XL",
         version: "player",
         nameNumber: "HAALAND 9",
-        badge: false,
+        patch: "none",
         qty: 2,
       },
-      // 3XL (+9), badge (+12), qty 1
-      { handle: nationalHandle, size: "3XL", version: "fan", badge: true, qty: 1 },
-      // plain line, no add-ons
-      { handle: otherKindHandle, size: "M", version: "fan", badge: false, qty: 3 },
+      // 3XL (+9), league patch (+11.99), qty 1 — a club product, so the
+      // patch is billable.
+      { handle: clubHandle, size: "3XL", version: "fan", patch: "league", qty: 1 },
+      // a national-team line: no league, so no patch regardless of what is
+      // requested — this is the forced-to-"none" guarantee, exercised again
+      // in its own describe block below.
+      { handle: nationalHandle, size: "M", version: "fan", patch: "ucl", qty: 3 },
     ];
 
     const cart = repriceCart(items, REGION);
@@ -84,9 +88,9 @@ describe("repriceCart — the server's own arithmetic", () => {
 
     const expected = cartTotals(
       [
-        priceLine(otherKindSeason, "4XL", "player", 2, { nameNumber: true }),
-        priceLine(nationalSeason, "3XL", "fan", 1, { badge: true }),
-        priceLine(otherKindSeason, "M", "fan", 3),
+        priceLine(clubSeason, "4XL", "player", 2, { nameNumber: true }),
+        priceLine(clubSeason, "3XL", "fan", 1, { patch: "league" }),
+        priceLine(nationalSeason, "M", "fan", 3),
       ],
       shippingFor(REGION),
     );
@@ -98,8 +102,23 @@ describe("repriceCart — the server's own arithmetic", () => {
     // player 110 + 12 surcharge + 20 print
     expect(cart.lines[0].unitPrice).toBe(142);
     expect(cart.lines[0].lineTotal).toBe(284);
-    // fan 95 + 9 surcharge + 12 badge
-    expect(cart.lines[1].unitPrice).toBe(116);
+    // fan 95 + 9 surcharge + 11.99 league patch
+    expect(cart.lines[1].unitPrice).toBe(95 + 9 + 11.99);
+    // national line: "ucl" was requested but the product has no league, so
+    // it is billed as plain fan price with no patch at all.
+    expect(cart.lines[2].patch).toBe("none");
+    expect(cart.lines[2].unitPrice).toBe(priceLine(nationalSeason, "M", "fan", 1).unitPrice);
+  });
+
+  it("forces a patch to \"none\" for a national-team product, whatever the client requested", () => {
+    const nationalHandle = visibleHandle("national");
+    for (const requested of ["league", "ucl"] as const) {
+      const cart = repriceCart(
+        [{ handle: nationalHandle, size: "M", version: "fan", patch: requested, qty: 1 }],
+        REGION,
+      );
+      expect(cart.lines[0].patch).toBe("none");
+    }
   });
 
   it("ignores any price-shaped field the client tries to send", () => {
@@ -109,7 +128,7 @@ describe("repriceCart — the server's own arithmetic", () => {
       handle,
       size: "M",
       version: "fan",
-      badge: false,
+      patch: "none",
       qty: 1,
       unitPrice: 1,
       lineTotal: 1,
@@ -126,8 +145,8 @@ describe("repriceCart — the server's own arithmetic", () => {
   it("drops a hidden handle and an unknown handle rather than pricing them", () => {
     const cart = repriceCart(
       [
-        { handle: hiddenHandle(), size: "M", version: "fan", badge: false, qty: 1 },
-        { handle: "not-a-real-handle", size: "M", version: "fan", badge: false, qty: 1 },
+        { handle: hiddenHandle(), size: "M", version: "fan", patch: "none", qty: 1 },
+        { handle: "not-a-real-handle", size: "M", version: "fan", patch: "none", qty: 1 },
       ],
       REGION,
     );
@@ -140,7 +159,7 @@ describe("repriceCart — the server's own arithmetic", () => {
   it("prices shipping by the region passed in, not a flat figure", () => {
     const handle = visibleHandle("national");
     const forRegion = (region: Parameters<typeof shippingFor>[0]) =>
-      repriceCart([{ handle, size: "M", version: "fan", badge: false, qty: 1 }], region)
+      repriceCart([{ handle, size: "M", version: "fan", patch: "none", qty: 1 }], region)
         .shipping;
     expect(forRegion("north")).toBe(50);
     expect(forRegion("center")).toBe(60);
@@ -157,11 +176,11 @@ describe("repriceCart — the server's own arithmetic", () => {
       const existing = byKindAndSeason.get(product.season);
       if (existing && getProduct(existing)!.kind !== product.kind) {
         const a = repriceCart(
-          [{ handle: existing, size: "M", version: "fan", badge: false, qty: 1 }],
+          [{ handle: existing, size: "M", version: "fan", patch: "none", qty: 1 }],
           REGION,
         );
         const b = repriceCart(
-          [{ handle: product.handle, size: "M", version: "fan", badge: false, qty: 1 }],
+          [{ handle: product.handle, size: "M", version: "fan", patch: "none", qty: 1 }],
           REGION,
         );
         expect(a.lines[0].unitPrice).toBe(b.lines[0].unitPrice);
@@ -174,11 +193,11 @@ describe("repriceCart — the server's own arithmetic", () => {
   it("clamps quantity to the cart's 1..10 bound", () => {
     const handle = visibleHandle("current");
     const over = repriceCart(
-      [{ handle, size: "M", version: "fan", badge: false, qty: 999 }],
+      [{ handle, size: "M", version: "fan", patch: "none", qty: 999 }],
       REGION,
     );
     const under = repriceCart(
-      [{ handle, size: "M", version: "fan", badge: false, qty: 0 }],
+      [{ handle, size: "M", version: "fan", patch: "none", qty: 0 }],
       REGION,
     );
     expect(over.lines[0].qty).toBe(MAX_QTY_SERVER);
@@ -187,6 +206,47 @@ describe("repriceCart — the server's own arithmetic", () => {
 
   it("uses the same maximum quantity as the client cart", () => {
     expect(MAX_QTY_SERVER).toBe(MAX_QTY);
+  });
+
+  describe("the checkout-only gift-box add-on", () => {
+    it("prices zero gift boxes by default", () => {
+      const handle = visibleHandle("current");
+      const cart = repriceCart(
+        [{ handle, size: "M", version: "fan", patch: "none", qty: 1 }],
+        REGION,
+      );
+      expect(cart.giftBoxQty).toBe(0);
+      expect(cart.giftBox).toBe(0);
+    });
+
+    it("prices the requested quantity of boxes, once per order", () => {
+      const handle = visibleHandle("current");
+      const cart = repriceCart(
+        [{ handle, size: "M", version: "fan", patch: "none", qty: 1 }],
+        REGION,
+        2,
+      );
+      expect(cart.giftBoxQty).toBe(2);
+      expect(cart.giftBox).toBeGreaterThan(0);
+      expect(cart.total).toBe(
+        cartTotals(
+          [priceLine(getProduct(handle)!.season, "M", "fan", 1)],
+          shippingFor(REGION),
+          2,
+        ).total,
+      );
+    });
+
+    it("never charges for a gift box on an empty/dropped cart", () => {
+      const cart = repriceCart(
+        [{ handle: "not-a-real-handle", size: "M", version: "fan", patch: "none", qty: 1 }],
+        REGION,
+        3,
+      );
+      expect(cart.giftBoxQty).toBe(0);
+      expect(cart.giftBox).toBe(0);
+      expect(cart.total).toBe(0);
+    });
   });
 });
 
@@ -200,7 +260,7 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
           size: "M",
           version: "fan",
           nameNumber: "  o'dea    <script>7  ",
-          badge: false,
+          patch: "none",
           qty: 1,
         },
       ],
@@ -218,7 +278,7 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
           size: "M",
           version: "fan",
           nameNumber: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-          badge: false,
+          patch: "none",
           qty: 1,
         },
       ],
@@ -231,7 +291,7 @@ describe("repriceCart — sanitizeNameNumber on the server path", () => {
   it("does not charge for a name that sanitises away to nothing", () => {
     const handle = visibleHandle("current");
     const cart = repriceCart(
-      [{ handle, size: "M", version: "fan", nameNumber: "!!! ???", badge: false, qty: 1 }],
+      [{ handle, size: "M", version: "fan", nameNumber: "!!! ???", patch: "none", qty: 1 }],
       REGION,
     );
     expect(cart.lines[0].nameNumber).toBeNull();
@@ -340,22 +400,18 @@ describe("decidePaidTransition — pending → paid, exactly once", () => {
   });
 
   /**
-   * Cash on delivery is a MANUAL rail. Bit has no callback, so no webhook on
-   * any endpoint may move a COD order to paid — only the owner can, by hand,
-   * after seeing the transfer. These tests are the proof that a card event
-   * cannot reach one, whatever status the row happens to be in.
+   * Cash on delivery is a MANUAL rail (owner decision 2026-10-23: plain cash,
+   * no deposit). No webhook on any endpoint may move a `cash` order to paid —
+   * these tests are the proof that a card event cannot reach one, whatever
+   * status the row happens to be in, including `pending`, which a cash order
+   * shares with a freshly-created card order.
    */
   describe("cash on delivery is out of reach of every callback", () => {
     for (const settling of SETTLEABLE_PROVIDERS) {
-      for (const status of [
-        "awaiting_deposit",
-        "pending",
-        "paid",
-        "failed",
-      ] as OrderStatus[]) {
-        it(`refuses a ${settling} settlement of a ${status} bit_cod order`, () => {
+      for (const status of ["pending", "paid", "failed", "cancelled"] as OrderStatus[]) {
+        it(`refuses a ${settling} settlement of a ${status} cash order`, () => {
           expect(
-            decidePaidTransition(order(status, COD_PROVIDER, null), "REF-1", settling),
+            decidePaidTransition(order(status, CASH_PROVIDER, null), "REF-1", settling),
           ).toEqual({ action: "reject", reason: "manual-provider" });
         });
       }
@@ -363,130 +419,37 @@ describe("decidePaidTransition — pending → paid, exactly once", () => {
 
     it("rejects rather than no-ops, so a misrouted event stays loud in the logs", () => {
       const decision = decidePaidTransition(
-        order("awaiting_deposit", COD_PROVIDER),
+        order("pending", CASH_PROVIDER),
         "CAP-1",
         "paypal",
       );
       expect(decision.action).toBe("reject");
     });
 
-    it("keeps bit_cod out of the settleable set entirely", () => {
-      expect(isSettleableProvider(COD_PROVIDER)).toBe(false);
+    it("keeps cash out of the settleable set entirely", () => {
+      expect(isSettleableProvider(CASH_PROVIDER)).toBe(false);
       expect(SETTLEABLE_PROVIDERS).toEqual(["paypal", "payplus"]);
       // …while still being a provider the application recognises on a row.
-      expect(isPaymentProvider(COD_PROVIDER)).toBe(true);
-    });
-
-    it("leaves an awaiting_deposit card order untouched too — the status is not pending", () => {
-      // Belt and braces: even if a row somehow carried a card provider with
-      // the COD status, no callback promotes it.
-      expect(
-        decidePaidTransition(order("awaiting_deposit", "paypal"), "CAP-1", "paypal"),
-      ).toEqual({ action: "noop", reason: "not-pending" });
+      expect(isPaymentProvider(CASH_PROVIDER)).toBe(true);
     });
   });
 });
 
 /**
- * The COD route's whole provider-and-money decision, extracted so it can be
- * asserted. The route contains no other provider or status literal, so what is
- * proved here is proved of the route: a cash-on-delivery checkout cannot
- * create a card-provider order, and the deposit is always derived from the
- * total the server itself computed.
+ * The cash-on-delivery route's whole provider decision, extracted so it can
+ * be asserted. The route contains no other provider or status literal, so
+ * what is proved here is proved of the route: a cash-on-delivery checkout
+ * cannot create a card-provider order.
  */
-describe("codOrderRow — what a cash-on-delivery checkout writes", () => {
-  it("always writes the COD rail and the COD status, for any total", () => {
-    for (const total of [1, 95, 149, 150, 219, 220, 500, 12_345]) {
-      const row = codOrderRow(total);
-      expect(row.payment_provider).toBe("bit_cod");
-      expect(row.status).toBe("awaiting_deposit");
-    }
+describe("cashOrderRow — what a cash-on-delivery checkout writes", () => {
+  it("always writes the cash rail and the pending status", () => {
+    const row = cashOrderRow();
+    expect(row.payment_provider).toBe("cash");
+    expect(row.status).toBe("pending");
   });
 
-  it("can never produce a card provider or a settleable status", () => {
-    for (const total of [0, 100, 1000]) {
-      const row = codOrderRow(total);
-      expect(isSettleableProvider(row.payment_provider)).toBe(false);
-      expect(row.status).not.toBe("pending");
-      expect(row.status).not.toBe("paid");
-    }
-  });
-
-  it("records the deposit the pricing tiers dictate for the given total", () => {
-    for (const total of [95, 149, 150, 219, 220, 900]) {
-      expect(codOrderRow(total).deposit_ils).toBe(bitDepositFor(total));
-    }
-    expect(codOrderRow(145).deposit_ils).toBe(35);
-    expect(codOrderRow(200).deposit_ils).toBe(40);
-    expect(codOrderRow(300).deposit_ils).toBe(50);
-  });
-
-  it("round-trips into the confirmation gate: what it writes is what the page shows", () => {
-    const row = codOrderRow(300);
-    expect(
-      codConfirmationFor(
-        {
-          status: row.status,
-          provider: row.payment_provider,
-          deposit: row.deposit_ils,
-        },
-        "050-1234567",
-      ),
-    ).toEqual({ deposit: 50, phone: "050-1234567" });
-  });
-
-  it("derives the deposit from a repriced cart total, not from anything on the wire", () => {
-    const handle = visibleHandle("national");
-    // A cart the browser could have lied about in any way it liked: the row is
-    // built from repriceCart's own total.
-    const cart = repriceCart(
-      [{ handle, size: "M", version: "fan", badge: false, qty: 3 }],
-      "jerusalem",
-    );
-    expect(codOrderRow(cart.total).deposit_ils).toBe(bitDepositFor(cart.total));
-  });
-});
-
-/**
- * The confirmation page's COD gate. It decides whether a buyer is shown a
- * phone number and told to send money, so it fails closed on every missing or
- * inconsistent fact rather than guessing.
- */
-describe("codConfirmationFor — when the thank-you page shows Bit instructions", () => {
-  const PHONE = "050-1234567";
-  const ok = { status: "awaiting_deposit", provider: "bit_cod", deposit: 40 } as const;
-
-  it("shows the instructions for a bit_cod order awaiting its deposit", () => {
-    expect(codConfirmationFor({ ...ok }, PHONE)).toEqual({
-      deposit: 40,
-      phone: PHONE,
-    });
-  });
-
-  it("shows nothing when there is no order behind the reference", () => {
-    expect(codConfirmationFor(null, PHONE)).toBeNull();
-  });
-
-  it("shows nothing for a card order, whatever its status", () => {
-    for (const provider of SETTLEABLE_PROVIDERS) {
-      expect(codConfirmationFor({ ...ok, provider }, PHONE)).toBeNull();
-    }
-  });
-
-  it("shows nothing once the owner has marked the COD order paid", () => {
-    expect(codConfirmationFor({ ...ok, status: "paid" }, PHONE)).toBeNull();
-    expect(codConfirmationFor({ ...ok, status: "failed" }, PHONE)).toBeNull();
-    expect(codConfirmationFor({ ...ok, status: "cancelled" }, PHONE)).toBeNull();
-  });
-
-  it("refuses to name an amount the row does not carry", () => {
-    expect(codConfirmationFor({ ...ok, deposit: null }, PHONE)).toBeNull();
-    expect(codConfirmationFor({ ...ok, deposit: 0 }, PHONE)).toBeNull();
-  });
-
-  it("refuses to ask for money with no number to send it to", () => {
-    expect(codConfirmationFor({ ...ok }, null)).toBeNull();
-    expect(codConfirmationFor({ ...ok }, "")).toBeNull();
+  it("can never produce a settleable provider", () => {
+    expect(isSettleableProvider(cashOrderRow().payment_provider)).toBe(false);
   });
 });
 
