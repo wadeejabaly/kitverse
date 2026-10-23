@@ -145,7 +145,12 @@ export function ProductForm({
             onChange={(event) => setPersonalise(event.target.checked)}
             className="mt-1 accent-accent"
           />
-          <span>{t("nameNumberToggle")}</span>
+          <span>
+            {t("nameNumberToggle")}
+            <small className="ms-1.5 text-ink-soft">
+              <Figure>+₪{ADDONS.nameNumber}</Figure>
+            </small>
+          </span>
         </label>
         {personalise ? (
           <div className="mt-3">
@@ -171,49 +176,42 @@ export function ProductForm({
         ) : null}
       </fieldset>
 
-      {/* Official patch (owner decision 2026-10-23) — a national-team product
-          has no leagueName and skips this fieldset entirely: there is no
-          league patch to offer and no Champions League patch either, since
-          the feature is scoped to club shirts. One patch per shirt, never
-          both: this is a radio group, not two checkboxes. */}
+      {/* Official patch (owner decision 2026-10-23; checkbox + dropdown per
+          owner request 2026-10-24) — a national-team product has no
+          leagueName and skips this fieldset entirely: there is no league
+          patch to offer and no Champions League patch either, since the
+          feature is scoped to club shirts. Checking the box reveals a
+          dropdown of the two choices; one patch per shirt, never both —
+          the dropdown itself enforces that, so unchecking the box is the
+          only way back to "none" rather than a third option inside it. */}
       {leagueName ? (
         <fieldset className="mb-6 border-0 p-0">
           <legend className="mono-eyebrow mb-2.5 block text-ink-soft">
             {t("patchLegend")}
           </legend>
-          <div className="flex flex-col gap-2 text-sm">
-            <label className="flex items-start gap-2.5">
-              <input
-                type="radio"
-                name="patch"
-                checked={patch === "none"}
-                onChange={() => setPatch("none")}
-                className="mt-1 accent-accent"
-              />
-              <span>{t("patchNone")}</span>
-            </label>
-            <label className="flex items-start gap-2.5">
-              <input
-                type="radio"
-                name="patch"
-                checked={patch === "league"}
-                onChange={() => setPatch("league")}
-                className="mt-1 accent-accent"
-              />
-              <span>{t("patchLeague", { league: leagueName })}</span>
-            </label>
-            <label className="flex items-start gap-2.5">
-              <input
-                type="radio"
-                name="patch"
-                checked={patch === "ucl"}
-                onChange={() => setPatch("ucl")}
-                className="mt-1 accent-accent"
-              />
-              <span>{t("patchUcl")}</span>
-            </label>
-          </div>
-          <p className="mt-2 text-xs text-ink-soft">{t("patchHint")}</p>
+          <label className="flex items-start gap-2.5 text-sm">
+            <input
+              type="checkbox"
+              checked={patch !== "none"}
+              onChange={(event) => setPatch(event.target.checked ? "league" : "none")}
+              className="mt-1 accent-accent"
+            />
+            <span>{t("patchToggle")}</span>
+          </label>
+          {patch !== "none" ? (
+            <div className="mt-3">
+              <select
+                value={patch}
+                onChange={(event) => setPatch(event.target.value as Patch)}
+                aria-label={t("patchSelectLabel")}
+                className="w-full border border-rule bg-tile px-3.5 py-3 text-sm text-ink"
+              >
+                <option value="league">{t("patchLeague", { league: leagueName })}</option>
+                <option value="ucl">{t("patchUcl")}</option>
+              </select>
+              <p className="mt-2 text-xs text-ink-soft">{t("patchHint")}</p>
+            </div>
+          ) : null}
         </fieldset>
       ) : null}
 

@@ -66,7 +66,7 @@
         "body": "We sell replicas, and we say so. Same design, same badge placement, honest photographs of the shirt you receive."
       },
       "two": {
-        "title": "12 to 25 days, tracked",
+        "title": "8 to 17 working days, tracked",
         "body": "Shipped from our supplier with a tracking number as soon as the parcel moves. No dates we cannot keep."
       },
       "three": {
@@ -178,7 +178,7 @@
       },
       "delivery": {
         "title": "Delivery and shipping",
-        "body": "We currently ship within Israel only, at a single flat delivery rate shown at checkout.\n\nExpected delivery is 12 to 25 days from order confirmation, with a tracking number emailed to you once the order ships. Shirts printed with a name and number need two extra days of preparation before dispatch."
+        "body": "We currently ship within Israel only, at a single flat delivery rate shown at checkout.\n\nExpected delivery is 8 to 17 working days from order confirmation, with a tracking number emailed to you once the order ships. Shirts printed with a name and number need two extra days of preparation before dispatch."
       },
       "cancellation": {
         "title": "Cancellation and returns",
@@ -233,7 +233,8 @@
     "nameNumberLabel": "Name and number",
     "nameNumberHint": "Printed to order. Adds ₪20 and two days to dispatch.",
     "patchLegend": "Patch",
-    "patchNone": "No patch",
+    "patchToggle": "Add an official patch",
+    "patchSelectLabel": "Choose patch",
     "patchLeague": "{league} patch",
     "patchUcl": "Champions League patch",
     "patchHint": "Sewn-on official patch. Adds ₪11.99.",
@@ -242,7 +243,7 @@
     "viewCart": "View cart",
     "was": "Was",
     "accordionShipping": "Shipping",
-    "accordionShippingBody": "Shirts ship from our supplier and take 12 to 25 days to arrive, tracked door to door. Printed shirts add two days before dispatch.",
+    "accordionShippingBody": "Shirts ship from our supplier and take 8 to 17 working days to arrive, tracked door to door. Printed shirts add two days before dispatch.",
     "accordionReturns": "Returns",
     "accordionReturnsBody": "Fourteen days from delivery on unworn shirts with tags attached. Printed shirts can only be returned if the print is wrong or the shirt is faulty.",
     "accordionSizing": "Sizing",
@@ -269,7 +270,7 @@
     "shippingTbd": "Calculated by region at checkout",
     "shippingNote": "Israel only for now.",
     "total": "Total",
-    "deliveryNote": "Delivery is 12 to 25 days. Printed shirts add two days.",
+    "deliveryNote": "Delivery is 8 to 17 working days. Printed shirts add two days.",
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
     "unavailable": "This shirt is no longer available and was removed from your cart."
@@ -299,9 +300,9 @@
   "shippingPage": {
     "eyebrow": "Shipping and returns",
     "title": "How delivery works",
-    "metaDescription": "KitVerse shipping and returns: 12 to 25 day tracked delivery, 14-day returns, and how customs are handled.",
+    "metaDescription": "KitVerse shipping and returns: 8 to 17 working day tracked delivery, 14-day returns, and how customs are handled.",
     "timingTitle": "Timing",
-    "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 12 to 25 days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
+    "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 8 to 17 working days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
     "rateTitle": "Rate and area",
     "rateBody": "We deliver within Israel only for now, and the rate depends on your region. Pick your region at checkout and the price shows immediately. Prices are in shekels and include VAT.",
     "trackingTitle": "Tracking",
@@ -317,7 +318,7 @@
     "metaDescription": "What KitVerse sells: replica football shirts for clubs and national teams, in Fan and Player versions, with honest photographs and honest delivery dates.",
     "body1": "KitVerse sells football shirts for clubs from the big five leagues and for national teams, in two versions: Fan and Player. Sizes run from S to 4XL, and any shirt can be printed with a name and number.",
     "body2": "These are replicas, not licensed merchandise, and we would rather say that on the front page than leave you to work it out. The design, the badge placement and the fabric are made to match the original closely; the shirt is not sold by the club. Every product photograph on this site is of the actual shirt we ship.",
-    "body3": "Prices are in shekels and include VAT. Delivery is 12 to 25 days with tracking, inside Israel for now.",
+    "body3": "Prices are in shekels and include VAT. Delivery is 8 to 17 working days with tracking, inside Israel for now.",
     "contactTitle": "Contact",
     "contactBody": "Questions about an order, a size, or a return — write to us and we reply within two business days.",
     "email": "hello@kitverse.co.il"
@@ -350,7 +351,7 @@
     "errorCity": "Please enter your city.",
     "errorRegion": "Choose your delivery region.",
     "errorNotes": "That note is too long.",
-    "formIncomplete": "Complete your delivery details and the payment button appears.",
+    "formIncomplete": "Complete your delivery details above to send the order.",
     "processing": "Confirming your payment…",
     "termsLine": "By paying you agree to our <terms>terms and cancellation policy</terms>.",
     "demoTitle": "Payments are not set up yet",
@@ -369,9 +370,9 @@
     "returnFailed": "The card payment did not go through, and nothing was charged. You can try again, or pay with PayPal.",
     "returnCancelled": "You stopped the payment, and nothing was charged. Your cart is still here whenever you are ready.",
     "payCodIntro": "Or pay cash on delivery",
-    "payCod": "Order with cash on delivery",
+    "payCod": "Send order",
     "payCodPlacing": "Placing your order…",
-    "payCashNote": "Pay the courier in cash when your order arrives. No deposit, nothing charged now.",
+    "payCashNote": "Pay the courier in cash when your order arrives, in 8 to 17 working days. No deposit, nothing charged now.",
     "giftBoxLegend": "Gift box",
     "giftBoxHint": "A gift box for your shirts — one box fits more than one shirt. ₪{price} each.",
     "giftBoxNone": "No gift box",
@@ -383,7 +384,7 @@
     "intro": "Payment received, and we have started getting your order ready.",
     "metaDescription": "Your KitVerse order confirmation.",
     "referenceLabel": "Order reference",
-    "delivery": "Delivery is 12 to 25 days with tracking. Shirts printed with a name and number add two days to dispatch.",
+    "delivery": "Delivery is 8 to 17 working days with tracking. Shirts printed with a name and number add two days to dispatch.",
     "emailNote": "You will get an email with the order details, then a tracking number as soon as the parcel moves. If anything in the address is wrong, write to us quickly and we will fix it.",
     "keepShopping": "Keep shopping",
     "confirmingTitle": "We are confirming your payment",

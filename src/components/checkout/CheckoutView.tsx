@@ -30,9 +30,14 @@ import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
  * — handle, size, version, personalisation, quantity — and no money at all.
  * The server re-derives the amount from the catalogue and charges that.
  *
- * NEITHER payment method exists until the delivery form validates. A buyer who
- * pays and only then discovers their address was rejected has been failed by
- * the page.
+ * Every payment control is visible from the start, not revealed once the form
+ * validates — a shopper should see the "Send order" button before they begin
+ * typing, so they know what is coming. It is simply disabled (the same grey
+ * .btn:disabled treatment every other control on the site uses) until the
+ * delivery form validates, and reads as active the moment it does. A buyer who
+ * pays and only then discovers their address was rejected would have been
+ * failed by the page, so disabled still means disabled underneath, not just
+ * visually — the onClick handlers run only once `parsed.success` is true.
  *
  * Three methods, each shown only when it is configured: PayPlus clears cards
  * (a redirect to a page PayPlus hosts), PayPal covers everything else, and
@@ -627,10 +632,6 @@ export function CheckoutView({
 
           {!payplusEnabled && !cashEnabled && paypalClientId === null ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
-          ) : !parsed.success ? (
-            <p className="border border-rule px-4 py-3.5 text-sm text-ink-soft">
-              {t("formIncomplete")}
-            </p>
           ) : (
             <div className="flex flex-col gap-6">
               <h3 className="mono-eyebrow text-ink-soft">{t("payTitle")}</h3>
@@ -640,7 +641,7 @@ export function CheckoutView({
                   <button
                     type="button"
                     className="btn w-full"
-                    disabled={phase !== "form"}
+                    disabled={phase !== "form" || !parsed.success}
                     onClick={startCardPayment}
                   >
                     {phase === "redirecting" ? t("redirecting") : t("payCard")}
@@ -680,12 +681,13 @@ export function CheckoutView({
                     }}
                   >
                     <PayPalButtons
-                      // Re-mount when the amount changes so a stale button can
-                      // never create an order for a total the customer has
-                      // moved on from.
-                      forceReRender={[totals.total, locale]}
+                      // Re-mount when the amount OR the form's validity
+                      // changes, so a stale button can never create an order
+                      // for a total the customer has moved on from, and the
+                      // disabled state updates the moment the form completes.
+                      forceReRender={[totals.total, locale, parsed.success]}
                       style={{ layout: "vertical", shape: "sharp", label: "pay" }}
-                      disabled={phase !== "form"}
+                      disabled={phase !== "form" || !parsed.success}
                       createOrder={createPayPalOrder}
                       onApprove={async (data) => {
                         if (typeof data.orderID === "string") await capture(data.orderID);
@@ -702,7 +704,10 @@ export function CheckoutView({
 
               {/* Cash on delivery — last, and plain (owner decision
                   2026-10-23): no deposit, nothing charged here at all. The
-                  buyer pays the courier in full when the order arrives. */}
+                  buyer pays the courier in full when the order arrives.
+                  The button (owner request 2026-10-24) is always on screen,
+                  grey and disabled until the delivery form validates, then
+                  reads as active — never hidden behind a separate message. */}
               {cashEnabled ? (
                 <div>
                   {payplusEnabled || paypalClientId !== null ? (
@@ -714,12 +719,18 @@ export function CheckoutView({
                   <button
                     type="button"
                     className="btn w-full"
-                    disabled={phase !== "form"}
+                    disabled={phase !== "form" || !parsed.success}
                     onClick={placeCashOrder}
                   >
                     {phase === "placing" ? t("payCodPlacing") : t("payCod")}
                   </button>
                 </div>
+              ) : null}
+
+              {/* One shared reason, shown once, for every disabled control
+                  above — not a separate panel replacing them. */}
+              {!parsed.success ? (
+                <p className="text-xs text-ink-soft">{t("formIncomplete")}</p>
               ) : null}
             </div>
           )}

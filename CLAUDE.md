@@ -105,17 +105,24 @@ photo-forward.
    correctly — migration `0005` is additive — the application simply never
    writes `awaiting_deposit` / `bit_cod` / `deposit_ils` again.
 1c. **Official patch add-on, replacing the flat badge patch — owner decision
-   2026-10-23.** A club product (one with a league) offers a radio choice of
-   **at most one** patch per shirt: no patch, that club's own league's
+   2026-10-23, UI updated 2026-10-24.** A club product (one with a league)
+   offers **at most one** patch per shirt: no patch, that club's own league's
    official patch, or the Champions League patch — never both, and the
    Champions League option is offered on every club product regardless of
    whether that club plays in the real UCL (any league, any season). Both
    choices cost the same flat **₪11.99** (`ADDONS.patch` in `pricing.ts`,
-   the site's first fractional ILS price — see `round2()`). A national-team
-   product has no league, so it never shows the patch fieldset and the server
-   force-zeroes `patch` to `"none"` for one regardless of what a client
-   sends, mirroring the existing `sanitizeNameNumber` defense-in-depth
-   pattern. `CartItem.patch: "none" | "league" | "ucl"` replaces the old
+   the site's first fractional ILS price — see `round2()`). On the PDP this
+   is a checkbox ("Add an official patch") that reveals a `<select>` with the
+   two choices when checked — not a three-way radio group — per the owner's
+   2026-10-24 request; unchecking the box is the only way back to "none".
+   The Arabic copy uses **رقعة** ("patch"), not شعار ("emblem/crest"), per a
+   2026-10-24 terminology check against how Arabic jersey retailers actually
+   name this: `patchLegend`/`patchToggle`/`patchLeague`/`patchUcl`/
+   `patchHint`/`propPatch*` all read "رقعة". A national-team product has no
+   league, so it never shows the patch fieldset and the server force-zeroes
+   `patch` to `"none"` for one regardless of what a client sends, mirroring
+   the existing `sanitizeNameNumber` defense-in-depth pattern.
+   `CartItem.patch: "none" | "league" | "ucl"` replaces the old
    `badge: boolean`; `order_items.patch` (text) replaces `order_items.badge`
    in migration `0005`.
 1d. **Gift box add-on — owner decision 2026-10-23.** Checkout-only (not on
@@ -130,6 +137,27 @@ photo-forward.
    checkout schema, `orders.street` / `orders.house_number` in migration
    `0005`). The legacy `orders.address` column is still written, concatenated
    from the two new fields, for anything that still reads it.
+1f. **Delivery window is 8–17 working days, and the cash checkout button is
+   always visible — owner decision 2026-10-24.** The old "12 to 25 days"
+   figure is retired everywhere it appeared (home values, PDP shipping
+   accordion, cart/checkout `deliveryNote`, the shipping page, the about
+   page, and the thank-you page) and replaced with **"8 to 17 working
+   days"**, so the site never quotes two different delivery windows. The
+   figure is shown in the checkout order summary (`cart.deliveryNote`) and
+   again in the cash payment note (`checkout.payCashNote`) — both ABOVE the
+   "Send order" button — specifically so a buyer sees the timeframe before
+   they commit, not only on the confirmation page afterward. The cash
+   button (`checkout.payCod`, now "Send order" / "أرسل الطلب", was "Order
+   with cash on delivery") and every other payment control are rendered from
+   the start rather than hidden behind a "complete your details" message —
+   each is simply `.btn:disabled` (the site's one grey/50%-opacity disabled
+   treatment) until `CustomerSchema` parses the delivery form, then reads as
+   fully active. The underlying gate is unchanged: the onClick handlers that
+   actually place an order still only run once `parsed.success` is true, so
+   this is a visibility change, not a validation change. The name & number
+   checkbox on the PDP now shows its price inline — "Add a name and number
+   +₪20" — the same `<Figure>+₪{amount}</Figure>` treatment the size
+   surcharges already use.
 2. **Locales.** `ar` default (RTL) at `/`, `en` at `/en`.
    `localePrefix: "as-needed"`, `localeDetection: false`.
 3. **Shipping at launch — updated 2026-09-02.** Israel only, priced **by
