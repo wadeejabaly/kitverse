@@ -22,7 +22,20 @@ export interface Product {
   kit: Kit;
   league: string | null; // "premier-league" | "la-liga" | "serie-a" | "bundesliga" | "ligue-1" | null (national)
   edition: "standard" | "anniversary";
-  image: string; // "/products/<handle>.jpg"
+  image: string; // primary/front photo — "/products/<handle>.jpg"
+  /**
+   * Additional photos (back, detail shots, …) shown after `image` on the PDP
+   * gallery. Optional and absent on almost every product today: the catalog
+   * moved to hand-maintained JSON when it was rebuilt for 2026/27 (see
+   * CLAUDE.md "Owner decisions" §1), so real photography — this field
+   * included — is added by hand per product as it arrives, not produced by
+   * scripts/import-catalog.mjs. That importer predates this field and
+   * rewrites catalog.json's products array from scratch on every run, so
+   * rerunning it against vendor/ source data would silently drop any
+   * hand-added `images` — do not run it on a product that has one without
+   * carrying the field forward by hand afterwards.
+   */
+  images?: string[];
   sourceHash: string; // supplier provenance
   visible: boolean; // approved review state AND not deduped-away
 }

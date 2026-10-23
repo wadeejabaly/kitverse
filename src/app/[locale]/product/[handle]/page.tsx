@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -9,6 +8,7 @@ import { priceFor } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductForm } from "@/components/product/ProductForm";
+import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { Season } from "@/components/shared/Money";
 import { SectionHead, Wrap } from "@/components/shared/PageLede";
@@ -134,26 +134,18 @@ export default async function ProductPage({
       </nav>
 
       <section className="grid items-start gap-10 pt-8 pb-10 wide:grid-cols-2 wide:gap-14">
-        {/* One photograph per product today; the tile is sticky so the buy box
-            can scroll past it on tall screens.
+        {/* The tile is sticky so the buy box can scroll past it on tall
+            screens. Most products have one photo today; a product with more
+            (see Product.images) gets a thumbnail row under the tile — see
+            <ProductGallery>.
 
-            No reveal on the gallery: it is the LCP element on this page, and
-            an entrance on the thing the reader came to see is the one place
-            where motion costs more than it gives. The details column opposite
-            carries the entrance instead, 90ms behind the fold — enough to
-            read as "the page settled", not as a curtain. */}
+            No reveal on the gallery: the first photo is the LCP element on
+            this page, and an entrance on the thing the reader came to see is
+            the one place where motion costs more than it gives. The details
+            column opposite carries the entrance instead, 90ms behind the
+            fold — enough to read as "the page settled", not as a curtain. */}
         <div className="wide:sticky wide:top-24">
-          <div className="grid aspect-square place-items-center bg-tile">
-            <Image
-              src={product.image}
-              alt={title}
-              width={2048}
-              height={2048}
-              priority
-              sizes="(max-width: 900px) 100vw, 560px"
-              className="h-auto w-[90%]"
-            />
-          </div>
+          <ProductGallery images={[product.image, ...(product.images ?? [])]} alt={title} />
         </div>
 
         <Reveal delay={90}>

@@ -461,7 +461,8 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/_placeholder.jpg",
+      "image": "/products/real-madrid-2026-27-home-shirt.jpg",
+      "images": ["/products/real-madrid-2026-27-home-shirt-back.jpg"],
       "sourceHash": "cdd74a24",
       "visible": true
     },

@@ -247,7 +247,8 @@
     "accordionSizingBody": "Sizing runs about one size smaller than European. Between sizes, take the larger one. Player version is cut slimmer than Fan.",
     "accordionSizingLink": "Full measurements",
     "related": "More from {team}",
-    "metaDescription": "{title} — Fan and Player versions, sizes S to 4XL, optional name and number printing. Prices in shekels including VAT."
+    "metaDescription": "{title} — Fan and Player versions, sizes S to 4XL, optional name and number printing. Prices in shekels including VAT.",
+    "galleryPhoto": "Photo {index}"
   },
   "cart": {
     "eyebrow": "Cart",
