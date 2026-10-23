@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { routing, getDir } from "@/i18n/config";
-import { FONT_STACK_VARS } from "@/lib/fonts";
+import { FONT_CLASS_NAMES, FONT_STACK_VARS } from "@/lib/fonts";
 import { OG_IMAGE, alternatesFor, getSiteUrl, localeUrl, ogImageUrl } from "@/lib/site";
 import { ConsentProvider } from "@/components/providers/ConsentProvider";
 import { CartProvider } from "@/components/cart/CartProvider";
@@ -81,7 +81,14 @@ export default async function LocaleLayout({
   return (
     // lang + dir are set per locale; the font stacks come from src/lib/fonts.ts
     // as custom properties, and globals.css picks the Arabic stack off `lang`.
-    <html lang={locale} dir={getDir(locale)} style={FONT_STACK_VARS}>
+    // FONT_CLASS_NAMES carries next/font's generated --font-inter /
+    // --font-noto-arabic variables, which SANS_STACK / ARABIC_STACK reference.
+    <html
+      lang={locale}
+      dir={getDir(locale)}
+      style={FONT_STACK_VARS}
+      className={FONT_CLASS_NAMES}
+    >
       <body className="flex min-h-dvh flex-col bg-ground text-ink">
         <NextIntlClientProvider messages={messages}>
           <ConsentProvider>
