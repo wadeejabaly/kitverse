@@ -477,7 +477,8 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/_placeholder.jpg",
+      "image": "/products/real-madrid-2026-27-away-shirt.jpg",
+      "images": ["/products/real-madrid-2026-27-away-shirt-back.jpg"],
       "sourceHash": "4854e1c0",
       "visible": true
     },
@@ -492,7 +493,8 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "/products/_placeholder.jpg",
+      "image": "/products/real-madrid-2026-27-third-shirt.jpg",
+      "images": ["/products/real-madrid-2026-27-third-shirt-back.jpg"],
       "sourceHash": "2e08cfe5",
       "visible": true
     },
