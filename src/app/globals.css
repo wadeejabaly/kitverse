@@ -17,6 +17,7 @@
 :root {
   --ground: #f5f3ef; /* page background — warm off-white */
   --tile: #ffffff; /* product image tiles and cards */
+  --field: #ffffff; /* form inputs and selects (follows the theme, unlike --tile) */
   --ink: #14140f; /* text */
   --ink-soft: #6e6a5f; /* secondary text */
   --rule: #e3dfd6; /* hairline borders — the only separator used */
@@ -126,6 +127,8 @@
    and the product shots are cut out on white. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --field: #1c1c18;
     --ground: #131310;
     --ink: #f1efe9;
     --ink-soft: #9a968b;
@@ -146,6 +149,8 @@
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
+  --field: #1c1c18;
   --ground: #131310;
   --ink: #f1efe9;
   --ink-soft: #9a968b;
@@ -171,6 +176,7 @@
 @theme inline {
   --color-ground: var(--ground);
   --color-tile: var(--tile);
+  --color-field: var(--field);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);

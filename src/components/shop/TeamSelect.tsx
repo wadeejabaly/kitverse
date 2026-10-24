@@ -37,7 +37,7 @@ export function TeamSelect({
       onChange={(event) =>
         router.push(shopHref({ kind, league, team: event.target.value || null }))
       }
-      className="w-full border border-rule bg-tile px-3 py-2.5 text-sm text-ink"
+      className="w-full border border-rule bg-field px-3 py-2.5 text-sm text-ink"
     >
       <option value="">{allLabel}</option>
       {teams.map((team) => (

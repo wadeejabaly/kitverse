@@ -9,9 +9,8 @@ import {
   ProseParagraph,
   Wrap,
 } from "@/components/shared/PageLede";
-import { findOrderStateByReference } from "@/lib/order-service";
+import { readOrderToken } from "@/lib/orders/link";
 import { alternatesFor } from "@/lib/site";
-import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function generateMetadata({
   params,
@@ -66,22 +65,20 @@ export default async function ThankYouPage({
   setRequestLocale(locale);
   const t = await getTranslations("thankYou");
 
-  const raw = (await searchParams).ref;
+  const sp = await searchParams;
+  const raw = sp.ref;
   const reference = (typeof raw === "string" ? raw : "")
     .replace(/[^A-Za-z0-9]/g, "")
     .slice(0, 16)
     .toUpperCase();
 
-  // No reference: nothing to look up and nothing to claim either way.
-  // A reference we cannot confirm as paid gets the honest holding copy.
-  const db = reference === "" ? null : getSupabaseAdmin();
-  const state = db ? await findOrderStateByReference(db, reference) : null;
+  // the signed token from checkout proves this visitor placed the order; it opens the live order page
+  const token = typeof sp.t === "string" ? sp.t : "";
+  const orderUrl = token && readOrderToken(token) ? `/o/${token}` : null;
 
-  // A cash order (owner decision 2026-10-23) is confirmed the moment it is
-  // placed — there is no payment to wait for, so its `pending` status reads
-  // as "confirmed" here, unlike a card order's `pending`.
-  const isCash = state?.provider === "cash";
-  const confirmed = reference === "" || state?.status === "paid" || isCash;
+  // website orders are cash on delivery for now: confirmed the moment they are placed
+  const isCash = reference !== "";
+  const confirmed = true;
 
   return (
     <Wrap>
@@ -96,6 +93,11 @@ export default async function ThankYouPage({
           <>
             <ProseParagraph>{t("cashNote")}</ProseParagraph>
             <ProseParagraph>{t("delivery")}</ProseParagraph>
+            {orderUrl ? (
+              <a href={orderUrl} className="btn-quiet mt-2">
+                {t("viewOrder")}
+              </a>
+            ) : null}
           </>
         ) : confirmed ? (
           <>

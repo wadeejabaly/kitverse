@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Link, useRouter } from "@/i18n/navigation";
 import {
   DELIVERY_REGIONS,
@@ -96,14 +95,10 @@ function isReturnState(value: unknown): value is ReturnState {
 export function CheckoutView({
   products,
   locale,
-  paypalClientId,
-  payplusEnabled,
   cashEnabled,
 }: {
   products: CartProductInfo[];
   locale: string;
-  paypalClientId: string | null;
-  payplusEnabled: boolean;
   cashEnabled: boolean;
 }) {
   const t = useTranslations("checkout");
@@ -213,42 +208,6 @@ export function CheckoutView({
   }
 
   /**
-   * The card path. The server prices the cart, writes the pending order and
-   * asks PayPlus for a hosted page; all that comes back here is the URL to
-   * send the customer to.
-   *
-   * The cart is deliberately NOT emptied before leaving: a customer who
-   * cancels on the payment page must come back to the basket they had. It is
-   * cleared on the confirmation page instead, once there is an order behind
-   * it.
-   */
-  async function startCardPayment() {
-    setErrorCode(null);
-    setReturnNotice(null);
-    setPhase("redirecting");
-
-    type StartResponse = { redirectUrl?: unknown; code?: unknown } | null;
-    let payload: StartResponse = null;
-    try {
-      const response = await fetch("/api/checkout/payplus/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: orderRequestBody(),
-      });
-      payload = (await response.json().catch(() => null)) as StartResponse;
-      if (response.ok && typeof payload?.redirectUrl === "string") {
-        window.location.assign(payload.redirectUrl);
-        return;
-      }
-    } catch {
-      // Network failure — handled exactly like a rejected request below.
-    }
-
-    setPhase("form");
-    setErrorCode(isErrorCode(payload?.code) ? payload.code : "server_error");
-  }
-
-  /**
    * The cash-on-delivery path (owner decision 2026-10-23: plain cash, no
    * deposit). Nothing is charged at all — the server writes a `pending`
    * order, emails the owner immediately, and hands back the reference. The
@@ -259,7 +218,7 @@ export function CheckoutView({
     setReturnNotice(null);
     setPhase("placing");
 
-    type CashResponse = { reference?: unknown; code?: unknown } | null;
+    type CashResponse = { reference?: unknown; token?: unknown; code?: unknown } | null;
     let payload: CashResponse = null;
     try {
       const response = await fetch("/api/checkout/cash/start", {
@@ -274,8 +233,9 @@ export function CheckoutView({
         // cart is empty" screen at someone who has just ordered.
         setPhase("done");
         clear();
+        const token = typeof payload.token === "string" ? payload.token : "";
         router.push(
-          `/checkout/thank-you?ref=${encodeURIComponent(payload.reference)}`,
+          `/checkout/thank-you?ref=${encodeURIComponent(payload.reference)}&t=${encodeURIComponent(token)}`,
         );
         return;
       }
@@ -285,50 +245,6 @@ export function CheckoutView({
 
     setPhase("form");
     setErrorCode(isErrorCode(payload?.code) ? payload.code : "server_error");
-  }
-
-  async function createPayPalOrder(): Promise<string> {
-    setErrorCode(null);
-    setReturnNotice(null);
-    // Choices only — never a price. See the note at the top of this file.
-    const response = await fetch("/api/checkout/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: orderRequestBody(),
-    });
-    const body: unknown = await response.json().catch(() => null);
-    const payload = body as { paypalOrderId?: unknown; code?: unknown } | null;
-
-    if (!response.ok || typeof payload?.paypalOrderId !== "string") {
-      setErrorCode(isErrorCode(payload?.code) ? payload.code : "server_error");
-      throw new Error("create-order failed");
-    }
-    return payload.paypalOrderId;
-  }
-
-  async function capture(paypalOrderId: string): Promise<void> {
-    setPhase("paying");
-    const response = await fetch("/api/checkout/capture-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paypalOrderId }),
-    });
-    const body: unknown = await response.json().catch(() => null);
-    const payload = body as { status?: unknown; reference?: unknown; code?: unknown } | null;
-
-    if (!response.ok || payload?.status !== "paid") {
-      setPhase("form");
-      setErrorCode(isErrorCode(payload?.code) ? payload.code : "capture_failed");
-      return;
-    }
-
-    // Paid. Empty the cart and hand over to the confirmation page — in that
-    // order, behind the "done" phase, so the emptied cart never flashes an
-    // "your cart is empty" screen at someone who has just paid.
-    setPhase("done");
-    clear();
-    const reference = typeof payload.reference === "string" ? payload.reference : "";
-    router.push(`/checkout/thank-you?ref=${encodeURIComponent(reference)}`);
   }
 
   if (!hydrated) return <div className="min-h-[40vh]" aria-hidden />;
@@ -449,7 +365,7 @@ export function CheckoutView({
               aria-invalid={touched.region === true && fieldErrors.region === true}
               onChange={(event) => setField("region", event.target.value)}
               onBlur={() => setTouched((current) => ({ ...current, region: true }))}
-              className={`w-full border bg-tile px-3.5 py-3 text-sm text-ink ${
+              className={`w-full border bg-field px-3.5 py-3 text-sm text-ink ${
                 touched.region === true && fieldErrors.region === true
                   ? "border-ink"
                   : "border-rule"
@@ -572,7 +488,7 @@ export function CheckoutView({
             dir="ltr"
             value={giftBoxQty}
             onChange={(event) => setGiftBoxQty(Number(event.target.value))}
-            className="tabular w-32 border border-rule bg-tile px-3 py-2.5 text-sm text-ink"
+            className="tabular w-32 border border-rule bg-field px-3 py-2.5 text-sm text-ink"
           >
             <option value={0}>{t("giftBoxNone")}</option>
             {Array.from({ length: GIFT_BOX_MAX_QTY }, (_, index) => index + 1).map(
@@ -625,7 +541,7 @@ export function CheckoutView({
             </p>
           ) : null}
 
-          {!payplusEnabled && !cashEnabled && paypalClientId === null ? (
+          {!cashEnabled ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : !parsed.success ? (
             <p className="border border-rule px-4 py-3.5 text-sm text-ink-soft">
@@ -635,81 +551,11 @@ export function CheckoutView({
             <div className="flex flex-col gap-6">
               <h3 className="mono-eyebrow text-ink-soft">{t("payTitle")}</h3>
 
-              {payplusEnabled ? (
-                <div>
-                  <button
-                    type="button"
-                    className="btn w-full"
-                    disabled={phase !== "form"}
-                    onClick={startCardPayment}
-                  >
-                    {phase === "redirecting" ? t("redirecting") : t("payCard")}
-                  </button>
-                  <p className="mt-2.5 text-xs text-ink-soft">{t("payCardNote")}</p>
-                  {/* Honest rather than reassuring: the hosted page's Arabic
-                      support is not something this site can promise. */}
-                  <p className="mt-1.5 text-xs text-ink-soft">
-                    {t("payCardLanguage")}
-                  </p>
-                </div>
-              ) : null}
-
-              {paypalClientId !== null ? (
-                <div>
-                  {payplusEnabled ? (
-                    <p className="mb-4 border-t border-rule pt-4 text-xs text-ink-soft">
-                      {t("payPalNote")}
-                    </p>
-                  ) : null}
-                  <PayPalScriptProvider
-                    options={{
-                      clientId: paypalClientId,
-                      currency: "ILS",
-                      intent: "capture",
-                      components: "buttons",
-                      // PayPal offers its own "Debit or Credit Card" button.
-                      // With PayPlus present that is a SECOND card button on
-                      // one screen, pointing at a different processor — so it
-                      // is dropped and cards go to the primary path. With
-                      // PayPlus absent it is the only way to pay by card and
-                      // stays exactly where it was.
-                      ...(payplusEnabled ? { disableFunding: "card" } : {}),
-                      // PayPal's own locale codes: ar_EG is the Arabic checkout
-                      // it ships; there is no ar_IL.
-                      locale: locale === "ar" ? "ar_EG" : "en_US",
-                    }}
-                  >
-                    <PayPalButtons
-                      // Re-mount when the amount changes so a stale button can
-                      // never create an order for a total the customer has
-                      // moved on from.
-                      forceReRender={[totals.total, locale]}
-                      style={{ layout: "vertical", shape: "sharp", label: "pay" }}
-                      disabled={phase !== "form"}
-                      createOrder={createPayPalOrder}
-                      onApprove={async (data) => {
-                        if (typeof data.orderID === "string") await capture(data.orderID);
-                      }}
-                      onCancel={() => setPhase("form")}
-                      onError={() => {
-                        setPhase("form");
-                        setErrorCode((current) => current ?? "server_error");
-                      }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
-              ) : null}
-
               {/* Cash on delivery — last, and plain (owner decision
                   2026-10-23): no deposit, nothing charged here at all. The
                   buyer pays the courier in full when the order arrives. */}
               {cashEnabled ? (
                 <div>
-                  {payplusEnabled || paypalClientId !== null ? (
-                    <p className="mb-4 border-t border-rule pt-4 text-xs text-ink-soft">
-                      {t("payCodIntro")}
-                    </p>
-                  ) : null}
                   <p className="mb-4 text-xs text-ink-soft">{t("payCashNote")}</p>
                   <button
                     type="button"
@@ -808,7 +654,7 @@ function Field({
   "onChange" | "onBlur" | "name" | "value" | "id"
 >) {
   const id = `checkout-${name}`;
-  const className = `w-full border bg-tile px-3.5 py-3 text-sm text-ink ${
+  const className = `w-full border bg-field px-3.5 py-3 text-sm text-ink ${
     invalid ? "border-ink" : "border-rule"
   }`;
 
