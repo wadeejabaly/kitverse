@@ -164,7 +164,7 @@ export function ProductForm({
               onChange={(event) => setNameNumber(sanitizeNameNumber(event.target.value))}
               placeholder="HAALAND 9"
               aria-label={t("nameNumberLabel")}
-              className="latin w-full border border-rule bg-tile px-3.5 py-3 text-sm text-ink"
+              className="latin w-full border border-rule bg-field px-3.5 py-3 text-sm text-ink"
             />
             <p className="mt-2 text-xs text-ink-soft">{t("nameNumberHint")}</p>
           </div>
@@ -230,7 +230,7 @@ export function ProductForm({
           dir="ltr"
           value={qty}
           onChange={(event) => setQty(Number(event.target.value))}
-          className="tabular w-24 border border-rule bg-tile px-3 py-2.5 text-sm text-ink"
+          className="tabular w-24 border border-rule bg-field px-3 py-2.5 text-sm text-ink"
         >
           {Array.from({ length: MAX_QTY }, (_, index) => index + 1).map((value) => (
             <option key={value} value={value}>

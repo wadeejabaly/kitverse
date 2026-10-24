@@ -365,7 +365,7 @@ export function CheckoutView({
               aria-invalid={touched.region === true && fieldErrors.region === true}
               onChange={(event) => setField("region", event.target.value)}
               onBlur={() => setTouched((current) => ({ ...current, region: true }))}
-              className={`w-full border bg-tile px-3.5 py-3 text-sm text-ink ${
+              className={`w-full border bg-field px-3.5 py-3 text-sm text-ink ${
                 touched.region === true && fieldErrors.region === true
                   ? "border-ink"
                   : "border-rule"
@@ -488,7 +488,7 @@ export function CheckoutView({
             dir="ltr"
             value={giftBoxQty}
             onChange={(event) => setGiftBoxQty(Number(event.target.value))}
-            className="tabular w-32 border border-rule bg-tile px-3 py-2.5 text-sm text-ink"
+            className="tabular w-32 border border-rule bg-field px-3 py-2.5 text-sm text-ink"
           >
             <option value={0}>{t("giftBoxNone")}</option>
             {Array.from({ length: GIFT_BOX_MAX_QTY }, (_, index) => index + 1).map(
@@ -654,7 +654,7 @@ function Field({
   "onChange" | "onBlur" | "name" | "value" | "id"
 >) {
   const id = `checkout-${name}`;
-  const className = `w-full border bg-tile px-3.5 py-3 text-sm text-ink ${
+  const className = `w-full border bg-field px-3.5 py-3 text-sm text-ink ${
     invalid ? "border-ink" : "border-rule"
   }`;
 
