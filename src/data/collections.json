@@ -1,0 +1,378 @@
+{
+  "leagues": [
+    {
+      "slug": "premier-league",
+      "name": "Premier League",
+      "nameAr": "الدوري الإنجليزي الممتاز"
+    },
+    {
+      "slug": "la-liga",
+      "name": "La Liga",
+      "nameAr": "الدوري الإسباني"
+    },
+    {
+      "slug": "serie-a",
+      "name": "Serie A",
+      "nameAr": "الدوري الإيطالي"
+    },
+    {
+      "slug": "bundesliga",
+      "name": "Bundesliga",
+      "nameAr": "الدوري الألماني"
+    },
+    {
+      "slug": "ligue-1",
+      "name": "Ligue 1",
+      "nameAr": "الدوري الفرنسي"
+    },
+    {
+      "slug": "argentina-primera",
+      "name": "Argentine Primera",
+      "nameAr": "الدوري الأرجنتيني"
+    },
+    {
+      "slug": "brasileirao",
+      "name": "Brasileirão",
+      "nameAr": "الدوري البرازيلي"
+    },
+    {
+      "slug": "eredivisie",
+      "name": "Eredivisie",
+      "nameAr": "الدوري الهولندي"
+    },
+    {
+      "slug": "mls",
+      "name": "MLS",
+      "nameAr": "الدوري الأمريكي"
+    },
+    {
+      "slug": "primeira-liga",
+      "name": "Primeira Liga",
+      "nameAr": "الدوري البرتغالي"
+    },
+    {
+      "slug": "saudi-pro-league",
+      "name": "Saudi Pro League",
+      "nameAr": "الدوري السعودي"
+    },
+    {
+      "slug": "scottish-premiership",
+      "name": "Scottish Premiership",
+      "nameAr": "الدوري الاسكتلندي"
+    }
+  ],
+  "teams": [
+    {
+      "slug": "ac-milan",
+      "name": "AC Milan",
+      "nameAr": "ميلان",
+      "kind": "club"
+    },
+    {
+      "slug": "ajax",
+      "name": "Ajax",
+      "nameAr": "أياكس",
+      "kind": "club"
+    },
+    {
+      "slug": "al-hilal",
+      "name": "Al-Hilal",
+      "nameAr": "الهلال",
+      "kind": "club"
+    },
+    {
+      "slug": "al-ittihad",
+      "name": "Al-Ittihad",
+      "nameAr": "الاتحاد",
+      "kind": "club"
+    },
+    {
+      "slug": "al-nassr",
+      "name": "Al-Nassr",
+      "nameAr": "النصر",
+      "kind": "club"
+    },
+    {
+      "slug": "algeria",
+      "name": "Algeria",
+      "nameAr": "الجزائر",
+      "kind": "national"
+    },
+    {
+      "slug": "argentina",
+      "name": "Argentina",
+      "nameAr": "الأرجنتين",
+      "kind": "national"
+    },
+    {
+      "slug": "arsenal",
+      "name": "Arsenal",
+      "nameAr": "أرسنال",
+      "kind": "club"
+    },
+    {
+      "slug": "aston-villa",
+      "name": "Aston Villa",
+      "nameAr": "أستون فيلا",
+      "kind": "club"
+    },
+    {
+      "slug": "atletico-madrid",
+      "name": "Atlético Madrid",
+      "nameAr": "أتلتيكو مدريد",
+      "kind": "club"
+    },
+    {
+      "slug": "barcelona",
+      "name": "Barcelona",
+      "nameAr": "برشلونة",
+      "kind": "club"
+    },
+    {
+      "slug": "bayern-munich",
+      "name": "Bayern Munich",
+      "nameAr": "بايرن ميونخ",
+      "kind": "club"
+    },
+    {
+      "slug": "belgium",
+      "name": "Belgium",
+      "nameAr": "بلجيكا",
+      "kind": "national"
+    },
+    {
+      "slug": "benfica",
+      "name": "Benfica",
+      "nameAr": "بنفيكا",
+      "kind": "club"
+    },
+    {
+      "slug": "boca-juniors",
+      "name": "Boca Juniors",
+      "nameAr": "بوكا جونيورز",
+      "kind": "club"
+    },
+    {
+      "slug": "borussia-dortmund",
+      "name": "Borussia Dortmund",
+      "nameAr": "بوروسيا دورتموند",
+      "kind": "club"
+    },
+    {
+      "slug": "brazil",
+      "name": "Brazil",
+      "nameAr": "البرازيل",
+      "kind": "national"
+    },
+    {
+      "slug": "celtic",
+      "name": "Celtic",
+      "nameAr": "سلتيك",
+      "kind": "club"
+    },
+    {
+      "slug": "chelsea",
+      "name": "Chelsea",
+      "nameAr": "تشيلسي",
+      "kind": "club"
+    },
+    {
+      "slug": "colombia",
+      "name": "Colombia",
+      "nameAr": "كولومبيا",
+      "kind": "national"
+    },
+    {
+      "slug": "croatia",
+      "name": "Croatia",
+      "nameAr": "كرواتيا",
+      "kind": "national"
+    },
+    {
+      "slug": "egypt",
+      "name": "Egypt",
+      "nameAr": "مصر",
+      "kind": "national"
+    },
+    {
+      "slug": "england",
+      "name": "England",
+      "nameAr": "إنجلترا",
+      "kind": "national"
+    },
+    {
+      "slug": "flamengo",
+      "name": "Flamengo",
+      "nameAr": "فلامنغو",
+      "kind": "club"
+    },
+    {
+      "slug": "france",
+      "name": "France",
+      "nameAr": "فرنسا",
+      "kind": "national"
+    },
+    {
+      "slug": "galatasaray",
+      "name": "Galatasaray",
+      "nameAr": "غلطة سراي",
+      "kind": "club"
+    },
+    {
+      "slug": "germany",
+      "name": "Germany",
+      "nameAr": "ألمانيا",
+      "kind": "national"
+    },
+    {
+      "slug": "inter-miami",
+      "name": "Inter Miami",
+      "nameAr": "إنتر ميامي",
+      "kind": "club"
+    },
+    {
+      "slug": "inter-milan",
+      "name": "Inter Milan",
+      "nameAr": "إنتر ميلان",
+      "kind": "club"
+    },
+    {
+      "slug": "italy",
+      "name": "Italy",
+      "nameAr": "إيطاليا",
+      "kind": "national"
+    },
+    {
+      "slug": "japan",
+      "name": "Japan",
+      "nameAr": "اليابان",
+      "kind": "national"
+    },
+    {
+      "slug": "jordan",
+      "name": "Jordan",
+      "nameAr": "الأردن",
+      "kind": "national"
+    },
+    {
+      "slug": "manchester-city",
+      "name": "Manchester City",
+      "nameAr": "مانشستر سيتي",
+      "kind": "club"
+    },
+    {
+      "slug": "manchester-united",
+      "name": "Manchester United",
+      "nameAr": "مانشستر يونايتد",
+      "kind": "club"
+    },
+    {
+      "slug": "marseille",
+      "name": "Marseille",
+      "nameAr": "مارسيليا",
+      "kind": "club"
+    },
+    {
+      "slug": "mexico",
+      "name": "Mexico",
+      "nameAr": "المكسيك",
+      "kind": "national"
+    },
+    {
+      "slug": "morocco",
+      "name": "Morocco",
+      "nameAr": "المغرب",
+      "kind": "national"
+    },
+    {
+      "slug": "napoli",
+      "name": "Napoli",
+      "nameAr": "نابولي",
+      "kind": "club"
+    },
+    {
+      "slug": "netherlands",
+      "name": "Netherlands",
+      "nameAr": "هولندا",
+      "kind": "national"
+    },
+    {
+      "slug": "newcastle-united",
+      "name": "Newcastle United",
+      "nameAr": "نيوكاسل يونايتد",
+      "kind": "club"
+    },
+    {
+      "slug": "paris-saint-germain",
+      "name": "Paris Saint-Germain",
+      "nameAr": "باريس سان جيرمان",
+      "kind": "club"
+    },
+    {
+      "slug": "porto",
+      "name": "Porto",
+      "nameAr": "بورتو",
+      "kind": "club"
+    },
+    {
+      "slug": "portugal",
+      "name": "Portugal",
+      "nameAr": "البرتغال",
+      "kind": "national"
+    },
+    {
+      "slug": "real-madrid",
+      "name": "Real Madrid",
+      "nameAr": "ريال مدريد",
+      "kind": "club"
+    },
+    {
+      "slug": "roma",
+      "name": "Roma",
+      "nameAr": "روما",
+      "kind": "club"
+    },
+    {
+      "slug": "saudi-arabia",
+      "name": "Saudi Arabia",
+      "nameAr": "السعودية",
+      "kind": "national"
+    },
+    {
+      "slug": "senegal",
+      "name": "Senegal",
+      "nameAr": "السنغال",
+      "kind": "national"
+    },
+    {
+      "slug": "spain",
+      "name": "Spain",
+      "nameAr": "إسبانيا",
+      "kind": "national"
+    },
+    {
+      "slug": "sporting-cp",
+      "name": "Sporting CP",
+      "nameAr": "سبورتينغ لشبونة",
+      "kind": "club"
+    },
+    {
+      "slug": "tottenham-hotspur",
+      "name": "Tottenham Hotspur",
+      "nameAr": "توتنهام هوتسبير",
+      "kind": "club"
+    },
+    {
+      "slug": "tunisia",
+      "name": "Tunisia",
+      "nameAr": "تونس",
+      "kind": "national"
+    },
+    {
+      "slug": "united-states",
+      "name": "United States",
+      "nameAr": "الولايات المتحدة",
+      "kind": "national"
+    }
+  ]
+}

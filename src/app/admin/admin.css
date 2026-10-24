@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* Kitverse palette: warm paper, ink, pitch green. */
+:root {
+  --paper: #f6f5f1;
+  --surface: #ffffff;
+  --ink: #15140f;
+  --ink-2: #3d3b33;
+  --muted: #77746a;
+  --line: #e6e3db;
+  --line-2: #d8d4c9;
+  --pitch: #1e4620;
+  --pitch-2: #2c5e2f;
+  --pitch-soft: #e9f0e7;
+  --amber: #a15c07;
+  --amber-soft: #fbf1df;
+  --red: #b42318;
+  --red-soft: #fdecea;
+  --void: #f6f5f1;
+  --pitch-fill: #1e4620;
+  --pitch-fill-2: #2c5e2f;
+  --link: #1e4620;
+}
+
+/* Admin: dark console look (black page, framed panel, hairline borders). */
+.admin-theme {
+  --void: #000000;
+  --paper: #0a0a0a;
+  --surface: #0e0e0e;
+  --raised: #161616;
+  --ink: #ededed;
+  --ink-2: #c2c2c2;
+  --muted: #8a8a8a;
+  --line: #242424;
+  --line-2: #333333;
+  --pitch: #3ecf8e;
+  --pitch-2: #5ad9a0;
+  --pitch-soft: #0d2a1d;
+  --pitch-fill: #0b7a4b;
+  --pitch-fill-2: #0e8f58;
+  --link: #5aa7f2;
+  --amber: #f5b14c;
+  --amber-soft: #2a1e0b;
+  --red: #f47067;
+  --red-soft: #2c1312;
+  color-scheme: dark;
+}
+html:has(.admin-theme), html:has(.admin-theme) body { background: #000; }
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-pitch: var(--pitch);
+  --color-pitch-2: var(--pitch-2);
+  --color-pitch-soft: var(--pitch-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-red: var(--red);
+  --color-red-soft: var(--red-soft);
+  --color-void: var(--void);
+  --color-raised: var(--raised, var(--surface));
+  --color-pitch-fill: var(--pitch-fill);
+  --color-pitch-fill-2: var(--pitch-fill-2);
+  --color-link: var(--link);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Arabic customer text inside the English admin */
+[dir="auto"], .ar { font-family: var(--font-geist-sans), "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif; }

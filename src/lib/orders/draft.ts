@@ -13,6 +13,7 @@ export interface OrderRow {
   id: string; number: number; status: string; customer_id: string; conversation_id: string | null;
   zone_id: string | null; address: Record<string, string | null> | null; total: number; quote: Quote | null;
   payment_method: "cod" | "paypal" | null; payment_status: string; price_list_version_id: string | null; confirmed_at: string | null;
+  gift_boxes?: number; source?: "instagram" | "website";
 }
 
 export interface ItemRow {
@@ -127,7 +128,7 @@ export async function requote(order: OrderRow): Promise<Quote> {
     });
   }
   const adj = must(await db().from("adjustments").select("reason,amount").eq("order_id", order.id), "adjustments") as { reason: string; amount: number }[];
-  const boxes = items.filter((i) => i.box).reduce((n, i) => n + i.qty, 0); // one gift box per boxed shirt
+  const boxes = items.filter((i) => i.box).reduce((n, i) => n + i.qty, 0) + (order.gift_boxes ?? 0); // boxed shirts + boxes ordered on the website
   const q = quote(list.data, { items: cart, zoneId: order.zone_id, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
     orderAddons: boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : [] });
   const status = order.status === "draft" && cart.length ? "quoted" : order.status;

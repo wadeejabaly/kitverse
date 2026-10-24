@@ -1,0 +1,132 @@
+import { z } from "zod";
+import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS, isDeliveryRegion } from "@/data/pricing";
+import type { DeliveryRegion } from "@/data/pricing";
+import type { Patch, Size, Version } from "@/data/types";
+import { NAME_NUMBER_MAX } from "@/lib/product";
+
+/**
+ * The checkout wire contract — shared by the browser form and the API routes.
+ *
+ * Deliberately dependency-light: this module must be safe to import from a
+ * client component, so it pulls in Zod and two tiny constants and nothing
+ * else. The catalogue lookup and the money recomputation live in
+ * src/lib/orders.ts, which is server-side and imports catalog.json.
+ *
+ * Note what is NOT in the item schema: any price. The browser sends what the
+ * customer chose; the server decides what it costs. A request carrying a
+ * price field would simply have it ignored.
+ */
+
+export const MAX_CART_LINES = 40;
+
+// Membership checks against the single source of truth in pricing.ts, so a
+// new size can never be valid in the cart and invalid at checkout.
+const SizeSchema = z.custom<Size>(
+  (value) => typeof value === "string" && (SIZES as string[]).includes(value),
+);
+const VersionSchema = z.custom<Version>(
+  (value) => typeof value === "string" && (VERSIONS as string[]).includes(value),
+);
+// The closed set of delivery regions, checked against pricing.ts — the server
+// must never price shipping from a region it did not itself define.
+const DeliveryRegionSchema = z.custom<DeliveryRegion>(isDeliveryRegion);
+const PatchSchema = z.enum(["none", "league", "ucl"]) satisfies z.ZodType<Patch>;
+
+/** One cart line as it crosses the wire. Matches CartItem minus any money. */
+export const CheckoutItemSchema = z.object({
+  handle: z.string().min(1).max(120),
+  size: SizeSchema,
+  version: VersionSchema,
+  nameNumber: z.string().max(NAME_NUMBER_MAX * 2).optional(),
+  // Replaces the old `badge: boolean` (owner decision 2026-10-23). Whether
+  // "league"/"ucl" is actually billable for this handle is re-checked
+  // server-side against the catalogue in repriceCart — a national-team
+  // product (no league) is never charged for a patch, whatever is sent here.
+  patch: PatchSchema,
+  // Clamped rather than rejected server-side; the bound here is a sanity
+  // ceiling so an absurd number never reaches the clamp.
+  qty: z.number().int().min(1).max(1000),
+});
+
+export type CheckoutItemInput = z.infer<typeof CheckoutItemSchema>;
+
+/**
+ * Delivery details. Israel only at launch, so `country` is not a form field
+ * at all — it is fixed to IL here and on the order row, which is honest about
+ * what the store can actually ship.
+ *
+ * `region` IS a form field, and a required one: shipping is priced from it
+ * (pricing.ts → shippingFor), so it has to be a choice the shopper made and a
+ * value from a closed set the server owns.
+ *
+ * `street` + `houseNumber` replace the old single `address` field (owner
+ * decision 2026-10-23) — two fields instead of one free-text one, same as the
+ * database (migration 0005) and the order-notification email.
+ */
+export const CustomerSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  // Kept permissive on purpose: international dialling forms vary and a
+  // rejected valid number costs a sale. The rule is "enough digits to be a
+  // phone number", not a format.
+  phone: z
+    .string()
+    .trim()
+    .min(7)
+    .max(24)
+    .regex(/^[+()\-\s0-9]+$/)
+    .refine((value) => (value.match(/\d/g) ?? []).length >= 7),
+  email: z.email().max(160),
+  street: z.string().trim().min(2).max(140),
+  houseNumber: z.string().trim().min(1).max(20),
+  city: z.string().trim().min(2).max(80),
+  // Explicit, shopper-chosen — shipping is priced from this, never inferred
+  // from the free-text city above (too unreliable to bill from).
+  region: DeliveryRegionSchema,
+  notes: z.string().trim().max(500).optional(),
+});
+
+export type CustomerInput = z.infer<typeof CustomerSchema>;
+
+export const CreateOrderRequestSchema = z.object({
+  items: z.array(CheckoutItemSchema).min(1).max(MAX_CART_LINES),
+  customer: CustomerSchema,
+  locale: z.enum(["ar", "en"]),
+  // The checkout-only gift-box add-on (owner decision 2026-10-23): how many
+  // boxes, not a per-shirt flag. Optional on the wire so an older client
+  // omitting it still prices as "no gift box" rather than failing validation.
+  giftBoxQty: z.number().int().min(0).max(GIFT_BOX_MAX_QTY).optional().default(0),
+});
+
+export type CreateOrderRequest = z.infer<typeof CreateOrderRequestSchema>;
+
+export const CaptureOrderRequestSchema = z.object({
+  paypalOrderId: z.string().min(4).max(64).regex(/^[A-Za-z0-9_-]+$/),
+});
+
+/** The country this store ships to at launch. Not a form field. */
+export const FIXED_COUNTRY = "IL";
+
+/**
+ * Failure codes the API returns instead of prose. The browser maps each one
+ * to a localized string (messages: checkout.errors.*), so an error message is
+ * never an untranslated server string and never leaks internals.
+ */
+export type CheckoutErrorCode =
+  | "invalid_request"
+  | "cart_empty"
+  | "payments_unconfigured"
+  | "paypal_failed"
+  | "payplus_failed"
+  | "order_not_found"
+  | "capture_failed"
+  | "rate_limited"
+  | "server_error";
+
+export interface CheckoutErrorBody {
+  code: CheckoutErrorCode;
+}
+
+/** The customer-facing order reference: the first block of the order uuid. */
+export function orderReference(orderId: string): string {
+  return orderId.replace(/-/g, "").slice(0, 8).toUpperCase();
+}

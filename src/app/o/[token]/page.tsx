@@ -160,7 +160,8 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
       <a href="https://ig.me/m/kitversejerseys" className="flex items-center justify-center gap-2 rounded-md bg-pitch-fill py-3.5 text-[15px] font-semibold text-white active:scale-[.99]">
         <MessageCircle className="h-5 w-5" strokeWidth={1.75} /> عندك سؤال؟ راسلنا عالانستغرام
       </a>
-      <footer className="flex justify-center gap-3 text-xs text-muted"><span dir="ltr">@kitversejerseys</span><a href="/privacy" className="underline">الخصوصية</a></footer>
+      <footer className="flex justify-center gap-3 text-xs text-muted"><span dir="ltr">@kitversejerseys</span>{/* eslint-disable-next-line @next/next/no-html-link-for-pages -- the storefront has its own root layout, so this is a full page load anyway */}
+        <a href="/privacy" className="underline">الخصوصية</a></footer>
     </main>
   );
 }

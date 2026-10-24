@@ -1,0 +1,272 @@
+import { describe, expect, it } from "vitest";
+import {
+  ADDONS,
+  DELIVERY_REGIONS,
+  GIFT_BOX_MAX_QTY,
+  GIFT_BOX_PRICE,
+  SHIPPING_ILS_BY_REGION,
+  SIZES,
+  VERSIONS,
+  cartTotals,
+  giftBoxTotalFor,
+  isDeliveryRegion,
+  isRetroSeason,
+  priceFor,
+  priceLine,
+  round2,
+  seasonYear,
+  shippingFor,
+  sizeSurcharge,
+} from "./pricing";
+import type { Size } from "./types";
+
+const NON_SURCHARGE_SIZES: Size[] = ["S", "M", "L", "XL", "XXL"];
+
+// Real, non-retro seasons as they appear in the catalogue.
+const CURRENT_SEASONS = ["2026/27", "2026", "2025/26"];
+// 2023 and earlier — Retro, whatever the exact string shape.
+const RETRO_SEASONS = ["2023", "2022", "2021/22", "2020", "1998/99"];
+
+describe("seasonYear + isRetroSeason", () => {
+  it("reads the first four-digit year out of a season string", () => {
+    expect(seasonYear("2026/27")).toBe(2026);
+    expect(seasonYear("2025/26")).toBe(2025);
+    expect(seasonYear("2026")).toBe(2026);
+  });
+
+  it("is Retro at 2023 and earlier, not Retro at 2024 and later", () => {
+    for (const season of RETRO_SEASONS) expect(isRetroSeason(season)).toBe(true);
+    for (const season of CURRENT_SEASONS) expect(isRetroSeason(season)).toBe(false);
+    expect(isRetroSeason("2024")).toBe(false);
+    expect(isRetroSeason("2023/24")).toBe(true); // year read is 2023
+  });
+
+  it("treats an unparseable season as NOT retro, so it never over-charges", () => {
+    expect(isRetroSeason("")).toBe(false);
+    expect(isRetroSeason("season unknown")).toBe(false);
+    expect(priceFor("season unknown", "M", "fan")).toBe(95);
+  });
+});
+
+describe("priceFor — flat ladder by type, no season split for Fan/Player", () => {
+  it("Fan is 95 and Player is 110 at every non-retro season and non-surcharge size", () => {
+    for (const season of CURRENT_SEASONS) {
+      for (const size of NON_SURCHARGE_SIZES) {
+        expect(priceFor(season, size, "fan")).toBe(95);
+        expect(priceFor(season, size, "player")).toBe(110);
+      }
+    }
+  });
+
+  it("Retro is 135 regardless of fan/player choice, at every retro season", () => {
+    for (const season of RETRO_SEASONS) {
+      for (const size of NON_SURCHARGE_SIZES) {
+        expect(priceFor(season, size, "fan")).toBe(135);
+        expect(priceFor(season, size, "player")).toBe(135);
+      }
+    }
+  });
+});
+
+describe("priceFor — 3XL/4XL surcharge", () => {
+  it("adds +9 at 3XL and +12 at 4XL, on top of any base price", () => {
+    for (const season of [...CURRENT_SEASONS, ...RETRO_SEASONS]) {
+      for (const version of VERSIONS) {
+        const base = priceFor(season, "XXL", version); // just below the boundary
+        expect(priceFor(season, "3XL", version)).toBe(base + 9);
+        expect(priceFor(season, "4XL", version)).toBe(base + 12);
+      }
+    }
+  });
+
+  it("sizeSurcharge agrees with the difference priceFor actually applies", () => {
+    for (const size of SIZES) {
+      expect(priceFor("2026/27", size, "fan") - priceFor("2026/27", "S", "fan")).toBe(
+        sizeSurcharge(size),
+      );
+    }
+    expect(sizeSurcharge("XXL")).toBe(0);
+    expect(sizeSurcharge("3XL")).toBe(9);
+    expect(sizeSurcharge("4XL")).toBe(12);
+  });
+
+  it("full ladder spot-check", () => {
+    expect(priceFor("2026/27", "S", "fan")).toBe(95);
+    expect(priceFor("2026/27", "S", "player")).toBe(110);
+    expect(priceFor("2026/27", "3XL", "fan")).toBe(104);
+    expect(priceFor("2026/27", "4XL", "player")).toBe(122);
+    expect(priceFor("2022", "S", "fan")).toBe(135);
+    expect(priceFor("2022", "S", "player")).toBe(135);
+    expect(priceFor("2022", "3XL", "fan")).toBe(144);
+    expect(priceFor("2022", "4XL", "player")).toBe(147);
+  });
+
+  it("covers every season × size × version combination without throwing", () => {
+    for (const season of [...CURRENT_SEASONS, ...RETRO_SEASONS]) {
+      for (const size of SIZES) {
+        for (const version of VERSIONS) {
+          expect(Number.isFinite(priceFor(season, size, version))).toBe(true);
+        }
+      }
+    }
+  });
+});
+
+describe("ADDONS", () => {
+  it("exposes the confirmed addon prices", () => {
+    expect(ADDONS.nameNumber).toBe(20);
+    // Owner decision 2026-10-23: the official patch (replacing the old flat
+    // `badge` boolean add-on) is ₪11.99 for either patch choice.
+    expect(ADDONS.patch).toBe(11.99);
+  });
+});
+
+describe("round2 — cent-exact rounding for the fractional add-ons", () => {
+  it("rounds to the nearest cent", () => {
+    expect(round2(11.99 * 3)).toBe(35.97);
+    expect(round2(34.99 * 2)).toBe(69.98);
+    expect(round2(95)).toBe(95);
+  });
+
+  it("never leaves floating-point drift in a displayed total", () => {
+    for (let qty = 1; qty <= 10; qty += 1) {
+      const total = round2(11.99 * qty);
+      expect(Number(total.toFixed(2))).toBe(total);
+    }
+  });
+});
+
+describe("regional shipping", () => {
+  it("has exactly the four confirmed regions at the confirmed rates", () => {
+    expect(DELIVERY_REGIONS).toEqual(["north", "center", "negev", "jerusalem"]);
+    expect(shippingFor("north")).toBe(50);
+    expect(shippingFor("center")).toBe(60);
+    expect(shippingFor("negev")).toBe(70);
+    expect(shippingFor("jerusalem")).toBe(100);
+  });
+
+  it("SHIPPING_ILS_BY_REGION agrees with shippingFor for every region", () => {
+    for (const region of DELIVERY_REGIONS) {
+      expect(SHIPPING_ILS_BY_REGION[region]).toBe(shippingFor(region));
+    }
+  });
+
+  it("isDeliveryRegion accepts the closed set and nothing else", () => {
+    for (const region of DELIVERY_REGIONS) expect(isDeliveryRegion(region)).toBe(true);
+    for (const bogus of ["", "NORTH", "tel-aviv", null, undefined, 0, {}]) {
+      expect(isDeliveryRegion(bogus)).toBe(false);
+    }
+  });
+});
+
+describe("priceLine + cartTotals — addon math and totals", () => {
+  it("priceLine with no addons equals priceFor × qty", () => {
+    const line = priceLine("2026/27", "M", "fan", 2);
+    expect(line.unitPrice).toBe(95);
+    expect(line.lineTotal).toBe(190);
+  });
+
+  it("priceLine adds nameNumber and a patch onto the unit price before multiplying by qty", () => {
+    const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, patch: "league" });
+    expect(line.unitPrice).toBe(round2(95 + 20 + 11.99));
+    expect(line.lineTotal).toBe(round2((95 + 20 + 11.99) * 3));
+  });
+
+  it("the league patch and the Champions League patch cost exactly the same", () => {
+    const league = priceLine("2026/27", "M", "fan", 1, { patch: "league" });
+    const ucl = priceLine("2026/27", "M", "fan", 1, { patch: "ucl" });
+    expect(league.unitPrice).toBe(ucl.unitPrice);
+    expect(league.unitPrice).toBe(round2(95 + 11.99));
+  });
+
+  it('a patch of "none" charges nothing, same as omitting it', () => {
+    const withNone = priceLine("2026/27", "M", "fan", 1, { patch: "none" });
+    const omitted = priceLine("2026/27", "M", "fan", 1);
+    expect(withNone.unitPrice).toBe(95);
+    expect(withNone.unitPrice).toBe(omitted.unitPrice);
+  });
+
+  it("priceLine respects the size surcharge together with addons", () => {
+    const line = priceLine("2026/27", "4XL", "player", 1, { nameNumber: true });
+    // player base 110 + 12 surcharge + 20 name&number
+    expect(line.unitPrice).toBe(110 + 12 + 20);
+  });
+
+  it("priceLine on a retro season ignores the version argument", () => {
+    const asFan = priceLine("2019/20", "M", "fan", 1);
+    const asPlayer = priceLine("2019/20", "M", "player", 1);
+    expect(asFan.unitPrice).toBe(135);
+    expect(asPlayer.unitPrice).toBe(135);
+  });
+
+  it("cartTotals sums line totals into subtotal and adds the given shipping once", () => {
+    const lines = [
+      priceLine("2026/27", "M", "fan", 1),
+      priceLine("2022", "L", "player", 2, { patch: "league" }),
+    ];
+    const totals = cartTotals(lines, shippingFor("center"));
+    const expectedSubtotal = round2(95 + round2(135 + 11.99) * 2);
+    expect(totals.subtotal).toBe(expectedSubtotal);
+    expect(totals.shipping).toBe(60);
+    expect(totals.giftBox).toBe(0);
+    expect(totals.total).toBe(round2(expectedSubtotal + 60));
+  });
+
+  it("cartTotals charges no shipping or gift box for an empty cart even if given", () => {
+    const totals = cartTotals([], shippingFor("jerusalem"), 3);
+    expect(totals.subtotal).toBe(0);
+    expect(totals.shipping).toBe(0);
+    expect(totals.giftBox).toBe(0);
+    expect(totals.total).toBe(0);
+  });
+
+  it("cartTotals defaults shipping and gift box to 0 when omitted (the cart page, pre-checkout)", () => {
+    const totals = cartTotals([priceLine("2026/27", "S", "fan", 1)]);
+    expect(totals.shipping).toBe(0);
+    expect(totals.giftBox).toBe(0);
+    expect(totals.total).toBe(95);
+  });
+
+  it("cartTotals still charges shipping exactly once for a single-item cart", () => {
+    const totals = cartTotals([priceLine("2026/27", "S", "fan", 1)], shippingFor("north"));
+    expect(totals.shipping).toBe(50);
+    expect(totals.total).toBe(95 + 50);
+  });
+
+  it("cartTotals adds the gift box exactly once, on top of subtotal and shipping", () => {
+    const totals = cartTotals(
+      [priceLine("2026/27", "S", "fan", 1)],
+      shippingFor("north"),
+      2,
+    );
+    expect(totals.giftBox).toBe(round2(GIFT_BOX_PRICE * 2));
+    expect(totals.total).toBe(round2(95 + 50 + GIFT_BOX_PRICE * 2));
+  });
+});
+
+describe("giftBoxTotalFor — the checkout-only gift-box add-on", () => {
+  it("is free for a quantity of zero", () => {
+    expect(giftBoxTotalFor(0)).toBe(0);
+  });
+
+  it("charges the confirmed ₪34.99 per box", () => {
+    expect(GIFT_BOX_PRICE).toBe(34.99);
+    expect(giftBoxTotalFor(1)).toBe(34.99);
+    expect(giftBoxTotalFor(2)).toBe(69.98);
+    expect(giftBoxTotalFor(3)).toBe(round2(34.99 * 3));
+  });
+
+  it("clamps to 0..GIFT_BOX_MAX_QTY rather than throwing or over-charging", () => {
+    expect(giftBoxTotalFor(-5)).toBe(0);
+    expect(giftBoxTotalFor(GIFT_BOX_MAX_QTY + 50)).toBe(
+      round2(GIFT_BOX_PRICE * GIFT_BOX_MAX_QTY),
+    );
+  });
+
+  it("never leaves a fractional-cent result", () => {
+    for (let qty = 0; qty <= GIFT_BOX_MAX_QTY; qty += 1) {
+      const total = giftBoxTotalFor(qty);
+      expect(Number(total.toFixed(2))).toBe(total);
+    }
+  });
+});

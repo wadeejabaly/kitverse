@@ -9,12 +9,12 @@ export const dynamic = "force-dynamic";
 export default async function Orders({ searchParams }: PageProps<"/admin/orders">) {
   const sp = await searchParams;
   const status = typeof sp.status === "string" ? sp.status : "open";
-  let q = db().from("orders").select("id,number,status,total,payment_method,confirmed_at,address,customer:customers(ig_user_id)")
+  let q = db().from("orders").select("id,number,status,total,payment_method,confirmed_at,address,source,customer:customers(ig_user_id)")
     .not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation)").order("confirmed_at", { ascending: false }).limit(100);
   if (status === "open") q = q.not("status", "in", "(delivered,cancelled)");
   else if (status !== "all") q = q.eq("status", status);
   const { data } = await q;
-  const rows = (data ?? []) as unknown as { id: string; number: number; status: string; total: number; payment_method: string | null; confirmed_at: string | null; address: { full_name?: string; town?: string } | null; customer: { ig_user_id: string | null } }[];
+  const rows = (data ?? []) as unknown as { id: string; number: number; status: string; total: number; payment_method: string | null; confirmed_at: string | null; address: { full_name?: string; town?: string } | null; source: string; customer: { ig_user_id: string | null } }[];
   const batchable = rows.some((r) => r.status === "confirmed" || r.status === "paid");
   const tabs = [["open", "Open"], ["confirmed", "New"], ["with_courier", "With courier"], ["all", "All"]];
 
@@ -40,6 +40,7 @@ export default async function Orders({ searchParams }: PageProps<"/admin/orders"
                         <span className="font-medium tabular-nums">#{o.number}</span>
                         <span className="truncate text-sm" dir="auto">{o.address?.full_name ?? ""}</span>
                         {o.customer?.ig_user_id?.startsWith("sim:") ? <Badge>test</Badge> : null}
+                        {o.source === "website" ? <Badge tone="green">website</Badge> : null}
                       </div>
                       <div className="mt-0.5 flex items-center gap-2 text-xs text-muted">
                         <span dir="auto">{o.address?.town ?? ""}</span>·<span>{o.payment_method === "paypal" ? "PayPal" : "Cash"}</span>{o.confirmed_at ? <>·<span>{ilTime(o.confirmed_at)}</span></> : null}
