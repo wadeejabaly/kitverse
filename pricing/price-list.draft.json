@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT v1 (2026-09-30). Source: owner's price-list template in the IG DMs (latest copy 2026-09-18) + proposals marked source=proposal. Owner must approve. Seed for the admin price editor. Amounts in ILS.",
+  "_note": "Owner-approved 2026-10-24: website prices (Wadeea's site) are the single source for site + bot. Amounts in ILS.",
   "currency": "ILS",
   "groups": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "id": "retro",
-      "name_en": "Retro (2022 and older)",
+      "name_en": "Retro (2023 and older)",
       "name_ar": "النسخة الريترو",
       "price": 135,
       "match": {
@@ -45,7 +45,7 @@
           "adult"
         ]
       },
-      "source": "dm"
+      "source": "website"
     },
     {
       "id": "fan_long",
@@ -80,19 +80,19 @@
         "sleeve": "long",
         "era": "retro"
       },
-      "source": "dm"
+      "source": "website"
     },
     {
       "id": "kids_kit",
       "name_en": "Kids kit (shirt + shorts)",
       "name_ar": "طقم الأطفال",
-      "price": 160,
+      "price": 200,
       "match": {
         "audience": [
           "kids"
         ]
       },
-      "source": "dm-latest",
+      "source": "owner DM price list",
       "history": [
         200,
         180,
@@ -103,14 +103,14 @@
       "id": "adult_kit",
       "name_en": "Adult kit (shirt + shorts)",
       "name_ar": "طقم الكبار",
-      "price": 180,
+      "price": 300,
       "match": {
         "kit_with_shorts": true,
         "audience": [
           "adult"
         ]
       },
-      "source": "dm-latest",
+      "source": "owner DM price list",
       "history": [
         300,
         200,
@@ -121,7 +121,7 @@
   "rules": {
     "special_edition_and_goalkeeper": "priced by their version/sleeve/era group (proposal)",
     "womens_cut": "fan version only, priced as fan (proposal; DMs: women's cut exists only as fan)",
-    "retro_definition": "season starting 2022 or earlier (owner's definition in DMs)"
+    "retro_definition": "season starting 2023 or earlier (website rule)"
   },
   "addons": [
     {
@@ -136,9 +136,9 @@
       "id": "patch",
       "name_en": "Patch",
       "name_ar": "الرقعة",
-      "price": 12,
+      "price": 11.99,
       "per": "patch",
-      "source": "dm"
+      "source": "website"
     },
     {
       "id": "size_3xl",
@@ -157,22 +157,12 @@
       "source": "dm"
     },
     {
-      "id": "box_real",
-      "name_en": "Real Madrid gift box",
-      "name_ar": "بوكس ريال مدريد",
-      "price": 30,
+      "id": "gift_box",
+      "name_en": "Gift box",
+      "name_ar": "بوكس هدية",
+      "price": 34.99,
       "per": "order",
-      "source": "dm",
-      "team_id": "real-madrid"
-    },
-    {
-      "id": "box_barca",
-      "name_en": "Barcelona gift box",
-      "name_ar": "بوكس برشلونة",
-      "price": 45,
-      "per": "order",
-      "source": "dm",
-      "team_id": "barcelona"
+      "source": "website"
     }
   ],
   "offers": [
@@ -180,7 +170,7 @@
       "id": "bundle_3",
       "name_ar": "عرض 3 قمصان ب 300₪ (كم طويل 330₪)",
       "name_en": "3 player shirts for 300₪ (long sleeve 330₪)",
-      "active": true,
+      "active": false,
       "min_qty": 3,
       "eligible": {
         "version": "player",
@@ -220,7 +210,7 @@
       {
         "id": "jerusalem",
         "name_ar": "القدس وضواحيها",
-        "fee": 70,
+        "fee": 100,
         "days": "up to 20"
       },
       {
@@ -251,5 +241,6 @@
       "id": "nba",
       "price_in_dms": 160
     }
-  ]
+  ],
+  "returns": "14 days from delivery, unworn with tags; printed shirts only if the print is wrong or the shirt is faulty; damage reported with photos within 48h; refund within 5 business days"
 }

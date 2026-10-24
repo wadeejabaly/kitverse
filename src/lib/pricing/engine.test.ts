@@ -4,7 +4,7 @@ import { quote, PricingError, type CartItem } from "./engine";
 import { PriceListData } from "./schema";
 
 // the real draft price list - tests double as a check that the JSON is valid
-const list = PriceListData.parse(JSON.parse(readFileSync("pricing/price-list.draft.json", "utf8")));
+const list = PriceListData.parse(JSON.parse(readFileSync("src/lib/pricing/fixture.price-list.json", "utf8")));
 const ILS = (n: number) => n * 100;
 
 let n = 0;
@@ -119,5 +119,17 @@ describe("order add-ons, discounts, delivery", () => {
   it("inactive or expired offers are ignored", () => {
     const off = { ...list, offers: list.offers.map((o) => ({ ...o, ends_at: "2000-01-01" })) };
     expect(quote(off, { items: [shirt({ qty: 3 })] }).itemsTotal).toBe(ILS(330));
+  });
+});
+
+describe("order add-ons with a quantity", () => {
+  const withBox = { ...list, addons: [...list.addons, { id: "gift_box", name_en: "Gift box", name_ar: "بوكس هدية", price: 34.99, per: "order" as const }] };
+  it("charges each gift box", () => {
+    const q = quote(withBox, { items: [shirt()], orderAddons: [{ id: "gift_box", qty: 2 }] });
+    expect(q.orderAddons[0].amount).toBe(6998);
+    expect(q.itemsTotal).toBe(ILS(110) + 6998);
+  });
+  it("rejects per-shirt add-ons as order add-ons", () => {
+    expect(() => quote(withBox, { items: [shirt()], orderAddons: [{ id: "name_number", qty: 1 }] })).toThrow();
   });
 });

@@ -154,7 +154,7 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
 
       <p className="flex items-start gap-2 text-[13px] leading-relaxed text-muted">
         <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.75} />
-        كل بلوزة بتنعمل خصيصًا الك، عشان هيك فش ارجاع او تبديل. اذا وصلك اشي غلط او فيه عيب، احكيلنا ومنصلحه.
+        ارجاع خلال 14 يوم من الاستلام، البلوزة مش ملبوسة ومع التيكت. البلايز المطبوع عليها اسم ورقم بترجع بس اذا الطباعة غلط او فيها عيب. اذا وصلك اشي مضروب، ابعتلنا صور خلال 48 ساعة.
       </p>
 
       <a href="https://ig.me/m/kitversejerseys" className="flex items-center justify-center gap-2 rounded-md bg-pitch-fill py-3.5 text-[15px] font-semibold text-white active:scale-[.99]">

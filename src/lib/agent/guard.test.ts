@@ -5,7 +5,7 @@ import { PriceListData } from "../pricing/schema";
 import { quote } from "../pricing/engine";
 import { recommendSize } from "./sizing";
 
-const list = PriceListData.parse(JSON.parse(readFileSync("pricing/price-list.draft.json", "utf8")));
+const list = PriceListData.parse(JSON.parse(readFileSync("src/lib/pricing/fixture.price-list.json", "utf8")));
 
 describe("money guard", () => {
   it("finds amounts in Arabic, Hebrew, English", () => {

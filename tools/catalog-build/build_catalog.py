@@ -71,7 +71,7 @@ def parse_album(aid, title, cover, cats):
     s = season_of(t)
     y = start_year(s)
     return dict(id=aid, title=t, cover=cover, cats=cats, season=s,
-                era='retro' if ('retro' in low or (y and y <= 2022)) else 'current',
+                era='retro' if ('retro' in low or (y and y <= 2023)) else 'current',
                 kit=kit_of(low), kind=kind_of(low),
                 version='player' if 'player' in low else 'fan',
                 sleeve='long' if 'long sleeve' in low else 'short',

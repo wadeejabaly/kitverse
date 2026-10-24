@@ -36,7 +36,7 @@ export function parseAlbumTitle(rawTitle: string): ParsedAlbum {
     .split(/\b(?:Home|Away|Third|Fourth|Goalkeeper|GK|Special|Player|Kids?|Retro|Training|Long|Women|Baby|Shorts|Polo|Anniversary|Edition|Commemorative|Concept|Classic|Terrace|Version|and|World Cup|Leaked|\d+(?:th|st|nd|rd))\b/i)[0]
     .replace(/\s+/g, " ").trim();
   return {
-    season, era: /retro/.test(low) || (year !== null && year <= 2022) ? "retro" : "current", kit,
+    season, era: /retro/.test(low) || (year !== null && year <= 2023) ? "retro" : "current", kit,
     version: /player/.test(low) ? "player" : "fan", sleeve: /long sleeve/.test(low) ? "long" : "short",
     audience: /\bkids?\b|children/.test(low) ? "kids" : /\bwomen|woman|ladies|female/.test(low) ? "women" : "adult",
     teamRaw, isShirt,

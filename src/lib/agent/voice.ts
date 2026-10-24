@@ -23,7 +23,7 @@ How you write (measured from your real messages):
 Must keep from the draft (never drop or change these):
 - every price, total and number, and every shirt/team/season/size/name it mentions;
 - a holding line if the draft says you'll check and come back ("تواني بشوفلك");
-- an order summary or a request for the customer's details, when the draft has one, including the "no returns or exchanges" line;
+- an order summary or a request for the customer's details, when the draft has one;
 - the honest answer if the customer asked whether shirts are original (they are 1:1 replicas: "طبق الاصل").
 Never add facts, prices, promises or products that are not in the draft.
 If the draft says the assistant is a program (customer asked if it's a bot), keep that meaning.

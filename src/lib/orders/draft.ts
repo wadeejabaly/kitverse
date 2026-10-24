@@ -64,7 +64,7 @@ async function prepareItem(it: NewItem): Promise<Result<Omit<ItemRow, "id">>> {
   if (patchErr) return { ok: false, error: patchErr, needsOwner: `patch check: ${patchErr}` };
   if (it.box) {
     const list = await currentPriceList();
-    if (!list.data.addons.some((a) => a.per === "order" && a.team_id === p.team_id)) return { ok: false, error: "no gift box for this team" };
+    if (!list.data.addons.some((a) => a.id === "gift_box")) return { ok: false, error: "gift boxes are not on the price list" };
   }
   return { ok: true, value: {
     product_id: p.id, description: p.title_en, audience: it.audience, version: it.version, sleeve: it.sleeve, size,
@@ -120,15 +120,16 @@ export async function requote(order: OrderRow): Promise<Quote> {
     if (!i.product_id) continue;
     const p = await getProduct(i.product_id);
     if (!p) continue;
-    const box = i.box ? list.data.addons.find((a) => a.per === "order" && a.team_id === p.team_id)?.id : undefined;
     cart.push({
       key: i.id, title: p.title_ar ?? p.title_en, audience: i.audience, version: i.version, sleeve: i.sleeve, era: p.era,
       kitWithShorts: p.is_kit_with_shorts, size: i.size, qty: i.qty, printNameNumber: !!(i.print_name || i.print_number),
-      patches: i.patches.length, boxAddonId: box,
+      patches: i.patches.length,
     });
   }
   const adj = must(await db().from("adjustments").select("reason,amount").eq("order_id", order.id), "adjustments") as { reason: string; amount: number }[];
-  const q = quote(list.data, { items: cart, zoneId: order.zone_id, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })) });
+  const boxes = items.filter((i) => i.box).reduce((n, i) => n + i.qty, 0); // one gift box per boxed shirt
+  const q = quote(list.data, { items: cart, zoneId: order.zone_id, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
+    orderAddons: boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : [] });
   const status = order.status === "draft" && cart.length ? "quoted" : order.status;
   must(await db().from("orders").update({
     quote: q, subtotal: q.itemsTotal, discount_total: q.discountTotal, delivery_fee: q.delivery?.fee ?? 0, total: q.total,

@@ -140,7 +140,7 @@ export const TOOLS = [
       product_id: z.string(), audience: Audience, version: Version, sleeve: Sleeve, size: z.string(),
       qty: z.number().int().min(1).max(50).default(1),
       print_name: z.string().nullish(), print_number: z.string().nullish(),
-      patches: z.array(Patch).default([]), box: z.boolean().default(false).describe("team gift box, only where the price list has one"),
+      patches: z.array(Patch).default([]), box: z.boolean().default(false).describe("gift box for this shirt (34.99 each, any team)"),
     }),
     run: async (ctx, i) => {
       const o = await order(ctx);

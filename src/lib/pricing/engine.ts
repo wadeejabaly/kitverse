@@ -31,6 +31,7 @@ export interface QuoteInput {
   items: CartItem[];
   zoneId?: string | null;      // delivery zone; null = not known yet
   adjustments?: Adjustment[];  // approved discounts / discount codes (already validated)
+  orderAddons?: { id: string; qty: number }[]; // per-order extras with a quantity (e.g. gift boxes)
   now?: Date;
 }
 
@@ -153,6 +154,13 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
     if (!a) throw new PricingError(`unknown add-on ${id}`);
     return { id, label: a.name_ar, amount: A(a.price) };
   });
+  for (const x of input.orderAddons ?? []) {
+    if (!x.qty) continue;
+    const a = addon(x.id);
+    if (!a || a.per !== "order") throw new PricingError(`unknown order add-on ${x.id}`);
+    if (!Number.isInteger(x.qty) || x.qty < 0 || x.qty > 10) throw new PricingError(`bad qty for ${x.id}`);
+    orderAddons.push({ id: a.id, label: x.qty > 1 ? `${a.name_ar} ×${x.qty}` : a.name_ar, amount: A(a.price) * x.qty });
+  }
 
   const itemsTotal = lines.reduce((s, l) => s + l.lineTotal, 0) + orderAddons.reduce((s, a) => s + a.amount, 0);
   const discountTotal = Math.min(itemsTotal, (input.adjustments ?? []).reduce((s, a) => s + Math.max(0, a.amount), 0));
