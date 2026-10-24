@@ -1,0 +1,47 @@
+{
+ "supplier_football_albums": 26866,
+ "shirt_albums": 18454,
+ "products": 10745,
+ "teams": 729,
+ "by_status": {
+  "available": 10412,
+  "featured": 333
+ },
+ "by_era": {
+  "current": 8720,
+  "retro": 2025
+ },
+ "by_kit": {
+  "Special": 3246,
+  "Third": 709,
+  "Away": 1706,
+  "Home": 2293,
+  "Unstated": 2454,
+  "Goalkeeper": 278,
+  "Fourth": 59
+ },
+ "flagged": {
+  "special edition": 3246,
+  "team has no Arabic name yet": 2368,
+  "kit not stated by supplier": 2454,
+  "no season in supplier title": 189,
+  "leaked pre-release design": 2,
+  "old catalog wrongly called this ": 7
+ },
+ "old_catalog_linked": 261,
+ "old_catalog_total": 262,
+ "teams_no_arabic": 539,
+ "featured_teams_missing_at_supplier": [],
+ "not_offered": {
+  "polo": 290,
+  "outerwear": 1999,
+  "training": 4637,
+  "baby": 61,
+  "unknown": 145,
+  "shorts": 654,
+  "tshirt": 90,
+  "unparseable team": 263,
+  "vest": 272,
+  "rugby": 1
+ }
+}

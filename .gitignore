@@ -1,20 +1,28 @@
-# deps / build
-node_modules/
-.next/
-out/
-next-env.d.ts
-*.tsbuildinfo
-
-# env — never commit any .env.* except the example
+# secrets - never commit
 .env
-.env.*
-!.env.example
+.env.local
+.env.*.local
+*.pem
 
-# misc
-.DS_Store
+# dependencies / builds
+/node_modules
+/.next/
+/out/
+/build
+/coverage
 .vercel
-.claude/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
 
-# vendored image archives (on-disk only; data/scripts/payloads ARE tracked)
-vendor/images-source/
-vendor/images-alt/
+# local tooling data (supplier crawl, old images) - not in git
+tools/catalog-build/data/
+__pycache__/
+*.pyc
+
+# supabase cli local state
+supabase/.temp/
+supabase/.branches/
+
+.DS_Store
+eval-results/

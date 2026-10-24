@@ -1,0 +1,136 @@
+{
+ "not_offered_albums": {
+  "polo": 290,
+  "outerwear": 1999,
+  "training": 4637,
+  "baby": 61,
+  "unknown": 145,
+  "shorts": 654,
+  "tshirt": 90,
+  "unparseable team": 263,
+  "vest": 272,
+  "rugby": 1
+ },
+ "dm_demand_top": [
+  [
+   "real madrid",
+   217
+  ],
+  [
+   "barcelona",
+   74
+  ],
+  [
+   "lille",
+   24
+  ],
+  [
+   "arsenal",
+   20
+  ],
+  [
+   "inter milan",
+   16
+  ],
+  [
+   "ac milan",
+   10
+  ],
+  [
+   "chelsea",
+   9
+  ],
+  [
+   "spain",
+   9
+  ],
+  [
+   "inter miami",
+   8
+  ],
+  [
+   "manchester united",
+   7
+  ],
+  [
+   "al-nassr",
+   6
+  ],
+  [
+   "bayern munich",
+   6
+  ],
+  [
+   "egypt",
+   6
+  ],
+  [
+   "paris saint-germain",
+   6
+  ],
+  [
+   "argentina",
+   5
+  ],
+  [
+   "liverpool",
+   5
+  ],
+  [
+   "manchester city",
+   4
+  ],
+  [
+   "nice",
+   3
+  ],
+  [
+   "ddr",
+   2
+  ],
+  [
+   "1. fc koln",
+   0
+  ],
+  [
+   "aberdeen",
+   0
+  ],
+  [
+   "ac milan x gc",
+   0
+  ],
+  [
+   "acf fiorentina",
+   0
+  ],
+  [
+   "adelaide united",
+   0
+  ],
+  [
+   "aek athens",
+   0
+  ],
+  [
+   "afc bournemouth",
+   0
+  ],
+  [
+   "aik",
+   0
+  ],
+  [
+   "aik solna",
+   0
+  ],
+  [
+   "aik sonina",
+   0
+  ],
+  [
+   "ajax",
+   0
+  ]
+ ]
+}
