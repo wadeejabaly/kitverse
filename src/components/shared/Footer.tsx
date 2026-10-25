@@ -21,9 +21,11 @@ export async function Footer() {
   const year = String(new Date().getFullYear());
 
   return (
-    // The footer's top hairline is the crest gold — the site's one full-width
-    // brand mark, and the boundary it draws is real (page ends, footer begins).
-    <footer className="border-t border-gold">
+    // The footer's top edge, owner decision 2026-10-25: the same
+    // accent→electric→gold bar the header closes on (see .footer-accent in
+    // globals.css), replacing the plain gold hairline — still the boundary
+    // where the page ends and the footer begins, just louder about it now.
+    <footer className="footer-accent">
       <div className="mx-auto w-full max-w-page overflow-hidden px-6 pt-10 pb-14">
         {/* The editorial close: the logotype at watermark contrast, set to the
             page width and clipped by it, so the footer ends on the brand

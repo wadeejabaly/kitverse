@@ -92,9 +92,14 @@ export async function HeroD({
   const playerFrom = priceFor("2026/27", "S", "player");
 
   return (
-    // 76px is the sticky header. The hero owns one viewport and no more, so the
-    // CTA is above the fold at every size.
-    <section className="kv-flood relative flex min-h-[calc(100svh-76px)] flex-col justify-center overflow-hidden">
+    // 105px is the sticky header: 64px crest + 2×20px (py-5) padding + 1px
+    // border-b (see Header.tsx). This was 76px before the crest doubled to
+    // 64px on 2026-10-23 (32px crest + the same padding/border ≈ 76px) —
+    // that resize never updated the figure here, so the hero ran 29px past
+    // the real fold on every screen until this was caught and fixed
+    // (2026-10-25). The hero owns one viewport and no more, so the CTA is
+    // above the fold at every size — keep this in sync with Header.tsx.
+    <section className="kv-flood relative flex min-h-[calc(100svh-105px)] flex-col justify-center overflow-hidden">
       {/* Background pair — the ambient corner wash and the diagonal beam —
           move together as one slow, distant layer (speed 0.08). The shirt
           stage below moves at 0.18: faster, because it is the foreground

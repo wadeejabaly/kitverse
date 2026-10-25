@@ -9,10 +9,12 @@
 
    The accent and the gold are both sampled from the KitVerse
    club crest (public/brand/badge.png): the shield navy and the
-   outer ring gold. The crest's electric blue sits outside this
-   sitewide palette everywhere except ONE deliberate exception —
-   the Floodlight hero's --flood-* set below — and appears
-   nowhere else in the UI.
+   outer ring gold. A third crest colour, the shield's electric
+   blue (--electric below), joined the sitewide palette on
+   2026-10-25 — bands, buttons, hovers, dividers — as the loud
+   half of a deliberately bolder, more athletic-brand direction;
+   --accent and --gold stay the quiet half, reserved for prices,
+   primary text and the one micro-accent they always were.
    ============================================================ */
 :root {
   --ground: #f5f3ef; /* page background — warm off-white */
@@ -35,6 +37,26 @@
      compare-at price itself when the flat ladder landed, and that use was NOT
      replaced. */
   --gold: #856618;
+
+  /* The crest's electric blue, SITEWIDE now (owner decision 2026-10-25,
+     "give it a Nike × Adidas vibe"). This supersedes the Floodlight note
+     below, which restricted this exact blue to the hero alone — the owner
+     now wants that same energy carried through the rest of the site rather
+     than fenced off in one section. --electric is the LOUD accent: bold
+     bands, button fills, hover glows, diagonal dividers — anywhere the site
+     should feel like it is selling a product, not filing a form. --accent
+     (the quieter crest navy) stays the one colour prices and primary text
+     are set in, so a price never competes with a background for attention;
+     --electric is for the surfaces and chrome around it.
+     4.94:1 on --ground — clears normal text, not just large/UI text, so it
+     is safe to set type in directly, not only backgrounds. Lifted in dark
+     mode the same way --accent is (see below), since this exact value
+     drops to 3.4:1 on the dark ground. */
+  --electric: #2f5fe0;
+  /* The lighter step, for use on dark/navy surfaces (the hero already proved
+     this exact pairing works) and for glows/shadows, where the darker
+     --electric above would just read as navy again. */
+  --electric-2: #5b8cff;
 
   /* Header glass. The header is the one translucent surface on the site.
      --header-solid is the tint every browser gets: the crest navy at ~6% over
@@ -83,14 +105,14 @@
   --band-glass-lo: rgb(16 26 53 / 0.8);
 
   /* Floodlight hero tokens. <HeroD/> — the home-page hero — is a
-     self-contained dark stage with its own ground, ink and, the one
-     exception named above, the crest's electric blue. None of these
-     are mapped into @theme and no component outside the Floodlight
-     system may reference one: that is what keeps this an exception
-     rather than a second palette. They do not vary with the
-     light/dark scheme, the same way a product tile is always white
-     — the hero is always this stage. See "THE FLOODLIGHT HERO"
-     further down for the surface itself. */
+     self-contained dark stage with its own ground and ink. Previously the
+     one place the crest's electric blue appeared at all; as of 2026-10-25
+     that blue is --electric above, used sitewide, so this is no longer an
+     exception for the COLOUR, only for the SURFACE — --flood-ground/
+     --flood-ink/--flood-tile stay hero-only because nothing else on the
+     site is a dark stage. They do not vary with the light/dark scheme, the
+     same way a product tile is always white — the hero is always this
+     stage. See "THE FLOODLIGHT HERO" further down for the surface itself. */
   --flood-ground: #0a1024;
   --flood-ground-2: #0d1530;
   --flood-blue: #2f6bff;
@@ -120,6 +142,12 @@
     "Segoe UI",
     sans-serif
   );
+
+  /* The "major headers" pairing (owner decision 2026-10-25): Reem Kufi for
+     h1/h2 and the two display classes, falling back to the primary stack
+     above rather than straight to system sans — see src/lib/fonts.ts. */
+  --type-sans-display: var(--stack-sans-display, var(--type-sans));
+  --type-arabic-display: var(--stack-arabic-display, var(--type-arabic));
 }
 
 /* Dark scheme — honored for both the system preference and an explicit
@@ -137,6 +165,7 @@
     --accent-ink: #131310;
     --chip: #1f1f1a;
     --gold: #b08f55; /* 6.1:1 — matched to dark --ink-soft's 6.3:1 */
+    --electric: #5b8cff; /* 5.88:1 on the dark ground — --electric-2's own value, reused rather than lifted further */
     --header-solid: #14161f;
     --header-glass: rgb(20 22 31 / 0.82);
     --band: #1a2033; /* a cool panel against the warm near-black ground */
@@ -159,6 +188,7 @@
   --accent-ink: #131310;
   --chip: #1f1f1a;
   --gold: #b08f55;
+  --electric: #5b8cff;
   --header-solid: #14161f;
   --header-glass: rgb(20 22 31 / 0.82);
   --band: #1a2033; /* a cool panel against the warm near-black ground */
@@ -172,7 +202,7 @@
 /* Map tokens into Tailwind v4 (CSS-first @theme) →
    bg-ground, bg-tile, text-ink, text-ink-soft, border-rule, text-accent,
    bg-accent, text-accent-ink, bg-chip, text-gold/border-gold/decoration-gold,
-   max-w-page, font-sans/mono/arabic. */
+   text-electric/bg-electric/border-electric, max-w-page, font-sans/mono/arabic. */
 @theme inline {
   --color-ground: var(--ground);
   --color-tile: var(--tile);
@@ -184,6 +214,8 @@
   --color-accent-ink: var(--accent-ink);
   --color-chip: var(--chip);
   --color-gold: var(--gold);
+  --color-electric: var(--electric);
+  --color-electric-2: var(--electric-2);
   --color-band: var(--band);
   --color-band-ink: var(--band-ink);
 
@@ -258,6 +290,24 @@ body[lang="ar"] {
   letter-spacing: normal;
 }
 
+/* ---------- Major headers ----------
+   Owner decision 2026-10-25: the display pairing (Reem Kufi, see
+   src/lib/fonts.ts) is reserved for the handful of big headline moments —
+   h1/h2, which is also every element carrying .display-sm or
+   .kv-flood-display (both are only ever set on an h1 or h2 — see their own
+   rules further down and each component's usage) — not h3–h6, which stay
+   on the primary stack so card titles and subheadings read at the sizes a
+   heavily stylized display face was never drawn for. */
+h1,
+h2 {
+  font-family: var(--type-sans-display);
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2 {
+  font-family: var(--type-arabic-display);
+}
+
 /* A Latin island inside an Arabic page — brand names, model codes, URLs. */
 [lang="ar"] .latin,
 [lang="ar"] [lang="en"] {
@@ -325,7 +375,7 @@ body[lang="ar"] {
      position:fixed descendants — and <MobileMenu>'s `fixed inset-0` overlay
      is rendered inside <header>. Filter the header directly and that overlay
      stops resolving against the viewport and collapses to the header's own
-     ~76px box, so the mobile menu silently breaks. The pseudo-element carries
+     ~105px box, so the mobile menu silently breaks. The pseudo-element carries
      the effect without changing what the header is a containing block for.
 
      Do not add transform, filter or perspective to .header-glass either:
@@ -341,10 +391,57 @@ body[lang="ar"] {
   }
 }
 
-/* The one button treatment on the site. Accent fill for the primary action
-   (add to cart, checkout, shop all), a hairline outline for anything quieter.
-   Tracked uppercase is a Latin treatment: Arabic drops both and takes the
-   Arabic stack, exactly as the eyebrows do. */
+/* The header's bottom edge, replacing the plain 1px --rule hairline (owner
+   decision 2026-10-25): a 3px accent→electric→gold gradient bar. An ::after,
+   not a `border` utility — ::before is already the blur layer above, and a
+   plain border can't carry a three-stop gradient, so this is a second real
+   layer rather than a CSS trick on the existing one. Sits flush on the
+   header's own bottom edge rather than below it, so it never adds to the
+   105px the hero's height math has to track (see Header.tsx's size note). */
+.header-accent {
+  position: relative;
+}
+
+.header-accent::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--electric) 55%, var(--gold));
+  pointer-events: none;
+}
+
+/* The footer's matching top edge (replacing its old plain --gold hairline,
+   same owner decision) — the same three-stop gradient, mirrored top-to-
+   bottom so the page opens and closes on the same bar. <footer> has no
+   other pseudo-element, so this can be its own ::before rather than
+   needing the header's position:relative wrapper trick. */
+.footer-accent {
+  position: relative;
+}
+
+.footer-accent::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--electric) 55%, var(--gold));
+  pointer-events: none;
+}
+
+/* The one button treatment on the site. Accent-to-electric fill for the
+   primary action (add to cart, checkout, shop all), a hairline outline for
+   anything quieter. Tracked uppercase is a Latin treatment: Arabic drops
+   both and takes the Arabic stack, exactly as the eyebrows do.
+
+   Bolder as of 2026-10-25: a diagonal gradient instead of a flat fill (the
+   same two colours the hero's own button already proved work together —
+   see .btn-flood), a glow instead of a flat shadow, and a lift on hover/
+   press rather than nothing. White label text stays safe across the whole
+   gradient — the lighter, --electric end still measures 5.48:1. Radius
+   stays 0: the energy here is colour and motion, not a rounded corner. */
 .btn {
   display: inline-block;
   font-family: var(--type-sans);
@@ -352,26 +449,44 @@ body[lang="ar"] {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 15px 34px;
-  background: var(--accent);
+  background: linear-gradient(115deg, var(--accent) 35%, var(--electric) 130%);
   color: var(--accent-ink);
   border: 0;
   text-align: center;
   cursor: pointer;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--electric) 55%, transparent);
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -10px color-mix(in srgb, var(--electric) 65%, transparent);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .btn-quiet {
   background: transparent;
   color: var(--ink);
   border: 1px solid var(--rule);
+  box-shadow: none;
 }
 
 .btn-quiet:hover {
-  border-color: var(--ink);
+  border-color: var(--electric);
+  color: var(--electric);
+  transform: none;
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 [lang="ar"] .btn {
@@ -733,6 +848,49 @@ body[lang="ar"] {
    only thing that ever drew one was the Fan/Player explainer, which is on the
    page ground now and uses --rule like every other section.) */
 .band-soft {
+  color: color-mix(in srgb, var(--band-ink) 74%, transparent);
+}
+
+/* ============================================================
+   THE ENERGY BAND
+   Owner decision 2026-10-25 ("Nike × Adidas vibe"): a second, simpler dark
+   surface — not THE BAND above, which stays <HeroB/>'s specific
+   plaque-over-shirts material — for one loud beat of colour between
+   otherwise quiet sections. Full-bleed (unlike the band, which is a
+   contained card), angled top and bottom edges rather than a plain
+   rectangle, and the same grain tile THE BAND uses so the two surfaces
+   still read as one family. Deliberately NOT fenced to "once": the whole
+   point of this one is that a page can reach for it more than a single
+   time.
+
+   Text: --band-ink only, same rule THE BAND follows and for the same
+   measured reason — --gold reads 2.82:1 here and fails; see .btn-band's
+   own note. Ghost figures and eyebrows inside get their own small
+   overrides below rather than fighting the base rules authored for the
+   page ground. */
+.energy-band {
+  position: relative;
+  overflow: hidden;
+  color: var(--band-ink);
+  background-color: var(--accent);
+  background-image: var(--kv-grain),
+    linear-gradient(115deg, var(--accent) 15%, var(--electric) 150%);
+  background-size:
+    240px 240px,
+    auto;
+  clip-path: polygon(0 clamp(24px, 3.5vw, 56px), 100% 0, 100% calc(100% - clamp(24px, 3.5vw, 56px)), 0 100%);
+}
+
+.energy-band .mono-eyebrow {
+  color: var(--band-ink);
+}
+
+.energy-band .ghost-figure {
+  color: var(--band-ink);
+  opacity: 0.22;
+}
+
+.energy-band .text-ink-soft {
   color: color-mix(in srgb, var(--band-ink) 74%, transparent);
 }
 
@@ -1122,8 +1280,11 @@ body[lang="ar"] {
   --flood-text-angle: 90deg;
 }
 
-/* The one button treatment, on the one surface allowed a second
-   colour: the flood's own electric blue fill. The glow is a real
+/* The hero's own button face, tuned for the one DARK surface on the
+   site: the flood's own electric blue fill, not the --accent-to-
+   --electric gradient .btn uses everywhere else — a gradient needs the
+   dark end (--accent) to read as shadow, and on an already-dark stage
+   that end would just vanish into the ground. The glow is a real
    box-shadow rather than a second navy button sitting flat on a navy
    page.
 

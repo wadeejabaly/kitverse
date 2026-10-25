@@ -29,7 +29,7 @@ export async function Header() {
   const leagues = getLeagues();
 
   return (
-    <header className="header-glass sticky top-0 z-40 border-b border-rule">
+    <header className="header-glass header-accent sticky top-0 z-40">
       <div className="mx-auto flex w-full max-w-page items-center gap-6 px-6 py-5 wide:gap-10">
         <MobileMenu leagues={leagues} />
 

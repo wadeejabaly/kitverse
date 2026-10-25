@@ -52,9 +52,10 @@ export async function HeroA({
   }));
 
   return (
-    // 76px is the sticky header. The hero owns one viewport and no more, so
-    // the CTA is above the fold at every size.
-    <section className="flex min-h-[calc(100svh-76px)] flex-col justify-center">
+    // 105px is the sticky header: 64px crest + 2×20px (py-5) padding + 1px
+    // border-b (see Header.tsx) — keep this in sync with it. The hero owns
+    // one viewport and no more, so the CTA is above the fold at every size.
+    <section className="flex min-h-[calc(100svh-105px)] flex-col justify-center">
       <Wrap>
         <div className="grid items-center gap-8 py-8 wide:grid-cols-[0.92fr_1.08fr] wide:gap-16 wide:py-14">
           <div className="order-2 wide:order-none">

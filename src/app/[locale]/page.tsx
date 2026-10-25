@@ -238,11 +238,16 @@ export default async function HomePage({
       ) : null}
 
       {/* ─────────── HOW WE WORK ───────────
-          Oversized numerals carry the rhythm. The eyebrow that names this
-          section already existed in the message files and had never been
-          rendered. */}
-      <Wrap>
-        <section className="border-t border-rule pt-10 pb-[clamp(88px,13vw,170px)]">
+          Owner decision 2026-10-25 ("Nike × Adidas vibe"): this is now the
+          page's second dark moment, on .energy-band rather than the page
+          ground — see that class' own note in globals.css for why a second
+          one is deliberate here. The diagonal top/bottom edges are the
+          section boundary now, so the old border-t hairline is gone; the
+          clip-path eats into the box a little at each side, hence the
+          extra block padding beyond what the plain version used. Oversized
+          numerals still carry the rhythm. */}
+      <section className="energy-band py-[clamp(72px,11vw,150px)]">
+        <Wrap>
           <span className="mono-eyebrow">{t("valuesEyebrow")}</span>
           <Reveal
             stagger={80}
@@ -263,8 +268,8 @@ export default async function HomePage({
               </div>
             ))}
           </Reveal>
-        </section>
-      </Wrap>
+        </Wrap>
+      </section>
     </>
   );
 }
