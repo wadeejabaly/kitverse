@@ -1,4 +1,4 @@
-import type { Product } from "@/data/types";
+import type { Patch, Product } from "@/data/types";
 
 /**
  * Locale-aware reads of a Product's bilingual fields, plus the small display
@@ -39,4 +39,24 @@ export function sanitizeNameNumber(input: string): string {
     .replace(/[^A-Z0-9 ]/g, "")
     .replace(/\s{2,}/g, " ")
     .slice(0, NAME_NUMBER_MAX);
+}
+
+/**
+ * The official-patch add-on (owner decisions 2026-10-23 and 2026-10-25) is
+ * re-checked against the PRODUCT, not trusted from the client: a club shirt
+ * can only ever carry "league" or "ucl", a national-team shirt can only ever
+ * carry "worldcup", and the two sets never overlap. Whatever the client
+ * sent, anything outside the product's own set collapses to "none" here —
+ * the same defence sanitizeNameNumber above applies to the other add-on, and
+ * the server-side half of what ProductForm's patchOptionsFor() already
+ * enforces in the UI.
+ */
+export function sanitizePatch(patch: Patch, product: Product): Patch {
+  if (product.league !== null) {
+    return patch === "league" || patch === "ucl" ? patch : "none";
+  }
+  if (product.kind === "national") {
+    return patch === "worldcup" ? patch : "none";
+  }
+  return "none";
 }

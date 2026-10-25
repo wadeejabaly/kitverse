@@ -172,10 +172,12 @@ describe("priceLine + cartTotals — addon math and totals", () => {
     expect(line.lineTotal).toBe(round2((95 + 20 + 11.99) * 3));
   });
 
-  it("the league patch and the Champions League patch cost exactly the same", () => {
+  it("the league patch, the Champions League patch, and the World Cup patch all cost exactly the same", () => {
     const league = priceLine("2026/27", "M", "fan", 1, { patch: "league" });
     const ucl = priceLine("2026/27", "M", "fan", 1, { patch: "ucl" });
+    const worldcup = priceLine("2026/27", "M", "fan", 1, { patch: "worldcup" });
     expect(league.unitPrice).toBe(ucl.unitPrice);
+    expect(league.unitPrice).toBe(worldcup.unitPrice);
     expect(league.unitPrice).toBe(round2(95 + 11.99));
   });
 

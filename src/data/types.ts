@@ -13,13 +13,22 @@ export type Version = "fan" | "player";
 
 /**
  * The official-patch add-on (owner decision 2026-10-23, replacing the single
- * generic "badge" boolean). A shopper picks AT MOST ONE patch per shirt:
- * their club's own domestic league patch, or a Champions League patch — never
- * both (one patch per shirt, confirmed). Only ever offered on a CLUB product
- * (`Product.league !== null`); national-team shirts have no patch option at
- * all, so their line is always "none".
+ * generic "badge" boolean; extended 2026-10-25 with a World Cup patch for
+ * national-team shirts). A shopper picks AT MOST ONE patch per shirt:
+ *
+ *   - a CLUB product (`Product.league !== null`) offers "league" (that
+ *     club's own domestic league patch) or "ucl" (Champions League) — never
+ *     both;
+ *   - a NATIONAL-TEAM product (`Product.kind === "national"`,
+ *     `Product.league === null`) offers only "worldcup";
+ *
+ * — and the two sets never overlap: a club shirt can never carry "worldcup"
+ * and a national shirt can never carry "league" or "ucl". All three cost the
+ * same flat ADDONS.patch. See ProductForm's patchOptionsFor() for the
+ * product → allowed-values mapping, and sanitizePatch() in lib/product.ts
+ * for the server-side mirror of that same rule.
  */
-export type Patch = "none" | "league" | "ucl";
+export type Patch = "none" | "league" | "ucl" | "worldcup";
 
 export interface Product {
   handle: string; // normalized, ASCII, unique
