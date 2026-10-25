@@ -202,36 +202,36 @@
   "returns": "14 days from delivery, unworn with tags; printed shirts only if the print is wrong or the shirt is faulty; damage reported with photos within 48h; refund within 5 business days",
   "currency": "ILS",
   "delivery": {
-    "_note": "Owner decision 2026-10-25: two tiers only. North (up to and including Kfar Qara) is 49.99; everywhere else, including the West Bank, is 69.99. The 5 zone ids stay (reporting/history), only the fees changed - center/negev/jerusalem/jer_ws_eilat are now priced identically.",
+    "_note": "Owner decision 2026-10-25, rounded 2026-10-25: two tiers only. North (up to and including Kfar Qara) is 50; everywhere else, including the West Bank, is 70. The 5 zone ids stay (reporting/history), only the fees changed - center/negev/jerusalem/jer_ws_eilat are now priced identically.",
     "per": "order (1 or 10 shirts, same fee)",
     "zones": [
       {
         "id": "north",
-        "fee": 49.99,
+        "fee": 50,
         "days": "7-14",
         "name_ar": "الشمال (لحد كفر قرع)"
       },
       {
         "id": "center",
-        "fee": 69.99,
+        "fee": 70,
         "days": "7-14",
         "name_ar": "باقي المناطق"
       },
       {
         "id": "negev",
-        "fee": 69.99,
+        "fee": 70,
         "days": "up to 20",
         "name_ar": "باقي المناطق"
       },
       {
         "id": "jerusalem",
-        "fee": 69.99,
+        "fee": 70,
         "days": "up to 20",
         "name_ar": "باقي المناطق"
       },
       {
         "id": "jer_ws_eilat",
-        "fee": 69.99,
+        "fee": 70,
         "days": "up to 20",
         "name_ar": "باقي المناطق"
       }

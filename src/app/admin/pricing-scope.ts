@@ -6,7 +6,7 @@
  * only export async functions - exporting this plain object broke the Vercel build the same way
  * CATALOG_SCOPE did (see catalog-scope.ts).
  */
-export const DELIVERY_FEES = { north: 49.99, rest: 69.99 } as const;
+export const DELIVERY_FEES = { north: 50, rest: 70 } as const;
 
 export interface DeliveryFeesPreview {
   version: number;

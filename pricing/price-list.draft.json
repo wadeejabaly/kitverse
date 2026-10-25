@@ -187,37 +187,37 @@
     }
   ],
   "delivery": {
-    "_note": "Owner decision 2026-10-25: two tiers only. North (up to and including Kfar Qara) is 49.99; everywhere else, including the West Bank, is 69.99. The 5 zone ids stay (reporting/history), only the fees changed - center/negev/jerusalem/jer_ws_eilat are now priced identically.",
+    "_note": "Owner decision 2026-10-25, rounded 2026-10-25: two tiers only. North (up to and including Kfar Qara) is 50; everywhere else, including the West Bank, is 70. The 5 zone ids stay (reporting/history), only the fees changed - center/negev/jerusalem/jer_ws_eilat are now priced identically.",
     "per": "order (1 or 10 shirts, same fee)",
     "zones": [
       {
         "id": "north",
         "name_ar": "الشمال (لحد كفر قرع)",
-        "fee": 49.99,
+        "fee": 50,
         "days": "7-14"
       },
       {
         "id": "center",
         "name_ar": "باقي المناطق",
-        "fee": 69.99,
+        "fee": 70,
         "days": "7-14"
       },
       {
         "id": "negev",
         "name_ar": "باقي المناطق",
-        "fee": 69.99,
+        "fee": 70,
         "days": "up to 20"
       },
       {
         "id": "jerusalem",
         "name_ar": "باقي المناطق",
-        "fee": 69.99,
+        "fee": 70,
         "days": "up to 20"
       },
       {
         "id": "jer_ws_eilat",
         "name_ar": "باقي المناطق",
-        "fee": 69.99,
+        "fee": 70,
         "days": "up to 20"
       }
     ],
