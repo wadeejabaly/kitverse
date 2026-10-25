@@ -95,6 +95,7 @@ export async function storeInbound(channel: Channel, ev: IgEvent): Promise<Inbou
 
   const msg = must(await db().from("messages").insert({
     conversation_id: conv.id, direction: "in", sender: "customer", ig_message_id: ev.mid ?? null, kind,
+    reply_to_ig_message_id: ev.replyToMid ?? ev.reaction?.mid ?? null, // the message they replied/reacted to
     text: ev.text ?? null, media: media.length ? media : null, ig_media_id: igMediaId, product_ids, status: "received", created_at: now.toISOString(),
   }).select("id").single(), "store inbound") as { id: string };
 

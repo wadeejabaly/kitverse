@@ -42,7 +42,7 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
 
   const list = await currentPriceList();
   const rows = await recentMessages(conv.id);
-  const productIds = [...new Set(rows.flatMap((r) => r.product_ids))];
+  const productIds = [...new Set(rows.flatMap((r) => [...r.product_ids, ...(r.reply_to?.product_ids ?? [])]))];
   const titles = new Map<string, string>();
   if (productIds.length) {
     const ps = must(await db().from("products").select("id,title_ar,title_en").in("id", productIds), "titles") as { id: string; title_ar: string | null; title_en: string }[];
