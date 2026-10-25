@@ -124,21 +124,33 @@ export function FloodStage({
               opacity: shown ? 1 : 0,
               pointerEvents: shown ? undefined : "none",
             }}
-            className="kv-crossfade group relative col-start-1 row-start-1 grid h-full w-full place-items-center"
+            className="kv-crossfade group relative col-start-1 row-start-1 grid aspect-square w-full place-items-center"
           >
-            {/* Bounded on BOTH axes (max-h AND max-w at 84%, object-contain),
-                not just width — fixed 2026-10-25. The old `w-[84%] h-auto`
-                let a portrait-leaning supplier photo (anything taller than
-                the stage is wide) render past 84% of the square's height,
-                and since the three crossfading layers share one implicit
-                grid row, the row auto-sized to whichever shirt was tallest —
-                stretching this <Link/> past the stage's own aspect-square
-                box. The stage clips that overflow (overflow-hidden), and the
-                chip below is positioned bottom-2 off THIS element, not the
-                stage, so it rode along and got its bottom edge clipped too:
-                the "cut off" name/price chip the owner saw. Capping both
-                axes keeps every photo, whatever its native proportions,
-                inside the square the stage actually shows. */}
+            {/* Fixed 2026-10-25 — two parts, both needed:
+                1. This element used to be sized `h-full`, which chases the
+                   stage's own height. But the three crossfading layers share
+                   one implicit grid row, and that row auto-sizes to its
+                   TALLEST child's natural content height — so a portrait-
+                   leaning supplier photo (taller, at a fixed 84% width, than
+                   the stage is tall) stretched the row past the stage's own
+                   aspect-square box, and `h-full` just chased that stretched
+                   row rather than the visible square. `aspect-square` here
+                   instead gives this element a height derived from its OWN
+                   (definite) width, independent of its siblings or its
+                   photo's content — always exactly the stage's square,
+                   whatever any shirt's photo does.
+                2. That in turn is what lets the image's `max-h-[84%]` below
+                   actually apply: a percentage max-height only resolves
+                   against a DEFINITE parent height (CSS's old height-
+                   percentage rule) — against the previous indefinite,
+                   content-chasing row it silently computed to `none` and
+                   did nothing, which is why bounding only the image never
+                   fully fixed this on its own.
+                Together: every photo, whatever its native proportions, now
+                renders inside the square the stage actually shows, so the
+                chip below — bottom-2 off THIS element — never rides past
+                the stage's own overflow-hidden edge and gets clipped, which
+                is the "cut off" name/price chip the owner saw. */}
             <Image
               src={shirt.image}
               alt={shirt.title}
