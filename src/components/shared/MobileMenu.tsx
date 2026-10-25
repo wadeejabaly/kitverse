@@ -89,6 +89,7 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
               <MenuLink href="/shop/national-teams">{t("nationalTeams")}</MenuLink>
               <MenuLink href="/shop/new-season">{tShop("kinds.current")}</MenuLink>
               <MenuLink href="/shop/last-season">{tShop("kinds.previous")}</MenuLink>
+              <MenuLink href="/accessories">{t("accessories")}</MenuLink>
             </MenuGroup>
 
             {leagues.length > 0 ? (

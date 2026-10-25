@@ -1,0 +1,868 @@
+{
+  "accessories": [
+    {
+      "handle": "keychain-ac-milan",
+      "category": "keychain",
+      "team": "AC Milan",
+      "teamAr": "ميلان",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-algeria",
+      "category": "keychain",
+      "team": "Algeria",
+      "teamAr": "الجزائر",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-argentina",
+      "category": "keychain",
+      "team": "Argentina",
+      "teamAr": "الأرجنتين",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-arsenal",
+      "category": "keychain",
+      "team": "Arsenal",
+      "teamAr": "أرسنال",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-as-monaco",
+      "category": "keychain",
+      "team": "AS Monaco",
+      "teamAr": "موناكو",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-as-roma",
+      "category": "keychain",
+      "team": "AS Roma",
+      "teamAr": "روما",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-aston-villa",
+      "category": "keychain",
+      "team": "Aston Villa",
+      "teamAr": "أستون فيلا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-atalanta",
+      "category": "keychain",
+      "team": "Atalanta",
+      "teamAr": "أتالانتا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-athletic-bilbao",
+      "category": "keychain",
+      "team": "Athletic Bilbao",
+      "teamAr": "أتلتيك بيلباو",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-atletico-madrid",
+      "category": "keychain",
+      "team": "Atlético Madrid",
+      "teamAr": "أتلتيكو مدريد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-australia",
+      "category": "keychain",
+      "team": "Australia",
+      "teamAr": "أستراليا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-austria",
+      "category": "keychain",
+      "team": "Austria",
+      "teamAr": "النمسا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-barcelona",
+      "category": "keychain",
+      "team": "Barcelona",
+      "teamAr": "برشلونة",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-bayer-leverkusen",
+      "category": "keychain",
+      "team": "Bayer Leverkusen",
+      "teamAr": "باير ليفركوزن",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-bayern-munich",
+      "category": "keychain",
+      "team": "Bayern Munich",
+      "teamAr": "بايرن ميونخ",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-belgium",
+      "category": "keychain",
+      "team": "Belgium",
+      "teamAr": "بلجيكا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-bologna",
+      "category": "keychain",
+      "team": "Bologna",
+      "teamAr": "بولونيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-borussia-dortmund",
+      "category": "keychain",
+      "team": "Borussia Dortmund",
+      "teamAr": "بوروسيا دورتموند",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-borussia-monchengladbach",
+      "category": "keychain",
+      "team": "Borussia Mönchengladbach",
+      "teamAr": "بوروسيا مونشنغلادباخ",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-brazil",
+      "category": "keychain",
+      "team": "Brazil",
+      "teamAr": "البرازيل",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-cameroon",
+      "category": "keychain",
+      "team": "Cameroon",
+      "teamAr": "الكاميرون",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-canada",
+      "category": "keychain",
+      "team": "Canada",
+      "teamAr": "كندا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-celta-vigo",
+      "category": "keychain",
+      "team": "Celta Vigo",
+      "teamAr": "سيلتا فيغو",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-chelsea",
+      "category": "keychain",
+      "team": "Chelsea",
+      "teamAr": "تشيلسي",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-colombia",
+      "category": "keychain",
+      "team": "Colombia",
+      "teamAr": "كولومبيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-costa-rica",
+      "category": "keychain",
+      "team": "Costa Rica",
+      "teamAr": "كوستاريكا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-croatia",
+      "category": "keychain",
+      "team": "Croatia",
+      "teamAr": "كرواتيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-czechia",
+      "category": "keychain",
+      "team": "Czechia",
+      "teamAr": "التشيك",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-denmark",
+      "category": "keychain",
+      "team": "Denmark",
+      "teamAr": "الدنمارك",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-ecuador",
+      "category": "keychain",
+      "team": "Ecuador",
+      "teamAr": "الإكوادور",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-egypt",
+      "category": "keychain",
+      "team": "Egypt",
+      "teamAr": "مصر",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-eintracht-frankfurt",
+      "category": "keychain",
+      "team": "Eintracht Frankfurt",
+      "teamAr": "آينتراخت فرانكفورت",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-england",
+      "category": "keychain",
+      "team": "England",
+      "teamAr": "إنجلترا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-everton",
+      "category": "keychain",
+      "team": "Everton",
+      "teamAr": "إيفرتون",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-fiorentina",
+      "category": "keychain",
+      "team": "Fiorentina",
+      "teamAr": "فيورنتينا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-france",
+      "category": "keychain",
+      "team": "France",
+      "teamAr": "فرنسا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-germany",
+      "category": "keychain",
+      "team": "Germany",
+      "teamAr": "ألمانيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-ghana",
+      "category": "keychain",
+      "team": "Ghana",
+      "teamAr": "غانا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-hamburger-sv",
+      "category": "keychain",
+      "team": "Hamburger SV",
+      "teamAr": "هامبورغ",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-inter-milan",
+      "category": "keychain",
+      "team": "Inter Milan",
+      "teamAr": "إنتر ميلان",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-iran",
+      "category": "keychain",
+      "team": "Iran",
+      "teamAr": "إيران",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-iraq",
+      "category": "keychain",
+      "team": "Iraq",
+      "teamAr": "العراق",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-ivory-coast",
+      "category": "keychain",
+      "team": "Ivory Coast",
+      "teamAr": "ساحل العاج",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-japan",
+      "category": "keychain",
+      "team": "Japan",
+      "teamAr": "اليابان",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-jordan",
+      "category": "keychain",
+      "team": "Jordan",
+      "teamAr": "الأردن",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-juventus",
+      "category": "keychain",
+      "team": "Juventus",
+      "teamAr": "يوفنتوس",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-lazio",
+      "category": "keychain",
+      "team": "Lazio",
+      "teamAr": "لاتسيو",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-lens",
+      "category": "keychain",
+      "team": "Lens",
+      "teamAr": "لانس",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-lille",
+      "category": "keychain",
+      "team": "Lille",
+      "teamAr": "ليل",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-liverpool",
+      "category": "keychain",
+      "team": "Liverpool",
+      "teamAr": "ليفربول",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-manchester-city",
+      "category": "keychain",
+      "team": "Manchester City",
+      "teamAr": "مانشستر سيتي",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-manchester-united",
+      "category": "keychain",
+      "team": "Manchester United",
+      "teamAr": "مانشستر يونايتد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-mexico",
+      "category": "keychain",
+      "team": "Mexico",
+      "teamAr": "المكسيك",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-morocco",
+      "category": "keychain",
+      "team": "Morocco",
+      "teamAr": "المغرب",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-nantes",
+      "category": "keychain",
+      "team": "Nantes",
+      "teamAr": "نانت",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-napoli",
+      "category": "keychain",
+      "team": "Napoli",
+      "teamAr": "نابولي",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-netherlands",
+      "category": "keychain",
+      "team": "Netherlands",
+      "teamAr": "هولندا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-newcastle-united",
+      "category": "keychain",
+      "team": "Newcastle United",
+      "teamAr": "نيوكاسل يونايتد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-nice",
+      "category": "keychain",
+      "team": "Nice",
+      "teamAr": "نيس",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-norway",
+      "category": "keychain",
+      "team": "Norway",
+      "teamAr": "النرويج",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-olympique-lyonnais",
+      "category": "keychain",
+      "team": "Olympique Lyonnais",
+      "teamAr": "أولمبيك ليون",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-olympique-marseille",
+      "category": "keychain",
+      "team": "Olympique Marseille",
+      "teamAr": "أولمبيك مارسيليا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-paraguay",
+      "category": "keychain",
+      "team": "Paraguay",
+      "teamAr": "باراغواي",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-paris-saint-germain",
+      "category": "keychain",
+      "team": "Paris Saint-Germain",
+      "teamAr": "باريس سان جيرمان",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-poland",
+      "category": "keychain",
+      "team": "Poland",
+      "teamAr": "بولندا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-portugal",
+      "category": "keychain",
+      "team": "Portugal",
+      "teamAr": "البرتغال",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-qatar",
+      "category": "keychain",
+      "team": "Qatar",
+      "teamAr": "قطر",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-rb-leipzig",
+      "category": "keychain",
+      "team": "RB Leipzig",
+      "teamAr": "آر بي لايبزيغ",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-real-betis",
+      "category": "keychain",
+      "team": "Real Betis",
+      "teamAr": "ريال بيتيس",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-real-madrid",
+      "category": "keychain",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-real-sociedad",
+      "category": "keychain",
+      "team": "Real Sociedad",
+      "teamAr": "ريال سوسييداد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-rennes",
+      "category": "keychain",
+      "team": "Rennes",
+      "teamAr": "رين",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-saint-etienne",
+      "category": "keychain",
+      "team": "Saint-Étienne",
+      "teamAr": "سانت إيتيان",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-saudi-arabia",
+      "category": "keychain",
+      "team": "Saudi Arabia",
+      "teamAr": "السعودية",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-schalke-04",
+      "category": "keychain",
+      "team": "Schalke 04",
+      "teamAr": "شالكه 04",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-scotland",
+      "category": "keychain",
+      "team": "Scotland",
+      "teamAr": "اسكتلندا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-senegal",
+      "category": "keychain",
+      "team": "Senegal",
+      "teamAr": "السنغال",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-serbia",
+      "category": "keychain",
+      "team": "Serbia",
+      "teamAr": "صربيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-sevilla",
+      "category": "keychain",
+      "team": "Sevilla",
+      "teamAr": "إشبيلية",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-south-africa",
+      "category": "keychain",
+      "team": "South Africa",
+      "teamAr": "جنوب أفريقيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-south-korea",
+      "category": "keychain",
+      "team": "South Korea",
+      "teamAr": "كوريا الجنوبية",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-spain",
+      "category": "keychain",
+      "team": "Spain",
+      "teamAr": "إسبانيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-sweden",
+      "category": "keychain",
+      "team": "Sweden",
+      "teamAr": "السويد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-switzerland",
+      "category": "keychain",
+      "team": "Switzerland",
+      "teamAr": "سويسرا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-torino",
+      "category": "keychain",
+      "team": "Torino",
+      "teamAr": "تورينو",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-tottenham-hotspur",
+      "category": "keychain",
+      "team": "Tottenham Hotspur",
+      "teamAr": "توتنهام",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-tunisia",
+      "category": "keychain",
+      "team": "Tunisia",
+      "teamAr": "تونس",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-turkey",
+      "category": "keychain",
+      "team": "Turkey",
+      "teamAr": "تركيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-uruguay",
+      "category": "keychain",
+      "team": "Uruguay",
+      "teamAr": "الأوروغواي",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-usa",
+      "category": "keychain",
+      "team": "USA",
+      "teamAr": "الولايات المتحدة",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-valencia",
+      "category": "keychain",
+      "team": "Valencia",
+      "teamAr": "فالنسيا",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-vfb-stuttgart",
+      "category": "keychain",
+      "team": "VfB Stuttgart",
+      "teamAr": "شتوتغارت",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-villarreal",
+      "category": "keychain",
+      "team": "Villarreal",
+      "teamAr": "فياريال",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-wales",
+      "category": "keychain",
+      "team": "Wales",
+      "teamAr": "ويلز",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-werder-bremen",
+      "category": "keychain",
+      "team": "Werder Bremen",
+      "teamAr": "فيردر بريمن",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    },
+    {
+      "handle": "keychain-west-ham-united",
+      "category": "keychain",
+      "team": "West Ham United",
+      "teamAr": "وست هام يونايتد",
+      "price": 14.99,
+      "image": "/products/_placeholder.jpg",
+      "visible": true
+    }
+  ]
+}

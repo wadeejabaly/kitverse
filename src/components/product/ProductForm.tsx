@@ -85,6 +85,7 @@ export function ProductForm({
 
   function onAdd() {
     add({
+      kind: "jersey",
       handle,
       size,
       version,

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getVisibleProducts } from "@/data/catalog";
-import { CartView, type CartProductInfo } from "@/components/cart/CartView";
+import { accessoriesByCategory } from "@/data/accessories";
+import { CartView, type CartAccessoryInfo, type CartProductInfo } from "@/components/cart/CartView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { alternatesFor } from "@/lib/site";
 
@@ -44,10 +45,18 @@ export default async function CartPage({
     image: product.image,
   }));
 
+  const accessories: CartAccessoryInfo[] = accessoriesByCategory("keychain").map((accessory) => ({
+    handle: accessory.handle,
+    team: accessory.team,
+    teamAr: accessory.teamAr,
+    price: accessory.price,
+    image: accessory.image,
+  }));
+
   return (
     <Wrap>
       <PageLede eyebrow={t("eyebrow")} title={t("title")} />
-      <CartView products={products} locale={locale} />
+      <CartView products={products} accessories={accessories} locale={locale} />
     </Wrap>
   );
 }

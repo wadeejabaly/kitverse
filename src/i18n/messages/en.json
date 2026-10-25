@@ -16,6 +16,7 @@
     "language": "Language",
     "nationalTeams": "National teams",
     "leagues": "Leagues",
+    "accessories": "Accessories",
     "menuBrowse": "Browse",
     "menuHelp": "Help",
     "toArabic": "العربية",
@@ -216,6 +217,23 @@
     "count": "{count, plural, =0 {No shirts} one {{countText} shirt} other {{countText} shirts}}",
     "emptyTitle": "Nothing here yet",
     "emptyBody": "No shirts match this filter right now. Clear it, or try another league."
+  },
+  "accessories": {
+    "eyebrow": "Accessories",
+    "categoryTitle": "Accessories",
+    "categoryMetaDescription": "KitVerse accessories: team keychains, with more on the way.",
+    "categoryIntro": "Small extras to go with your shirt.",
+    "count": "{count, plural, =0 {No items} one {{countText} item} other {{countText} items}}",
+    "keychainsLabel": "Keychains",
+    "keychainsIntro": "A keychain for every club and national side in the catalogue.",
+    "keychainTitle": "{team} Keychain",
+    "metaDescription": "{team} keychain — a small KitVerse extra for any order.",
+    "keychainBody": "A simple team keychain, ready to add to any order.",
+    "quantity": "Quantity",
+    "added": "Added to your cart.",
+    "viewCart": "View cart",
+    "checkoutExcluded": "Not included in this order yet",
+    "checkoutNotice": "Keychains can't be ordered online yet — they're left out of your order below. Remove them from your cart, or message us on Instagram to add one to a cash-on-delivery order."
   },
   "product": {
     "breadcrumbShop": "Shop",

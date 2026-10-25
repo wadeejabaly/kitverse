@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, cartTotals, priceLine } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, cartTotals, priceLine, round2 } from "@/data/pricing";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
-import type { CartProductInfo } from "@/components/cart/CartView";
+import type { CartAccessoryInfo, CartProductInfo } from "@/components/cart/CartView";
 import { Figure, Price } from "@/components/shared/Money";
 import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
 import { CityCombobox } from "@/components/checkout/CityCombobox";
@@ -42,6 +42,13 @@ import type { TownOption } from "@/data/localities";
  * The gift-box add-on (owner decision 2026-10-23) lives only here, at
  * checkout, not on the cart page: one box per order at most, but
  * quantity-selectable, because a single box can hold more than one shirt.
+ *
+ * Accessories (2026-10-25, phase 1 of the keychains feature): shown in the
+ * summary so the total still matches the cart, but excluded from the order
+ * actually sent — orderRequestBody() only ever lists jersey items, since the
+ * database and the order-writing code don't have an accessory concept yet
+ * (see the project notes for the migration that will add one). A banner and
+ * a per-line tag say so plainly rather than silently dropping the item.
  */
 
 type FormValues = {
@@ -100,10 +107,12 @@ function isReturnState(value: unknown): value is ReturnState {
 
 export function CheckoutView({
   products,
+  accessories,
   locale,
   cashEnabled,
 }: {
   products: CartProductInfo[];
+  accessories: CartAccessoryInfo[];
   locale: string;
   cashEnabled: boolean;
 }) {
@@ -111,6 +120,7 @@ export function CheckoutView({
   const tCart = useTranslations("cart");
   const tCommon = useTranslations("common");
   const tProduct = useTranslations("product");
+  const tAccessories = useTranslations("accessories");
   const router = useRouter();
   const { items, hydrated, clear } = useCart();
   const searchParams = useSearchParams();
@@ -190,10 +200,15 @@ export function CheckoutView({
     () => new Map(products.map((product) => [product.handle, product])),
     [products],
   );
+  const byAccessoryHandle = useMemo(
+    () => new Map(accessories.map((accessory) => [accessory.handle, accessory])),
+    [accessories],
+  );
 
   // Same skip rule as the cart: a line whose handle is no longer an approved
   // product cannot be priced honestly, so it is not shown and not charged for.
   const lines = items
+    .filter((item) => item.kind === "jersey")
     .map((item) => {
       const product = byHandle.get(item.handle);
       if (!product) return null;
@@ -209,11 +224,32 @@ export function CheckoutView({
     })
     .filter((line) => line !== null);
 
+  // Accessory lines (2026-10-25): shown in the summary and counted in the
+  // total so the number on screen matches the cart page, but NOT sent to
+  // the server — see orderRequestBody() and the banner below.
+  const accessoryLines = items
+    .filter((item) => item.kind === "accessory")
+    .map((item) => {
+      const accessory = byAccessoryHandle.get(item.handle);
+      if (!accessory) return null;
+      return {
+        item,
+        accessory,
+        priced: {
+          unitPrice: accessory.price,
+          qty: item.qty,
+          lineTotal: round2(accessory.price * item.qty),
+        },
+        key: lineKey(item),
+      };
+    })
+    .filter((line) => line !== null);
+
   // Shipping needs a resolved city — 0 here is "not yet known", not "free".
   // The order is not submittable until cityCheck is "found" (see the button below).
   const shippingAmount = cityCheck.status === "found" ? cityCheck.fee : 0;
   const totals = cartTotals(
-    lines.map((line) => line.priced),
+    [...lines.map((line) => line.priced), ...accessoryLines.map((line) => line.priced)],
     shippingAmount,
     giftBoxQty,
   );
@@ -241,17 +277,27 @@ export function CheckoutView({
     // on screen while they fill it in again. It clears when they try to pay.
   }
 
-  /** The cart's CHOICES, which is all either processor is ever sent. */
+  /**
+   * The cart's CHOICES, which is all either processor is ever sent.
+   *
+   * Jersey items only (2026-10-25): the order-writing code and the database
+   * have no accessory concept yet, so an accessory line in the cart is left
+   * out here entirely rather than sent in a shape the server would reject or
+   * silently mis-handle. The summary UI says this plainly; see the file doc
+   * comment.
+   */
   function orderRequestBody() {
     return JSON.stringify({
-      items: items.map((item) => ({
-        handle: item.handle,
-        size: item.size,
-        version: item.version,
-        patch: item.patch,
-        qty: item.qty,
-        ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
-      })),
+      items: items
+        .filter((item) => item.kind === "jersey")
+        .map((item) => ({
+          handle: item.handle,
+          size: item.size,
+          version: item.version,
+          patch: item.patch,
+          qty: item.qty,
+          ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
+        })),
       customer: parsed.success ? parsed.data : null,
       locale,
       giftBoxQty,
@@ -308,13 +354,26 @@ export function CheckoutView({
     );
   }
 
-  if (lines.length === 0) {
+  if (lines.length === 0 && accessoryLines.length === 0) {
     return (
       <div className="py-16">
         <h2 className="mb-2.5 text-xl">{tCart("emptyTitle")}</h2>
         <p className="mb-7 max-w-[46ch] text-ink-soft">{tCart("emptyBody")}</p>
         <Link href="/shop" className="btn">
           {tCommon("continueShopping")}
+        </Link>
+      </div>
+    );
+  }
+
+  // A cart that is only keychains has nothing checkout can submit yet.
+  if (lines.length === 0) {
+    return (
+      <div className="py-16">
+        <h2 className="mb-2.5 text-xl">{tAccessories("checkoutExcluded")}</h2>
+        <p className="mb-7 max-w-[46ch] text-ink-soft">{tAccessories("checkoutNotice")}</p>
+        <Link href="/cart" className="btn">
+          {tAccessories("viewCart")}
         </Link>
       </div>
     );
@@ -496,7 +555,41 @@ export function CheckoutView({
               </span>
             </li>
           ))}
+          {accessoryLines.map(({ accessory, priced, key }) => (
+            <li
+              key={key}
+              className="grid grid-cols-[64px_1fr_auto] items-start gap-4 border-b border-rule py-4"
+            >
+              <span className="grid aspect-square place-items-center bg-tile">
+                <Image
+                  src={accessory.image}
+                  alt={locale === "ar" ? accessory.teamAr : accessory.team}
+                  width={128}
+                  height={128}
+                  sizes="64px"
+                  className="h-auto w-[86%]"
+                />
+              </span>
+              <span className="text-[13px]">
+                <span className="block">
+                  {tAccessories("keychainTitle", {
+                    team: locale === "ar" ? accessory.teamAr : accessory.team,
+                  })}
+                </span>
+                <span className="block text-ink-soft">{tAccessories("checkoutExcluded")}</span>
+              </span>
+              <span className="text-accent text-[13px]">
+                <Price value={priced.lineTotal} />
+              </span>
+            </li>
+          ))}
         </ul>
+
+        {accessoryLines.length > 0 ? (
+          <p className="mt-4 border border-rule bg-chip px-4 py-3.5 text-xs text-ink-soft">
+            {tAccessories("checkoutNotice")}
+          </p>
+        ) : null}
 
         {/* Gift box (owner decision 2026-10-23) — one per order, but
             quantity-selectable, since a single box can hold more than one

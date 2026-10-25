@@ -48,6 +48,7 @@ export async function Footer() {
               </FooterLink>
             ))}
             <FooterLink href="/shop/national-teams">{tNav("nationalTeams")}</FooterLink>
+            <FooterLink href="/accessories">{tNav("accessories")}</FooterLink>
           </FooterColumn>
 
           <FooterColumn label={t("helpGroup")}>

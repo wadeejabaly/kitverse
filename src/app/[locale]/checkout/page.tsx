@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getVisibleProducts } from "@/data/catalog";
-import type { CartProductInfo } from "@/components/cart/CartView";
+import { accessoriesByCategory } from "@/data/accessories";
+import type { CartAccessoryInfo, CartProductInfo } from "@/components/cart/CartView";
 import { CheckoutView } from "@/components/checkout/CheckoutView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { alternatesFor } from "@/lib/site";
@@ -46,6 +47,13 @@ export default async function CheckoutPage({
     image: product.image,
   }));
 
+  const accessories: CartAccessoryInfo[] = accessoriesByCategory("keychain").map((accessory) => ({
+    handle: accessory.handle,
+    team: accessory.team,
+    teamAr: accessory.teamAr,
+    price: accessory.price,
+    image: accessory.image,
+  }));
 
   return (
     <Wrap>
@@ -57,6 +65,7 @@ export default async function CheckoutPage({
       <Suspense fallback={<div className="min-h-[40vh]" aria-hidden />}>
         <CheckoutView
           products={products}
+          accessories={accessories}
           locale={locale}
           cashEnabled={!!process.env.SUPABASE_SERVICE_ROLE_KEY}
         />

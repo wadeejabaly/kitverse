@@ -59,11 +59,52 @@ export interface Product {
   visible: boolean; // approved review state AND not deduped-away
 }
 
-export interface CartItem {
+export interface JerseyCartItem {
+  kind: "jersey";
   handle: string;
   size: Size;
   version: Version;
   nameNumber?: string; // <=18 chars, trimmed, uppercase-latin+digits+space allowed
   patch: Patch;
   qty: number; // 1..10
+}
+
+/**
+ * An accessory line (2026-10-25, the "add an Accessories category, keychains
+ * for now" ask). Deliberately much thinner than a jersey line: no size,
+ * version or patch — an accessory has one flat price and nothing to
+ * configure, so the only choice is how many.
+ */
+export interface AccessoryCartItem {
+  kind: "accessory";
+  handle: string;
+  qty: number; // 1..10
+}
+
+/**
+ * `kind` is the discriminant added when the cart grew a second kind of line.
+ * A cart saved by an earlier release has neither tag at all — CartProvider's
+ * `parseStoredCart` treats anything without `kind` as a jersey line, the only
+ * kind that could have been stored before this.
+ */
+export type CartItem = JerseyCartItem | AccessoryCartItem;
+
+export type AccessoryCategory = "keychain";
+
+/**
+ * A non-jersey product (2026-10-25). Intentionally a separate, much simpler
+ * shape from `Product`: no kit/season/league/edition, because none of those
+ * jersey concepts apply — one flat price, one photo, done. Lives in its own
+ * hand-maintained src/data/accessories.json rather than catalog.json, which
+ * scripts/export-store-catalog.ts regenerates from the database on every
+ * build and would silently wipe anything added here by hand.
+ */
+export interface Accessory {
+  handle: string; // normalized, ASCII, unique — e.g. "keychain-real-madrid"
+  category: AccessoryCategory;
+  team: string; // EN
+  teamAr: string;
+  price: number; // ILS, flat — e.g. 14.99. No size/version pricing.
+  image: string;
+  visible: boolean;
 }

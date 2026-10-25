@@ -9,25 +9,33 @@ import {
   useState,
 } from "react";
 import { SIZES, VERSIONS } from "@/data/pricing";
-import type { CartItem, Patch, Size, Version } from "@/data/types";
+import type { AccessoryCartItem, CartItem, JerseyCartItem, Patch, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 
 /**
  * The cart: client-side only, persisted to localStorage, prices never stored.
  *
- * Two rules shape this file.
+ * Three rules shape this file.
  *
- * 1. Prices are NEVER persisted. A stored line is {handle, size, version,
- *    nameNumber, patch, qty} and nothing else — every figure the customer
- *    sees is recomputed from src/data/pricing.ts at render time, so a price
- *    change can never be stale in someone's browser and a tampered
- *    localStorage entry cannot move money.
+ * 1. Prices are NEVER persisted. A stored jersey line is {kind:"jersey",
+ *    handle, size, version, nameNumber, patch, qty}; a stored accessory line
+ *    is {kind:"accessory", handle, qty}. Every figure the customer sees is
+ *    recomputed at render time (jersey lines from src/data/pricing.ts,
+ *    accessory lines from src/data/accessories.ts), so a price change can
+ *    never be stale in someone's browser and a tampered localStorage entry
+ *    cannot move money.
  *
  * 2. Hydration safety. The server has no localStorage, so the first client
  *    render must match the server's HTML exactly: we start empty with
  *    `hydrated:false`, then read storage in an effect. Consumers that show a
  *    count render nothing (not "0") until `hydrated` is true, which keeps the
  *    header from flashing a wrong number.
+ *
+ * 3. Two kinds of line, one cart (2026-10-25, the Accessories/keychains ask).
+ *    `kind` is the discriminant; everything in this file that doesn't care
+ *    which kind a line is (count, qty clamp, storage round-trip) stays
+ *    generic over `CartItem`, and only `lineKey` and `parseStoredCart` branch
+ *    on it.
  */
 
 const STORAGE_KEY = "kitverse-cart-v1";
@@ -48,28 +56,72 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null);
 
 /**
- * A line's identity: the same shirt in the same size, version, personalisation
- * and patch choice is one line whose quantity grows. Change any option and it
- * is a different line, because it is a different physical product.
+ * A line's identity. For a jersey: the same shirt in the same size, version,
+ * personalisation and patch choice is one line whose quantity grows; change
+ * any option and it is a different line, because it is a different physical
+ * product. For an accessory: there is nothing to configure, so the handle
+ * alone is the identity — adding the same keychain twice just grows its qty.
  */
 export function lineKey(item: CartItem): string {
-  return [
-    item.handle,
-    item.size,
-    item.version,
-    item.nameNumber ?? "",
-    item.patch,
-  ].join("|");
+  if (item.kind === "accessory") return `accessory|${item.handle}`;
+  return ["jersey", item.handle, item.size, item.version, item.nameNumber ?? "", item.patch].join("|");
 }
 
 const SIZE_SET = new Set<string>(SIZES);
 const VERSION_SET = new Set<string>(VERSIONS);
 const PATCH_SET = new Set<string>(["none", "league", "ucl", "worldcup"]);
 
+function parseJerseyEntry(value: Record<string, unknown>): JerseyCartItem | null {
+  if (typeof value.handle !== "string" || value.handle === "") return null;
+  if (typeof value.size !== "string" || !SIZE_SET.has(value.size)) return null;
+  if (typeof value.version !== "string" || !VERSION_SET.has(value.version)) return null;
+
+  const qtyRaw = typeof value.qty === "number" ? Math.floor(value.qty) : 1;
+  const qty = Math.min(MAX_QTY, Math.max(1, qtyRaw));
+  const nameNumber =
+    typeof value.nameNumber === "string" && value.nameNumber.trim() !== ""
+      ? sanitizeNameNumber(value.nameNumber).slice(0, NAME_NUMBER_MAX)
+      : undefined;
+  // `patch` replaced the old `badge: boolean` (owner decision 2026-10-23).
+  // A cart saved by an earlier release has `badge: true/false` and no
+  // `patch` at all — migrate it on read: `badge: true` becomes the generic
+  // "league" patch (the closest match to the old single generic add-on),
+  // `badge: false`/absent becomes "none".
+  const patch: Patch =
+    typeof value.patch === "string" && PATCH_SET.has(value.patch)
+      ? (value.patch as Patch)
+      : value.badge === true
+        ? "league"
+        : "none";
+
+  return {
+    kind: "jersey",
+    handle: value.handle,
+    size: value.size as Size,
+    version: value.version as Version,
+    patch,
+    qty,
+    ...(nameNumber ? { nameNumber } : {}),
+  };
+}
+
+function parseAccessoryEntry(value: Record<string, unknown>): AccessoryCartItem | null {
+  if (typeof value.handle !== "string" || value.handle === "") return null;
+  const qtyRaw = typeof value.qty === "number" ? Math.floor(value.qty) : 1;
+  const qty = Math.min(MAX_QTY, Math.max(1, qtyRaw));
+  return { kind: "accessory", handle: value.handle, qty };
+}
+
 /**
  * Anything read back from localStorage is untrusted input — another tab, an
  * older release, or a hand-edited value. Parse defensively and drop whatever
  * does not fit the contract rather than rendering a broken cart.
+ *
+ * `kind` is new (2026-10-25, the Accessories/keychains ask): a cart stored by
+ * any earlier release has no `kind` field on any entry at all, because a
+ * jersey line was the only kind of line that could ever exist — so an entry
+ * with no `kind`, or any `kind` other than "accessory", is read as a jersey
+ * line, same as always.
  */
 function parseStoredCart(raw: string | null): CartItem[] {
   if (!raw) return [];
@@ -85,36 +137,9 @@ function parseStoredCart(raw: string | null): CartItem[] {
   for (const entry of parsed) {
     if (typeof entry !== "object" || entry === null) continue;
     const value = entry as Record<string, unknown>;
-    if (typeof value.handle !== "string" || value.handle === "") continue;
-    if (typeof value.size !== "string" || !SIZE_SET.has(value.size)) continue;
-    if (typeof value.version !== "string" || !VERSION_SET.has(value.version)) continue;
-
-    const qtyRaw = typeof value.qty === "number" ? Math.floor(value.qty) : 1;
-    const qty = Math.min(MAX_QTY, Math.max(1, qtyRaw));
-    const nameNumber =
-      typeof value.nameNumber === "string" && value.nameNumber.trim() !== ""
-        ? sanitizeNameNumber(value.nameNumber).slice(0, NAME_NUMBER_MAX)
-        : undefined;
-    // `patch` replaced the old `badge: boolean` (owner decision 2026-10-23).
-    // A cart saved by an earlier release has `badge: true/false` and no
-    // `patch` at all — migrate it on read: `badge: true` becomes the generic
-    // "league" patch (the closest match to the old single generic add-on),
-    // `badge: false`/absent becomes "none".
-    const patch: Patch =
-      typeof value.patch === "string" && PATCH_SET.has(value.patch)
-        ? (value.patch as Patch)
-        : value.badge === true
-          ? "league"
-          : "none";
-
-    items.push({
-      handle: value.handle,
-      size: value.size as Size,
-      version: value.version as Version,
-      patch,
-      qty,
-      ...(nameNumber ? { nameNumber } : {}),
-    });
+    const parsedItem =
+      value.kind === "accessory" ? parseAccessoryEntry(value) : parseJerseyEntry(value);
+    if (parsedItem) items.push(parsedItem);
   }
   return items;
 }

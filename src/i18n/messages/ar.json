@@ -16,6 +16,7 @@
     "language": "اللغة",
     "nationalTeams": "منتخبات",
     "leagues": "دوريات",
+    "accessories": "إكسسوارات",
     "menuBrowse": "تصفّح",
     "menuHelp": "مساعدة",
     "toArabic": "العربية",
@@ -216,6 +217,23 @@
     "count": "{count, plural, =0 {لا قمصان} one {قميص واحد} two {قميصان} few {{countText} قمصان} many {{countText} قميصًا} other {{countText} قميص}}",
     "emptyTitle": "ما في شي هون بعد",
     "emptyBody": "ما في قمصان تطابق هذا الفلتر حاليًا. ألغِ الفلتر، أو جرّب دوري تاني."
+  },
+  "accessories": {
+    "eyebrow": "إكسسوارات",
+    "categoryTitle": "إكسسوارات",
+    "categoryMetaDescription": "إكسسوارات كيتفيرس: ميداليات مفاتيح للفرق، وبالطريق أشياء زيادة.",
+    "categoryIntro": "أشياء صغيرة زيادة عالقميص.",
+    "count": "{count, plural, =0 {لا قطع} one {قطعة واحدة} two {قطعتان} few {{countText} قطع} many {{countText} قطعة} other {{countText} قطعة}}",
+    "keychainsLabel": "ميداليات مفاتيح",
+    "keychainsIntro": "ميدالية مفاتيح لكل فريق ومنتخب بالكتالوج.",
+    "keychainTitle": "ميدالية مفاتيح {team}",
+    "metaDescription": "ميدالية مفاتيح {team} — إضافة صغيرة من كيتفيرس لأي طلبية.",
+    "keychainBody": "ميدالية مفاتيح بسيطة، جاهزة تنضاف لأي طلبية.",
+    "quantity": "الكمية",
+    "added": "انضافت للسلة.",
+    "viewCart": "شوف السلة",
+    "checkoutExcluded": "لسا مش داخلة بهاي الطلبية",
+    "checkoutNotice": "ميداليات المفاتيح لسا مش متاحة نطلبها أونلاين — رح نشيلها من طلبيتك تحت. شيلها من السلة، أو راسلنا بالإنستغرام لو بدك تضيفها على طلبية الدفع عند الاستلام."
   },
   "product": {
     "breadcrumbShop": "المتجر",

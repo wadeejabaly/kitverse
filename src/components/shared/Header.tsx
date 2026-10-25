@@ -51,6 +51,7 @@ export async function Header() {
           <HeaderLink href="/shop">{t("shop")}</HeaderLink>
           <HeaderLink href="/shop/national-teams">{t("nationalTeams")}</HeaderLink>
           <LeaguesMenu leagues={leagues} locale={locale} label={t("leagues")} />
+          <HeaderLink href="/accessories">{t("accessories")}</HeaderLink>
           <HeaderLink href="/size-guide">{t("sizeGuide")}</HeaderLink>
           <HeaderLink href="/about">{t("about")}</HeaderLink>
         </nav>
