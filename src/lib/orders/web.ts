@@ -7,14 +7,21 @@ import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { sanitizePatch } from "../product";
+import { resolveTown } from "../localities";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
  * The browser never sends prices: every line is re-priced here from the current price list.
+ *
+ * Owner decision 2026-10-25: a website order never auto-confirms. It is saved
+ * as "awaiting_confirmation" and the owner approves or declines it from
+ * /admin/orders - same as the "wait for my approval, cash and card" ask.
+ * The shopper's city is matched to a zone here (resolveTown, the same lookup
+ * the Instagram bot uses) - never trusted from the browser.
  */
 export type WebOrderResult =
   | { ok: true; number: number; token: string; url: string; total: number }
-  | { ok: false; code: "invalid_request" | "cart_empty" | "server_error"; detail?: string };
+  | { ok: false; code: "invalid_request" | "cart_empty" | "unknown_city" | "server_error"; detail?: string };
 
 const PATCH: Record<string, PatchId[]> = { none: [], league: ["league"], ucl: ["champions_league"], worldcup: ["world_cup"] };
 
@@ -31,6 +38,12 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
   const c = req.customer;
   const phone = normalizePhone(c.phone);
   if (!phone) return { ok: false, code: "invalid_request", detail: "phone" };
+
+  // The shopper never picks a region any more — match their typed city against
+  // the same town → zone list the Instagram bot uses. An unrecognised town
+  // fails cleanly here, before anything is written.
+  const resolved = await resolveTown(c.city);
+  if (!resolved) return { ok: false, code: "unknown_city", detail: c.city };
 
   const handles = [...new Set(req.items.map((i) => i.handle))];
   const products = must(await db().from("products").select("id,handle,title_en,status").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string }[];
@@ -49,9 +62,12 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
     customerId = (must(await db().from("customers").insert({ full_name: c.name, phone, email: c.email, preferred_language: req.locale === "en" ? "en" : "ar" }).select("id").single(), "web customer") as { id: string }).id;
   }
 
-  const address = { full_name: c.name, phone, email: c.email, town: c.city, street: c.street, house_number: c.houseNumber, recipient_name: c.name, notes: c.notes || null };
+  const address = {
+    full_name: c.name, phone, email: c.email, town: resolved.locality.name_ar ?? resolved.locality.name_en, locality_id: resolved.locality.id,
+    street: c.street, house_number: c.houseNumber, recipient_name: c.name, notes: c.notes || null,
+  };
   const order = must(await db().from("orders").insert({
-    customer_id: customerId, status: "awaiting_confirmation", source: "website", zone_id: c.region, address,
+    customer_id: customerId, status: "awaiting_confirmation", source: "website", zone_id: resolved.locality.zone_id, address,
     gift_boxes: req.giftBoxQty ?? 0, notes: c.notes || null,
   }).select("*").single(), "web order") as OrderRow;
 
@@ -64,10 +80,14 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
       return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: "short", size: i.size, qty: i.qty, print_name: name, print_number: number, patches: PATCH[patch] ?? [] };
     })).select("id"), "web items");
     const q = await requote(order);
-    const row = must(await db().from("orders").update({ status: "confirmed", payment_method: "cod", confirmed_at: new Date().toISOString(), total: q.total })
-      .eq("id", order.id).select("number,total").single(), "confirm web order") as { number: number; total: number };
-    must(await db().from("order_events").insert({ order_id: order.id, from_status: "awaiting_confirmation", to_status: "confirmed", actor: "customer", note: "website checkout, cash on delivery" }).select("id"), "web order event");
-    await notify({ kind: "order.new", priority: "urgent", title: `New website order #${row.number} - ₪${row.total / 100}`, body: `${c.name}, ${c.city} · cash on delivery`, link: `/admin/orders/${order.id}` });
+    // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —
+    // the owner approves or declines it from /admin/orders (approveWebOrder / declineWebOrder).
+    const row = must(await db().from("orders").update({ payment_method: "cod", total: q.total })
+      .eq("id", order.id).select("number,total").single(), "price web order") as { number: number; total: number };
+    await notify({
+      kind: "order.needs_approval", priority: "urgent", title: `Approve order #${row.number} - ₪${row.total / 100}`,
+      body: `${c.name}, ${address.town} · cash on delivery - waiting for your OK`, link: `/admin/orders/${order.id}`,
+    });
     return { ok: true, number: row.number, token: orderToken(order.id), url: orderLink(order.id), total: row.total };
   } catch (e) {
     await db().from("orders").update({ status: "cancelled", notes: `checkout failed: ${(e as Error).message.slice(0, 200)}` }).eq("id", order.id);

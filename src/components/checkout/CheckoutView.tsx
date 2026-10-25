@@ -1,19 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import {
-  DELIVERY_REGIONS,
-  GIFT_BOX_MAX_QTY,
-  GIFT_BOX_PRICE,
-  cartTotals,
-  priceLine,
-  shippingFor,
-  type DeliveryRegion,
-} from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, cartTotals, priceLine } from "@/data/pricing";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
 import type { CartProductInfo } from "@/components/cart/CartView";
 import { Figure, Price } from "@/components/shared/Money";
@@ -57,7 +49,6 @@ type FormValues = {
   street: string;
   houseNumber: string;
   city: string;
-  region: DeliveryRegion | "";
   notes: string;
 };
 
@@ -68,7 +59,6 @@ const EMPTY_FORM: FormValues = {
   street: "",
   houseNumber: "",
   city: "",
-  region: "",
   notes: "",
 };
 
@@ -77,6 +67,7 @@ type FieldName = keyof FormValues;
 const ERROR_CODES: readonly CheckoutErrorCode[] = [
   "invalid_request",
   "cart_empty",
+  "unknown_city",
   "payments_unconfigured",
   "paypal_failed",
   "payplus_failed",
@@ -85,6 +76,14 @@ const ERROR_CODES: readonly CheckoutErrorCode[] = [
   "rate_limited",
   "server_error",
 ];
+
+/** What the city field currently shows, resolved against the server's town → zone list
+ *  (POST /api/checkout/resolve-city) — never guessed client-side. */
+type CityCheck =
+  | { status: "idle" }
+  | { status: "checking" }
+  | { status: "found"; fee: number; label: string }
+  | { status: "unknown" };
 
 function isErrorCode(value: unknown): value is CheckoutErrorCode {
   return typeof value === "string" && (ERROR_CODES as readonly string[]).includes(value);
@@ -125,6 +124,43 @@ export function CheckoutView({
   const [giftBoxQty, setGiftBoxQty] = useState(0);
 
   /**
+   * Owner decision 2026-10-25: no region picker — the shopper just types
+   * their city, and this resolves it against the same town → zone list the
+   * Instagram bot uses (POST /api/checkout/resolve-city), debounced so it
+   * doesn't fire on every keystroke. The server re-resolves it again at
+   * order creation — this is only a preview.
+   */
+  const [cityCheck, setCityCheck] = useState<CityCheck>({ status: "idle" });
+  const cityCheckTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const city = values.city.trim();
+    if (cityCheckTimer.current) clearTimeout(cityCheckTimer.current);
+    if (city.length < 2) {
+      setCityCheck({ status: "idle" });
+      return;
+    }
+    setCityCheck({ status: "checking" });
+    cityCheckTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/checkout/resolve-city", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ city }),
+        });
+        const data = (await res.json().catch(() => null)) as { ok?: boolean; found?: boolean; fee?: number; label?: string } | null;
+        if (data?.ok && data.found && typeof data.fee === "number") {
+          setCityCheck({ status: "found", fee: data.fee, label: data.label ?? "" });
+        } else {
+          setCityCheck({ status: "unknown" });
+        }
+      } catch {
+        setCityCheck({ status: "unknown" });
+      }
+    }, 500);
+    return () => { if (cityCheckTimer.current) clearTimeout(cityCheckTimer.current); };
+  }, [values.city]);
+
+  /**
    * The card page's failure and cancel URLs come back here with `?pay=`.
    * Read once into state so the note can be dismissed as soon as the customer
    * does anything, rather than sticking to the URL for the rest of the visit.
@@ -159,10 +195,9 @@ export function CheckoutView({
     })
     .filter((line) => line !== null);
 
-  // Shipping needs a region — there is no rate to show until one is picked,
-  // and 0 here is "not yet known", not "free". The order is not submittable
-  // without a region either, because CustomerSchema requires it.
-  const shippingAmount = values.region ? shippingFor(values.region) : 0;
+  // Shipping needs a resolved city — 0 here is "not yet known", not "free".
+  // The order is not submittable until cityCheck is "found" (see the button below).
+  const shippingAmount = cityCheck.status === "found" ? cityCheck.fee : 0;
   const totals = cartTotals(
     lines.map((line) => line.priced),
     shippingAmount,
@@ -185,9 +220,6 @@ export function CheckoutView({
   }, [parsed]);
 
   function setField(field: FieldName, value: string) {
-    // `region` is narrower than `string` (DeliveryRegion | ""), and every
-    // value this is called with for that field comes from the <select> below,
-    // whose options are exactly DELIVERY_REGIONS plus the empty placeholder.
     setValues((current) => ({ ...current, [field]: value }) as FormValues);
     setErrorCode(null);
     // The return notice deliberately survives typing: the customer comes back
@@ -352,47 +384,19 @@ export function CheckoutView({
             onBlur={() => setTouched((current) => ({ ...current, city: true }))}
           />
 
-          {/* Delivery region — drives the shipping figure in the summary. A
-              select, never inferred from the free-text city above: guessing a
-              tier from a hand-typed city is exactly the silent mismatch that
-              costs the store money on every order shipped to the wrong one. */}
-          <div>
-            <label
-              htmlFor="checkout-region"
-              className="mono-eyebrow mb-2 block text-ink-soft"
-            >
-              {t("fieldRegion")}
-            </label>
-            <select
-              id="checkout-region"
-              name="region"
-              value={values.region}
-              aria-invalid={touched.region === true && fieldErrors.region === true}
-              onChange={(event) => setField("region", event.target.value)}
-              onBlur={() => setTouched((current) => ({ ...current, region: true }))}
-              className={`w-full border bg-field px-3.5 py-3 text-sm text-ink ${
-                touched.region === true && fieldErrors.region === true
-                  ? "border-ink"
-                  : "border-rule"
-              }`}
-            >
-              <option value="" disabled>
-                {t("fieldRegionPlaceholder")}
-              </option>
-              {DELIVERY_REGIONS.map((region) => (
-                <option key={region} value={region}>
-                  {/* An <option> label is plain text — <bdi> cannot go here —
-                      so the rate carries the isolation itself, U+2066/U+2069,
-                      which is what <bdi> compiles down to anyway. Without it
-                      the "₪60" can reorder against the Arabic label. */}
-                  {`${tCommon(`region.${region}`)} — ⁦₪${shippingFor(region)}⁩`}
-                </option>
-              ))}
-            </select>
-            {touched.region === true && fieldErrors.region === true ? (
-              <p className="mt-1.5 text-xs text-ink-soft">{t("errorRegion")}</p>
-            ) : null}
-          </div>
+          {/* Owner decision 2026-10-25: no region picker. The city above is
+              resolved against the server's town → zone list (cityCheck),
+              never guessed client-side — this just shows what came back. */}
+          {cityCheck.status === "checking" ? (
+            <p className="text-xs text-ink-soft">{t("cityChecking")}</p>
+          ) : cityCheck.status === "found" ? (
+            <p className="flex items-baseline gap-2 text-sm">
+              <span className="text-ink-soft">{t("cityFoundLabel", { town: cityCheck.label })}</span>
+              <span dir="ltr" className="font-medium">⁦₪{cityCheck.fee}⁩</span>
+            </p>
+          ) : cityCheck.status === "unknown" ? (
+            <p className="text-xs text-ink-soft">{t("cityUnknown")}</p>
+          ) : null}
 
           {/* Country is not a choice at launch — saying so is more honest than
               a select with one option in it. */}
@@ -515,9 +519,9 @@ export function CheckoutView({
             <Price value={totals.subtotal} />
           </Row>
           <Row label={tCart("shipping")}>
-            {values.region ? (
+            {cityCheck.status === "found" ? (
               <span className="flex items-baseline gap-2">
-                <span className="text-ink-soft">{tCommon(`region.${values.region}`)}</span>
+                <span className="text-ink-soft" dir="auto">{cityCheck.label}</span>
                 <Price value={shippingAmount} />
               </span>
             ) : (
@@ -568,7 +572,7 @@ export function CheckoutView({
                   <button
                     type="button"
                     className="btn w-full"
-                    disabled={phase !== "form" || !parsed.success}
+                    disabled={phase !== "form" || !parsed.success || cityCheck.status !== "found"}
                     onClick={placeCashOrder}
                   >
                     {phase === "placing" ? t("payCodPlacing") : t("payCod")}
@@ -578,7 +582,7 @@ export function CheckoutView({
 
               {/* One shared reason, shown once, for every disabled control
                   above — not a separate panel replacing them. */}
-              {!parsed.success ? (
+              {!parsed.success || cityCheck.status !== "found" ? (
                 <p className="text-xs text-ink-soft">{t("formIncomplete")}</p>
               ) : null}
             </div>
@@ -610,6 +614,8 @@ function ErrorMessage({ code }: { code: CheckoutErrorCode }) {
   switch (code) {
     case "cart_empty":
       return <>{t("errorCartEmpty")}</>;
+    case "unknown_city":
+      return <>{t("cityUnknown")}</>;
     case "payments_unconfigured":
       return <>{t("errorUnconfigured")}</>;
     case "rate_limited":

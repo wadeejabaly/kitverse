@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { DELIVERY_REGIONS, shippingFor } from "@/data/pricing";
+import { SHIPPING_ILS_BY_TIER } from "@/data/pricing";
 import { Price } from "@/components/shared/Money";
 import {
   PageLede,
@@ -38,7 +38,6 @@ export default async function ShippingPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("shippingPage");
-  const tCommon = await getTranslations("common");
 
   return (
     <Wrap>
@@ -49,15 +48,19 @@ export default async function ShippingPage({
 
         <ProseHeading>{t("rateTitle")}</ProseHeading>
         <ProseParagraph>{t("rateBody")}</ProseParagraph>
-        {/* The rates come straight from pricing.ts, so this page can never
-            quote a figure checkout disagrees with. */}
+        {/* The two tiers come straight from pricing.ts, so this page can never
+            quote a figure checkout disagrees with. Shown separately on purpose
+            (owner decision 2026-10-25) so a northern customer never thinks
+            everyone pays the higher fee. */}
         <ul className="mb-3.5 flex max-w-[36ch] flex-col gap-1.5 text-ink">
-          {DELIVERY_REGIONS.map((region) => (
-            <li key={region} className="flex items-baseline justify-between gap-4">
-              <span className="text-ink-soft">{tCommon(`region.${region}`)}</span>
-              <Price value={shippingFor(region)} />
-            </li>
-          ))}
+          <li className="flex items-baseline justify-between gap-4">
+            <span className="text-ink-soft">{t("tierNorth")}</span>
+            <Price value={SHIPPING_ILS_BY_TIER.north} />
+          </li>
+          <li className="flex items-baseline justify-between gap-4">
+            <span className="text-ink-soft">{t("tierRest")}</span>
+            <Price value={SHIPPING_ILS_BY_TIER.rest} />
+          </li>
         </ul>
 
         <ProseHeading>{t("trackingTitle")}</ProseHeading>

@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS, isDeliveryRegion } from "@/data/pricing";
-import type { DeliveryRegion } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS } from "@/data/pricing";
 import type { Patch, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX } from "@/lib/product";
 
@@ -27,9 +26,6 @@ const SizeSchema = z.custom<Size>(
 const VersionSchema = z.custom<Version>(
   (value) => typeof value === "string" && (VERSIONS as string[]).includes(value),
 );
-// The closed set of delivery regions, checked against pricing.ts — the server
-// must never price shipping from a region it did not itself define.
-const DeliveryRegionSchema = z.custom<DeliveryRegion>(isDeliveryRegion);
 const PatchSchema = z.enum(["none", "league", "ucl", "worldcup"]) satisfies z.ZodType<Patch>;
 
 /** One cart line as it crosses the wire. Matches CartItem minus any money. */
@@ -55,9 +51,11 @@ export type CheckoutItemInput = z.infer<typeof CheckoutItemSchema>;
  * at all — it is fixed to IL here and on the order row, which is honest about
  * what the store can actually ship.
  *
- * `region` IS a form field, and a required one: shipping is priced from it
- * (pricing.ts → shippingFor), so it has to be a choice the shopper made and a
- * value from a closed set the server owns.
+ * Owner decision 2026-10-25: there is no region field any more. The shopper
+ * just types their city, and the SERVER matches it against the town → zone
+ * list (resolveTown() in src/lib/localities.ts — the same one the Instagram
+ * bot already uses) to price delivery. An unrecognised town fails the order
+ * with code "unknown_city" rather than guessing a tier.
  *
  * `street` + `houseNumber` replace the old single `address` field (owner
  * decision 2026-10-23) — two fields instead of one free-text one, same as the
@@ -79,9 +77,6 @@ export const CustomerSchema = z.object({
   street: z.string().trim().min(2).max(140),
   houseNumber: z.string().trim().min(1).max(20),
   city: z.string().trim().min(2).max(80),
-  // Explicit, shopper-chosen — shipping is priced from this, never inferred
-  // from the free-text city above (too unreliable to bill from).
-  region: DeliveryRegionSchema,
   notes: z.string().trim().max(500).optional(),
 });
 
@@ -114,6 +109,7 @@ export const FIXED_COUNTRY = "IL";
 export type CheckoutErrorCode =
   | "invalid_request"
   | "cart_empty"
+  | "unknown_city"
   | "payments_unconfigured"
   | "paypal_failed"
   | "payplus_failed"
