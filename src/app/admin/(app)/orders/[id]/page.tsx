@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink } from "lucide-react";
+import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink, Check, X } from "lucide-react";
 import { db } from "@/lib/db";
 import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
 import { orderToken } from "@/lib/orders/link";
-import { changeOrderStatus } from "../../../orders-actions";
+import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime } from "../../../ui";
 
 export const dynamic = "force-dynamic";
@@ -12,13 +12,16 @@ export const dynamic = "force-dynamic";
 export default async function OrderPage({ params }: PageProps<"/admin/orders/[id]">) {
   const { id } = await params;
   const o = (await db().from("orders").select("*").eq("id", id).maybeSingle()).data as
-    { id: string; number: number; status: string; total: number; conversation_id: string | null; payment_method: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null } | null;
+    { id: string; number: number; status: string; source: string; total: number; conversation_id: string | null; payment_method: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null } | null;
   if (!o) notFound();
   const lines = await batchLines([o.id]);
   const events = (await db().from("order_events").select("from_status,to_status,actor,note,created_at").eq("order_id", o.id).order("created_at")).data ?? [];
   const a = o.address ?? {};
   const st = ORDER_STATUS[o.status] ?? ORDER_STATUS.draft;
-  const next = ["confirmed", "in_supplier_batch", "produced", "at_warehouse", "with_courier", "delivered", "issue", "cancelled"];
+  const flow = ["confirmed", "paid", "in_supplier_batch", "produced", "at_warehouse", "with_courier", "delivered", "issue", "cancelled"];
+  // the current status is always the default, so Save never changes it by accident
+  const next = flow.includes(o.status) ? flow : [o.status, ...flow];
+  const awaitingOk = o.status === "awaiting_confirmation" && o.source === "website";
   const msgLabels: Record<string, string> = { produced: "Produced", at_warehouse: "At warehouse", with_courier: "With courier" };
 
   return (
@@ -70,6 +73,16 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               <div className="flex items-start gap-2 text-ink-2" dir="auto"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted" />{[a.town, a.street, a.house_number, a.landmark].filter(Boolean).join("، ")}</div>
             </div>
           </Card>
+          {awaitingOk ? (
+            <Card>
+              <SectionTitle>Website order - waiting for your OK</SectionTitle>
+              <p className="mb-3 text-sm text-muted">Approve to send it into the normal flow (supplier batch, delivery). Decline cancels it.</p>
+              <div className="flex gap-2">
+                <form action={approveWebOrder}><input type="hidden" name="orderId" value={o.id} /><button className={button.primary}><Check className="h-4 w-4" /> Approve</button></form>
+                <form action={declineWebOrder}><input type="hidden" name="orderId" value={o.id} /><button className={button.danger}><X className="h-4 w-4" /> Decline</button></form>
+              </div>
+            </Card>
+          ) : (
           <Card>
             <SectionTitle>Update status</SectionTitle>
             <form action={changeOrderStatus} className="flex flex-col gap-3 text-sm">
@@ -77,16 +90,19 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               <select name="status" defaultValue={o.status} className={input}>
                 {next.map((s) => <option key={s} value={s}>{(ORDER_STATUS[s] ?? { label: s }).label}</option>)}
               </select>
-              <label className="flex items-start gap-2.5 rounded-xl bg-paper p-3">
-                <input type="checkbox" name="notify" className="mt-0.5 h-4 w-4 accent-[var(--pitch)]" />
-                <span>Message the customer on Instagram
-                  <span className="mt-1 block text-xs text-muted">Only for: {Object.keys(STATUS_MESSAGE).map((k) => msgLabels[k]).join(", ")}. Sent in your style, in Arabic.</span>
-                </span>
-              </label>
+              {o.conversation_id ? (
+                <label className="flex items-start gap-2.5 rounded-xl bg-paper p-3">
+                  <input type="checkbox" name="notify" className="mt-0.5 h-4 w-4 accent-[var(--pitch)]" />
+                  <span>Message the customer on Instagram
+                    <span className="mt-1 block text-xs text-muted">Only for: {Object.keys(STATUS_MESSAGE).map((k) => msgLabels[k]).join(", ")}. Sent in your style, in Arabic.</span>
+                  </span>
+                </label>
+              ) : null}
               <input name="note" placeholder="Note (optional)" className={input} />
               <button className={`${button.primary} self-start`}>Save</button>
             </form>
           </Card>
+          )}
         </div>
       </div>
     </>

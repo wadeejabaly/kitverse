@@ -119,7 +119,7 @@ export default async function Settings() {
         <Section icon={Wallet} title="Deposit" text="Ask for a small Bit deposit before confirming cash-on-delivery orders.">
           <form action={saveSetting} className="flex items-center justify-between gap-3 text-sm">
             <input type="hidden" name="key" value="deposit" />
-            <label className="flex items-center gap-2.5"><input type="checkbox" name="enabled" defaultChecked={!!s.deposit?.enabled} className="h-4 w-4 accent-[var(--pitch)]" />Require a 35-50₪ Bit deposit</label>
+            <label className="flex items-center gap-2.5"><input type="checkbox" name="enabled" defaultChecked={!!s.deposit?.enabled} className="h-4 w-4 accent-[var(--pitch)]" />Require a {String(s.deposit?.min_ils ?? 35)}-{String(s.deposit?.max_ils ?? 50)}₪ Bit deposit</label>
             <button className={button.ghost}>Save</button>
           </form>
         </Section>

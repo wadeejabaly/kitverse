@@ -5,6 +5,7 @@ import { z } from "zod";
 import sharp from "sharp";
 import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
+import { env } from "@/lib/env";
 
 /** Owner uploads a clean photo for a shirt (used instead of supplier photos from now on). */
 export async function uploadProductPhoto(form: FormData) {
@@ -23,6 +24,9 @@ export async function uploadProductPhoto(form: FormData) {
   must(await db().from("product_images").insert({ product_id: p.id, url, status: "good", source: "owner", role: "front", checked_at: new Date().toISOString() }).select("id"), "image row");
   must(await db().from("products").update({ primary_image_url: url, photo_status: "owner_upload" }).eq("id", p.id).select("id"), "set photo");
   await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_upload", entity: "product", entity_id: p.id });
+  // the website catalog is built at deploy time: rebuild so the photo goes live (~2 min)
+  const hook = env().VERCEL_DEPLOY_HOOK_URL;
+  if (hook) await fetch(hook, { method: "POST" }).catch((e) => console.error("deploy hook failed", (e as Error).message));
   revalidatePath("/admin/photos");
 }
 

@@ -21,6 +21,8 @@ const Env = z.object({
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional().default(""),
   VAPID_PRIVATE_KEY: z.string().optional().default(""),
   VAPID_SUBJECT: z.string().optional().default(""),
+  // Vercel deploy hook: rebuilds the website so owner-uploaded photos appear (the catalog is static)
+  VERCEL_DEPLOY_HOOK_URL: z.string().optional().default(""),
 });
 
 let cached: z.infer<typeof Env> | null = null;

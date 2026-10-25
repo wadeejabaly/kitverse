@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { requireStaff } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -11,12 +12,14 @@ export const dynamic = "force-dynamic";
 /** Console layout: black page, wordmark bar, one framed panel holding the icon rail and the page. */
 export default async function AppShell({ children }: { children: React.ReactNode }) {
   const staff = await requireStaff();
-  const [{ count: pending }, { count: unread }, priceList, botSetting] = await Promise.all([
+  const [{ count: pending }, { count: webOrders }, { count: unread }, priceList, botSetting] = await Promise.all([
     db().from("approvals").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    db().from("orders").select("id", { count: "exact", head: true }).eq("status", "awaiting_confirmation").eq("source", "website"),
     db().from("notifications").select("id", { count: "exact", head: true }).is("read_at", null).neq("priority", "quiet"),
     db().from("price_list_versions").select("status").order("version", { ascending: false }).limit(1).maybeSingle(),
     db().from("bot_settings").select("value").eq("key", "bot_on").maybeSingle(),
   ]);
+  const badges = { "/admin/approvals": pending ?? 0, "/admin/orders": webOrders ?? 0 };
   const botOn = (botSetting.data?.value as { on?: boolean } | undefined)?.on !== false;
   const vapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
   const draftPrices = priceList.data?.status !== "published";
@@ -33,7 +36,7 @@ export default async function AppShell({ children }: { children: React.ReactNode
       </header>
 
       <div className="flex min-h-0 flex-1 md:rounded-xl md:border md:border-line md:bg-paper">
-        <Rail pending={pending ?? 0} />
+        <Rail badges={badges} />
         <main className="min-w-0 flex-1 overflow-x-hidden px-4 pb-28 md:overflow-y-auto md:px-8 md:pb-12">
           <div className="mx-auto w-full max-w-5xl">{children}</div>
         </main>
@@ -45,9 +48,9 @@ export default async function AppShell({ children }: { children: React.ReactNode
           <span className="text-line-2">|</span>
           <form action={signOut}><button className="inline-flex items-center gap-1.5 hover:text-ink"><LogOut className="h-3.5 w-3.5" />Sign out</button></form>
         </div>
-        {draftPrices ? <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-amber" />Price list is still a draft</span> : <span>Price list published</span>}
+        {draftPrices ? <Link href="/admin/pricing" className="flex items-center gap-2 hover:text-ink"><span className="h-1.5 w-1.5 rounded-full bg-amber" />Price list is still a draft</Link> : <span>Price list published</span>}
       </footer>
-      <TabBar pending={pending ?? 0} />
+      <TabBar badges={badges} />
     </div>
   );
 }

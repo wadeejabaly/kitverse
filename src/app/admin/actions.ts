@@ -15,6 +15,7 @@ import { storeInbound, getOrCreateConversation } from "@/lib/conversation/ingest
 import { normalize } from "@/lib/text";
 import { requote, type OrderRow } from "@/lib/orders/draft";
 import { isBotModel } from "@/lib/agent/models";
+import { israelDayEnd } from "@/lib/time";
 
 async function audit(actor: string | null, action: string, entity: string, entityId: string, after?: unknown) {
   await db().from("audit_log").insert({ actor, action, entity, entity_id: entityId, after: after ?? null });
@@ -207,7 +208,7 @@ export async function saveSetting(form: FormData) {
   else if (key === "spend_override") {
     const cur = await get("spend");
     const v = form.get("value");
-    const until = v === "today" ? new Date(new Date().setHours(23, 59, 59, 999)).toISOString() : v === "forever" ? "9999-12-31T00:00:00Z" : null;
+    const until = v === "today" ? israelDayEnd() : v === "forever" ? "9999-12-31T00:00:00Z" : null;
     row = { key: "spend", value: { ...cur, override_until: until } };
   } else if (key === "spend_limits") {
     const cur = await get("spend");
@@ -221,7 +222,8 @@ export async function saveSetting(form: FormData) {
     row = { key, value: { ...cur, enabled: form.get("mode") !== "everyone", usernames, code } };
   } else if (key === "deposit") {
     const cur = await get("deposit");
-    row = { key, value: { ...cur, enabled: form.get("enabled") === "on" } };
+    // the Settings page promises 35-50₪ by Bit: keep those amounts even if the row was never seeded
+    row = { key, value: { method: "bit", min_ils: 35, max_ils: 50, non_refundable: true, ...cur, enabled: form.get("enabled") === "on" } };
   } else {
     const n = (f: string) => z.coerce.number().int().min(1).max(1000).parse(form.get(f));
     row = { key, value: { new_per_24h: n("new_per_24h"), new_lifetime_before_review: n("new_lifetime_before_review"), engaged_per_24h: n("engaged_per_24h"), buyer_per_24h: n("buyer_per_24h"), spam_msgs_per_min: n("spam_msgs_per_min") } };

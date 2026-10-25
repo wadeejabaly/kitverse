@@ -2,6 +2,7 @@ import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { env } from "../env";
+import { logAiUsage } from "../ai-cost";
 import { db, must } from "../db";
 import { searchCatalog } from "../catalog/search";
 import { notify } from "../notify";
@@ -51,6 +52,7 @@ List the football shirts it shows (an offer poster may show ~3). For each: team 
 Return ONLY JSON: {"shirts":[...]}. Return {"shirts":[]} if no specific shirt is visible.` },
     ] }],
   });
+  await logAiUsage("post_match", env().ANTHROPIC_MODEL, r.usage);
   const text = r.content.find((b) => b.type === "text")?.text ?? "{}";
   const parsed = Shirts.safeParse(JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1) || "{}"));
   if (!parsed.success) return 0;

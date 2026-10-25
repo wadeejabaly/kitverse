@@ -18,8 +18,11 @@ const StatusChange = z.object({
 export async function changeOrderStatus(form: FormData) {
   const staff = await requireStaff();
   const c = StatusChange.parse({ orderId: form.get("orderId"), status: form.get("status"), notify: form.get("notify") === "on", note: (form.get("note") as string) || undefined });
-  const o = must(await db().from("orders").select("id,status,conversation_id").eq("id", c.orderId).single(), "order") as { id: string; status: string; conversation_id: string | null };
-  must(await db().from("orders").update({ status: c.status }).eq("id", o.id).select("id"), "update status");
+  const o = must(await db().from("orders").select("id,status,conversation_id,confirmed_at").eq("id", c.orderId).single(), "order") as { id: string; status: string; conversation_id: string | null; confirmed_at: string | null };
+  if (o.status === c.status && !c.note) return; // nothing changed
+  // an order confirmed by hand counts from now (overview "orders today", customer page date)
+  const confirmedAt = c.status === "confirmed" && !o.confirmed_at ? { confirmed_at: new Date().toISOString() } : {};
+  must(await db().from("orders").update({ status: c.status, ...confirmedAt }).eq("id", o.id).select("id"), "update status");
   must(await db().from("order_events").insert({ order_id: o.id, from_status: o.status, to_status: c.status, actor: "owner", actor_user: staff.id, note: c.note ?? null }).select("id"), "event");
   if (c.status === "delivered") {
     await db().from("cash_collections").upsert({ order_id: o.id, amount: 0, status: "with_courier" }, { onConflict: "order_id", ignoreDuplicates: true });
@@ -38,12 +41,16 @@ export async function changeOrderStatus(form: FormData) {
 /** Put confirmed orders into a new supplier batch and open its spreadsheet. */
 export async function createSupplierBatch(form: FormData) {
   const staff = await requireStaff();
-  const ids = z.array(z.string().uuid()).min(1).parse(form.getAll("orderId"));
+  const picked = z.array(z.string().uuid()).min(1).parse(form.getAll("orderId"));
+  // only orders that are still waiting to go to the supplier
+  const ready = must(await db().from("orders").select("id,status").in("id", picked).in("status", ["confirmed", "paid"]), "batchable orders") as { id: string; status: string }[];
+  if (!ready.length) redirect("/admin/orders");
+  const ids = ready.map((o) => o.id);
   const batch = must(await db().from("supplier_batches").insert({ status: "draft" }).select("id").single(), "batch") as { id: string };
   const items = must(await db().from("order_items").select("id,order_id").in("order_id", ids), "items") as { id: string; order_id: string }[];
   if (items.length) must(await db().from("supplier_batch_items").insert(items.map((i) => ({ batch_id: batch.id, order_item_id: i.id }))).select("id"), "batch items");
   must(await db().from("orders").update({ status: "in_supplier_batch" }).in("id", ids).select("id"), "orders to batch");
-  await db().from("order_events").insert(ids.map((id) => ({ order_id: id, from_status: "confirmed", to_status: "in_supplier_batch", actor: "owner", actor_user: staff.id, note: `batch ${batch.id}` })));
+  await db().from("order_events").insert(ready.map((o) => ({ order_id: o.id, from_status: o.status, to_status: "in_supplier_batch", actor: "owner", actor_user: staff.id, note: `batch ${batch.id}` })));
   revalidatePath("/admin/orders");
   redirect(`/admin/orders/batches/${batch.id}`);
 }

@@ -35,3 +35,14 @@ export async function applyDeliveryFees() {
   clearPriceListCache();
   revalidatePath("/admin/pricing");
 }
+
+/** Owner approves the price list the bot and website quote from (clears the "draft" warning). */
+export async function publishPriceList() {
+  const staff = await requireStaff();
+  const list = await currentPriceList();
+  if (list.status === "published") return;
+  must(await db().from("price_list_versions").update({ status: "published", published_at: new Date().toISOString(), published_by: staff.id }).eq("id", list.id).eq("status", "draft").select("id"), "publish price list");
+  await db().from("audit_log").insert({ actor: staff.id, action: "pricing.publish", entity: "price_list_versions", entity_id: list.id });
+  clearPriceListCache();
+  revalidatePath("/admin", "layout");
+}

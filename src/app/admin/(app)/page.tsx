@@ -1,37 +1,50 @@
 import Link from "next/link";
 import { ClipboardCheck, ShoppingBag, Wallet, Cpu, ArrowRight, MessagesSquare, Images, Truck, ImageOff } from "lucide-react";
 import { db } from "@/lib/db";
+import { israelDayStart } from "@/lib/time";
 import { PageHeader, Card, Stat, SectionTitle, Badge, EmptyState, KIND, timeAgo } from "../ui";
 
 export const dynamic = "force-dynamic";
 
 export default async function Overview() {
-  const since = new Date(new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Jerusalem" }) + "T00:00:00+03:00").toISOString();
-  const [spend, pending, orders, needsMe, recentOrders, noPhoto] = await Promise.all([
+  const since = israelDayStart();
+  const [spend, pendingCount, pending, webWaiting, orders, ownerChats, recentOrders, noPhoto] = await Promise.all([
     db().rpc("spend_today_usd"),
+    db().from("approvals").select("id", { count: "exact", head: true }).eq("status", "pending"),
     db().from("approvals").select("id,kind,proposal,draft_reply,created_at,conversation:conversations(customer:customers(full_name,display_name,ig_username))").eq("status", "pending").order("created_at").limit(6),
-    db().from("orders").select("total").gte("confirmed_at", since),
-    db().from("conversations").select("id", { count: "exact", head: true }).eq("mode", "owner").eq("channel", "instagram"),
+    db().from("orders").select("id", { count: "exact", head: true }).eq("status", "awaiting_confirmation").eq("source", "website"),
+    db().from("orders").select("total,customer:customers(ig_user_id)").gte("confirmed_at", since).neq("status", "cancelled"),
+    db().from("conversations").select("id,messages(direction,created_at)").eq("mode", "owner").eq("channel", "instagram")
+      .order("created_at", { referencedTable: "messages", ascending: false }).limit(1, { referencedTable: "messages" }),
     db().from("orders").select("id,number,total,status,address,confirmed_at").not("confirmed_at", "is", null).order("confirmed_at", { ascending: false }).limit(5),
     db().from("products").select("id", { count: "exact", head: true }).eq("status", "featured").not("photo_status", "in", "(good,owner_upload)"),
   ]);
-  const today = orders.data ?? [];
+  // real sales only: test-bot orders (sim: customers) and cancelled orders don't count
+  const today = ((orders.data ?? []) as unknown as { total: number; customer: { ig_user_id: string | null } | null }[]).filter((o) => !o.customer?.ig_user_id?.startsWith("sim:"));
   const revenue = today.reduce((s, o) => s + o.total, 0) / 100;
+  // chats the owner took over where the customer wrote last (not ones he already answered)
+  const needsReply = ((ownerChats.data ?? []) as { messages: { direction: string }[] }[]).filter((c) => c.messages[0]?.direction === "in").length;
+  const webOrders = webWaiting.count ?? 0;
   const approvals = (pending.data ?? []) as unknown as { id: string; kind: string; proposal: { summary?: string }; draft_reply: string | null; created_at: string; conversation: { customer: { full_name: string | null; display_name: string | null; ig_username: string | null } } | null }[];
 
   return (
     <>
       <PageHeader title="Overview" subtitle={new Date().toLocaleDateString("en-GB", { timeZone: "Asia/Jerusalem", weekday: "long", day: "numeric", month: "long" })} />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat label="Waiting for you" value={approvals.length} icon={ClipboardCheck} />
+        <Stat label="Waiting for you" value={(pendingCount.count ?? 0) + webOrders} icon={ClipboardCheck} />
         <Stat label="Orders today" value={today.length} icon={ShoppingBag} />
         <Stat label="Sales today" value={`₪${revenue.toLocaleString()}`} icon={Wallet} />
         <Stat label="AI cost today" value={`$${Number(spend.data ?? 0).toFixed(2)}`} icon={Cpu} />
       </div>
 
-      {needsMe.count ? (
+      {webOrders ? (
+        <Link href="/admin/orders?status=needs_approval" className="mt-3 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-pitch bg-surface px-4 py-3 text-sm text-ink hover:bg-raised">
+          <ShoppingBag className="h-4 w-4 text-pitch" /> {webOrders} website order{webOrders > 1 ? "s" : ""} waiting for your OK <ArrowRight className="ml-auto h-4 w-4 text-muted" />
+        </Link>
+      ) : null}
+      {needsReply ? (
         <Link href="/admin/inbox?filter=owner" className="mt-3 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-pitch bg-surface px-4 py-3 text-sm text-ink hover:bg-raised">
-          <MessagesSquare className="h-4 w-4 text-pitch" /> {needsMe.count} chat{needsMe.count > 1 ? "s" : ""} waiting for your reply <ArrowRight className="ml-auto h-4 w-4 text-muted" />
+          <MessagesSquare className="h-4 w-4 text-pitch" /> {needsReply} chat{needsReply > 1 ? "s" : ""} waiting for your reply <ArrowRight className="ml-auto h-4 w-4 text-muted" />
         </Link>
       ) : null}
       {noPhoto.count ? (

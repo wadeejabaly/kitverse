@@ -12,12 +12,8 @@ import { allowedAmounts, unexpectedAmounts, toBubbles, isNoReply, looksLikeMeta,
 import { openOrder, requote } from "../orders/draft";
 import { settings } from "../conversation/limits";
 import { isBotModel } from "./models";
+import { costUsd } from "../ai-cost";
 
-const PRICES: Record<string, { in: number; out: number; read: number; write: number }> = {
-  "claude-opus-5-5": { in: 4, out: 20, read: 0.2, write: 5 },
-  "claude-sonnet-5-5": { in: 2, out: 10, read: 0.2, write: 2.5 },
-  "claude-haiku-5-5": { in: 0.1, out: 0.5, read: 0.01, write: 0.125 },
-};
 
 export interface AgentResult {
   outbox: OutboxItem[];              // photos first, then text bubbles
@@ -35,7 +31,6 @@ const anthropic = () => (client ??= new Anthropic({ apiKey: env().ANTHROPIC_API_
 export async function runAgent(conv: ConversationRow, customer: CustomerRow, opts: { effort?: "low" | "medium" | "high"; extraSystem?: string } = {}): Promise<AgentResult> {
   const chosen = (await settings<{ model?: string }>("ai_model", {})).model;
   const model = isBotModel(chosen) ? chosen : env().ANTHROPIC_MODEL;
-  const price = PRICES[model] ?? PRICES["claude-opus-5-5"];
   // server-side refusal fallback exists for Opus/Sonnet only
   const fallback = model.startsWith("claude-haiku") ? {} : { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const };
   const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, costUsd: 0 };
@@ -79,7 +74,7 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
     const u = r.usage;
     usage.input += u.input_tokens; usage.output += u.output_tokens;
     usage.cacheRead += u.cache_read_input_tokens ?? 0; usage.cacheWrite += u.cache_creation_input_tokens ?? 0;
-    usage.costUsd = (usage.input * price.in + usage.output * price.out + usage.cacheRead * price.read + usage.cacheWrite * price.write) / 1e6;
+    usage.costUsd += costUsd(model, u);
     return r;
   };
 
@@ -142,7 +137,7 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
       const u = r.usage;
       usage.input += u.input_tokens; usage.output += u.output_tokens;
       usage.cacheRead += u.cache_read_input_tokens ?? 0; usage.cacheWrite += u.cache_creation_input_tokens ?? 0;
-      usage.costUsd = (usage.input * price.in + usage.output * price.out + usage.cacheRead * price.read + usage.cacheWrite * price.write) / 1e6;
+      usage.costUsd += costUsd(model, u);
       const voiced = extractReply(rawText(r)).text;
       if (voiced && !isNoReply(voiced) && !problems(voiced).length) text = voiced;
     } catch (e) {

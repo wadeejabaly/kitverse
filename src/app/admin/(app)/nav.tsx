@@ -8,7 +8,7 @@ import { cx } from "../ui";
 const GROUPS = [
   [
     { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
-    { href: "/admin/approvals", label: "Approvals", icon: ClipboardCheck, badge: true },
+    { href: "/admin/approvals", label: "Approvals", icon: ClipboardCheck },
     { href: "/admin/inbox", label: "Inbox", icon: MessagesSquare },
     { href: "/admin/orders", label: "Orders", icon: Package },
   ],
@@ -21,7 +21,9 @@ const GROUPS = [
   ],
   [{ href: "/admin/settings", label: "Settings", icon: Settings2 }],
 ];
-const ITEMS = GROUPS.flat() as { href: string; label: string; icon: typeof Bell; exact?: boolean; badge?: boolean }[];
+const ITEMS = GROUPS.flat() as { href: string; label: string; icon: typeof Bell; exact?: boolean }[];
+/** Counts shown as a dot / number on a nav item, keyed by href. */
+export type Badges = Record<string, number>;
 const MOBILE = ["/admin", "/admin/approvals", "/admin/inbox", "/admin/orders", "/admin/settings"];
 
 function active(path: string, href: string, exact?: boolean) {
@@ -29,7 +31,7 @@ function active(path: string, href: string, exact?: boolean) {
 }
 
 /** Icon rail with hover labels, grouped by dividers. */
-export function Rail({ pending }: { pending: number }) {
+export function Rail({ badges }: { badges: Badges }) {
   const path = usePathname();
   return (
     <nav className="hidden w-[84px] shrink-0 flex-col items-center gap-0 border-r border-line py-5 md:flex">
@@ -42,9 +44,9 @@ export function Rail({ pending }: { pending: number }) {
               <Link key={it.href} href={it.href} aria-label={it.label}
                 className={cx("group relative grid h-11 w-11 place-items-center rounded-lg transition-colors", on ? "bg-raised text-ink ring-1 ring-line-2" : "text-muted hover:bg-raised hover:text-ink")}>
                 <Icon className="h-5 w-5" strokeWidth={1.6} />
-                {it.badge && pending ? <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-pitch ring-2 ring-paper" /> : null}
+                {badges[it.href] ? <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-pitch ring-2 ring-paper" /> : null}
                 <span className="pointer-events-none absolute left-full z-30 ml-3 whitespace-nowrap rounded-md border border-line-2 bg-raised px-2 py-1 text-xs text-ink opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                  {it.label}{it.badge && pending ? <span className="ml-1.5 text-pitch">{pending}</span> : null}
+                  {it.label}{badges[it.href] ? <span className="ml-1.5 text-pitch">{badges[it.href]}</span> : null}
                 </span>
               </Link>
             );
@@ -55,7 +57,7 @@ export function Rail({ pending }: { pending: number }) {
   );
 }
 
-export function TabBar({ pending }: { pending: number }) {
+export function TabBar({ badges }: { badges: Badges }) {
   const path = usePathname();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-paper/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
@@ -68,7 +70,7 @@ export function TabBar({ pending }: { pending: number }) {
               <Link href={it.href} className={cx("relative flex flex-col items-center gap-1 py-2.5 text-[11px]", on ? "text-ink" : "text-muted")}>
                 <Icon className={cx("h-[22px] w-[22px]", on && "text-pitch")} strokeWidth={on ? 2 : 1.6} />
                 {it.label}
-                {it.badge && pending ? <span className="absolute left-1/2 top-1.5 ml-2 min-w-4 rounded-full bg-pitch-fill px-1 text-center text-[10px] font-semibold leading-4 text-white">{pending}</span> : null}
+                {badges[it.href] ? <span className="absolute left-1/2 top-1.5 ml-2 min-w-4 rounded-full bg-pitch-fill px-1 text-center text-[10px] font-semibold leading-4 text-white">{badges[it.href]}</span> : null}
               </Link>
             </li>
           );

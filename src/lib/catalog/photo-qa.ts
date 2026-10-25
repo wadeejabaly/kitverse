@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import sharp from "sharp";
 import { z } from "zod";
 import { env } from "../env";
+import { logAiUsage } from "../ai-cost";
 import { db, must } from "../db";
 import { albumPhotoHashes } from "./images";
 
@@ -59,6 +60,7 @@ async function confirmTeam(url: string, expected: string): Promise<boolean | nul
       { type: "text", text: `Is this ${expected.replace(/^a /, "a ")}? Look closely at the crest/badge and the sponsor. Don't judge the season or whether it's the home/away design - only whether it is that team. Answer ONLY JSON: {"crest_seen":"<team the crest belongs to>","is_team":true|false}` },
     ] }],
   });
+  await logAiUsage("photo_check", env().ANTHROPIC_MODEL, r.usage);
   const t = r.content.find((b) => b.type === "text")?.text ?? "";
   const m = t.match(/"is_team"\s*:\s*(true|false)/);
   return m ? m[1] === "true" : null;
@@ -76,6 +78,7 @@ Return ONLY JSON:
 {"shows_shirt":bool,"front_view":bool,"overlay_text":bool (any text/labels/prices/Chinese or other characters ADDED on top of the photo, e.g. "2021巴西客场"),"watermark":bool,"messy_background":bool,"blurry_or_dark":bool,"score":1-5 (how attractive and professional for a customer),"shirt_box":{"x":0-1,"y":0-1,"w":0-1,"h":0-1} or null (tight box around the shirt, as fractions of width/height),"overlay_outside_shirt":bool (true if all added text/watermarks are outside the shirt box),"text_boxes":[{"x":0-1,"y":0-1,"w":0-1,"h":0-1}] (one generous box around each piece of ADDED text or watermark; [] if none),"baby_bodysuit":bool (a baby romper/onesie with snaps between the legs),"kids_item":bool (a small children's shirt/kit rather than an adult shirt),"other_garments":bool (shorts, socks, a second shirt or any other clothing visible besides the one shirt; a mannequin, hanger or rack is fine)}` },
     ] }],
   });
+  await logAiUsage("photo_check", QA_MODEL, r.usage);
   const text = r.content.find((b) => b.type === "text")?.text ?? "";
   try {
     return Assessment.parse({ ...JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)), matches_expected: null });

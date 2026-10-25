@@ -1,73 +1,68 @@
-import { ShieldCheck, Layers } from "lucide-react";
-import { previewCatalogScope, applyCatalogScope } from "../../catalog-actions";
-import { CLUBS_BY_LEAGUE, EXTRA_CLUBS, NATIONAL_IDS, CATALOG_SCOPE } from "../../catalog-scope";
-import { PageHeader, Card, Badge, button } from "../../ui";
+import Link from "next/link";
+import { ImageOff, ArrowRight, Layers, Shirt, Store, MessagesSquare } from "lucide-react";
+import { db } from "@/lib/db";
+import catalog from "@/data/catalog.json";
+import collections from "@/data/collections.json";
+import { PageHeader, Card, Stat, SectionTitle } from "../../ui";
 
 export const dynamic = "force-dynamic";
 
-/** One-time (repeatable) scope change: website shows only this hand-picked list of clubs and
- *  national teams (not "every club in these leagues"), current season only. Everything else
- *  already in the catalog moves to "available" (bot-only), not deleted. */
-export default async function CatalogScope() {
-  const preview = await previewCatalogScope();
-  const noChange = preview.toFeature === 0 && preview.toUnfeature === 0;
+type WebShirt = { handle: string; team: string; kind: string; league: string | null; image: string };
+
+/**
+ * What the website sells: Wadeea's hand-picked list (catalog/store-selection.json), exported into
+ * src/data/catalog.json on every deploy. Read-only - the list itself changes in code, not here.
+ */
+export default async function Catalog() {
+  const shirts = (catalog as { products: WebShirt[] }).products;
+  const noPhoto = shirts.filter((s) => s.image.includes("_placeholder"));
+  const [notAtSupplier, botOnly] = await Promise.all([
+    db().from("products").select("id", { count: "exact", head: true }).eq("status", "featured").contains("flags", ["not_at_supplier"]),
+    db().from("products").select("id", { count: "exact", head: true }).eq("status", "available"),
+  ]);
+
+  const groups = [
+    ...collections.leagues.map((l) => ({ id: l.slug, label: l.name, rows: shirts.filter((s) => s.league === l.slug) })),
+    { id: "national", label: "National teams", rows: shirts.filter((s) => s.kind === "national") },
+  ].filter((g) => g.rows.length);
+  const byTeam = (rows: WebShirt[]) => [...new Set(rows.map((r) => r.team))].map((team) => {
+    const t = rows.filter((r) => r.team === team);
+    return { team, count: t.length, missing: t.filter((r) => r.image.includes("_placeholder")).length };
+  }).sort((a, b) => a.team.localeCompare(b.team));
 
   return (
     <>
-      <PageHeader title="Catalog scope" subtitle="What shows on the website. Nothing is deleted - removed shirts stay sellable through the bot." />
+      <PageHeader title="Catalog" subtitle="The shirts on the website - Wadeea's hand-picked list. The bot can also sell any other shirt the supplier has." />
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <Stat label="On the website" value={shirts.length} icon={Store} />
+        <Stat label="Teams" value={new Set(shirts.map((s) => s.team)).size} icon={Layers} />
+        <Stat label="Not at the supplier" value={notAtSupplier.count ?? 0} icon={Shirt} />
+        <Stat label="Bot-only shirts" value={botOnly.count ?? 0} icon={MessagesSquare} />
+      </div>
+      <p className="mt-2 text-xs text-muted">&quot;Not at the supplier&quot;: on the website but not in the supplier&apos;s albums - the bot checks with you before confirming them. Bot-only: in the supplier catalog, sold through Instagram on request.</p>
 
-      <Card className="mb-4">
-        <div className="mb-3 flex items-center gap-2 text-sm font-medium text-ink-2"><Layers className="h-4 w-4" /> Curated scope - {CATALOG_SCOPE.clubIds.length} clubs, {NATIONAL_IDS.length} national teams</div>
-        {Object.entries(CLUBS_BY_LEAGUE).map(([key, league]) => (
-          <div key={key} className="mb-2.5">
-            <div className="mb-1 text-xs font-medium text-muted">{league.label}</div>
-            <div className="flex flex-wrap gap-1.5">
-              {league.ids.map((id) => <Badge key={id}>{id}</Badge>)}
+      {noPhoto.length ? (
+        <Link href="/admin/photos" className="mt-4 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-amber bg-surface px-4 py-3 text-sm text-ink hover:bg-raised">
+          <ImageOff className="h-4 w-4 text-amber" /> {noPhoto.length} website shirts show a blank shirt instead of a photo <ArrowRight className="ml-auto h-4 w-4 text-muted" />
+        </Link>
+      ) : null}
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        {groups.map((g) => (
+          <Card key={g.id} padded={false} className="overflow-hidden">
+            <div className="px-4 pt-4 sm:px-5"><SectionTitle>{g.label} · {g.rows.length} shirts</SectionTitle></div>
+            <div className="divide-y divide-line border-t border-line">
+              {byTeam(g.rows).map((t) => (
+                <div key={t.team} className="flex items-center gap-3 px-4 py-2 text-sm sm:px-5">
+                  <span className="flex-1 truncate">{t.team}</span>
+                  {t.missing ? <span className="text-xs text-amber">{t.missing} without photo</span> : null}
+                  <span className="w-6 text-right tabular-nums text-muted">{t.count}</span>
+                </div>
+              ))}
             </div>
-          </div>
+          </Card>
         ))}
-        <div className="mb-2.5">
-          <div className="mb-1 text-xs font-medium text-muted">{EXTRA_CLUBS.label}</div>
-          <div className="flex flex-wrap gap-1.5">
-            {EXTRA_CLUBS.ids.map((id) => <Badge key={id} tone="green">{id}</Badge>)}
-          </div>
-        </div>
-        <div>
-          <div className="mb-1 text-xs font-medium text-muted">National teams ({NATIONAL_IDS.length})</div>
-          <div className="flex flex-wrap gap-1.5">
-            {NATIONAL_IDS.map((id) => <Badge key={id} tone="green">{id}</Badge>)}
-          </div>
-        </div>
-        <p className="mt-3 text-sm text-muted">
-          Current season only: clubs season {CATALOG_SCOPE.clubSeason}; national teams {CATALOG_SCOPE.nationalSeasons.join(" or ")}. No retro, no older seasons.
-          Team ids with no matching product below (e.g. a club this supplier doesn&apos;t currently stock) simply add nothing - safe to apply either way.
-        </p>
-      </Card>
-
-      <Card padded={false} className="mb-4 divide-y divide-line overflow-hidden">
-        <Row label="Matches this scope" value={preview.matchingTotal} />
-        <Row label="Currently on the website" value={preview.currentlyFeaturedTotal} />
-        <Row label="Already correct" value={preview.staysFeatured} />
-        <Row label="Will be added to the website" value={preview.toFeature} tone={preview.toFeature ? "green" : undefined} />
-        <Row label="Will be removed from the website (bot-only after)" value={preview.toUnfeature} tone={preview.toUnfeature ? "amber" : undefined} />
-      </Card>
-
-      {noChange ? (
-        <p className="flex items-center gap-2 text-sm text-muted"><ShieldCheck className="h-4 w-4" /> The website already matches this scope exactly.</p>
-      ) : (
-        <form action={applyCatalogScope}>
-          <button className={button.primary}>Apply - update {preview.toFeature + preview.toUnfeature} products</button>
-        </form>
-      )}
+      </div>
     </>
-  );
-}
-
-function Row({ label, value, tone }: { label: string; value: number; tone?: "green" | "amber" }) {
-  return (
-    <div className="flex items-center justify-between px-4 py-3 sm:px-5">
-      <span className="text-sm text-ink-2">{label}</span>
-      <span className={`text-sm font-medium tabular-nums ${tone === "green" ? "text-pitch" : tone === "amber" ? "text-amber" : ""}`}>{value}</span>
-    </div>
   );
 }

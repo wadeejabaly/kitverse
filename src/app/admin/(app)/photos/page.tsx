@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ImageOff, Upload, RotateCcw, ShieldCheck } from "lucide-react";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
 import { uploadProductPhoto, retryProductPhoto } from "../../photos-actions";
 import { PageHeader, Card, Badge, EmptyState, cx } from "../../ui";
 
@@ -21,7 +22,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
 
   return (
     <>
-      <PageHeader title="Photos" subtitle="Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots." />
+      <PageHeader title="Photos" subtitle={`Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots. ${env().VERCEL_DEPLOY_HOOK_URL ? "Photos you upload show on the website about 2 minutes later." : "Photos you upload reach the bot right away and the website after the next site update."}`} />
       <div className="mb-4 inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
         <Link href="/admin/photos" className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-ink text-paper" : "text-ink-2")}>Needs a photo ({missing.length})</Link>
         <Link href="/admin/photos?tab=rejected" className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-ink text-paper" : "text-ink-2")}>Rejected photos</Link>
