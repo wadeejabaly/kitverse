@@ -124,33 +124,42 @@ export function FloodStage({
               opacity: shown ? 1 : 0,
               pointerEvents: shown ? undefined : "none",
             }}
-            className="kv-crossfade group relative col-start-1 row-start-1 grid aspect-square w-full place-items-center"
+            className="kv-crossfade group absolute inset-0 grid place-items-center overflow-hidden"
           >
-            {/* Fixed 2026-10-25 — two parts, both needed:
-                1. This element used to be sized `h-full`, which chases the
-                   stage's own height. But the three crossfading layers share
-                   one implicit grid row, and that row auto-sizes to its
-                   TALLEST child's natural content height — so a portrait-
-                   leaning supplier photo (taller, at a fixed 84% width, than
-                   the stage is tall) stretched the row past the stage's own
-                   aspect-square box, and `h-full` just chased that stretched
-                   row rather than the visible square. `aspect-square` here
-                   instead gives this element a height derived from its OWN
-                   (definite) width, independent of its siblings or its
-                   photo's content — always exactly the stage's square,
-                   whatever any shirt's photo does.
-                2. That in turn is what lets the image's `max-h-[84%]` below
-                   actually apply: a percentage max-height only resolves
-                   against a DEFINITE parent height (CSS's old height-
-                   percentage rule) — against the previous indefinite,
-                   content-chasing row it silently computed to `none` and
-                   did nothing, which is why bounding only the image never
-                   fully fixed this on its own.
-                Together: every photo, whatever its native proportions, now
-                renders inside the square the stage actually shows, so the
-                chip below — bottom-2 off THIS element — never rides past
-                the stage's own overflow-hidden edge and gets clipped, which
-                is the "cut off" name/price chip the owner saw. */}
+            {/* Fixed 2026-10-25, final shape — this element is now ABSOLUTELY
+                POSITIONED (inset-0), matching its stacked siblings above
+                (.kv-flood-crest-mark, .kv-flood-shirt-glow are both
+                position:absolute in globals.css) instead of being an
+                in-flow grid item sized `h-full`/`aspect-square` off a shared
+                row. Two earlier attempts at this same bug both failed for
+                the same underlying reason:
+                  - `h-full` chases the stage's own height, but the three
+                    crossfading layers shared ONE implicit grid row, and that
+                    row auto-sizes to its TALLEST child's natural content —
+                    so a portrait-leaning supplier photo (taller, at a fixed
+                    84% width, than the stage is tall) stretched the row
+                    past the stage's own square, and `h-full` just chased
+                    the stretched row.
+                  - `aspect-square` looked like a fix (a height derived from
+                    this element's own definite width) but CSS aspect-ratio
+                    is only a PREFERRED size — it doesn't clip; content with
+                    `min-height: auto` (the default) can still grow a box
+                    past what its aspect-ratio suggests, which is exactly
+                    what the tall photo kept doing.
+                `inset-0` sidesteps both: an absolutely positioned element is
+                pulled OUT of the grid's row-sizing calculation entirely and
+                sized purely from its containing block (the stage, which
+                already holds firm at the square via its OWN aspect-square +
+                overflow-hidden — overflow-hidden is what gives a box
+                `min-height: 0` instead of `auto`, which is the actual rule
+                that makes content unable to grow it). `overflow-hidden`
+                here too, belt-and-braces, so even an unconstrained photo
+                can never push past this element's own box. Together with
+                the image's `max-h-[84%]`/`max-w-[84%]` below: every photo,
+                whatever its native proportions, now renders inside the
+                square the stage actually shows, so the chip — bottom-2 off
+                THIS element — never rides past the edge and gets clipped,
+                which is the "cut off" name/price chip the owner saw. */}
             <Image
               src={shirt.image}
               alt={shirt.title}
