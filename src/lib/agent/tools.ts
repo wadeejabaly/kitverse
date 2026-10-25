@@ -293,10 +293,18 @@ export const TOOLS = [
       kind: z.enum(["discount", "compensation", "custom_print", "change_after_batch", "cancellation", "complaint", "return", "payment_exception", "large_order", "low_confidence", "other"]),
       summary: z.string().describe("what the customer wants + your recommendation, in short English, 1-3 sentences"),
       proposed_reply: z.string().nullish().describe("the reply you would send if the owner approves, in the customer's language"),
+      discount_ils: z.number().positive().max(1000).nullish().describe("kind=discount only: shekels off the order total you recommend (small - see 'Keeping the sale')"),
     }),
     run: async (ctx, i) => {
       const o = await openOrder(ctx.conversationId);
-      const a = await createApproval({ conversationId: ctx.conversationId, orderId: o?.id ?? null, kind: i.kind as ApprovalKind, customerLabel: ctx.customerLabel, summary: i.summary, draftReply: i.proposed_reply ?? null });
+      let proposal: Record<string, unknown> | undefined;
+      if (i.kind === "discount") {
+        if (!o || !(await orderItems(o.id)).length) return { error: "add the shirts to the order first (add_to_order), then ask the owner for a discount" };
+        if (!i.discount_ils) return { error: "say how many shekels off you recommend (discount_ils)" };
+        const q = await requote(o);
+        proposal = { discount_agorot: Math.round(i.discount_ils * 100), total_before: q.total };
+      }
+      const a = await createApproval({ conversationId: ctx.conversationId, orderId: o?.id ?? null, kind: i.kind as ApprovalKind, customerLabel: ctx.customerLabel, summary: i.summary, draftReply: i.proposed_reply ?? null, proposal });
       ctx.approvals.push(a.id);
       return { asked_owner: true, tell_customer: "a short holding line, no promises" };
     },

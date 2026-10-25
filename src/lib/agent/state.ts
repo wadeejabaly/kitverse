@@ -55,7 +55,7 @@ export async function buildState(conv: ConversationRow, customer: CustomerRow, r
   const decided = await recentDecisions(conv.id);
   if (decided.length) {
     lines.push(`\n## Owner decisions (act on these now if not done yet)`);
-    decided.forEach((d) => lines.push(`- ${d.kind} "${String(d.proposal.summary ?? "")}" -> ${d.status.toUpperCase()}${d.final_reply ? `; owner's answer/note: ${d.final_reply}` : ""}${d.proposal.owner_note ? `; note: ${String(d.proposal.owner_note)}` : ""}`));
+    decided.forEach((d) => lines.push(`- ${d.kind} "${String(d.proposal.summary ?? "")}" -> ${d.status.toUpperCase()}${d.final_reply ? `; owner's answer/note: ${d.final_reply}` : ""}${d.proposal.owner_note ? `; note: ${String(d.proposal.owner_note)}` : ""}${d.proposal.discount_applied_agorot ? `; ${Number(d.proposal.discount_applied_agorot) / 100}₪ off is now on the order - get_quote includes it` : ""}`));
   }
 
   // settings + announcements

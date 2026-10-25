@@ -13,6 +13,7 @@ import { processConversation, sendApprovedDraft } from "@/lib/conversation/proce
 import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { storeInbound, getOrCreateConversation } from "@/lib/conversation/ingest";
 import { normalize } from "@/lib/text";
+import { requote, type OrderRow } from "@/lib/orders/draft";
 
 async function audit(actor: string | null, action: string, entity: string, entityId: string, after?: unknown) {
   await db().from("audit_log").insert({ actor, action, entity, entity_id: entityId, after: after ?? null });
@@ -51,6 +52,7 @@ const Decision = z.object({
   decision: z.enum(["approved", "edited", "rejected", "taken_over"]),
   text: z.string().max(4000).optional(),
   note: z.string().max(1000).optional(),
+  discount_ils: z.coerce.number().min(0).max(1000).optional(),
 });
 
 /** Approve / edit / reject / take over. Drafts are sent; other decisions resume the bot with the owner's note. */
@@ -59,16 +61,23 @@ export async function decideApproval(form: FormData) {
   const d = Decision.parse({
     approvalId: form.get("approvalId"), decision: form.get("decision"),
     text: (form.get("text") as string) || undefined, note: (form.get("note") as string) || undefined,
+    discount_ils: (form.get("discount_ils") as string) || undefined,
   });
-  const a = must(await db().from("approvals").select("*").eq("id", d.approvalId).single(), "approval") as { id: string; kind: string; status: string; conversation_id: string; draft_reply: string | null; proposal: Record<string, unknown> };
+  const a = must(await db().from("approvals").select("*").eq("id", d.approvalId).single(), "approval") as { id: string; kind: string; status: string; conversation_id: string; order_id: string | null; draft_reply: string | null; proposal: Record<string, unknown> };
   if (a.status !== "pending") redirect(`/admin/approvals/${a.id}?error=already_decided`);
 
   const edited = d.decision === "edited" || (d.decision === "approved" && d.text && d.text.trim() !== (a.draft_reply ?? "").trim());
   const status = edited ? "edited" : d.decision;
+  // an approved discount goes onto the order itself, so every quote and the total include it
+  const discount = a.kind === "discount" && (status === "approved" || status === "edited") && a.order_id ? Math.round((d.discount_ils ?? 0) * 100) : 0;
   must(await db().from("approvals").update({
     status, decided_by: staff.id, decided_at: new Date().toISOString(),
-    final_reply: d.text ?? d.note ?? null, proposal: { ...a.proposal, owner_note: d.note ?? null },
+    final_reply: d.text ?? d.note ?? null, proposal: { ...a.proposal, owner_note: d.note ?? null, ...(discount ? { discount_applied_agorot: discount } : {}) },
   }).eq("id", a.id).eq("status", "pending").select("id"), "decide");
+  if (discount) {
+    must(await db().from("adjustments").insert({ order_id: a.order_id, kind: "discount", amount: discount, reason: "خصم", approval_id: a.id }).select("id"), "discount");
+    await requote(must(await db().from("orders").select("*").eq("id", a.order_id!).single(), "order") as OrderRow);
+  }
   await audit(staff.id, `approval.${status}`, "approval", a.id, { text: d.text, note: d.note });
 
   if (d.decision === "taken_over") {

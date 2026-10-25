@@ -12,7 +12,7 @@ export default async function ApprovalPage({ params, searchParams }: PageProps<"
   const { id } = await params;
   const sp = await searchParams;
   const a = (await db().from("approvals").select("*,conversation:conversations(customer:customers(full_name,display_name,ig_username))").eq("id", id).maybeSingle()).data as
-    { id: string; kind: string; status: string; conversation_id: string; draft_reply: string | null; final_reply: string | null; proposal: { summary?: string }; conversation: { customer: { full_name: string | null; display_name: string | null; ig_username: string | null } } | null } | null;
+    { id: string; kind: string; status: string; conversation_id: string; draft_reply: string | null; final_reply: string | null; proposal: { summary?: string; discount_agorot?: number; total_before?: number }; conversation: { customer: { full_name: string | null; display_name: string | null; ig_username: string | null } } | null } | null;
   if (!a) notFound();
   const msgs = ((await db().from("messages").select("id,direction,sender,kind,text,transcript,media,status,created_at")
     .eq("conversation_id", a.conversation_id).in("status", ["received", "sent", "queued", "draft", "failed"])
@@ -20,6 +20,7 @@ export default async function ApprovalPage({ params, searchParams }: PageProps<"
   const order = (await db().from("orders").select("number,status,quote").eq("conversation_id", a.conversation_id).order("created_at", { ascending: false }).limit(1).maybeSingle()).data as { number: number; quote: { summaryAr?: string } | null } | null;
   const isDraft = a.kind === "draft_reply";
   const isAvail = a.kind === "availability_check";
+  const isDiscount = a.kind === "discount";
   const pending = a.status === "pending";
   const k = KIND[a.kind] ?? KIND.other;
   const c = a.conversation?.customer;
@@ -60,6 +61,14 @@ export default async function ApprovalPage({ params, searchParams }: PageProps<"
                     {a.draft_reply ? (
                       <label className="flex flex-col gap-1.5 text-sm font-medium">Suggested reply if you approve
                         <textarea name="text" defaultValue={a.draft_reply} rows={3} className={input} dir="auto" />
+                      </label>
+                    ) : null}
+                    {isDiscount ? (
+                      <label className="flex flex-col gap-1.5 text-sm font-medium">Discount (₪ off the order)
+                        <span className="text-xs font-normal text-muted">
+                          {a.proposal.total_before ? `Order total now ${a.proposal.total_before / 100}₪. ` : ""}The bot suggests {(a.proposal.discount_agorot ?? 0) / 100}₪ - change it if you like. Approve puts it on the order; Reject keeps the full price.
+                        </span>
+                        <input name="discount_ils" type="number" min={0} max={1000} step="any" inputMode="decimal" defaultValue={(a.proposal.discount_agorot ?? 0) / 100} className={`${input} max-w-40`} />
                       </label>
                     ) : null}
                     <label className="flex flex-col gap-1.5 text-sm font-medium">Note for the bot <span className="text-xs font-normal text-muted">Optional - e.g. price, model, when it arrives. The bot tells the customer.</span>
