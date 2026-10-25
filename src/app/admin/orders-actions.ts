@@ -54,3 +54,34 @@ export async function markBatchSent(form: FormData) {
   must(await db().from("supplier_batches").update({ status: "sent", sent_at: new Date().toISOString() }).eq("id", id).select("id"), "batch sent");
   revalidatePath(`/admin/orders/batches/${id}`);
 }
+
+/**
+ * Owner decision 2026-10-25: a website order never auto-confirms (src/lib/orders/web.ts) - it
+ * waits here. Approve moves it into the normal confirmed/supplier-batch/delivered flow; decline
+ * cancels it. Both only ever act on a website order still awaiting confirmation, so this can
+ * never confirm or cancel something the bot is mid-conversation on.
+ */
+export async function approveWebOrder(form: FormData) {
+  const staff = await requireStaff();
+  const orderId = z.string().uuid().parse(form.get("orderId"));
+  const row = must(await db().from("orders").update({ status: "confirmed", confirmed_at: new Date().toISOString() })
+    .eq("id", orderId).eq("status", "awaiting_confirmation").eq("source", "website").select("id").maybeSingle(), "approve order");
+  if (row) {
+    must(await db().from("order_events").insert({ order_id: orderId, from_status: "awaiting_confirmation", to_status: "confirmed", actor: "owner", actor_user: staff.id, note: "approved" }).select("id"), "approve event");
+  }
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${orderId}`);
+}
+
+export async function declineWebOrder(form: FormData) {
+  const staff = await requireStaff();
+  const orderId = z.string().uuid().parse(form.get("orderId"));
+  const note = (form.get("note") as string) || "declined by owner";
+  const row = must(await db().from("orders").update({ status: "cancelled", notes: note })
+    .eq("id", orderId).eq("status", "awaiting_confirmation").eq("source", "website").select("id").maybeSingle(), "decline order");
+  if (row) {
+    must(await db().from("order_events").insert({ order_id: orderId, from_status: "awaiting_confirmation", to_status: "cancelled", actor: "owner", actor_user: staff.id, note }).select("id"), "decline event");
+  }
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${orderId}`);
+}

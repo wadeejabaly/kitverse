@@ -32,8 +32,8 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
   const { token } = await params;
   const id = readOrderToken(token);
   if (!id) notFound();
-  const o = (await db().from("orders").select("id,number,status,total,payment_method,payment_status,address,quote,confirmed_at,created_at").eq("id", id).maybeSingle()).data as
-    { id: string; number: number; status: string; total: number; payment_method: string | null; payment_status: string; address: Record<string, string | null> | null; quote: Quote | null; confirmed_at: string | null; created_at: string } | null;
+  const o = (await db().from("orders").select("id,number,status,source,total,payment_method,payment_status,address,quote,confirmed_at,created_at").eq("id", id).maybeSingle()).data as
+    { id: string; number: number; status: string; source: string | null; total: number; payment_method: string | null; payment_status: string; address: Record<string, string | null> | null; quote: Quote | null; confirmed_at: string | null; created_at: string } | null;
   if (!o || o.status === "cancelled") notFound();
 
   const items = ((await db().from("order_items").select("id,product_id,description,version,sleeve,size,qty,print_name,print_number,patches").eq("order_id", o.id).order("created_at")).data ?? []) as Item[];
@@ -41,6 +41,9 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
   const products = pids.length ? ((await db().from("products").select("id,title_ar,title_en,primary_image_url,photo_status").in("id", pids)).data ?? []) as Product[] : [];
   const q = o.quote;
   const confirmed = CONFIRMED.includes(o.status) || o.status === "delivered";
+  // Website orders wait for the OWNER's OK, not the customer's — a different message than the
+  // bot's "confirm with us in chat" line, which is only ever shown to an Instagram customer.
+  const pendingOwnerApproval = !confirmed && o.status === "awaiting_confirmation" && o.source === "website";
   const stepIndex = STEPS.findIndex((s) => s.statuses.includes(o.status));
   const paypalReady = !!process.env.PAYPAL_CLIENT_ID && !!process.env.PAYPAL_CLIENT_SECRET;
   const names = items.filter((i) => i.print_name || i.print_number).length;
@@ -57,8 +60,14 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
       </header>
 
       <section className="flex flex-col gap-1.5">
-        <h1 className="text-[26px] font-bold leading-tight">{confirmed ? "طلبيتك" : "ملخص الطلبية"}</h1>
-        <p className="text-sm text-muted">{confirmed ? `تأكدت ${date} · ${q?.delivery?.days ?? "7-14"} يوم انشالله (لا يشمل جمعة وسبت)` : "لما تتأكد من كلشي، ثبت الطلبية معنا بالشات"}</p>
+        <h1 className="text-[26px] font-bold leading-tight">{confirmed ? "طلبيتك" : pendingOwnerApproval ? "استلمنا طلبيتك" : "ملخص الطلبية"}</h1>
+        <p className="text-sm text-muted">
+          {confirmed
+            ? `تأكدت ${date} · ${q?.delivery?.days ?? "7-14"} يوم انشالله (لا يشمل جمعة وسبت)`
+            : pendingOwnerApproval
+              ? "عم نراجعها ومنأكدلك خلال وقت قصير"
+              : "لما تتأكد من كلشي، ثبت الطلبية معنا بالشات"}
+        </p>
       </section>
 
       {confirmed ? (

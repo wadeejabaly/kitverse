@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell } from "lucide-react";
+import { LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell, Layers, Truck } from "lucide-react";
 import { cx } from "../ui";
 
 const GROUPS = [
@@ -15,6 +15,8 @@ const GROUPS = [
   [
     { href: "/admin/media", label: "Posts", icon: Images },
     { href: "/admin/photos", label: "Photos", icon: ImageOff },
+    { href: "/admin/catalog", label: "Catalog", icon: Layers },
+    { href: "/admin/pricing", label: "Pricing", icon: Truck },
     { href: "/admin/test-chat", label: "Test bot", icon: FlaskConical },
   ],
   [{ href: "/admin/settings", label: "Settings", icon: Settings2 }],
