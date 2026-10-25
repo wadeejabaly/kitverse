@@ -33,7 +33,7 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
   if (!phone) return { ok: false, code: "invalid_request", detail: "phone" };
 
   const handles = [...new Set(req.items.map((i) => i.handle))];
-  const products = must(await db().from("products").select("id,handle,title_en,status").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string }[];
+  const products = must(await db().from("products").select("id,handle,title_en,status,flags").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string; flags: string[] }[];
   const lines = req.items.map((i) => ({ i, p: products.find((p) => p.handle === i.handle && p.status !== "hidden") }));
   if (!lines.length) return { ok: false, code: "cart_empty" };
   if (lines.some((l) => !l.p)) return { ok: false, code: "invalid_request", detail: "unknown product" };
@@ -67,7 +67,9 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
     const row = must(await db().from("orders").update({ status: "confirmed", payment_method: "cod", confirmed_at: new Date().toISOString(), total: q.total })
       .eq("id", order.id).select("number,total").single(), "confirm web order") as { number: number; total: number };
     must(await db().from("order_events").insert({ order_id: order.id, from_status: "awaiting_confirmation", to_status: "confirmed", actor: "customer", note: "website checkout, cash on delivery" }).select("id"), "web order event");
-    await notify({ kind: "order.new", priority: "urgent", title: `New website order #${row.number} - ₪${row.total / 100}`, body: `${c.name}, ${c.city} · cash on delivery`, link: `/admin/orders/${order.id}` });
+    const notAtSupplier = lines.filter(({ p }) => p!.flags?.includes("not_at_supplier")).map(({ p }) => p!.title_en);
+    await notify({ kind: "order.new", priority: "urgent", title: `New website order #${row.number} - ₪${row.total / 100}`, link: `/admin/orders/${order.id}`,
+      body: `${c.name}, ${c.city} · cash on delivery${notAtSupplier.length ? ` · not at supplier, check availability: ${notAtSupplier.join(", ")}` : ""}` });
     return { ok: true, number: row.number, token: orderToken(order.id), url: orderLink(order.id), total: row.total };
   } catch (e) {
     await db().from("orders").update({ status: "cancelled", notes: `checkout failed: ${(e as Error).message.slice(0, 200)}` }).eq("id", order.id);
