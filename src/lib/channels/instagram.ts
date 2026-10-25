@@ -45,11 +45,13 @@ export async function senderAction(recipientId: string, action: "typing_on" | "m
 }
 
 /** Basic profile for a new customer (name/username), best effort. */
-export async function userProfile(igsid: string): Promise<{ name?: string; username?: string }> {
+export async function userProfile(igsid: string): Promise<{ name?: string; username?: string; error?: string }> {
   const e = env();
-  if (!e.INSTAGRAM_ACCESS_TOKEN) return {};
+  if (!e.INSTAGRAM_ACCESS_TOKEN) return { error: "not connected" };
   const res = await fetch(`${base()}/${igsid}?fields=name,username`, { headers: { Authorization: `Bearer ${e.INSTAGRAM_ACCESS_TOKEN}` } });
-  return res.ok ? res.json() : {};
+  if (res.ok) return res.json();
+  const body = await res.json().catch(() => null) as { error?: { message?: string } } | null;
+  return { error: body?.error?.message ?? `HTTP ${res.status}` };
 }
 
 /** X-Hub-Signature-256 = "sha256=" + HMAC_SHA256(app secret, raw body). */

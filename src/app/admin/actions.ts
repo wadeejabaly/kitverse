@@ -178,7 +178,9 @@ export async function saveSetting(form: FormData) {
     const cur = await get("testers");
     const usernames = parseUsernames(String(form.get("usernames") ?? ""));
     // keep remembered ids only while their usernames stay listed: simplest is to re-resolve after any edit
-    row = { key, value: { ...cur, enabled: form.get("mode") !== "everyone", usernames, allowed_ids: [] } };
+    const code = String(form.get("code") ?? "").trim().toLowerCase().slice(0, 30) || "kvtest";
+    // keep accounts that joined with the code word; usernames are re-checked on their next message
+    row = { key, value: { ...cur, enabled: form.get("mode") !== "everyone", usernames, code } };
   } else if (key === "deposit") {
     const cur = await get("deposit");
     row = { key, value: { ...cur, enabled: form.get("enabled") === "on" } };

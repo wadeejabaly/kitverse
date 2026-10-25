@@ -38,7 +38,7 @@ export default async function Settings() {
   const overrideOn = isFuture(spend.override_until);
   const rl = s.rate_limits ?? {};
   const spent = Number((await db().rpc("spend_today_usd")).data ?? 0);
-  const testers = { enabled: (s.testers?.enabled as boolean | undefined) ?? true, usernames: (s.testers?.usernames as string[] | undefined) ?? [] };
+  const testers = { enabled: (s.testers?.enabled as boolean | undefined) ?? true, usernames: (s.testers?.usernames as string[] | undefined) ?? [], code: (s.testers?.code as string | undefined) || "kvtest", joined: ((s.testers?.allowed_ids as string[] | undefined) ?? []).length };
 
   return (
     <>
@@ -53,6 +53,11 @@ export default async function Settings() {
               Test accounts (Instagram usernames, one per line)
               <textarea name="usernames" rows={3} defaultValue={testers.usernames.map((u) => `@${u}`).join("\n")} placeholder={"@your_username\n@friend_username"} className={`${input} font-mono text-sm`} />
             </label>
+            <label className="mt-2 flex flex-col gap-1 text-xs text-muted">
+              Join word: a tester DMs this once and is connected (Instagram hides usernames of new chats)
+              <input name="code" defaultValue={testers.code} className={`${input} w-40 font-mono text-sm`} />
+            </label>
+            <p className="text-xs text-muted">{testers.joined} account{testers.joined === 1 ? "" : "s"} connected so far.</p>
             {testers.enabled && !testers.usernames.length ? <p className="text-xs text-amber">No test accounts yet, so the bot answers nobody.</p> : null}
             <button className={`${button.primary} mt-1 self-start`}>Save</button>
           </form>

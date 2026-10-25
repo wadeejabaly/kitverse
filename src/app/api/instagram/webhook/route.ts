@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { after } from "next/server";
 import { env } from "@/lib/env";
-import { parseWebhook, verifySignature } from "@/lib/channels/instagram";
+import { parseWebhook, sendText, verifySignature } from "@/lib/channels/instagram";
 import { storeInbound, storeOwnerEcho } from "@/lib/conversation/ingest";
 import { botMayHandle } from "@/lib/conversation/testers";
 import { emit } from "@/inngest/emit";
@@ -37,7 +37,12 @@ export async function POST(req: NextRequest) {
         if (ev.type === "read" || ev.type === "unsupported" || ev.isDeleted) continue;
         const customerId = ev.type === "echo" ? ev.recipientId : ev.senderId;
         if (myId && customerId === myId) continue; // our own account
-        if (!(await botMayHandle(customerId))) continue; // test phase: not on the tester list
+        const gate = await botMayHandle(customerId, ev.type === "message" ? ev.text : undefined);
+        if (gate === "joined") { // confirm the join word with a plain message (no AI involved)
+          await sendText(customerId, "✅ Test mode: you're connected to the Kitverse bot. Send your question now.").catch((e) => console.error("join confirm failed", (e as Error).message));
+          continue;
+        }
+        if (gate !== "allow") continue; // test phase: not a tester
         if (ev.type === "echo") { await storeOwnerEcho(ev); continue; }
         const r = await storeInbound("instagram", ev);
         if (r.trigger) toWake.add(r.conversationId);
