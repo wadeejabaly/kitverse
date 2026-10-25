@@ -13,7 +13,7 @@ export default async function Overview() {
     db().from("orders").select("total").gte("confirmed_at", since),
     db().from("conversations").select("id", { count: "exact", head: true }).eq("mode", "owner").eq("channel", "instagram"),
     db().from("orders").select("id,number,total,status,address,confirmed_at").not("confirmed_at", "is", null).order("confirmed_at", { ascending: false }).limit(5),
-    db().from("products").select("id", { count: "exact", head: true }).eq("photo_status", "none_clean").eq("status", "featured"),
+    db().from("products").select("id", { count: "exact", head: true }).eq("status", "featured").not("photo_status", "in", "(good,owner_upload)"),
   ]);
   const today = orders.data ?? [];
   const revenue = today.reduce((s, o) => s + o.total, 0) / 100;
@@ -36,7 +36,7 @@ export default async function Overview() {
       ) : null}
       {noPhoto.count ? (
         <Link href="/admin/photos" className="mt-3 flex items-center gap-3 rounded-xl border border-line border-l-[3px] border-l-amber bg-surface px-4 py-3 text-sm text-ink hover:bg-raised">
-          <ImageOff className="h-4 w-4 text-amber" /> {noPhoto.count} website shirts need a clean photo <ArrowRight className="ml-auto h-4 w-4 text-muted" />
+          <ImageOff className="h-4 w-4 text-amber" /> {noPhoto.count} website shirts have no photo yet <ArrowRight className="ml-auto h-4 w-4 text-muted" />
         </Link>
       ) : null}
 

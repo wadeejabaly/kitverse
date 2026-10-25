@@ -7,12 +7,14 @@ import { PageHeader, Card, Badge, EmptyState, cx } from "../../ui";
 
 export const dynamic = "force-dynamic";
 
-/** Shirts the bot can't show because every supplier photo failed the quality check. */
+/** Shirts without a usable photo: website shirts showing the blank placeholder, and bot-only shirts whose supplier photos all failed the check. */
 export default async function Photos({ searchParams }: PageProps<"/admin/photos">) {
   const sp = await searchParams;
   const tab = sp.tab === "rejected" ? "rejected" : "missing";
-  const missing = (await db().from("products").select("id,title_en,status,supplier_primary_album").eq("photo_status", "none_clean")
-    .order("status").order("title_en").limit(200)).data ?? [];
+  const missing = ((await db().from("products").select("id,title_en,status,photo_status,flags,supplier_primary_album")
+    .or("photo_status.eq.none_clean,and(status.eq.featured,photo_status.not.in.(good,owner_upload))")
+    .order("status", { ascending: false }).order("title_en").limit(400)).data ?? []) as { id: string; title_en: string; status: string; photo_status: string; flags: string[] | null; supplier_primary_album: string | null }[];
+  const why = (p: (typeof missing)[number]) => (p.flags ?? []).includes("not_at_supplier") ? "Not at the supplier" : p.photo_status === "none_clean" ? "Supplier photos not usable" : "No supplier photos";
   const rejected = tab === "rejected" ? ((await db().from("product_images").select("id,url,quality,product:products(title_en)").eq("status", "bad")
     .order("checked_at", { ascending: false }).limit(48)).data ?? []) as unknown as { id: string; url: string; quality: Record<string, unknown> | null; product: { title_en: string } }[] : [];
   const reason = (q: Record<string, unknown> | null) => !q ? "unreadable" : q.baby_bodysuit ? "baby item" : q.kids_item ? "kids item" : q.overlay_text ? "text on photo" : q.watermark ? "watermark" : q.front_view === false ? "not the front" : q.blurry_or_dark ? "blurry/dark" : "not attractive";
@@ -25,7 +27,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
         <Link href="/admin/photos?tab=rejected" className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-ink text-paper" : "text-ink-2")}>Rejected photos</Link>
       </div>
 
-      {tab === "missing" ? (!missing.length ? <EmptyState icon={ShieldCheck} title="Every checked shirt has a clean photo" /> : (
+      {tab === "missing" ? (!missing.length ? <EmptyState icon={ShieldCheck} title="Every shirt has a photo" /> : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {missing.map((p) => (
             <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5">
@@ -34,6 +36,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                 <div className="text-sm font-medium">{p.title_en}</div>
                 <div className="mt-0.5 flex items-center gap-2 text-xs text-muted">
                   {p.status === "featured" ? <Badge tone="green">On website</Badge> : <Badge>Bot only</Badge>}
+                  <span>{why(p)}</span>
                   {p.supplier_primary_album ? <a href={`https://jerseyxie.x.yupoo.com/albums/${p.supplier_primary_album}?uid=1`} target="_blank" rel="noreferrer" className="hover:text-ink hover:underline">supplier album</a> : null}
                 </div>
               </div>
@@ -45,7 +48,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                 </label>
                 <button className="rounded-lg bg-pitch-fill px-3 py-2 text-sm font-medium text-white hover:bg-pitch-fill-2">Upload</button>
               </form>
-              <form action={retryProductPhoto}><input type="hidden" name="productId" value={p.id} /><button className="grid h-9 w-9 place-items-center rounded-xl text-muted hover:bg-raised hover:text-ink" aria-label="Check supplier photos again"><RotateCcw className="h-4 w-4" /></button></form>
+              {p.supplier_primary_album ? <form action={retryProductPhoto}><input type="hidden" name="productId" value={p.id} /><button className="grid h-9 w-9 place-items-center rounded-xl text-muted hover:bg-raised hover:text-ink" aria-label="Check supplier photos again"><RotateCcw className="h-4 w-4" /></button></form> : null}
             </div>
           ))}
         </Card>
