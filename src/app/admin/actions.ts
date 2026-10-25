@@ -133,6 +133,29 @@ export async function conversationAction(form: FormData) {
   revalidatePath(`/admin/inbox/${conversationId}`);
 }
 
+/**
+ * Header switch. Off: the bot stays silent and the owner answers in Instagram. On: chats the bot paused
+ * because the owner replied go back to the bot (chats he took over on purpose stay his), and customers
+ * still waiting from the last 2 hours get an answer.
+ */
+export async function setBotOn(form: FormData) {
+  const staff = await requireStaff();
+  const on = form.get("on") === "1";
+  must(await db().from("bot_settings").upsert({ key: "bot_on", value: { on }, updated_by: staff.id, updated_at: new Date().toISOString() }, { onConflict: "key" }).select("key"), "bot switch");
+  await audit(staff.id, on ? "bot.on" : "bot.off", "setting", "bot_on");
+  if (on) {
+    const autonomy = ((await db().from("bot_settings").select("value").eq("key", "autonomy").maybeSingle()).data?.value as { mode?: string } | undefined)?.mode;
+    await db().from("conversations").update({ mode: autonomy === "auto" ? "bot" : "draft", mode_until: null }).eq("mode", "owner").not("mode_until", "is", null);
+    const since = new Date(Date.now() - 2 * 3600_000).toISOString();
+    const recent = (await db().from("conversations").select("id").eq("channel", "instagram").in("mode", ["bot", "draft"]).gte("last_customer_msg_at", since)).data ?? [];
+    for (const c of recent) {
+      const last = (await db().from("messages").select("direction").eq("conversation_id", c.id).in("status", ["received", "sent"]).order("created_at", { ascending: false }).limit(1).maybeSingle()).data;
+      if (last?.direction === "in") await emit(EV.messageReceived, { conversationId: c.id }).catch(() => false);
+    }
+  }
+  revalidatePath("/admin", "layout");
+}
+
 export async function ownerSend(form: FormData) {
   const staff = await requireStaff();
   const conversationId = z.string().uuid().parse(form.get("conversationId"));

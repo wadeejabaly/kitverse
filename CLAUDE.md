@@ -27,6 +27,8 @@ webhook → `storeInbound` → event → `processConversation`:
 3. `runAgent` (tools; `<reply>` extraction; money, meta and language guards);
 4. draft (default autonomy) or send.
 
+Owner switch: "Bot on/off" in the admin header (`bot_settings.bot_on`). Off = the bot stays silent on Instagram; on = auto-paused chats go back to the bot and customers waiting from the last 2h get answered.
+
 Test phase: the webhook drops every chat whose username isn't on the tester list (`src/lib/conversation/testers.ts`, admin Settings), so the real account can be connected safely.
 
 Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/decided`.

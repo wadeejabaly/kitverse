@@ -10,6 +10,11 @@ export async function settings<T>(key: string, fallback: T): Promise<T> {
   return (r.data?.value as T) ?? fallback;
 }
 
+/** The owner's header switch: off = he answers Instagram himself, the bot stays silent. */
+export async function botOn(): Promise<boolean> {
+  return (await settings<{ on?: boolean }>("bot_on", { on: true })).on !== false;
+}
+
 export type Gate =
   | { ok: true; tier: "new" | "engaged" | "buyer" }
   | { ok: false; reason: "spam" | "rate_limit" | "lifetime_review" | "spend_stop"; tier?: string };
