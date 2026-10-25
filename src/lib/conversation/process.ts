@@ -5,6 +5,7 @@ import { createApproval } from "../approvals";
 import { notify } from "../notify";
 import { transcribe } from "../stt";
 import { botOn, checkGate, settings } from "./limits";
+import { turnBlocker } from "./gate";
 import { queueOutgoing, sendQueued } from "./deliver";
 import { senderAction } from "../channels/instagram";
 import type { ConversationRow, CustomerRow } from "../agent/state";
@@ -50,10 +51,9 @@ const CLOSING_LINE: Record<string, string> = {
  */
 export async function processConversation(conversationId: string, opts: { extraSystem?: string } = {}): Promise<TurnResult> {
   const { conv, customer } = await load(conversationId);
-  if (conv.channel === "instagram" && !(await botOn())) return { status: "skipped", reason: "bot switched off" };
-  const modeActive = !conv.mode_until || new Date(conv.mode_until) > new Date();
-  if (["owner", "paused", "blocked"].includes(conv.mode) && modeActive) return { status: "skipped", reason: `mode ${conv.mode}` };
-  if (["owner", "paused"].includes(conv.mode) && !modeActive) {
+  const blocked = turnBlocker(conv, conv.channel === "instagram" ? await botOn() : true, new Date());
+  if (blocked) return { status: "skipped", reason: blocked };
+  if (["owner", "paused"].includes(conv.mode)) { // a timed owner pause that has run out: the bot takes the chat back
     const autonomy = await settings<{ mode: string }>("autonomy", { mode: "draft" });
     conv.mode = autonomy.mode === "auto" ? "bot" : "draft";
     await db().from("conversations").update({ mode: conv.mode, mode_until: null }).eq("id", conv.id);

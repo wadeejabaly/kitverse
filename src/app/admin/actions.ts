@@ -16,6 +16,7 @@ import { normalize } from "@/lib/text";
 import { requote, type OrderRow } from "@/lib/orders/draft";
 import { isBotModel } from "@/lib/agent/models";
 import { israelDayEnd } from "@/lib/time";
+import { conversationPatch } from "@/lib/conversation/gate";
 
 async function audit(actor: string | null, action: string, entity: string, entityId: string, after?: unknown) {
   await db().from("audit_log").insert({ actor, action, entity, entity_id: entityId, after: after ?? null });
@@ -119,16 +120,7 @@ export async function conversationAction(form: FormData) {
   const staff = await requireStaff();
   const { conversationId, action } = ConvAction.parse({ conversationId: form.get("conversationId"), action: form.get("action") });
   const autonomy = ((await db().from("bot_settings").select("value").eq("key", "autonomy").maybeSingle()).data?.value as { mode?: string } | undefined)?.mode;
-  const patch: Record<string, unknown> = {
-    take_over: { mode: "owner", mode_until: null },
-    hand_back: { mode: autonomy === "auto" ? "bot" : "draft", mode_until: null, bot_replies_total: 0 },
-    draft_mode: { mode: "draft", mode_until: null },
-    pause: { mode: "paused", mode_until: null },
-    unblock: { mode: "draft", spam_blocked_at: null },
-    unlimited_24h: { unlimited_until: new Date(Date.now() + 24 * 3600_000).toISOString() },
-    unlimited_forever: { unlimited_until: "9999-12-31T00:00:00Z" },
-    limits_normal: { unlimited_until: null },
-  }[action];
+  const patch = conversationPatch(action, autonomy, new Date());
   must(await db().from("conversations").update(patch).eq("id", conversationId).select("id"), "conversation action");
   await audit(staff.id, `conversation.${action}`, "conversation", conversationId, patch);
   if (action === "hand_back") await emit(EV.resume, { conversationId, note: "The owner handed this chat back to you. Read the latest messages (including what the owner wrote) and continue only if the customer is waiting for an answer; otherwise reply <no_reply>." }).catch(() => false);
