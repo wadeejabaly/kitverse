@@ -8,12 +8,12 @@ import { seasonYear } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import type { Product } from "@/data/types";
 import { ProductGrid } from "@/components/shop/ProductCard";
-import { TeamSelect } from "@/components/shop/TeamSelect";
-import { FilterGroup, FilterLink } from "@/components/shop/FilterRail";
+import { TeamFilterList } from "@/components/shop/TeamFilterList";
+import { FilterGroup, FilterCheckbox } from "@/components/shop/FilterRail";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { Season } from "@/components/shared/Money";
 import { collectionParams, resolveCollection, type Collection } from "@/lib/collections";
-import { collectionHref, firstParam, shopHref } from "@/lib/shop-href";
+import { allParams, collectionHref, shopHref, toggled } from "@/lib/shop-href";
 import { alternatesFor } from "@/lib/site";
 
 /**
@@ -27,12 +27,13 @@ import { alternatesFor } from "@/lib/site";
  * rebuild, showing its own empty state until then.
  *
  * Team + Year filter rail (2026-10-25, the owner's "filter each sub-category
- * by team or year" ask): a league/kind/retro collection gets both facets; a
- * team collection only gets Year, since it is already exactly one team and a
- * "Team" rail with a single option would be pointless. Sleeve length was also
- * asked for but is deliberately skipped — the catalog has no sleeve data for
- * any product, and the owner chose team+year only rather than adding a
- * defaulted field.
+ * by team or year" ask), as checkboxes (2026-10-25, same day — "let the
+ * filters be checkboxes"): a league/kind/retro collection gets both facets,
+ * each multi-select; a team collection only gets Year, since it is already
+ * exactly one team and a "Team" rail with a single option would be
+ * pointless. Sleeve length was also asked for but is deliberately skipped —
+ * the catalog has no sleeve data for any product, and the owner chose
+ * team+year only rather than adding a defaulted field.
  */
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -93,15 +94,15 @@ export default async function CollectionPage({
   // A team collection is already exactly one team — no Team rail for it.
   const showTeamFilter = collection.type !== "team";
 
-  const teamParam = firstParam(query.team);
-  const team =
-    showTeamFilter && getTeams().some((entry) => entry.slug === teamParam) ? teamParam : null;
+  const teamSlugs = new Set(getTeams().map((entry) => entry.slug));
+  const teams = showTeamFilter ? allParams(query.team).filter((value) => teamSlugs.has(value)) : [];
 
-  const seasonParam = firstParam(query.season);
-  const season = all.some((entry) => entry.season === seasonParam) ? seasonParam : null;
+  const validSeasons = new Set(all.map((entry) => entry.season));
+  const seasons = allParams(query.season).filter((value) => validSeasons.has(value));
 
-  const matchesTeam = (product: Product) => team === null || slugify(product.team) === team;
-  const matchesSeason = (product: Product) => season === null || product.season === season;
+  const matchesTeam = (product: Product) =>
+    teams.length === 0 || teams.includes(slugify(product.team));
+  const matchesSeason = (product: Product) => seasons.length === 0 || seasons.includes(product.season);
 
   const results = all.filter((product) => matchesTeam(product) && matchesSeason(product));
 
@@ -116,21 +117,21 @@ export default async function CollectionPage({
           name: locale === "ar" ? entry.nameAr : entry.name,
           count: forTeamFacet.filter((p) => slugify(p.team) === entry.slug).length,
         }))
-        .filter((option) => option.count > 0 || option.slug === team)
+        .filter((option) => option.count > 0 || teams.includes(option.slug))
         .sort((a, b) => a.name.localeCompare(b.name, locale))
     : [];
 
-  const seasonOptions = Array.from(new Set(all.map((p) => p.season)))
+  const seasonOptions = Array.from(validSeasons)
     .map((value) => ({
       value,
       count: forSeasonFacet.filter((p) => p.season === value).length,
     }))
-    .filter((option) => option.count > 0 || option.value === season)
+    .filter((option) => option.count > 0 || seasons.includes(option.value))
     // Newest first, same as the main shop page's identical facet.
     .sort((a, b) => seasonYear(b.value) - seasonYear(a.value));
 
-  const hasFilter = team !== null || season !== null;
-  const hasAnyFilterableFacet = showTeamFilter || seasonOptions.length > 1;
+  const hasFilter = teams.length > 0 || seasons.length > 0;
+  const hasAnyFilterableFacet = (showTeamFilter && teamOptions.length > 0) || seasonOptions.length > 1;
 
   return (
     <Wrap>
@@ -145,36 +146,30 @@ export default async function CollectionPage({
       >
         {hasAnyFilterableFacet ? (
           <aside className="flex flex-col gap-9 self-start wide:sticky wide:top-28">
-            <FilterGroup label={t("year")}>
-              <FilterLink
-                href={collectionHref(slug, { team })}
-                active={season === null}
-                label={t("all")}
-                count={forSeasonFacet.length}
-              />
-              {seasonOptions.map((option) => (
-                <FilterLink
-                  key={option.value}
-                  href={collectionHref(slug, {
-                    team,
-                    season: season === option.value ? null : option.value,
-                  })}
-                  active={season === option.value}
-                  label={<Season value={option.value} />}
-                  count={option.count}
-                />
-              ))}
-            </FilterGroup>
+            {seasonOptions.length > 1 ? (
+              <FilterGroup label={t("year")}>
+                {seasonOptions.map((option) => (
+                  <FilterCheckbox
+                    key={option.value}
+                    href={collectionHref(slug, {
+                      team: teams,
+                      season: toggled(seasons, option.value),
+                    })}
+                    checked={seasons.includes(option.value)}
+                    label={<Season value={option.value} />}
+                    count={option.count}
+                  />
+                ))}
+              </FilterGroup>
+            ) : null}
 
-            {showTeamFilter ? (
+            {showTeamFilter && teamOptions.length > 0 ? (
               <FilterGroup label={t("team")}>
-                <TeamSelect
+                <TeamFilterList
                   teams={teamOptions}
-                  selected={team}
+                  selected={teams}
                   basePath={`/shop/${slug}`}
-                  otherParams={{ season }}
-                  label={t("team")}
-                  allLabel={t("allTeams")}
+                  otherParams={{ season: seasons }}
                 />
               </FilterGroup>
             ) : null}
