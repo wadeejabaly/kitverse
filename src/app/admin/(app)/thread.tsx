@@ -15,6 +15,11 @@ const CONTEXT: Record<string, { label: string; icon: typeof Reply }> = {
   video: { label: "Video", icon: Film },
 };
 
+/** Scrollable chat window that opens at the newest message (column-reverse keeps it pinned to the bottom). */
+export function ChatWindow({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cx("flex flex-col-reverse overflow-y-auto overscroll-contain", className)}><div>{children}</div></div>;
+}
+
 /** Chat in Instagram style: customer left, bot (ink) / you (green) right; drafts dashed. */
 export function Thread({ messages }: { messages: ThreadMsg[] }) {
   if (!messages.length) return <p className="py-6 text-center text-sm text-muted">No messages yet.</p>;

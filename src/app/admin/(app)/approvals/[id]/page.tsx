@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Check, X, Hand, MessagesSquare, Receipt } from "lucide-react";
 import { db } from "@/lib/db";
 import { decideApproval } from "../../../actions";
-import { Thread, type ThreadMsg } from "../../thread";
+import { ChatWindow, Thread, type ThreadMsg } from "../../thread";
 import { PageHeader, Card, Badge, SectionTitle, button, input, KIND } from "../../../ui";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +37,7 @@ export default async function ApprovalPage({ params, searchParams }: PageProps<"
       {sp.error === "already_decided" ? <p className="mb-3 rounded-xl bg-amber-soft px-3 py-2 text-sm text-amber">This was already decided.</p> : null}
 
       <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
-        <Card><SectionTitle>Conversation</SectionTitle><Thread messages={msgs} /></Card>
+        <Card><SectionTitle>Conversation</SectionTitle><ChatWindow className="max-h-[min(55dvh,560px)]"><Thread messages={msgs} /></ChatWindow></Card>
 
         <div className="flex flex-col gap-4">
           {order?.quote?.summaryAr ? (

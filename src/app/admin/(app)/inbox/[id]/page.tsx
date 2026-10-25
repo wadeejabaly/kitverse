@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Send, Hand, Bot, PencilLine, ShieldOff, Infinity as InfinityIcon, Gauge, Receipt, ClipboardCheck } from "lucide-react";
 import { db } from "@/lib/db";
 import { conversationAction, ownerSend } from "../../../actions";
-import { Thread, type ThreadMsg } from "../../thread";
+import { ChatWindow, Thread, type ThreadMsg } from "../../thread";
 import { PageHeader, Card, Badge, SectionTitle, button, input, MODE, KIND, ORDER_STATUS } from "../../../ui";
 
 export const dynamic = "force-dynamic";
@@ -41,7 +41,7 @@ export default async function Conversation({ params }: PageProps<"/admin/inbox/[
               <ClipboardCheck className="h-4 w-4" /> Waiting for you: {(KIND[p.kind] ?? KIND.other).label}
             </Link>
           ))}
-          <Card><Thread messages={msgs} /></Card>
+          <Card padded={false}><ChatWindow className="max-h-[max(280px,calc(100dvh-360px))] p-4 sm:p-5"><Thread messages={msgs} /></ChatWindow></Card>
           <form action={ownerSend} className="flex gap-2">
             <input type="hidden" name="conversationId" value={conv.id} />
             <input name="text" required placeholder="Write to the customer…" className={input} dir="auto" autoComplete="off" />
