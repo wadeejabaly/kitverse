@@ -47,7 +47,7 @@ Never send supplier images directly. Kids items are shown only when the customer
 - RLS is on for every table. Staff access goes through `is_staff()`. Server actions call `requireStaff()`.
 - Never spend the Anthropic API credits from an agent session: no `npm run chat`, `npm run eval`, `photos:screen`/`photos:verify-teams`, admin Test bot or webhook messages that make the bot reply. The owner and partner test the bot. Do one-off visual review in the chat instead (e.g. `scripts/photo-sheets.ts` + `scripts/apply-photo-picks.ts`).
 - Secrets live only in `.env.local`. Never print them. `.env.development.local` is local only: `INNGEST_DEV=1`, test webhook secret, `KV_DEV_ADMIN` (dev-only admin bypass, never works in production builds).
-- Commit or push only when the user asks. `site` = merged app (store + bot + admin), meant to become `main`. Never bring back the old shop backend (Supabase orders tables, PayPal/PayPlus routes) - the user had it deleted.
+- Commit or push only when the user asks. Work on `main` (the `site` branch is merged and retired); Vercel deploys `main` to production. Only one agent session should change `main` at a time. Never bring back the old shop backend (Supabase orders tables, PayPal/PayPlus routes) - the user had it deleted.
 
 ## Commands
 `npm run dev` · `npm run store:export` · `npm test` · `npm run typecheck` · `npm run chat -- --user x "msg"` (local bot) · `npm run eval` (needs `KV_CONVS`/`KV_HELDOUT`, costs money) · `npm run db:push` · `npm run db:seed` · `npm run staff:invite` · `npm run db:clean-tests` · `npm run catalog:build`
