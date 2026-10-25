@@ -67,7 +67,9 @@ export async function HeroB({ priority = false }: { priority?: boolean }) {
   if (rowOne.length === 0) return null;
 
   return (
-    <section className="relative isolate flex min-h-[calc(100svh-76px)] flex-col justify-center overflow-hidden">
+    // 105px is the sticky header: 64px crest + 2×20px (py-5) padding + 1px
+    // border-b (see Header.tsx) — keep this in sync with it.
+    <section className="relative isolate flex min-h-[calc(100svh-105px)] flex-col justify-center overflow-hidden">
       <div
         aria-hidden
         // The rows are pushed APART to the top and bottom of the section

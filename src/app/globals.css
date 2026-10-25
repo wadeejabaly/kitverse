@@ -349,7 +349,7 @@ h2 {
      position:fixed descendants — and <MobileMenu>'s `fixed inset-0` overlay
      is rendered inside <header>. Filter the header directly and that overlay
      stops resolving against the viewport and collapses to the header's own
-     ~76px box, so the mobile menu silently breaks. The pseudo-element carries
+     ~105px box, so the mobile menu silently breaks. The pseudo-element carries
      the effect without changing what the header is a containing block for.
 
      Do not add transform, filter or perspective to .header-glass either:

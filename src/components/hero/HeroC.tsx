@@ -45,7 +45,9 @@ export async function HeroC({
   const [primary, secondary] = pickShirts(C_SHIRTS, 2);
 
   return (
-    <section className="flex min-h-[calc(100svh-76px)] flex-col justify-center">
+    // 105px is the sticky header: 64px crest + 2×20px (py-5) padding + 1px
+    // border-b (see Header.tsx) — keep this in sync with it.
+    <section className="flex min-h-[calc(100svh-105px)] flex-col justify-center">
       <Wrap>
         <div className="grid items-end gap-10 py-10 wide:grid-cols-[1.05fr_0.95fr] wide:gap-14 wide:py-16">
           <div>
