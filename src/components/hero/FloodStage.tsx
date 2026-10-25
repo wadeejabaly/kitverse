@@ -126,6 +126,19 @@ export function FloodStage({
             }}
             className="kv-crossfade group relative col-start-1 row-start-1 grid h-full w-full place-items-center"
           >
+            {/* Bounded on BOTH axes (max-h AND max-w at 84%, object-contain),
+                not just width — fixed 2026-10-25. The old `w-[84%] h-auto`
+                let a portrait-leaning supplier photo (anything taller than
+                the stage is wide) render past 84% of the square's height,
+                and since the three crossfading layers share one implicit
+                grid row, the row auto-sized to whichever shirt was tallest —
+                stretching this <Link/> past the stage's own aspect-square
+                box. The stage clips that overflow (overflow-hidden), and the
+                chip below is positioned bottom-2 off THIS element, not the
+                stage, so it rode along and got its bottom edge clipped too:
+                the "cut off" name/price chip the owner saw. Capping both
+                axes keeps every photo, whatever its native proportions,
+                inside the square the stage actually shows. */}
             <Image
               src={shirt.image}
               alt={shirt.title}
@@ -133,7 +146,7 @@ export function FloodStage({
               height={1200}
               priority={priority && index === 0}
               sizes="(max-width: 900px) 86vw, 560px"
-              className="kv-flood-shirt-shadow h-auto w-[84%] transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+              className="kv-flood-shirt-shadow h-auto max-h-[84%] w-auto max-w-[84%] object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
             />
             {/* The chip belongs to the SAME crossfading layer as its shirt (not
                 a separate stacked row like Variant A's caption), so it can only
