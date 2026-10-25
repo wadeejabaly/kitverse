@@ -45,6 +45,7 @@ Never send supplier images directly. Kids items are shown only when the customer
 - Prices = the website's (owner-approved 2026-10-24): fan 95, player 110, retro (2023 and older) 135, name+number 20, patch 11.99, 3XL +9 / 4XL +12, gift box 34.99 per box, no 3-for-300 offer. Delivery 7-14 days (Jerusalem/West Bank/south up to 20): north 50, center 60, negev 70, Jerusalem + West Bank + Eilat 100. Returns: 14 days, unworn with tags; printed shirts only if wrong/faulty.
 - Every discount needs an approval row (DB check). The bot's own discount limit is 0₪.
 - RLS is on for every table. Staff access goes through `is_staff()`. Server actions call `requireStaff()`.
+- Never spend the Anthropic API credits from an agent session: no `npm run chat`, `npm run eval`, `photos:screen`/`photos:verify-teams`, admin Test bot or webhook messages that make the bot reply. The owner and partner test the bot. Do one-off visual review in the chat instead (e.g. `scripts/photo-sheets.ts` + `scripts/apply-photo-picks.ts`).
 - Secrets live only in `.env.local`. Never print them. `.env.development.local` is local only: `INNGEST_DEV=1`, test webhook secret, `KV_DEV_ADMIN` (dev-only admin bypass, never works in production builds).
 - Commit or push only when the user asks. `site` = merged app (store + bot + admin), meant to become `main`. Never bring back the old shop backend (Supabase orders tables, PayPal/PayPlus routes) - the user had it deleted.
 
