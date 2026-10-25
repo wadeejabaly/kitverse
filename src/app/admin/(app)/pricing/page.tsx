@@ -1,15 +1,14 @@
-import { Truck, ShieldCheck, BadgeCheck } from "lucide-react";
+import { ShieldCheck, BadgeCheck, ArrowRight } from "lucide-react";
 import { currentPriceList } from "@/lib/pricing/load";
-import { previewDeliveryFees, applyDeliveryFees, publishPriceList } from "../../pricing-actions";
+import { previewPriceChanges, applyPriceChanges, publishPriceList } from "../../pricing-actions";
 import { PageHeader, Card, Badge, SectionTitle, button } from "../../ui";
 
 export const dynamic = "force-dynamic";
 
-/** The price list the bot and the website quote from: shirt prices and add-ons (read-only here),
- *  delivery fees (two-tier owner decision, applied with one click) and the publish switch. */
+/** The live price list the bot and the website checkout quote from, approved price changes waiting
+ *  to go live (from pricing/price-list.draft.json, applied with one tap) and the publish switch. */
 export default async function Pricing() {
-  const [list, preview] = await Promise.all([currentPriceList(), previewDeliveryFees()]);
-  const anyChange = preview.zones.some((z) => z.changes);
+  const [list, preview] = await Promise.all([currentPriceList(), previewPriceChanges()]);
   const draft = list.status !== "published";
   const row = (label: string, value: string, key: string) => (
     <div key={key} className="flex items-center justify-between px-4 py-2.5 text-sm sm:px-5"><span dir="auto">{label}</span><span className="tabular-nums">{value}</span></div>
@@ -36,25 +35,30 @@ export default async function Pricing() {
       </div>
 
       <div className="mt-6"><SectionTitle>Delivery</SectionTitle></div>
-      <p className="mb-3 text-sm text-muted">Two tiers: cheaper up north (through Kfar Qara), one fee everywhere else - the West Bank included.</p>
-      <Card padded={false} className="mb-4 divide-y divide-line overflow-hidden">
-        {preview.zones.map((z) => (
-          <div key={z.id} className="flex items-center justify-between px-4 py-3 sm:px-5">
-            <div className="text-sm font-medium" dir="auto">{z.label}</div>
-            <div className="flex items-center gap-2 text-sm tabular-nums">
-              <span className={z.changes ? "text-muted line-through" : ""}>₪{z.currentFee}</span>
-              {z.changes ? <span className="font-medium text-pitch">→ ₪{z.newFee}</span> : null}
-            </div>
-          </div>
-        ))}
+      <Card padded={false} className="mb-6 divide-y divide-line overflow-hidden">
+        {list.data.delivery.zones.map((z) => row(`${z.name_ar} · ${z.days} days`, `₪${z.fee}`, z.id))}
       </Card>
-      {!anyChange ? (
-        <p className="flex items-center gap-2 text-sm text-muted"><ShieldCheck className="h-4 w-4" /> Delivery fees match the two-tier scheme.</p>
+
+      {preview.changes.length ? (
+        <Card accent="amber">
+          <SectionTitle>Approved price changes - not live yet</SectionTitle>
+          <div className="mb-4 flex flex-col divide-y divide-line text-sm">
+            {preview.changes.map((c, i) => (
+              <div key={i} className="flex flex-wrap items-center gap-2 py-2">
+                <span className="flex-1" dir="auto">{c.what}</span>
+                <span className="tabular-nums text-muted line-through" dir="auto">{c.from}</span>
+                <ArrowRight className="h-3.5 w-3.5 text-muted" />
+                <span className="font-medium tabular-nums text-pitch" dir="auto">{c.to}</span>
+              </div>
+            ))}
+          </div>
+          <form action={applyPriceChanges} className="flex flex-wrap items-center gap-3">
+            <button className={button.primary}>Apply {preview.changes.length} change{preview.changes.length > 1 ? "s" : ""}</button>
+            <span className="text-xs text-muted">The bot and the website checkout use the new prices right away.</span>
+          </form>
+        </Card>
       ) : (
-        <form action={applyDeliveryFees} className="flex flex-wrap items-center gap-3">
-          <button className={button.primary}><Truck className="h-4 w-4" /> Apply new delivery fees</button>
-          <span className="text-xs text-muted">The bot and the website checkout switch to the new fees right away.</span>
-        </form>
+        <p className="flex items-center gap-2 text-sm text-muted"><ShieldCheck className="h-4 w-4" /> Live prices match the approved price list.</p>
       )}
     </>
   );
