@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "@/i18n/navigation";
-import { shopHref } from "@/lib/shop-href";
 
 /**
  * The team filter. A native <select> rather than a bespoke combobox: with a
@@ -12,31 +11,48 @@ import { shopHref } from "@/lib/shop-href";
  * that already read the search params (a function prop could not cross that
  * boundary), so nothing here needs useSearchParams and the rail stays outside
  * any Suspense boundary.
+ *
+ * Reused by `/shop/[collection]` as well as `/shop` itself (2026-10-25) — so
+ * rather than hard-coding `shopHref`'s kind/league shape, this takes the
+ * page's own `basePath` ("/shop" or "/shop/<slug>") plus whatever OTHER
+ * filters that page wants preserved across a team change, as a plain
+ * serializable object (still no function prop crossing the server/client
+ * boundary). `/shop` passes `{ kind, league, season }`; a collection page
+ * passes just `{ season }`, since kind/league are already fixed by the
+ * collection itself and have no business on that URL.
  */
 export function TeamSelect({
   teams,
   selected,
-  kind,
-  league,
+  basePath,
+  otherParams,
   label,
   allLabel,
 }: {
   teams: { slug: string; name: string; count: number }[];
   selected: string | null;
-  kind: string | null;
-  league: string | null;
+  basePath: string;
+  otherParams: Record<string, string | null | undefined>;
   label: string;
   allLabel: string;
 }) {
   const router = useRouter();
 
+  function hrefFor(team: string | null): string {
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(otherParams)) {
+      if (value) query.set(key, value);
+    }
+    if (team) query.set("team", team);
+    const search = query.toString();
+    return search ? `${basePath}?${search}` : basePath;
+  }
+
   return (
     <select
       aria-label={label}
       value={selected ?? ""}
-      onChange={(event) =>
-        router.push(shopHref({ kind, league, team: event.target.value || null }))
-      }
+      onChange={(event) => router.push(hrefFor(event.target.value || null))}
       className="w-full border border-rule bg-field px-3 py-2.5 text-sm text-ink"
     >
       <option value="">{allLabel}</option>

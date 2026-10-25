@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getLeagues, getTeams, getVisibleProducts } from "@/data/catalog";
+import { seasonYear } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import type { Kind, Product } from "@/data/types";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { TeamSelect } from "@/components/shop/TeamSelect";
-import { Figure } from "@/components/shared/Money";
+import { FilterGroup, FilterLink } from "@/components/shop/FilterRail";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
+import { Season } from "@/components/shared/Money";
 import { firstParam, shopHref } from "@/lib/shop-href";
 import { alternatesFor } from "@/lib/site";
 
@@ -65,20 +67,37 @@ export default async function ShopPage({
 
   const all = getVisibleProducts();
 
+  // Season/year (2026-10-25, the owner's "filter by year" ask) reads the
+  // product's own `season` string ("2026/27", "2026") directly — distinct
+  // from the `kind` facet above, which despite its translation key
+  // ("Season" in the UI) actually groups national/current/previous, not a
+  // specific year. The two are independent facets that happen to share an
+  // English word; `seasonOptions` below is built from whatever distinct
+  // values are actually in the catalog, not a fixed list, since the set
+  // only grows as new stock and retro seasons arrive.
+  const seasonParam = firstParam(query.season);
+  const season = all.some((entry) => entry.season === seasonParam) ? seasonParam : null;
+
   const matchesKind = (product: Product) => kind === null || product.kind === kind;
   const matchesLeague = (product: Product) =>
     league === null || product.league === league;
   const matchesTeam = (product: Product) =>
     team === null || slugify(product.team) === team;
+  const matchesSeason = (product: Product) => season === null || product.season === season;
 
   const results = all.filter(
-    (product) => matchesKind(product) && matchesLeague(product) && matchesTeam(product),
+    (product) =>
+      matchesKind(product) &&
+      matchesLeague(product) &&
+      matchesTeam(product) &&
+      matchesSeason(product),
   );
 
   // Cross-filtered facet sets: everything except the facet being counted.
-  const forKindFacet = all.filter((p) => matchesLeague(p) && matchesTeam(p));
-  const forLeagueFacet = all.filter((p) => matchesKind(p) && matchesTeam(p));
-  const forTeamFacet = all.filter((p) => matchesKind(p) && matchesLeague(p));
+  const forKindFacet = all.filter((p) => matchesLeague(p) && matchesTeam(p) && matchesSeason(p));
+  const forLeagueFacet = all.filter((p) => matchesKind(p) && matchesTeam(p) && matchesSeason(p));
+  const forTeamFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesSeason(p));
+  const forSeasonFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesTeam(p));
 
   const kindOptions = KINDS.map((value) => ({
     value,
@@ -101,7 +120,17 @@ export default async function ShopPage({
     .filter((option) => option.count > 0 || option.slug === team)
     .sort((a, b) => a.name.localeCompare(b.name, locale));
 
-  const hasFilter = kind !== null || league !== null || team !== null;
+  const seasonOptions = Array.from(new Set(all.map((p) => p.season)))
+    .map((value) => ({
+      value,
+      count: forSeasonFacet.filter((p) => p.season === value).length,
+    }))
+    .filter((option) => option.count > 0 || option.value === season)
+    // Newest first — the same ordering a shopper would expect browsing
+    // recent-to-old, and the direction `seasonYear()` already sorts for.
+    .sort((a, b) => seasonYear(b.value) - seasonYear(a.value));
+
+  const hasFilter = kind !== null || league !== null || team !== null || season !== null;
 
   return (
     <Wrap>
@@ -111,7 +140,7 @@ export default async function ShopPage({
         <aside className="flex flex-col gap-9 self-start wide:sticky wide:top-28">
           <FilterGroup label={t("kind")}>
             <FilterLink
-              href={shopHref({ league, team })}
+              href={shopHref({ league, team, season })}
               active={kind === null}
               label={t("all")}
               count={forKindFacet.length}
@@ -123,6 +152,7 @@ export default async function ShopPage({
                   kind: kind === option.value ? null : option.value,
                   league,
                   team,
+                  season,
                 })}
                 active={kind === option.value}
                 label={t(`kinds.${option.value}`)}
@@ -133,7 +163,7 @@ export default async function ShopPage({
 
           <FilterGroup label={t("league")} id="league">
             <FilterLink
-              href={shopHref({ kind, team })}
+              href={shopHref({ kind, team, season })}
               active={league === null}
               label={t("all")}
               count={forLeagueFacet.length}
@@ -145,9 +175,33 @@ export default async function ShopPage({
                   kind,
                   league: league === option.slug ? null : option.slug,
                   team,
+                  season,
                 })}
                 active={league === option.slug}
                 label={locale === "ar" ? option.nameAr : option.name}
+                count={option.count}
+              />
+            ))}
+          </FilterGroup>
+
+          <FilterGroup label={t("year")}>
+            <FilterLink
+              href={shopHref({ kind, league, team })}
+              active={season === null}
+              label={t("all")}
+              count={forSeasonFacet.length}
+            />
+            {seasonOptions.map((option) => (
+              <FilterLink
+                key={option.value}
+                href={shopHref({
+                  kind,
+                  league,
+                  team,
+                  season: season === option.value ? null : option.value,
+                })}
+                active={season === option.value}
+                label={<Season value={option.value} />}
                 count={option.count}
               />
             ))}
@@ -157,8 +211,8 @@ export default async function ShopPage({
             <TeamSelect
               teams={teamOptions}
               selected={team}
-              kind={kind}
-              league={league}
+              basePath="/shop"
+              otherParams={{ kind, league, season }}
               label={t("team")}
               allLabel={t("allTeams")}
             />
@@ -208,61 +262,5 @@ export default async function ShopPage({
         </div>
       </section>
     </Wrap>
-  );
-}
-
-function FilterGroup({
-  label,
-  id,
-  children,
-}: {
-  label: string;
-  id?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    // The group label sits above its own hairline rather than floating over
-    // the options: the rail reads as a set of small indexes, which is what it
-    // is, and the eye can find the group boundaries without any boxes.
-    <div id={id} className="scroll-mt-32">
-      <span className="mono-eyebrow mb-3 block border-b border-rule pb-3 text-ink-soft">
-        {label}
-      </span>
-      <div className="flex flex-col gap-2.5">{children}</div>
-    </div>
-  );
-}
-
-/**
- * One facet option. A link, not a button: the filter is a URL, so it should
- * be openable in a new tab and crawlable like any other listing.
- */
-function FilterLink({
-  href,
-  active,
-  label,
-  count,
-}: {
-  href: string;
-  active: boolean;
-  label: string;
-  count: number;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-current={active ? "true" : undefined}
-      className={`flex justify-between gap-2.5 text-start text-sm transition-colors ${
-        active ? "text-ink" : "text-ink-soft hover:text-ink"
-      }`}
-    >
-      <span>
-        {active ? <span aria-hidden className="me-2">—</span> : null}
-        {label}
-      </span>
-      <span className="mono-eyebrow latin text-ink-soft">
-        <Figure>{count}</Figure>
-      </span>
-    </Link>
   );
 }

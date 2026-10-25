@@ -202,6 +202,7 @@
     "category": "Category",
     "league": "League",
     "team": "Team",
+    "year": "Year",
     "all": "All",
     "allTeams": "All teams",
     "clear": "Clear filters",
