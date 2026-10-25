@@ -548,7 +548,11 @@ export function CheckoutView({
                 {item.patch !== "none" ? (
                   <span className="block text-ink-soft">
                     {tCart("propPatch")}:{" "}
-                    {item.patch === "ucl" ? tCart("propPatchUcl") : tCart("propPatchLeague")}
+                    {item.patch === "ucl"
+                      ? tCart("propPatchUcl")
+                      : item.patch === "worldcup"
+                        ? tCart("propPatchWorldCup")
+                        : tCart("propPatchLeague")}
                   </span>
                 ) : null}
               </span>

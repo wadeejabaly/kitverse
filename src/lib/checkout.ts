@@ -30,7 +30,7 @@ const VersionSchema = z.custom<Version>(
 // The closed set of delivery regions, checked against pricing.ts — the server
 // must never price shipping from a region it did not itself define.
 const DeliveryRegionSchema = z.custom<DeliveryRegion>(isDeliveryRegion);
-const PatchSchema = z.enum(["none", "league", "ucl"]) satisfies z.ZodType<Patch>;
+const PatchSchema = z.enum(["none", "league", "ucl", "worldcup"]) satisfies z.ZodType<Patch>;
 
 /** One cart line as it crosses the wire. Matches CartItem minus any money. */
 export const CheckoutItemSchema = z.object({

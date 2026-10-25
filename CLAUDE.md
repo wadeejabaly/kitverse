@@ -105,26 +105,40 @@ photo-forward.
    correctly — migration `0005` is additive — the application simply never
    writes `awaiting_deposit` / `bit_cod` / `deposit_ils` again.
 1c. **Official patch add-on, replacing the flat badge patch — owner decision
-   2026-10-23, UI updated 2026-10-24.** A club product (one with a league)
-   offers **at most one** patch per shirt: no patch, that club's own league's
-   official patch, or the Champions League patch — never both, and the
-   Champions League option is offered on every club product regardless of
-   whether that club plays in the real UCL (any league, any season). Both
-   choices cost the same flat **₪11.99** (`ADDONS.patch` in `pricing.ts`,
-   the site's first fractional ILS price — see `round2()`). On the PDP this
-   is a checkbox ("Add an official patch") that reveals a `<select>` with the
-   two choices when checked — not a three-way radio group — per the owner's
-   2026-10-24 request; unchecking the box is the only way back to "none".
-   The Arabic copy uses **رقعة** ("patch"), not شعار ("emblem/crest"), per a
-   2026-10-24 terminology check against how Arabic jersey retailers actually
-   name this: `patchLegend`/`patchToggle`/`patchLeague`/`patchUcl`/
-   `patchHint`/`propPatch*` all read "رقعة". A national-team product has no
-   league, so it never shows the patch fieldset and the server force-zeroes
-   `patch` to `"none"` for one regardless of what a client sends, mirroring
-   the existing `sanitizeNameNumber` defense-in-depth pattern.
-   `CartItem.patch: "none" | "league" | "ucl"` replaces the old
+   2026-10-23, UI updated 2026-10-24, World Cup patch added 2026-10-25.**
+   A shopper picks **at most one** patch per shirt, from a set that depends
+   on the product: a **club** product (one with a league) offers that
+   club's own league's official patch or the Champions League patch — never
+   both, and the Champions League option is offered on every club product
+   regardless of whether that club plays in the real UCL (any league, any
+   season); a **national-team** product (`kind === "national"`, no league)
+   offers only the **World Cup patch**, added 2026-10-25 per owner request —
+   national-team shirts previously had no patch option at all. The two sets
+   never overlap: a club shirt can never carry the World Cup patch and a
+   national shirt can never carry a league/UCL patch. All three choices cost
+   the same flat **₪11.99** (`ADDONS.patch` in `pricing.ts`, the site's
+   first fractional ILS price — see `round2()`). On the PDP this is a
+   checkbox ("Add an official patch") that reveals the choice when checked
+   — not a three-way radio group, per the owner's 2026-10-24 request — a
+   `<select>` when the product offers more than one option (club), or just
+   the single option's name as plain text when it offers exactly one
+   (national — a one-item dropdown would be pointless UI); unchecking the
+   box is the only way back to "none". `ProductForm`'s `patchOptions` array
+   is the one place that decides which set a product gets, and
+   `sanitizePatch()` in `src/lib/product.ts` is its server-side mirror, so
+   the two can never drift apart silently — the client's choice is never
+   trusted, only what the product's own category allows is ever billed
+   (two dedicated tests in `orders.test.ts` cover both directions: a
+   national product requesting league/UCL, and a club product requesting
+   World Cup, both collapse to `"none"`). The Arabic copy uses **رقعة**
+   ("patch"), not شعار ("emblem/crest"), per a 2026-10-24 terminology check
+   against how Arabic jersey retailers actually name this:
+   `patchLegend`/`patchToggle`/`patchLeague`/`patchUcl`/`patchWorldCup`/
+   `patchHint`/`propPatch*` all read "رقعة".
+   `CartItem.patch: "none" | "league" | "ucl" | "worldcup"` replaces the old
    `badge: boolean`; `order_items.patch` (text) replaces `order_items.badge`
-   in migration `0005`.
+   in migration `0005`, and its check constraint is widened to allow
+   `'worldcup'` in migration `0006`.
 1d. **Gift box add-on — owner decision 2026-10-23.** Checkout-only (not on
    the cart page), **₪34.99** per box (`GIFT_BOX_PRICE`), quantity-selectable
    up to `GIFT_BOX_MAX_QTY` — a box can hold more than one shirt, so this is
@@ -367,13 +381,15 @@ no separate client input is owed (the old Bit-deposit mechanic's
 
 Open launch gates: 20 products pending image review in `/review` (35 rejected
 stay hidden); Supabase project + migrations
-`0001`/`0002`/`0003`/`0004`/**`0005`** — `0003` (`delivery_region`), `0004`
-(superseded columns, kept for old rows) and **`0005`** (plain cash: the
+`0001`/`0002`/`0003`/`0004`/`0005`/**`0006`** — `0003` (`delivery_region`),
+`0004` (superseded columns, kept for old rows), `0005` (plain cash: the
 `payment_provider` check gains `'cash'`; `street`, `house_number`,
-`gift_box_qty`, `gift_box_ils` on `orders`; `patch` on `order_items`) must all
-be applied **before** this code deploys, because the payment-start routes
-write those columns and values and a database still on an earlier migration
-fails every checkout with an unknown-column or check-constraint error;
+`gift_box_qty`, `gift_box_ils` on `orders`; `patch` on `order_items`) and
+**`0006`** (widens the `order_items.patch` check constraint to also allow
+`'worldcup'`) must all be applied **before** this code deploys, because the
+payment-start routes write those columns and values and a database still on
+an earlier migration fails every checkout with an unknown-column or
+check-constraint error;
 PayPal sandbox e2e then owner-run `/code-review ultra` on
 the money path before any live charge; **the owner must know that a cash
 order is marked `paid` only by hand in the Supabase dashboard, once the

@@ -291,7 +291,10 @@ async function sendOwnerNotification(
       size: row.size ?? "",
       version: row.version ?? "",
       nameNumber: row.name_number,
-      patch: row.patch === "league" || row.patch === "ucl" ? row.patch : "none",
+      patch:
+        row.patch === "league" || row.patch === "ucl" || row.patch === "worldcup"
+          ? row.patch
+          : "none",
       unitPrice: Number(row.unit_price_ils ?? 0),
       qty: Number(row.qty ?? 0),
     }));

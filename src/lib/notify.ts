@@ -33,8 +33,8 @@ export interface NotificationItem {
   size: string;
   version: string;
   nameNumber: string | null;
-  /** 'none' | 'league' | 'ucl' — the official-patch add-on (replaces `badge`). */
-  patch: "none" | "league" | "ucl";
+  /** 'none' | 'league' | 'ucl' | 'worldcup' — the official-patch add-on (replaces `badge`). */
+  patch: "none" | "league" | "ucl" | "worldcup";
   unitPrice: number;
   qty: number;
 }
@@ -106,6 +106,7 @@ export function renderOrderSummary(order: OrderNotification): string {
     if (item.nameNumber) lines.push(`      print: ${item.nameNumber}`);
     if (item.patch === "league") lines.push("      patch: league (official)");
     if (item.patch === "ucl") lines.push("      patch: Champions League");
+    if (item.patch === "worldcup") lines.push("      patch: World Cup");
     lines.push(`      unit ILS ${item.unitPrice} — line ILS ${item.unitPrice * item.qty}`);
   }
   if (order.giftBoxQty > 0) {

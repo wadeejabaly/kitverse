@@ -162,6 +162,7 @@ export default async function ProductPage({
             handle={product.handle}
             season={product.season}
             leagueName={leagueName}
+            isNational={product.kind === "national"}
           />
 
           <div className="mt-8 border-t border-rule">

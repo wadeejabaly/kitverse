@@ -124,7 +124,11 @@ export function CartView({
                 ) : null}
                 {item.patch !== "none" ? (
                   <Prop label={t("propPatch")}>
-                    {item.patch === "ucl" ? t("propPatchUcl") : t("propPatchLeague")}
+                    {item.patch === "ucl"
+                      ? t("propPatchUcl")
+                      : item.patch === "worldcup"
+                        ? t("propPatchWorldCup")
+                        : t("propPatchLeague")}
                   </Prop>
                 ) : null}
               </dl>

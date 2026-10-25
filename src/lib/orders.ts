@@ -7,7 +7,7 @@ import {
 } from "@/data/pricing";
 import type { Patch, Size, Version } from "@/data/types";
 import { getProduct } from "@/data/catalog";
-import { sanitizeNameNumber } from "@/lib/product";
+import { sanitizeNameNumber, sanitizePatch } from "@/lib/product";
 import type { CheckoutItemInput } from "@/lib/checkout";
 
 /**
@@ -72,11 +72,11 @@ export interface RepricedCart {
  * PRODUCT'S OWN `season` read out of the catalogue, never from anything the
  * browser sent.
  *
- * The patch choice is re-checked against the catalogue too: a patch is only
- * ever billable on a CLUB product (`product.league !== null`), so a national
- * team handle has its `patch` forced to "none" here regardless of what the
- * client sent — the same defence as sanitizeNameNumber above, applied to the
- * other add-on.
+ * The patch choice is re-checked against the catalogue too, via
+ * sanitizePatch(): a CLUB product can only ever be billed for "league" or
+ * "ucl", a NATIONAL-TEAM product only ever for "worldcup" (owner decision
+ * 2026-10-25), and anything else the client sent collapses to "none" here —
+ * the same defence as sanitizeNameNumber above, applied to the other add-on.
  *
  * `giftBoxQty` (owner decision 2026-10-23) is a per-ORDER quantity, not a
  * per-line one, so it is priced once by cartTotals rather than per CheckoutItemInput.
@@ -101,7 +101,7 @@ export function repriceCart(
       : "";
     const hasName = nameNumber !== "";
     const qty = Math.min(MAX_QTY_SERVER, Math.max(1, Math.floor(item.qty)));
-    const patch: Patch = product.league !== null ? item.patch : "none";
+    const patch: Patch = sanitizePatch(item.patch, product);
 
     const priced = priceLine(product.season, item.size, item.version, qty, {
       nameNumber: hasName,

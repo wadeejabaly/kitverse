@@ -64,7 +64,7 @@ export function lineKey(item: CartItem): string {
 
 const SIZE_SET = new Set<string>(SIZES);
 const VERSION_SET = new Set<string>(VERSIONS);
-const PATCH_SET = new Set<string>(["none", "league", "ucl"]);
+const PATCH_SET = new Set<string>(["none", "league", "ucl", "worldcup"]);
 
 /**
  * Anything read back from localStorage is untrusted input — another tab, an

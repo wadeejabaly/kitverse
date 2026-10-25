@@ -26,7 +26,9 @@ import { MAX_QTY } from "@/components/cart/CartProvider";
  *      realistic mixed basket — this is the number that gets charged;
  *   2. a name & number is re-sanitized on the server whatever the browser
  *      sent, and only a name that survives sanitising is billed for, and a
- *      patch is only ever billable on a club product;
+ *      patch is only ever billable in the set its OWN product allows — a
+ *      club product for "league"/"ucl", a national-team product for
+ *      "worldcup", never the other product's set;
  *   3. pending → paid happens exactly once, whichever of the three callers
  *      (PayPal capture route, PayPal webhook, PayPlus callback) arrives
  *      first — and only for the processor the order was created for, and
@@ -110,8 +112,10 @@ describe("repriceCart — the server's own arithmetic", () => {
     expect(cart.lines[2].unitPrice).toBe(priceLine(nationalSeason, "M", "fan", 1).unitPrice);
   });
 
-  it("forces a patch to \"none\" for a national-team product, whatever the client requested", () => {
+  it("forces a national-team product's patch to \"none\" unless it's the World Cup patch", () => {
     const nationalHandle = visibleHandle("national");
+    // A club-only patch requested on a national shirt is rejected, same as
+    // before the World Cup patch existed.
     for (const requested of ["league", "ucl"] as const) {
       const cart = repriceCart(
         [{ handle: nationalHandle, size: "M", version: "fan", patch: requested, qty: 1 }],
@@ -119,6 +123,22 @@ describe("repriceCart — the server's own arithmetic", () => {
       );
       expect(cart.lines[0].patch).toBe("none");
     }
+    // worldcup IS billable on a national-team product (owner decision
+    // 2026-10-25) — the one value club-only logic used to reject outright.
+    const worldCupCart = repriceCart(
+      [{ handle: nationalHandle, size: "M", version: "fan", patch: "worldcup", qty: 1 }],
+      REGION,
+    );
+    expect(worldCupCart.lines[0].patch).toBe("worldcup");
+  });
+
+  it("forces a club product's patch to \"none\" if the client asks for the World Cup patch", () => {
+    const clubHandle = visibleHandle("current");
+    const cart = repriceCart(
+      [{ handle: clubHandle, size: "M", version: "fan", patch: "worldcup", qty: 1 }],
+      REGION,
+    );
+    expect(cart.lines[0].patch).toBe("none");
   });
 
   it("ignores any price-shaped field the client tries to send", () => {

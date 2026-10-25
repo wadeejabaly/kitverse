@@ -23,25 +23,41 @@ import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
  * add-to-cart writes "fan" as the stored version. priceFor ignores `version`
  * for a retro season, so that stored value can never affect what is charged.
  *
- * The patch fieldset (owner decision 2026-10-23, replacing the old generic
- * "badge" checkbox) only exists on a CLUB product — `leagueName` is null for
- * a national team, and the whole fieldset is skipped, so a national shirt
- * never offers (and can never be billed for) a patch at all.
+ * The patch fieldset (owner decision 2026-10-23, extended 2026-10-25 with a
+ * World Cup patch) offers a different set depending on the product: a CLUB
+ * product (`leagueName` set) offers its own league's patch or the Champions
+ * League patch; a NATIONAL-TEAM product (`isNational`) offers only the World
+ * Cup patch; anything else (should not happen in this catalogue) gets no
+ * patch fieldset at all. `patchOptions` below is the single place that
+ * decides which set a product gets — sanitizePatch() in lib/product.ts is
+ * its server-side mirror, so the two can never drift apart silently.
  */
 export function ProductForm({
   handle,
   season,
   leagueName,
+  isNational,
 }: {
   handle: string;
   season: string;
   /** The shopper's-locale league name, or null for a national-team product. */
   leagueName: string | null;
+  /** True for a national-team product — offers the World Cup patch instead. */
+  isNational: boolean;
 }) {
   const t = useTranslations("product");
   const tCommon = useTranslations("common");
   const { add } = useCart();
   const retro = isRetroSeason(season);
+
+  const patchOptions: { value: Patch; label: string }[] = leagueName
+    ? [
+        { value: "league", label: t("patchLeague", { league: leagueName }) },
+        { value: "ucl", label: t("patchUcl") },
+      ]
+    : isNational
+      ? [{ value: "worldcup", label: t("patchWorldCup") }]
+      : [];
 
   const [size, setSize] = useState<Size>("M");
   const [version, setVersion] = useState<Version>("fan");
@@ -177,14 +193,15 @@ export function ProductForm({
       </fieldset>
 
       {/* Official patch (owner decision 2026-10-23; checkbox + dropdown per
-          owner request 2026-10-24) — a national-team product has no
-          leagueName and skips this fieldset entirely: there is no league
-          patch to offer and no Champions League patch either, since the
-          feature is scoped to club shirts. Checking the box reveals a
-          dropdown of the two choices; one patch per shirt, never both —
-          the dropdown itself enforces that, so unchecking the box is the
-          only way back to "none" rather than a third option inside it. */}
-      {leagueName ? (
+          owner request 2026-10-24; World Cup patch for national teams per
+          owner request 2026-10-25) — patchOptions is empty for a product
+          that is neither a club shirt nor a national-team shirt, and the
+          whole fieldset is skipped. Checking the box reveals the choice (a
+          dropdown when there is more than one, otherwise just the single
+          option's name — a one-item dropdown would be pointless UI); one
+          patch per shirt, never both, so unchecking the box is the only way
+          back to "none". */}
+      {patchOptions.length > 0 ? (
         <fieldset className="mb-6 border-0 p-0">
           <legend className="mono-eyebrow mb-2.5 block text-ink-soft">
             {t("patchLegend")}
@@ -193,22 +210,31 @@ export function ProductForm({
             <input
               type="checkbox"
               checked={patch !== "none"}
-              onChange={(event) => setPatch(event.target.checked ? "league" : "none")}
+              onChange={(event) =>
+                setPatch(event.target.checked ? patchOptions[0].value : "none")
+              }
               className="mt-1 accent-accent"
             />
             <span>{t("patchToggle")}</span>
           </label>
           {patch !== "none" ? (
             <div className="mt-3">
-              <select
-                value={patch}
-                onChange={(event) => setPatch(event.target.value as Patch)}
-                aria-label={t("patchSelectLabel")}
-                className="w-full border border-rule bg-tile px-3.5 py-3 text-sm text-ink"
-              >
-                <option value="league">{t("patchLeague", { league: leagueName })}</option>
-                <option value="ucl">{t("patchUcl")}</option>
-              </select>
+              {patchOptions.length > 1 ? (
+                <select
+                  value={patch}
+                  onChange={(event) => setPatch(event.target.value as Patch)}
+                  aria-label={t("patchSelectLabel")}
+                  className="w-full border border-rule bg-tile px-3.5 py-3 text-sm text-ink"
+                >
+                  {patchOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <p className="text-sm">{patchOptions[0].label}</p>
+              )}
               <p className="mt-2 text-xs text-ink-soft">{t("patchHint")}</p>
             </div>
           ) : null}
