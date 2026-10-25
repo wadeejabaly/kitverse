@@ -112,12 +112,25 @@ export async function storeInbound(channel: Channel, ev: IgEvent): Promise<Inbou
  * The owner typed in Instagram himself (echo that we didn't send): store it and pause the bot
  * for this chat for 12h so they don't talk over each other.
  */
+/** Plain system message sent when a tester joins with the code word (its echo must not pause the bot). */
+export const JOIN_CONFIRMATION = "✅ Test mode: you're connected to the Kitverse bot. Send your question now.";
+
 export async function storeOwnerEcho(ev: IgEvent) {
   if (ev.mid) {
     const ours = await db().from("messages").select("id").eq("ig_message_id", ev.mid).maybeSingle();
     if (ours.data) return; // echo of a message the bot/admin sent
   }
+  if (ev.text === JOIN_CONFIRMATION) return; // our own test-mode confirmation
   const { conv } = await getOrCreateConversation("instagram", ev.recipientId);
+  // the echo can arrive before the sender saved Instagram's message id: match a just-sent bot/admin message by text
+  if (ev.text) {
+    const recent = (await db().from("messages").select("id").eq("conversation_id", conv.id).eq("direction", "out").neq("sender", "owner")
+      .eq("text", ev.text).is("ig_message_id", null).gte("created_at", new Date(Date.now() - 5 * 60_000).toISOString()).limit(1).maybeSingle()).data;
+    if (recent) {
+      await db().from("messages").update({ ig_message_id: ev.mid ?? null }).eq("id", recent.id);
+      return;
+    }
+  }
   must(await db().from("messages").insert({
     conversation_id: conv.id, direction: "out", sender: "owner", ig_message_id: ev.mid ?? null, kind: ev.attachments?.length ? "image" : "text",
     text: ev.text ?? null, status: "sent",

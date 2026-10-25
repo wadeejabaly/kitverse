@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { after } from "next/server";
 import { env } from "@/lib/env";
 import { describeWebhook, parseWebhook, sendText, verifySignature } from "@/lib/channels/instagram";
-import { storeInbound, storeOwnerEcho } from "@/lib/conversation/ingest";
+import { JOIN_CONFIRMATION, storeInbound, storeOwnerEcho } from "@/lib/conversation/ingest";
 import { botMayHandle } from "@/lib/conversation/testers";
 import { emit } from "@/inngest/emit";
 import { EV } from "@/inngest/client";
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         if (myId && customerId === myId) continue; // our own account
         const gate = await botMayHandle(customerId, ev.type === "message" ? ev.text : undefined);
         if (gate === "joined") { // confirm the join word with a plain message (no AI involved)
-          await sendText(customerId, "✅ Test mode: you're connected to the Kitverse bot. Send your question now.").catch((e) => console.error("join confirm failed", (e as Error).message));
+          await sendText(customerId, JOIN_CONFIRMATION).catch((e) => console.error("join confirm failed", (e as Error).message));
           continue;
         }
         if (gate !== "allow") continue; // test phase: not a tester
