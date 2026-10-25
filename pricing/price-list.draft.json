@@ -128,9 +128,9 @@
       "id": "name_number",
       "name_en": "Name + number",
       "name_ar": "الاسم والرقم",
-      "price": 20,
+      "price": 19.99,
       "per": "shirt",
-      "source": "dm"
+      "source": "website"
     },
     {
       "id": "patch",

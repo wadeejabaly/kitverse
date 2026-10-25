@@ -111,7 +111,8 @@ describe("priceFor — 3XL/4XL surcharge", () => {
 
 describe("ADDONS", () => {
   it("exposes the confirmed addon prices", () => {
-    expect(ADDONS.nameNumber).toBe(20);
+    // Owner decision: name + number moved from a flat 20 to ₪19.99.
+    expect(ADDONS.nameNumber).toBe(19.99);
     // Owner decision 2026-10-23: the official patch (replacing the old flat
     // `badge` boolean add-on) is ₪11.99 for either patch choice.
     expect(ADDONS.patch).toBe(11.99);
@@ -153,8 +154,8 @@ describe("priceLine + cartTotals — addon math and totals", () => {
 
   it("priceLine adds nameNumber and a patch onto the unit price before multiplying by qty", () => {
     const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, patch: "league" });
-    expect(line.unitPrice).toBe(round2(95 + 20 + 11.99));
-    expect(line.lineTotal).toBe(round2((95 + 20 + 11.99) * 3));
+    expect(line.unitPrice).toBe(round2(95 + 19.99 + 11.99));
+    expect(line.lineTotal).toBe(round2((95 + 19.99 + 11.99) * 3));
   });
 
   it("the league patch, the Champions League patch, and the World Cup patch all cost exactly the same", () => {
@@ -175,8 +176,8 @@ describe("priceLine + cartTotals — addon math and totals", () => {
 
   it("priceLine respects the size surcharge together with addons", () => {
     const line = priceLine("2026/27", "4XL", "player", 1, { nameNumber: true });
-    // player base 110 + 12 surcharge + 20 name&number
-    expect(line.unitPrice).toBe(110 + 12 + 20);
+    // player base 110 + 12 surcharge + 19.99 name&number
+    expect(line.unitPrice).toBe(round2(110 + 12 + 19.99));
   });
 
   it("priceLine on a retro season ignores the version argument", () => {

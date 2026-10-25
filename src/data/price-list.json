@@ -9,8 +9,8 @@
     {
       "id": "name_number",
       "per": "shirt",
-      "price": 20,
-      "source": "dm",
+      "price": 19.99,
+      "source": "website",
       "name_ar": "الاسم والرقم",
       "name_en": "Name + number"
     },

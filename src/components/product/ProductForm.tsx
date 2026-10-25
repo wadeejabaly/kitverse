@@ -215,7 +215,12 @@ export function ProductForm({
               }
               className="mt-1 accent-accent"
             />
-            <span>{t("patchToggle")}</span>
+            <span>
+              {t("patchToggle")}
+              <small className="ms-1.5 text-ink-soft">
+                <Figure>+₪{ADDONS.patch}</Figure>
+              </small>
+            </span>
           </label>
           {patch !== "none" ? (
             <div className="mt-3">

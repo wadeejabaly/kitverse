@@ -44,7 +44,7 @@ Never send supplier images directly. Kids items are shown only when the customer
 
 ## Rules
 - Money is stored in agorot as integers.
-- Prices = the website's (owner-approved 2026-10-24): fan 95, player 110, retro (2023 and older) 135, name+number 20, patch 11.99, 3XL +9 / 4XL +12, gift box 34.99 per box, no 3-for-300 offer. Delivery is two tiers, round shekels (owner decision 2026-10-25, amounts rounded 2026-10-25): north (through Kfar Qara) 50, everywhere else (center/negev/Jerusalem/West Bank/Eilat) 70, 7-14 days (up to 20 outside the north). Returns: 14 days, unworn with tags; printed shirts only if wrong/faulty.
+- Prices = the website's (owner-approved 2026-10-24): fan 95, player 110, retro (2023 and older) 135, name+number 19.99, patch 11.99, 3XL +9 / 4XL +12, gift box 34.99 per box, no 3-for-300 offer. Delivery is two tiers, round shekels (owner decision 2026-10-25, amounts rounded 2026-10-25): north (through Kfar Qara) 50, everywhere else (center/negev/Jerusalem/West Bank/Eilat) 70, 7-14 days (up to 20 outside the north). Returns: 14 days, unworn with tags; printed shirts only if wrong/faulty.
 - Every discount needs an approval row (DB check). The bot's own discount limit is 0₪.
 - RLS is on for every table. Staff access goes through `is_staff()`. Server actions call `requireStaff()`.
 - Never spend the Anthropic API credits from an agent session: no `npm run chat`, `npm run eval`, `photos:screen`/`photos:verify-teams`, admin Test bot or webhook messages that make the bot reply. The owner and partner test the bot. Do one-off visual review in the chat instead (e.g. `scripts/photo-sheets.ts` + `scripts/apply-photo-picks.ts`).
