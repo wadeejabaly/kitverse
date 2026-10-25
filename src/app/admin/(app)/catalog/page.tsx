@@ -1,5 +1,6 @@
 import { ShieldCheck, Layers } from "lucide-react";
-import { CATALOG_SCOPE, previewCatalogScope, applyCatalogScope } from "../../catalog-actions";
+import { previewCatalogScope, applyCatalogScope } from "../../catalog-actions";
+import { CATALOG_SCOPE } from "../../catalog-scope";
 import { PageHeader, Card, Badge, button } from "../../ui";
 
 export const dynamic = "force-dynamic";

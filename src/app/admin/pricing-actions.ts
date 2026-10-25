@@ -4,16 +4,8 @@ import { revalidatePath } from "next/cache";
 import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { currentPriceList, clearPriceListCache } from "@/lib/pricing/load";
-
-/** Owner decision 2026-10-25: two delivery tiers. North (through Kfar Qara) is cheaper;
- *  everywhere else - center, Negev, Jerusalem, the West Bank and Eilat - is the same higher fee. */
-export const DELIVERY_FEES = { north: 49.99, rest: 69.99 } as const;
-
-export interface DeliveryFeesPreview {
-  version: number;
-  status: string;
-  zones: { id: string; label: string; currentFee: number; newFee: number; changes: boolean }[];
-}
+import { DELIVERY_FEES } from "./pricing-scope";
+import type { DeliveryFeesPreview } from "./pricing-scope";
 
 export async function previewDeliveryFees(): Promise<DeliveryFeesPreview> {
   await requireStaff();
