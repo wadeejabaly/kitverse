@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { after } from "next/server";
 import { env } from "@/lib/env";
-import { parseWebhook, sendText, verifySignature } from "@/lib/channels/instagram";
+import { describeWebhook, parseWebhook, sendText, verifySignature } from "@/lib/channels/instagram";
 import { storeInbound, storeOwnerEcho } from "@/lib/conversation/ingest";
 import { botMayHandle } from "@/lib/conversation/testers";
 import { emit } from "@/inngest/emit";
@@ -31,8 +31,10 @@ export async function POST(req: NextRequest) {
   const myId = env().INSTAGRAM_ACCOUNT_ID;
 
   after(async () => {
+    const events = parseWebhook(payload);
+    console.log(`[webhook] ${describeWebhook(payload)} -> ${events.map((e) => e.type).join(",") || "no events"}`);
     const toWake = new Set<string>();
-    for (const ev of parseWebhook(payload)) {
+    for (const ev of events) {
       try {
         if (ev.type === "read" || ev.type === "unsupported" || ev.isDeleted) continue;
         const customerId = ev.type === "echo" ? ev.recipientId : ev.senderId;

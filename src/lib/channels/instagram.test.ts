@@ -35,6 +35,11 @@ describe("instagram webhook", () => {
 
   it("ignores empty payloads", () => {
     expect(parseWebhook({})).toEqual([]);
+  });
+  it("reads messages wrapped as entry.changes (Instagram Login webhooks)", () => {
+    const evs = parseWebhook({ object: "instagram", entry: [{ id: "1", time: 1, changes: [{ field: "messages", value: { sender: { id: "u1" }, recipient: { id: "b1" }, timestamp: 5, message: { mid: "m1", text: "kvtest" } } }] }] });
+    expect(evs).toHaveLength(1);
+    expect(evs[0]).toMatchObject({ type: "message", senderId: "u1", text: "kvtest" });
     expect(parseWebhook(null)).toEqual([]);
   });
 });

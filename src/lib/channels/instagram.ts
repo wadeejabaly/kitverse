@@ -80,10 +80,22 @@ export interface IgEvent {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/** Shape of a webhook call without any content (for logs): object, entries, event kinds and fields. */
+export function describeWebhook(payload: any): string {
+  const entries = payload?.entry ?? [];
+  const kinds = entries.flatMap((e: any) => [
+    ...(e.messaging ?? []).map((m: any) => `messaging:${Object.keys(m).filter((k) => !["sender", "recipient", "timestamp"].includes(k)).join("+")}`),
+    ...(e.changes ?? []).map((c: any) => `changes:${c.field}`),
+  ]);
+  return `object=${payload?.object} entries=${entries.length} [${kinds.join(", ")}]`;
+}
+
 export function parseWebhook(payload: any): IgEvent[] {
   const out: IgEvent[] = [];
   for (const entry of payload?.entry ?? []) {
-    for (const m of entry.messaging ?? []) {
+    // Instagram API with Instagram Login may wrap the same event as entry.changes[{ field, value }]
+    const changed = (entry.changes ?? []).filter((c: any) => c?.value && (c.field === "messages" || c.field?.startsWith("messaging"))).map((c: any) => c.value);
+    for (const m of [...(entry.messaging ?? []), ...changed]) {
       const base = { senderId: String(m.sender?.id ?? ""), recipientId: String(m.recipient?.id ?? ""), timestamp: Number(m.timestamp ?? Date.now()) };
       if (m.message) {
         const msg = m.message;
