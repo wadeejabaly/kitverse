@@ -10,7 +10,17 @@ import { shortSeason, titleFor } from "@/lib/product";
 /**
  * The product card from the mockup: a square photo on a white tile, the title,
  * then a baseline-aligned meta row of season (mono, Latin-only treatment) and
- * price (accent). Hover scales the image 1.03 and nothing else moves.
+ * price (accent). Hover scales the image 1.03 and, as of 2026-10-25 (the
+ * site's bolder, more athletic-brand direction), draws an electric-blue
+ * frame around the tile and shifts the price into the same colour — the
+ * same underline-draw mechanic the magazine index rows already use
+ * elsewhere, here as a ring instead of a line since the target is a square
+ * tile, not a row of text.
+ *
+ * This card is the one shared by every listing page on the site (shop, each
+ * league, retro, national teams, search, new/last season), so this one
+ * change is what carries the bolder direction across all of them without
+ * touching each page.
  *
  * Deliberately not a server component — the search page renders the same card
  * from the client, so it takes `locale` as a prop instead of reaching for
@@ -34,7 +44,7 @@ export function ProductCard({
 
   return (
     <Link href={`/product/${product.handle}`} className="group block text-start">
-      <div className="mb-3.5 grid aspect-square place-items-center overflow-hidden bg-tile">
+      <div className="mb-3.5 grid aspect-square place-items-center overflow-hidden bg-tile ring-1 ring-inset ring-transparent transition-colors duration-300 ease-out group-hover:ring-electric">
         <Image
           src={product.image}
           alt={title}
@@ -65,7 +75,7 @@ export function ProductCard({
             {t("viewShirt")}
           </span>
         </span>
-        <span className="flex items-baseline gap-2 text-sm text-accent">
+        <span className="flex items-baseline gap-2 text-sm text-accent transition-colors duration-300 ease-out group-hover:text-electric">
           <Price value={price} />
         </span>
       </div>
