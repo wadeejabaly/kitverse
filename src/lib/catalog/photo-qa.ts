@@ -29,6 +29,7 @@ const Assessment = z.object({
   matches_expected: z.boolean().nullable().default(null), // the shirt is the expected team/kit (null = not asked)
   baby_bodysuit: z.boolean().default(false),   // romper/onesie for babies - never shown
   kids_item: z.boolean().default(false),       // small children's kit
+  other_garments: z.boolean().optional(),      // shorts/socks/another garment next to the shirt (undefined = checked before this existed)
   text_boxes: z.array(z.object({ x: z.number(), y: z.number(), w: z.number(), h: z.number() })).default([]), // added text/watermarks
 });
 export type Assessment = z.infer<typeof Assessment>;
@@ -37,7 +38,7 @@ export type PhotoAudience = "adult" | "kids";
 
 export const isClean = (a: Assessment, audience: PhotoAudience = "adult") =>
   a.shows_shirt && !a.overlay_text && !a.watermark && !a.blurry_or_dark && a.score >= 3 &&
-  !a.baby_bodysuit && (audience === "kids" || !a.kids_item) && a.matches_expected !== false;
+  !a.baby_bodysuit && (audience === "kids" || (!a.kids_item && !a.other_garments)) && a.matches_expected !== false;
 
 let client: Anthropic | null = null;
 
@@ -72,7 +73,7 @@ async function assessQuality(url: string): Promise<Assessment | null> {
       { type: "text", text: `You check product photos for a football-shirt shop before they are sent to customers on Instagram.
 Judge ONLY what was added to the photo, not the shirt's own design (crests, sponsors, numbers printed on the shirt are fine).
 Return ONLY JSON:
-{"shows_shirt":bool,"front_view":bool,"overlay_text":bool (any text/labels/prices/Chinese or other characters ADDED on top of the photo, e.g. "2021巴西客场"),"watermark":bool,"messy_background":bool,"blurry_or_dark":bool,"score":1-5 (how attractive and professional for a customer),"shirt_box":{"x":0-1,"y":0-1,"w":0-1,"h":0-1} or null (tight box around the shirt, as fractions of width/height),"overlay_outside_shirt":bool (true if all added text/watermarks are outside the shirt box),"text_boxes":[{"x":0-1,"y":0-1,"w":0-1,"h":0-1}] (one generous box around each piece of ADDED text or watermark; [] if none),"baby_bodysuit":bool (a baby romper/onesie with snaps between the legs),"kids_item":bool (a small children's shirt/kit rather than an adult shirt)}` },
+{"shows_shirt":bool,"front_view":bool,"overlay_text":bool (any text/labels/prices/Chinese or other characters ADDED on top of the photo, e.g. "2021巴西客场"),"watermark":bool,"messy_background":bool,"blurry_or_dark":bool,"score":1-5 (how attractive and professional for a customer),"shirt_box":{"x":0-1,"y":0-1,"w":0-1,"h":0-1} or null (tight box around the shirt, as fractions of width/height),"overlay_outside_shirt":bool (true if all added text/watermarks are outside the shirt box),"text_boxes":[{"x":0-1,"y":0-1,"w":0-1,"h":0-1}] (one generous box around each piece of ADDED text or watermark; [] if none),"baby_bodysuit":bool (a baby romper/onesie with snaps between the legs),"kids_item":bool (a small children's shirt/kit rather than an adult shirt),"other_garments":bool (shorts, socks, a second shirt or any other clothing visible besides the one shirt; a mannequin, hanger or rack is fine)}` },
     ] }],
   });
   const text = r.content.find((b) => b.type === "text")?.text ?? "";
@@ -81,14 +82,14 @@ Return ONLY JSON:
   } catch { return null; }
 }
 
-async function fetchBuffer(url: string, supplier: boolean): Promise<Buffer | null> {
+export async function fetchBuffer(url: string, supplier: boolean): Promise<Buffer | null> {
   try {
     const res = await fetch(url, supplier ? { headers: { "User-Agent": UA, Referer: `${SUPPLIER}/` } } : undefined);
     return res.ok ? Buffer.from(await res.arrayBuffer()) : null;
   } catch { return null; }
 }
 
-async function upload(path: string, buf: Buffer): Promise<string> {
+export async function upload(path: string, buf: Buffer): Promise<string> {
   const up = await db().storage.from("media").upload(path, buf, { contentType: "image/jpeg", upsert: true });
   if (up.error) throw new Error(`upload ${path}: ${up.error.message}`);
   return db().storage.from("media").getPublicUrl(path).data.publicUrl;
@@ -106,6 +107,23 @@ async function cropToShirt(buf: Buffer, box: NonNullable<Assessment["shirt_box"]
   const side = Math.max(w, h);
   return sharp(buf).extract({ left, top, width: w, height: h })
     .resize({ width: side, height: side, fit: "contain", background: { r: 255, g: 255, b: 255 } })
+    .jpeg({ quality: 88 }).toBuffer();
+}
+
+/**
+ * Supplier photos often show the shirt next to its shorts. Fallback when an album has no shirt-only
+ * photo: crop to the shirt (generous margin); the result is checked again before it is used.
+ */
+export async function frameShirt(buf: Buffer, box: NonNullable<Assessment["shirt_box"]>): Promise<Buffer> {
+  const { width = 0, height = 0 } = await sharp(buf).metadata();
+  const m = 0.05; // shirt boxes are rough - keep the sleeves
+  const left = Math.max(0, Math.floor((box.x - m) * width));
+  const top = Math.max(0, Math.floor((box.y - m) * height));
+  const w = Math.min(width - left, Math.ceil((box.w + 2 * m) * width));
+  const h = Math.min(height - top, Math.ceil((box.h + 2 * m) * height));
+  // no padding: the site shows photos "contain" on a white tile and Instagram takes any ratio
+  return sharp(buf).extract({ left, top, width: w, height: h })
+    .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
     .jpeg({ quality: 88 }).toBuffer();
 }
 
@@ -159,7 +177,7 @@ async function applyCut(buf: Buffer, c: Box): Promise<Buffer> {
 
 interface ProductRef { id: string; handle: string; primary_image_url: string | null; supplier_cover: string | null; photo_status?: string }
 
-async function record(productId: string, url: string, status: "good" | "bad" | "cropped", a: Assessment | null, extra: { source: string; hash?: string; album?: string }) {
+export async function record(productId: string, url: string, status: "good" | "bad" | "cropped", a: Assessment | null, extra: { source: string; hash?: string; album?: string }) {
   await db().from("product_images").upsert({
     product_id: productId, url, status, quality: a, checked_at: new Date().toISOString(),
     source: extra.source, supplier_hash: extra.hash ?? null, album_id: extra.album ?? null, role: a?.front_view === false ? "other" : "front",
@@ -199,11 +217,12 @@ export async function bestProductPhoto(p: ProductRef, opts: { maxCandidates?: nu
 
   const seen = must(await db().from("product_images").select("url,status,quality,supplier_hash,album_id").eq("product_id", p.id), "seen") as { url: string; status: string; quality: Assessment | null; supplier_hash: string | null; album_id: string | null }[];
   // a previously approved photo from an allowed album
-  const reuse = seen.find((s) => (s.status === "good" || s.status === "cropped") && s.quality && isClean(s.quality, audience) && s.quality.front_view !== false
+  const reuse = seen.find((s) => (s.status === "good" || s.status === "cropped") && s.quality && s.quality.other_garments !== undefined && isClean(s.quality, audience) && s.quality.front_view !== false
     && (s.album_id ? albums.includes(s.album_id) : adult));
   if (reuse) return choose(p, reuse.url, adult);
 
   let croppable: { buf: Buffer; a: Assessment; hash?: string; album?: string } | null = null;
+  let withShorts: { buf: Buffer; a: Assessment; hash?: string; album?: string } | null = null;
   let erasable: { buf: Buffer; a: Assessment; hash?: string; album?: string } | null = null;
   const limit = opts.maxCandidates ?? 8;
   for (const c of candidates.slice(0, limit)) {
@@ -215,12 +234,16 @@ export async function bestProductPhoto(p: ProductRef, opts: { maxCandidates?: nu
       url = await upload(`products/${p.handle}/s-${c.hash}.jpg`, buf).catch(() => null);
     }
     if (!url) continue;
-    const a = prior?.quality && prior.quality.matches_expected !== null && prior.quality.matches_expected !== undefined ? prior.quality : await assessPhoto(url, expected);
+    const a = prior?.quality && prior.quality.matches_expected !== null && prior.quality.matches_expected !== undefined && prior.quality.other_garments !== undefined ? prior.quality : await assessPhoto(url, expected);
     if (!a) continue;
     const ok = isClean(a, audience) && a.front_view;
     await record(p.id, url, ok ? "good" : "bad", a, { source: c.source, hash: c.hash, album: c.album });
     if (ok) return choose(p, url, adult);
     const usable = a.shows_shirt && a.front_view && !a.blurry_or_dark && a.score >= 3 && !a.baby_bodysuit && (adult ? !a.kids_item : true) && a.matches_expected !== false;
+    if (usable && adult && a.other_garments && !withShorts && a.shirt_box && !a.overlay_text && !a.watermark) {
+      const buf = await fetchBuffer(url, false);
+      if (buf) withShorts = { buf, a, hash: c.hash, album: c.album };
+    }
     if (usable && (!croppable || !erasable)) {
       const buf = await fetchBuffer(url, false);
       if (buf && !croppable && a.shirt_box && a.overlay_outside_shirt && !a.watermark) croppable = { buf, a, hash: c.hash, album: c.album };
@@ -237,16 +260,18 @@ export async function bestProductPhoto(p: ProductRef, opts: { maxCandidates?: nu
     }
     return null;
   };
-  // 3) labels outside the shirt: crop to the shirt
+  // 3) only shirt + shorts photos: crop to the shirt (re-checked, so a cut-off sleeve fails)
+  if (withShorts) { const r = await finish("shirt", withShorts, await frameShirt(withShorts.buf, withShorts.a.shirt_box!)); if (r) return r; }
+  // 4) labels outside the shirt: crop to the shirt
   if (croppable) { const r = await finish("crop", croppable, await cropToShirt(croppable.buf, croppable.a.shirt_box!)); if (r) return r; }
-  // 4) labels near an edge: cut that strip off
+  // 5) labels near an edge: cut that strip off
   if (erasable?.a.shirt_box) {
     const plan = planCut(erasable.a.shirt_box, erasable.a.text_boxes);
     if (plan) { const r = await finish("cut", erasable, await applyCut(erasable.buf, plan)); if (r) return r; }
   }
-  // 5) otherwise blur the label away
+  // 6) otherwise blur the label away
   if (erasable) { const r = await finish("clean", erasable, await eraseText(erasable.buf, erasable.a.text_boxes)); if (r) return r; }
-  // 6) nothing clean - no photo rather than an ugly or wrong one
+  // 7) nothing clean - no photo rather than an ugly or wrong one
   return adult ? markNone(p) : null;
 }
 
