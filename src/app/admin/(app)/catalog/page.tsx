@@ -1,18 +1,13 @@
 import { ShieldCheck, Layers } from "lucide-react";
 import { previewCatalogScope, applyCatalogScope } from "../../catalog-actions";
-import { CATALOG_SCOPE } from "../../catalog-scope";
+import { CLUBS_BY_LEAGUE, EXTRA_CLUBS, NATIONAL_IDS, CATALOG_SCOPE } from "../../catalog-scope";
 import { PageHeader, Card, Badge, button } from "../../ui";
 
 export const dynamic = "force-dynamic";
 
-const LEAGUE_LABEL: Record<string, string> = {
-  "premier-league": "Premier League", "la-liga": "La Liga", "serie-a": "Serie A",
-  "bundesliga": "Bundesliga", "ligue-1": "Ligue 1",
-};
-const CLUB_LABEL: Record<string, string> = { "al-nassr": "Al-Nassr", "alahli-saudi": "Alahli Saudi" };
-
-/** One-time (repeatable) scope change: website shows only the agreed leagues/clubs + national teams,
- *  current season only. Everything else already in the catalog moves to "available" (bot-only), not deleted. */
+/** One-time (repeatable) scope change: website shows only this hand-picked list of clubs and
+ *  national teams (not "every club in these leagues"), current season only. Everything else
+ *  already in the catalog moves to "available" (bot-only), not deleted. */
 export default async function CatalogScope() {
   const preview = await previewCatalogScope();
   const noChange = preview.toFeature === 0 && preview.toUnfeature === 0;
@@ -22,14 +17,30 @@ export default async function CatalogScope() {
       <PageHeader title="Catalog scope" subtitle="What shows on the website. Nothing is deleted - removed shirts stay sellable through the bot." />
 
       <Card className="mb-4">
-        <div className="mb-3 flex items-center gap-2 text-sm font-medium text-ink-2"><Layers className="h-4 w-4" /> Agreed scope</div>
-        <div className="flex flex-wrap gap-1.5">
-          {CATALOG_SCOPE.leagueIds.map((l) => <Badge key={l}>{LEAGUE_LABEL[l] ?? l}</Badge>)}
-          {CATALOG_SCOPE.extraClubIds.map((c) => <Badge key={c} tone="green">{CLUB_LABEL[c] ?? c}</Badge>)}
-          <Badge tone="green">All national teams</Badge>
+        <div className="mb-3 flex items-center gap-2 text-sm font-medium text-ink-2"><Layers className="h-4 w-4" /> Curated scope - {CATALOG_SCOPE.clubIds.length} clubs, {NATIONAL_IDS.length} national teams</div>
+        {Object.entries(CLUBS_BY_LEAGUE).map(([key, league]) => (
+          <div key={key} className="mb-2.5">
+            <div className="mb-1 text-xs font-medium text-muted">{league.label}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {league.ids.map((id) => <Badge key={id}>{id}</Badge>)}
+            </div>
+          </div>
+        ))}
+        <div className="mb-2.5">
+          <div className="mb-1 text-xs font-medium text-muted">{EXTRA_CLUBS.label}</div>
+          <div className="flex flex-wrap gap-1.5">
+            {EXTRA_CLUBS.ids.map((id) => <Badge key={id} tone="green">{id}</Badge>)}
+          </div>
+        </div>
+        <div>
+          <div className="mb-1 text-xs font-medium text-muted">National teams ({NATIONAL_IDS.length})</div>
+          <div className="flex flex-wrap gap-1.5">
+            {NATIONAL_IDS.map((id) => <Badge key={id} tone="green">{id}</Badge>)}
+          </div>
         </div>
         <p className="mt-3 text-sm text-muted">
           Current season only: clubs season {CATALOG_SCOPE.clubSeason}; national teams {CATALOG_SCOPE.nationalSeasons.join(" or ")}. No retro, no older seasons.
+          Team ids with no matching product below (e.g. a club this supplier doesn&apos;t currently stock) simply add nothing - safe to apply either way.
         </p>
       </Card>
 

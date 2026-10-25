@@ -12,20 +12,14 @@ const chunk = <T,>(arr: T[], size: number): T[][] => {
   return out;
 };
 
-async function scopeTeamIds(): Promise<{ clubIds: string[]; nationalIds: string[] }> {
-  const teams = must(await db().from("teams").select("id,type,league_id"), "teams") as
-    { id: string; type: string; league_id: string | null }[];
-  const leagueIds: readonly string[] = CATALOG_SCOPE.leagueIds;
-  const extraClubIds: readonly string[] = CATALOG_SCOPE.extraClubIds;
-  const clubIds = teams
-    .filter((t) => t.type === "club" && (leagueIds.includes(t.league_id ?? "") || extraClubIds.includes(t.id)))
-    .map((t) => t.id);
-  const nationalIds = teams.filter((t) => t.type === "national").map((t) => t.id);
-  return { clubIds, nationalIds };
-}
-
+/**
+ * Matches by team id only, against the explicit allowlist in catalog-scope.ts - never by
+ * league_id or team type, since a crawl-data mislabel on either of those must not hide a product
+ * from this scope (see catalog-scope.ts for the known data-quality caveats on two ids).
+ */
 async function matchingProductIds(): Promise<string[]> {
-  const { clubIds, nationalIds } = await scopeTeamIds();
+  const clubIds: string[] = [...CATALOG_SCOPE.clubIds];
+  const nationalIds: string[] = [...CATALOG_SCOPE.nationalIds];
   const out: string[] = [];
   for (const ids of chunk(clubIds, 150)) {
     if (!ids.length) continue;
