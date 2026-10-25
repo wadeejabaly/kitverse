@@ -13,6 +13,7 @@ import { createApproval, type ApprovalKind } from "../approvals";
 import { normalize } from "../text";
 import { recommendSize } from "./sizing";
 import { notify } from "../notify";
+import { orderLink } from "../orders/link";
 import type { PatchId } from "../orders/rules";
 
 export type OutboxItem = { type: "text"; text: string } | { type: "image"; url: string; productId?: string };
@@ -22,6 +23,7 @@ export interface ToolContext {
   customerId: string;
   customerLabel: string;
   outbox: OutboxItem[];          // photos queued by tools (sent before the text reply)
+  after: OutboxItem[];           // sent after the text reply (the order page link)
   approvals: string[];           // approval ids created this turn
   handoff: boolean;
 }
@@ -242,7 +244,9 @@ export const TOOLS = [
       await notify({ kind: "order.confirmed", priority: "normal", title: `New order #${r.value.number} - ${ctx.customerLabel}`,
         body: `${shirts} shirt(s) · ₪${ils(r.value.total)} · ${i.payment_method === "cod" ? "cash on delivery" : "PayPal"}`, link: `/admin/orders/${r.value.id}` });
       if (shirts >= 6) await createApproval({ conversationId: ctx.conversationId, orderId: r.value.id, kind: "large_order", priority: "normal", customerLabel: ctx.customerLabel, summary: `Confirmed order #${r.value.number} with ${shirts} shirts - please check before sending to the supplier.` });
+      ctx.after.push({ type: "text", text: `هون فيك تشوف الطلبية ووين وصلت:\n${orderLink(r.value.id)}` });
       return { confirmed: true, order_number: r.value.number, total_ils: ils(r.value.total), delivery_days: zone?.days, payment_method: i.payment_method,
+        order_page: "the link to the customer's order page is sent automatically right after your reply - don't write a link or mention it",
         next: i.payment_method === "paypal" ? "call create_payment_link and send the link" : "thank them; the courier calls a day before delivery" };
     },
   }),

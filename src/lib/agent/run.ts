@@ -36,7 +36,7 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
   const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, costUsd: 0 };
   const toolCalls: AgentResult["toolCalls"] = [];
   const ctx: ToolContext = {
-    conversationId: conv.id, customerId: customer.id, outbox: [], approvals: [], handoff: false,
+    conversationId: conv.id, customerId: customer.id, outbox: [], after: [], approvals: [], handoff: false,
     customerLabel: customer.full_name ?? customer.display_name ?? customer.ig_username ?? "Customer",
   };
 
@@ -98,7 +98,7 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
   let text = extractReply(rawText(final)).text;
   const customerTexts = rows.filter((m) => m.direction === "in").slice(-4).map((m) => m.text ?? m.transcript ?? "");
 
-  // output guards: (1) every amount must come from the price list or the current quote,
+  // output guards (the model's own text only - ctx.after is fixed text): (1) every amount must come from the price list or the current quote,
   // (2) no internal/meta text. One tool-less rewrite, then hand the chat to the owner.
   const o = await openOrder(conv.id);
   const q = o ? await requote(o) : state.quote;
@@ -144,8 +144,8 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
   }
 
   if (!text || isNoReply(text)) {
-    return { outbox: ctx.outbox, approvals: ctx.approvals, handoff: ctx.handoff, outcome: ctx.outbox.length ? "replied" : "no_reply", usage, toolCalls, model };
+    return { outbox: [...ctx.outbox, ...ctx.after], approvals: ctx.approvals, handoff: ctx.handoff, outcome: ctx.outbox.length || ctx.after.length ? "replied" : "no_reply", usage, toolCalls, model };
   }
-  const outbox: OutboxItem[] = [...ctx.outbox, ...toBubbles(text).map((t) => ({ type: "text" as const, text: t }))];
+  const outbox: OutboxItem[] = [...ctx.outbox, ...toBubbles(text).map((t) => ({ type: "text" as const, text: t })), ...ctx.after];
   return { outbox, approvals: ctx.approvals, handoff: ctx.handoff, outcome: ctx.handoff ? "handoff" : ctx.approvals.length ? "approval" : "replied", usage, toolCalls, model };
 }
