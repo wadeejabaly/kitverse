@@ -1,5 +1,7 @@
-import { Bot, Cpu, Gauge, Wallet, FlaskConical } from "lucide-react";
+import { Bot, Cpu, Gauge, Wallet, FlaskConical, Sparkles } from "lucide-react";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
+import { BOT_MODELS, isBotModel } from "@/lib/agent/models";
 import { saveSetting } from "../../actions";
 import { PageHeader, Card, Badge, button, input, cx } from "../../ui";
 
@@ -34,6 +36,7 @@ export default async function Settings() {
   const rows = (await db().from("bot_settings").select("key,value")).data ?? [];
   const s = Object.fromEntries(rows.map((r) => [r.key, r.value])) as Record<string, Record<string, unknown>>;
   const autonomy = (s.autonomy?.mode as string) ?? "draft";
+  const model = isBotModel(s.ai_model?.model) ? s.ai_model.model : env().ANTHROPIC_MODEL;
   const spend = s.spend ?? {};
   const overrideOn = isFuture(spend.override_until);
   const rl = s.rate_limits ?? {};
@@ -68,6 +71,14 @@ export default async function Settings() {
             <input type="hidden" name="key" value="autonomy" />
             <Choice name="mode" value="draft" checked={autonomy !== "auto"} title="I approve every reply" text="The bot writes, you tap Send. Recommended for launch." />
             <Choice name="mode" value="auto" checked={autonomy === "auto"} title="Bot replies by itself" text="Discounts, missing shirts, complaints and similar still come to you." />
+            <button className={`${button.primary} mt-1 self-start`}>Save</button>
+          </form>
+        </Section>
+
+        <Section icon={Sparkles} title="AI model" text="Which Claude model writes the replies. Cheaper models cost less per chat but may sound less like you - try one on a test chat first.">
+          <form action={saveSetting} className="flex flex-col gap-2">
+            <input type="hidden" name="key" value="ai_model" />
+            {BOT_MODELS.map((m) => <Choice key={m.id} name="model" value={m.id} checked={model === m.id} title={m.title} text={m.text} />)}
             <button className={`${button.primary} mt-1 self-start`}>Save</button>
           </form>
         </Section>

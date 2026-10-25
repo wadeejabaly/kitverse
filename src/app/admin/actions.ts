@@ -14,6 +14,7 @@ import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { storeInbound, getOrCreateConversation } from "@/lib/conversation/ingest";
 import { normalize } from "@/lib/text";
 import { requote, type OrderRow } from "@/lib/orders/draft";
+import { isBotModel } from "@/lib/agent/models";
 
 async function audit(actor: string | null, action: string, entity: string, entityId: string, after?: unknown) {
   await db().from("audit_log").insert({ actor, action, entity, entity_id: entityId, after: after ?? null });
@@ -194,10 +195,15 @@ export async function testChatSend(form: FormData) {
 
 export async function saveSetting(form: FormData) {
   const staff = await requireStaff();
-  const key = z.enum(["autonomy", "spend_override", "deposit", "rate_limits", "spend_limits", "testers"]).parse(form.get("key"));
+  const key = z.enum(["autonomy", "spend_override", "deposit", "rate_limits", "spend_limits", "testers", "ai_model"]).parse(form.get("key"));
   const get = async (k: string) => ((await db().from("bot_settings").select("value").eq("key", k).maybeSingle()).data?.value ?? {}) as Record<string, unknown>;
   let row: { key: string; value: Record<string, unknown> };
   if (key === "autonomy") row = { key, value: { mode: form.get("mode") === "auto" ? "auto" : "draft" } };
+  else if (key === "ai_model") {
+    const model = form.get("model");
+    if (!isBotModel(model)) throw new Error("unknown model");
+    row = { key, value: { model } };
+  }
   else if (key === "spend_override") {
     const cur = await get("spend");
     const v = form.get("value");

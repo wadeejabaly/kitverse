@@ -11,7 +11,7 @@ AI sales system for @kitversejerseys: an Instagram-DM sales bot that sounds like
   - one turn per chat burst (5s debounce, shows "seen" + typing while it works, concurrency 1 per chat);
   - 3h follow-up nudge, approval decided/reminder, spend alert;
   - IG post sync every 15 min.
-- Claude (`ANTHROPIC_MODEL`) runs the agent through tools (`src/lib/agent/`). **The AI never does money math**: totals come only from `src/lib/pricing/engine.ts`.
+- Claude runs the agent (model picked in admin Settings -> `bot_settings.ai_model`: Opus 5.5 / Sonnet 5.5 / Haiku 5.5; default `ANTHROPIC_MODEL`) through tools (`src/lib/agent/`). **The AI never does money math**: totals come only from `src/lib/pricing/engine.ts`.
 - Meta Graph API for Instagram. No WhatsApp, no Telegram. Owner alerts come from the admin (in-app and web push, `public/sw.js`).
 
 ## Storefront

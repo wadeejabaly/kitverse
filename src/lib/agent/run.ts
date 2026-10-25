@@ -10,11 +10,13 @@ import { buildState, type ConversationRow, type CustomerRow } from "./state";
 import { VOICE_SYSTEM, voicePrompt } from "./voice";
 import { allowedAmounts, unexpectedAmounts, toBubbles, isNoReply, looksLikeMeta, extractReply, wrongLanguage } from "./guard";
 import { openOrder, requote } from "../orders/draft";
+import { settings } from "../conversation/limits";
+import { isBotModel } from "./models";
 
 const PRICES: Record<string, { in: number; out: number; read: number; write: number }> = {
   "claude-opus-5-5": { in: 4, out: 20, read: 0.2, write: 5 },
   "claude-sonnet-5-5": { in: 2, out: 10, read: 0.2, write: 2.5 },
-  "claude-haiku-4-5": { in: 1, out: 5, read: 0.1, write: 1.25 },
+  "claude-haiku-5-5": { in: 0.1, out: 0.5, read: 0.01, write: 0.125 },
 };
 
 export interface AgentResult {
@@ -31,8 +33,11 @@ let client: Anthropic | null = null;
 const anthropic = () => (client ??= new Anthropic({ apiKey: env().ANTHROPIC_API_KEY, maxRetries: 3 }));
 
 export async function runAgent(conv: ConversationRow, customer: CustomerRow, opts: { effort?: "low" | "medium" | "high"; extraSystem?: string } = {}): Promise<AgentResult> {
-  const model = env().ANTHROPIC_MODEL;
+  const chosen = (await settings<{ model?: string }>("ai_model", {})).model;
+  const model = isBotModel(chosen) ? chosen : env().ANTHROPIC_MODEL;
   const price = PRICES[model] ?? PRICES["claude-opus-5-5"];
+  // server-side refusal fallback exists for Opus/Sonnet only
+  const fallback = model.startsWith("claude-haiku") ? {} : { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const };
   const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, costUsd: 0 };
   const toolCalls: AgentResult["toolCalls"] = [];
   const ctx: ToolContext = {
@@ -57,15 +62,18 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
     { type: "text", text: priceListBlock(list.data, list.status), cache_control: { type: "ephemeral" } },
   ];
   const tools = toolParams();
-  const base: Anthropic.Beta.BetaMessageParam[] = [...history, { role: "system", content: state.text + (opts.extraSystem ? `\n\n${opts.extraSystem}` : "") }];
+  // cache the chat so far: the next call (tool loop, next turn) re-reads it at a tenth of the price
+  const lastTurn = history[history.length - 1];
+  const lastBlocks = [...(lastTurn.content as Anthropic.Beta.BetaContentBlockParam[])];
+  lastBlocks[lastBlocks.length - 1] = { ...lastBlocks[lastBlocks.length - 1], cache_control: { type: "ephemeral" } } as Anthropic.Beta.BetaContentBlockParam;
+  const base: Anthropic.Beta.BetaMessageParam[] = [...history.slice(0, -1), { ...lastTurn, content: lastBlocks }, { role: "system", content: state.text + (opts.extraSystem ? `\n\n${opts.extraSystem}` : "") }];
   const messages: Anthropic.Beta.BetaMessageParam[] = [...base];
 
   const call = async (msgs: Anthropic.Beta.BetaMessageParam[], toolChoice?: Anthropic.Beta.BetaToolChoiceNone) => {
     const t0 = Date.now();
     const r = await anthropic().beta.messages.create({
       model, max_tokens: 4000, system, tools, messages: msgs, ...(toolChoice ? { tool_choice: toolChoice } : {}),
-      output_config: { effort: opts.effort ?? "medium" },
-      betas: ["server-side-fallback-2026-07-01"], fallbacks: "default",
+      output_config: { effort: opts.effort ?? "medium" }, ...fallback,
     });
     console.log(`[agent] model call ${Date.now() - t0}ms (${r.stop_reason})`);
     const u = r.usage;
@@ -128,8 +136,7 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
       const user = await voicePrompt({ tail, draft: text, photosSent: ctx.outbox.filter((x) => x.type === "image").length, lastCustomerText: lastIn?.text ?? lastIn?.transcript ?? "" });
       const r = await anthropic().beta.messages.create({
         model, max_tokens: 2000, system: [{ type: "text", text: VOICE_SYSTEM, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: user }], output_config: { effort: "low" },
-        betas: ["server-side-fallback-2026-07-01"], fallbacks: "default",
+        messages: [{ role: "user", content: user }], output_config: { effort: "low" }, ...fallback,
       });
       console.log(`[agent] voice pass ${Date.now() - t0}ms`);
       const u = r.usage;
