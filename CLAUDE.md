@@ -36,7 +36,8 @@ Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/dec
 ## Admin
 - Overview numbers use Israel days (`src/lib/time.ts`); sales skip cancelled and test-bot (`sim:`) orders. "AI cost today" / the spend cap = `agent_runs` (bot turns) + `ai_usage` (photo checks, post matching; `src/lib/ai-cost.ts`).
 - Catalog page is read-only: the website list is Wadeea's `catalog/store-selection.json` (changing it is a code change + `scripts/apply-store-selection.ts`).
-- Pricing page: full price list, one-click two-tier delivery fees, "Approve & publish".
+- Pricing page: the live price list, the approved changes not live yet (diff vs `pricing/price-list.draft.json`, one-tap Apply) and "Approve & publish".
+- **Price changes go in `pricing/price-list.draft.json`** (then the owner taps Apply in admin Pricing). The bot and the website checkout price from the database; `src/data/price-list.json` is re-exported from the database on every build, so editing it by hand changes nothing.
 - Owner photo uploads call `VERCEL_DEPLOY_HOOK_URL` (if set) so the static website catalog rebuilds.
 
 ## Photos
