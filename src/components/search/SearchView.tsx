@@ -57,7 +57,7 @@ export function SearchView({
           placeholder={t("placeholder")}
           aria-label={t("label")}
           autoComplete="off"
-          className="mt-4 w-full max-w-[460px] border border-rule bg-tile px-3.5 py-3 text-sm text-ink"
+          className="mt-4 w-full max-w-[460px] border border-rule bg-field px-3.5 py-3 text-sm text-ink"
         />
       </div>
 

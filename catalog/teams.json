@@ -1,0 +1,7371 @@
+[
+ {
+  "id": "1-fc-koln",
+  "name_en": "1. FC Köln",
+  "name_ar": "كولن",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 29
+ },
+ {
+  "id": "aberdeen",
+  "name_en": "Aberdeen",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 15
+ },
+ {
+  "id": "ac-milan",
+  "name_en": "AC Milan",
+  "name_ar": "ميلان",
+  "name_he": null,
+  "aliases": [
+   "ميلان",
+   "milan"
+  ],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 286
+ },
+ {
+  "id": "ac-milan-x-gc",
+  "name_en": "Ac Milan X Gc",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 4
+ },
+ {
+  "id": "acf-fiorentina",
+  "name_en": "Acf Fiorentina",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "adelaide-united",
+  "name_en": "Adelaide United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "aek-athens",
+  "name_en": "Aek Athens",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "afc-bournemouth",
+  "name_en": "Afc Bournemouth",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 4
+ },
+ {
+  "id": "aik",
+  "name_en": "Aik",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "aik-solna",
+  "name_en": "Aik Solna",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "aik-sonina",
+  "name_en": "Aik Sonina",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "ajax",
+  "name_en": "Ajax",
+  "name_ar": "أياكس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "eredivisie",
+  "supplier_albums": 125
+ },
+ {
+  "id": "al-ahly",
+  "name_en": "Al Ahly",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "al-ain",
+  "name_en": "Al Ain",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "al-hilal",
+  "name_en": "Al-Hilal",
+  "name_ar": "الهلال",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "saudi-pro-league",
+  "supplier_albums": 45
+ },
+ {
+  "id": "al-ittihad",
+  "name_en": "Al-Ittihad",
+  "name_ar": "الاتحاد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "saudi-pro-league",
+  "supplier_albums": 23
+ },
+ {
+  "id": "al-nassr",
+  "name_en": "Al-Nassr",
+  "name_ar": "النصر",
+  "name_he": null,
+  "aliases": [
+   "النصر",
+   "nassr"
+  ],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 21
+ },
+ {
+  "id": "alahli-saudi",
+  "name_en": "Alahli Saudi",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "saudi-pro-league",
+  "supplier_albums": 12
+ },
+ {
+  "id": "alaves",
+  "name_en": "Alavés",
+  "name_ar": "ألافيس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 17
+ },
+ {
+  "id": "albacete",
+  "name_en": "Albacete",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 12
+ },
+ {
+  "id": "albania",
+  "name_en": "Albania",
+  "name_ar": "ألبانيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 21
+ },
+ {
+  "id": "albirex-niigata",
+  "name_en": "Albirex Niigata",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "alger",
+  "name_en": "Alger",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "algeria",
+  "name_en": "Algeria",
+  "name_ar": "الجزائر",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 115
+ },
+ {
+  "id": "algiers",
+  "name_en": "Algiers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "alk",
+  "name_en": "Alk",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "alkmaar",
+  "name_en": "Alkmaar",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "almeria",
+  "name_en": "Almeria",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 16
+ },
+ {
+  "id": "alverca",
+  "name_en": "Alverca",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "alwakrah",
+  "name_en": "Alwakrah",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "americas",
+  "name_en": "Americas",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 9
+ },
+ {
+  "id": "anderlecht",
+  "name_en": "Anderlecht",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "aravis",
+  "name_en": "Aravis",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "argentina",
+  "name_en": "Argentina",
+  "name_ar": "الأرجنتين",
+  "name_he": null,
+  "aliases": [
+   "ارجنتين",
+   "الارجنتين"
+  ],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 305
+ },
+ {
+  "id": "argentinos",
+  "name_en": "Argentinos",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 2
+ },
+ {
+  "id": "armenia",
+  "name_en": "Armenia",
+  "name_ar": "أرمينيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "arminia-bielefeld",
+  "name_en": "Arminia Bielefeld",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "arsenal",
+  "name_en": "Arsenal",
+  "name_ar": "أرسنال",
+  "name_he": null,
+  "aliases": [
+   "ارسنال",
+   "الارسنال"
+  ],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 423
+ },
+ {
+  "id": "as-monaco",
+  "name_en": "As Monaco",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "aston-villa",
+  "name_en": "Aston Villa",
+  "name_ar": "أستون فيلا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 100
+ },
+ {
+  "id": "atalanta",
+  "name_en": "Atalanta",
+  "name_ar": "أتالانتا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 34
+ },
+ {
+  "id": "atalanta-united",
+  "name_en": "Atalanta United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "athletic-bilbao",
+  "name_en": "Athletic Bilbao",
+  "name_ar": "أتلتيك بلباو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 69
+ },
+ {
+  "id": "athletico-paranaense",
+  "name_en": "Athletico Paranaense",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 11
+ },
+ {
+  "id": "atlanta-united",
+  "name_en": "Atlanta United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 3
+ },
+ {
+  "id": "atlante",
+  "name_en": "Atlante",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "atlas",
+  "name_en": "Atlas",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 29
+ },
+ {
+  "id": "atletico-clube-goianiense",
+  "name_en": "Atletico Clube Goianiense",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 2
+ },
+ {
+  "id": "atletico-independiente",
+  "name_en": "Atletico Independiente",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 1
+ },
+ {
+  "id": "atletico-junior",
+  "name_en": "Atletico Junior",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "atletico-madrid",
+  "name_en": "Atlético Madrid",
+  "name_ar": "أتلتيكو مدريد",
+  "name_he": null,
+  "aliases": [
+   "اتلتيكو",
+   "أتلتيكو"
+  ],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 90
+ },
+ {
+  "id": "atletico-mineiro",
+  "name_en": "Atletico Mineiro",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 30
+ },
+ {
+  "id": "atletico-nacional",
+  "name_en": "Atletico Nacional",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 28
+ },
+ {
+  "id": "atletico-pearol",
+  "name_en": "Atletico Pearol",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "atletico-velez-sarsfield",
+  "name_en": "Atletico Velez Sarsfield",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 2
+ },
+ {
+  "id": "augsburg",
+  "name_en": "Augsburg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "austin",
+  "name_en": "Austin",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 19
+ },
+ {
+  "id": "australia",
+  "name_en": "Australia",
+  "name_ar": "أستراليا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 16
+ },
+ {
+  "id": "austria",
+  "name_en": "Austria",
+  "name_ar": "النمسا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "auxerre",
+  "name_en": "Auxerre",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "avai",
+  "name_en": "Avai",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 2
+ },
+ {
+  "id": "avellaneda",
+  "name_en": "Avellaneda",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 8
+ },
+ {
+  "id": "avispa-fukuoka",
+  "name_en": "Avispa Fukuoka",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 10
+ },
+ {
+  "id": "ayr-united",
+  "name_en": "Ayr United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "bahia",
+  "name_en": "Bahia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 42
+ },
+ {
+  "id": "bakitya",
+  "name_en": "Bakitya",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "barcelona",
+  "name_en": "Barcelona",
+  "name_ar": "برشلونة",
+  "name_he": null,
+  "aliases": [
+   "برشلونه",
+   "برسا",
+   "برشا",
+   "البرسا",
+   "barca",
+   "barça",
+   "ברצלונה"
+  ],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 365
+ },
+ {
+  "id": "bari",
+  "name_en": "Bari",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 8
+ },
+ {
+  "id": "barracas-central",
+  "name_en": "Barracas Central",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "barranquilla",
+  "name_en": "Barranquilla",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "barranquilla-junior",
+  "name_en": "Barranquilla Junior",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "barry",
+  "name_en": "Barry",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "basel",
+  "name_en": "Basel",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "bayern-munich",
+  "name_en": "Bayern Munich",
+  "name_ar": "بايرن ميونخ",
+  "name_he": null,
+  "aliases": [
+   "بايرن",
+   "بايرن ميونخ"
+  ],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 220
+ },
+ {
+  "id": "bayern-oktoberfest",
+  "name_en": "Bayern Oktoberfest",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 4
+ },
+ {
+  "id": "beitar-jerusalem",
+  "name_en": "Beitar Jerusalem",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "belgium",
+  "name_en": "Belgium",
+  "name_ar": "بلجيكا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 42
+ },
+ {
+  "id": "belgrano-cba",
+  "name_en": "Belgrano Cba",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "benfica",
+  "name_en": "Benfica",
+  "name_ar": "بنفيكا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "primeira-liga",
+  "supplier_albums": 84
+ },
+ {
+  "id": "benin",
+  "name_en": "Benin",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "besiktas",
+  "name_en": "Besiktas",
+  "name_ar": "بشكتاش",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 20
+ },
+ {
+  "id": "besiktas-j-k",
+  "name_en": "Besiktas J.k",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "bielefeld",
+  "name_en": "Bielefeld",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 7
+ },
+ {
+  "id": "birmingham",
+  "name_en": "Birmingham",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 8
+ },
+ {
+  "id": "birmingham-city",
+  "name_en": "Birmingham City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 28
+ },
+ {
+  "id": "blackburn",
+  "name_en": "Blackburn",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 21
+ },
+ {
+  "id": "blackpool",
+  "name_en": "Blackpool",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "boca",
+  "name_en": "Boca",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 73
+ },
+ {
+  "id": "boca-juniors",
+  "name_en": "Boca Juniors",
+  "name_ar": "بوكا جونيورز",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 39
+ },
+ {
+  "id": "boca-maradona",
+  "name_en": "Boca Maradona",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 4
+ },
+ {
+  "id": "bochum",
+  "name_en": "Bochum",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 7
+ },
+ {
+  "id": "bodo-glimt",
+  "name_en": "Bodo/glimt",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "bohemian",
+  "name_en": "Bohemian",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 19
+ },
+ {
+  "id": "bolivia",
+  "name_en": "Bolivia",
+  "name_ar": "بوليفيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 14
+ },
+ {
+  "id": "bologna",
+  "name_en": "Bologna",
+  "name_ar": "بولونيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 15
+ },
+ {
+  "id": "bolton",
+  "name_en": "Bolton",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "bordeaux",
+  "name_en": "Bordeaux",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 7
+ },
+ {
+  "id": "borussia-dortmund",
+  "name_en": "Borussia Dortmund",
+  "name_ar": "بوروسيا دورتموند",
+  "name_he": null,
+  "aliases": [
+   "دورتموند",
+   "bvb"
+  ],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 144
+ },
+ {
+  "id": "borussia-monchengladbach",
+  "name_en": "Borussia Mönchengladbach",
+  "name_ar": "بوروسيا مونشنغلادباخ",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 31
+ },
+ {
+  "id": "bosnia-and-herzegovina",
+  "name_en": "Bosnia and Herzegovina",
+  "name_ar": "البوسنة والهرسك",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 7
+ },
+ {
+  "id": "botafogo",
+  "name_en": "Botafogo",
+  "name_ar": "بوتافوغو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 52
+ },
+ {
+  "id": "bournemouth",
+  "name_en": "Bournemouth",
+  "name_ar": "بورنموث",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 11
+ },
+ {
+  "id": "bradford",
+  "name_en": "Bradford",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "bradford-city",
+  "name_en": "Bradford City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "braga",
+  "name_en": "Braga",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "bragantino",
+  "name_en": "Bragantino",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "brazil",
+  "name_en": "Brazil",
+  "name_ar": "البرازيل",
+  "name_he": null,
+  "aliases": [
+   "البرازيل",
+   "برازيل"
+  ],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 349
+ },
+ {
+  "id": "brazil-internacional",
+  "name_en": "Brazil Internacional",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 1
+ },
+ {
+  "id": "brentford",
+  "name_en": "Brentford",
+  "name_ar": "برينتفورد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 9
+ },
+ {
+  "id": "brescia",
+  "name_en": "Brescia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "brescia-calcio",
+  "name_en": "Brescia Calcio",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "brestois",
+  "name_en": "Brestois",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "brighton-hove-albion",
+  "name_en": "Brighton Hove Albion",
+  "name_ar": "برايتون",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 34
+ },
+ {
+  "id": "bristol",
+  "name_en": "Bristol",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "bristol-city",
+  "name_en": "Bristol City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 8
+ },
+ {
+  "id": "brugge",
+  "name_en": "Brugge",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "bula",
+  "name_en": "Bula",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "bulgaria",
+  "name_en": "Bulgaria",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "burgos",
+  "name_en": "Burgos",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 14
+ },
+ {
+  "id": "burkina",
+  "name_en": "Burkina",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 18
+ },
+ {
+  "id": "burnley",
+  "name_en": "Burnley",
+  "name_ar": "بيرنلي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "cadiz",
+  "name_en": "Cadiz",
+  "name_ar": "قادش",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 27
+ },
+ {
+  "id": "cagliari",
+  "name_en": "Cagliari",
+  "name_ar": "كالياري",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 15
+ },
+ {
+  "id": "cameroon",
+  "name_en": "Cameroon",
+  "name_ar": "الكاميرون",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 44
+ },
+ {
+  "id": "canada",
+  "name_en": "Canada",
+  "name_ar": "كندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 31
+ },
+ {
+  "id": "cape-verde",
+  "name_en": "Cape Verde",
+  "name_ar": "الرأس الأخضر",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 16
+ },
+ {
+  "id": "cardiff",
+  "name_en": "Cardiff",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 6
+ },
+ {
+  "id": "cardiff-city",
+  "name_en": "Cardiff City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 13
+ },
+ {
+  "id": "carl-zeiss",
+  "name_en": "Carl Zeiss",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "castellon",
+  "name_en": "Castellon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "catolica-university",
+  "name_en": "Catolica University",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "ceara",
+  "name_en": "Ceara",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "celta-vigo",
+  "name_en": "Celta Vigo",
+  "name_ar": "سيلتا فيغو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 41
+ },
+ {
+  "id": "celtic",
+  "name_en": "Celtic",
+  "name_ar": "سلتيك",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "scottish-premiership",
+  "supplier_albums": 136
+ },
+ {
+  "id": "central-coast-mariners",
+  "name_en": "Central Coast Mariners",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "cerezo-osaka",
+  "name_en": "Cerezo Osaka",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 20
+ },
+ {
+  "id": "cerro-porteno",
+  "name_en": "Cerro Porteno",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 9
+ },
+ {
+  "id": "ceuta",
+  "name_en": "Ceuta",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "chapeco",
+  "name_en": "Chapeco",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "charlotte",
+  "name_en": "Charlotte",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 19
+ },
+ {
+  "id": "charlton",
+  "name_en": "Charlton",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 7
+ },
+ {
+  "id": "chelsea",
+  "name_en": "Chelsea",
+  "name_ar": "تشيلسي",
+  "name_he": null,
+  "aliases": [
+   "تشلسي",
+   "تشيلسي"
+  ],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 228
+ },
+ {
+  "id": "chiba-lotte-marines",
+  "name_en": "Chiba Lotte Marines",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "chicago",
+  "name_en": "Chicago",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 2
+ },
+ {
+  "id": "chicago-fire",
+  "name_en": "Chicago Fire",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 7
+ },
+ {
+  "id": "chile",
+  "name_en": "Chile",
+  "name_ar": "تشيلي",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 60
+ },
+ {
+  "id": "chivas",
+  "name_en": "Chivas",
+  "name_ar": "تشيفاس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 110
+ },
+ {
+  "id": "chivas-guadalajara",
+  "name_en": "Chivas Guadalajara",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "cincinati",
+  "name_en": "Cincinati",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "cincinnati",
+  "name_en": "Cincinnati",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 6
+ },
+ {
+  "id": "cliftonville",
+  "name_en": "Cliftonville",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "club-america",
+  "name_en": "Club América",
+  "name_ar": "كلوب أمريكا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 220
+ },
+ {
+  "id": "club-athletico-paranaense",
+  "name_en": "Club Athletico Paranaense",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 17
+ },
+ {
+  "id": "club-atletico-independiente",
+  "name_en": "Club Atletico Independiente",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 3
+ },
+ {
+  "id": "club-deportivo-universidad",
+  "name_en": "Club Deportivo Universidad",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "club-internacional",
+  "name_en": "Club Internacional",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 10
+ },
+ {
+  "id": "club-leon",
+  "name_en": "Club Leon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 2
+ },
+ {
+  "id": "club-nacional",
+  "name_en": "Club Nacional",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "club-nacional-de-football",
+  "name_en": "Club Nacional de Football",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "club-universidad-de-chile",
+  "name_en": "Club Universidad de Chile",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "clube-nautico",
+  "name_en": "Clube Nautico",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "colo-colo",
+  "name_en": "Colo Colo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 49
+ },
+ {
+  "id": "colo-colo",
+  "name_en": "Colo-colo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 50
+ },
+ {
+  "id": "colocolo",
+  "name_en": "Colocolo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 30
+ },
+ {
+  "id": "colombia",
+  "name_en": "Colombia",
+  "name_ar": "كولومبيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 78
+ },
+ {
+  "id": "colorado-rapids",
+  "name_en": "Colorado Rapids",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 3
+ },
+ {
+  "id": "columbia",
+  "name_en": "Columbia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 10
+ },
+ {
+  "id": "columbus-crew",
+  "name_en": "Columbus Crew",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 8
+ },
+ {
+  "id": "como",
+  "name_en": "Como",
+  "name_ar": "كومو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "concepcion",
+  "name_en": "Concepcion",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "congo",
+  "name_en": "Congo",
+  "name_ar": "الكونغو",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 18
+ },
+ {
+  "id": "copenhagen",
+  "name_en": "Copenhagen",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "cordoba",
+  "name_en": "Cordoba",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 24
+ },
+ {
+  "id": "corinthians",
+  "name_en": "Corinthians",
+  "name_ar": "كورينثيانز",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 164
+ },
+ {
+  "id": "coritiba",
+  "name_en": "Coritiba",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 11
+ },
+ {
+  "id": "cork-city",
+  "name_en": "Cork City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "corvado",
+  "name_en": "Corvado",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "costa-rica",
+  "name_en": "Costa Rica",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 17
+ },
+ {
+  "id": "cote-d-ivoire",
+  "name_en": "Cote D'ivoire",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "coventry-city",
+  "name_en": "Coventry City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 30
+ },
+ {
+  "id": "crb",
+  "name_en": "Crb",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "cremona",
+  "name_en": "Cremona",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "cremonese",
+  "name_en": "Cremonese",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "criciuma",
+  "name_en": "Criciuma",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 1
+ },
+ {
+  "id": "croatia",
+  "name_en": "Croatia",
+  "name_ar": "كرواتيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 28
+ },
+ {
+  "id": "cruz-azul",
+  "name_en": "Cruz Azul",
+  "name_ar": "كروز أزول",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 97
+ },
+ {
+  "id": "cruzeiro",
+  "name_en": "Cruzeiro",
+  "name_ar": "كروزيرو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 54
+ },
+ {
+  "id": "crystal-palace",
+  "name_en": "Crystal Palace",
+  "name_ar": "كريستال بالاس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 33
+ },
+ {
+  "id": "curacao",
+  "name_en": "Curacao",
+  "name_ar": "كوراساو",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "czech-republic",
+  "name_en": "Czech Republic",
+  "name_ar": "التشيك",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "d-c-united",
+  "name_en": "D.c. United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "d-c-u-nite",
+  "name_en": "D.c.u.nite",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 2
+ },
+ {
+  "id": "dallas",
+  "name_en": "Dallas",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 5
+ },
+ {
+  "id": "ddr",
+  "name_en": "Ddr",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "denmark",
+  "name_en": "Denmark",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 27
+ },
+ {
+  "id": "deportivo",
+  "name_en": "Deportivo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 22
+ },
+ {
+  "id": "deportivo-alaves",
+  "name_en": "Deportivo Alaves",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 6
+ },
+ {
+  "id": "deportivo-la-coruna",
+  "name_en": "Deportivo la Coruna",
+  "name_ar": "ديبورتيفو لا كورونيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 34
+ },
+ {
+  "id": "deportivo-universidad-catolica",
+  "name_en": "Deportivo Universidad Catolica",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 26
+ },
+ {
+  "id": "derby",
+  "name_en": "Derby",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "derby-county",
+  "name_en": "Derby County",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 16
+ },
+ {
+  "id": "derbyshire",
+  "name_en": "Derbyshire",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "dinamo",
+  "name_en": "Dinamo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "dinamo-zagreb",
+  "name_en": "Dinamo Zagreb",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "djurgardens",
+  "name_en": "Djurgardens",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "doncaster",
+  "name_en": "Doncaster",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "donetsk",
+  "name_en": "Donetsk",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "dotmund",
+  "name_en": "Dotmund",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 12
+ },
+ {
+  "id": "dresden",
+  "name_en": "Dresden",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "dundee",
+  "name_en": "Dundee",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "dusseldorf",
+  "name_en": "Dusseldorf",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 17
+ },
+ {
+  "id": "dynamo",
+  "name_en": "Dynamo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 8
+ },
+ {
+  "id": "ecuador",
+  "name_en": "Ecuador",
+  "name_ar": "الإكوادور",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 21
+ },
+ {
+  "id": "egypt",
+  "name_en": "Egypt",
+  "name_ar": "مصر",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 16
+ },
+ {
+  "id": "eindhoven",
+  "name_en": "Eindhoven",
+  "name_ar": "آيندهوفن",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "eredivisie",
+  "supplier_albums": 25
+ },
+ {
+  "id": "eintracht-frankfurt",
+  "name_en": "Eintracht Frankfurt",
+  "name_ar": "آينتراخت فرانكفورت",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 30
+ },
+ {
+  "id": "el-ahly",
+  "name_en": "El Ahly",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "el-barrio",
+  "name_en": "El Barrio",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "el-salvador",
+  "name_en": "El Salvador",
+  "name_ar": "السلفادور",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 26
+ },
+ {
+  "id": "elche",
+  "name_en": "Elche",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 11
+ },
+ {
+  "id": "emelec",
+  "name_en": "Emelec",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "empoli",
+  "name_en": "Empoli",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 2
+ },
+ {
+  "id": "england",
+  "name_en": "England",
+  "name_ar": "إنجلترا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 191
+ },
+ {
+  "id": "england-euro-jordan",
+  "name_en": "England Euro Jordan",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "espanyol",
+  "name_en": "Espanyol",
+  "name_ar": "إسبانيول",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 27
+ },
+ {
+  "id": "estoril-praia",
+  "name_en": "Estoril Praia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "primeira-liga",
+  "supplier_albums": 1
+ },
+ {
+  "id": "estudiantes-de-la",
+  "name_en": "Estudiantes de la",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "estudiantes-de-la-plata",
+  "name_en": "Estudiantes de la Plata",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 3
+ },
+ {
+  "id": "everton",
+  "name_en": "Everton",
+  "name_ar": "إيفرتون",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 72
+ },
+ {
+  "id": "fc-seoul",
+  "name_en": "FC Seoul",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "fc-st-pauli",
+  "name_en": "FC St. Pauli",
+  "name_ar": "سانت باولي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "fc-tokyo",
+  "name_en": "FC Tokyo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "fc-union-berlin",
+  "name_en": "FC Union Berlin",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 15
+ },
+ {
+  "id": "fcsb",
+  "name_en": "Fcsb",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "fenerbahce",
+  "name_en": "Fenerbahce",
+  "name_ar": "فنربخشة",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 23
+ },
+ {
+  "id": "feyenoord",
+  "name_en": "Feyenoord",
+  "name_ar": "فينورد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "eredivisie",
+  "supplier_albums": 48
+ },
+ {
+  "id": "figueirense",
+  "name_en": "Figueirense",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "finland",
+  "name_en": "Finland",
+  "name_ar": "فنلندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "fiorentina",
+  "name_en": "Fiorentina",
+  "name_ar": "فيورنتينا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 48
+ },
+ {
+  "id": "flamenco",
+  "name_en": "Flamenco",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "flamengo",
+  "name_en": "Flamengo",
+  "name_ar": "فلامنغو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 231
+ },
+ {
+  "id": "fluminense",
+  "name_en": "Fluminense",
+  "name_ar": "فلومينينسي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 71
+ },
+ {
+  "id": "fortaleza",
+  "name_en": "Fortaleza",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 10
+ },
+ {
+  "id": "france",
+  "name_en": "France",
+  "name_ar": "فرنسا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 158
+ },
+ {
+  "id": "freiburg",
+  "name_en": "Freiburg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 7
+ },
+ {
+  "id": "fulham",
+  "name_en": "Fulham",
+  "name_ar": "فولهام",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 31
+ },
+ {
+  "id": "gabon",
+  "name_en": "Gabon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "galatasaray",
+  "name_en": "Galatasaray",
+  "name_ar": "غلطة سراي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 44
+ },
+ {
+  "id": "gamba-osaka",
+  "name_en": "Gamba Osaka",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "gambia",
+  "name_en": "Gambia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "garine",
+  "name_en": "Garine",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 2
+ },
+ {
+  "id": "genoa",
+  "name_en": "Genoa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 10
+ },
+ {
+  "id": "georgia",
+  "name_en": "Georgia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "germany",
+  "name_en": "Germany",
+  "name_ar": "ألمانيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 185
+ },
+ {
+  "id": "getafe",
+  "name_en": "Getafe",
+  "name_ar": "خيتافي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 11
+ },
+ {
+  "id": "ghana",
+  "name_en": "Ghana",
+  "name_ar": "غانا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 32
+ },
+ {
+  "id": "gijon",
+  "name_en": "Gijon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 6
+ },
+ {
+  "id": "girona",
+  "name_en": "Girona",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 21
+ },
+ {
+  "id": "glasgow",
+  "name_en": "Glasgow",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "glasgow-rangers",
+  "name_en": "Glasgow Rangers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "scottish-premiership",
+  "supplier_albums": 2
+ },
+ {
+  "id": "goias",
+  "name_en": "Goias",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "granada",
+  "name_en": "Granada",
+  "name_ar": "غرناطة",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 32
+ },
+ {
+  "id": "greece",
+  "name_en": "Greece",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "greenland",
+  "name_en": "Greenland",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "gremio",
+  "name_en": "Gremio",
+  "name_ar": "غريميو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 61
+ },
+ {
+  "id": "greuther",
+  "name_en": "Greuther",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "guarani",
+  "name_en": "Guarani",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 1
+ },
+ {
+  "id": "guatemala",
+  "name_en": "Guatemala",
+  "name_ar": "غواتيمالا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "guimaraes",
+  "name_en": "Guimaraes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "guinea",
+  "name_en": "Guinea",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "haiti",
+  "name_en": "Haiti",
+  "name_ar": "هايتي",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 13
+ },
+ {
+  "id": "hajduk-split",
+  "name_en": "Hajduk Split",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "hamburger-sv",
+  "name_en": "Hamburger SV",
+  "name_ar": "هامبورغ",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 36
+ },
+ {
+  "id": "hannover",
+  "name_en": "Hannover",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "hanover",
+  "name_en": "Hanover",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "hansa-rostock",
+  "name_en": "Hansa Rostock",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 5
+ },
+ {
+  "id": "hapoel-beer-sheva",
+  "name_en": "Hapoel Beer Sheva",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "hapoel-petah-tikva",
+  "name_en": "Hapoel Petah Tikva",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "hapoel-tel-aviv",
+  "name_en": "Hapoel Tel Aviv",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "hartlepool-united",
+  "name_en": "Hartlepool United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "hashtag-united",
+  "name_en": "Hashtag United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "hatz",
+  "name_en": "Hatz",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "heart",
+  "name_en": "Heart",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "heerenveen",
+  "name_en": "Heerenveen",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "heidenheim",
+  "name_en": "Heidenheim",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "hellas-verona",
+  "name_en": "Hellas Verona",
+  "name_ar": "هيلاس فيرونا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 13
+ },
+ {
+  "id": "hellenic",
+  "name_en": "Hellenic",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "hercules",
+  "name_en": "Hercules",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 8
+ },
+ {
+  "id": "hertha",
+  "name_en": "Hertha",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 15
+ },
+ {
+  "id": "hibernian",
+  "name_en": "Hibernian",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 7
+ },
+ {
+  "id": "higgins",
+  "name_en": "Higgins",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "hiroshima-sanfrecce",
+  "name_en": "Hiroshima Sanfrecce",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "hoffenheim",
+  "name_en": "Hoffenheim",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "hokkaido",
+  "name_en": "Hokkaido",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "holstein-kiel",
+  "name_en": "Holstein Kiel",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 5
+ },
+ {
+  "id": "honduras",
+  "name_en": "Honduras",
+  "name_ar": "هندوراس",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 23
+ },
+ {
+  "id": "hongkong",
+  "name_en": "Hongkong",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "huddersfield",
+  "name_en": "Huddersfield",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "huddersfield-town",
+  "name_en": "Huddersfield Town",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "hull-city",
+  "name_en": "Hull City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 19
+ },
+ {
+  "id": "hungary",
+  "name_en": "Hungary",
+  "name_ar": "المجر",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "huracan",
+  "name_en": "Huracan",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 1
+ },
+ {
+  "id": "ibrahimovic",
+  "name_en": "Ibrahimovic",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 6
+ },
+ {
+  "id": "iceland",
+  "name_en": "Iceland",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "ichihara-chiba",
+  "name_en": "Ichihara Chiba",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "independiente-medellin",
+  "name_en": "Independiente Medellin",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "india",
+  "name_en": "India",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "inter-miami",
+  "name_en": "Inter Miami",
+  "name_ar": "إنتر ميامي",
+  "name_he": null,
+  "aliases": [
+   "ميامي",
+   "انتر ميامي"
+  ],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 122
+ },
+ {
+  "id": "inter-milan",
+  "name_en": "Inter Milan",
+  "name_ar": "إنتر ميلان",
+  "name_he": null,
+  "aliases": [
+   "انتر",
+   "الانتر",
+   "inter"
+  ],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 241
+ },
+ {
+  "id": "internacional",
+  "name_en": "Internacional",
+  "name_ar": "إنترناسيونال",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 26
+ },
+ {
+  "id": "ipswich",
+  "name_en": "Ipswich",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 14
+ },
+ {
+  "id": "ipswich-town",
+  "name_en": "Ipswich Town",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 12
+ },
+ {
+  "id": "iran",
+  "name_en": "Iran",
+  "name_ar": "إيران",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "iraq",
+  "name_en": "Iraq",
+  "name_ar": "العراق",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "ireland-st-patrick-s-day",
+  "name_en": "Ireland St. Patrick's Day",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "iron-maiden",
+  "name_en": "Iron Maiden",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 12
+ },
+ {
+  "id": "israel",
+  "name_en": "Israel",
+  "name_ar": "إسرائيل",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "italy",
+  "name_en": "Italy",
+  "name_ar": "إيطاليا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 171
+ },
+ {
+  "id": "ivory-coast",
+  "name_en": "Ivory Coast",
+  "name_ar": "ساحل العاج",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 58
+ },
+ {
+  "id": "jamaica",
+  "name_en": "Jamaica",
+  "name_ar": "جامايكا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 36
+ },
+ {
+  "id": "japan",
+  "name_en": "Japan",
+  "name_ar": "اليابان",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 768
+ },
+ {
+  "id": "japan-cartoon",
+  "name_en": "Japan Cartoon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "jerusalem",
+  "name_en": "Jerusalem",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "johor-darul-tazim",
+  "name_en": "Johor Darul Tazim",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "johor-dt",
+  "name_en": "Johor Dt",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "johore",
+  "name_en": "Johore",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 14
+ },
+ {
+  "id": "johore-darul-ta-zim",
+  "name_en": "Johore Darul Ta'zim",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "jordan",
+  "name_en": "Jordan",
+  "name_ar": "الأردن",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "js-kabylie",
+  "name_en": "Js Kabylie",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "juarez",
+  "name_en": "Juarez",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 1
+ },
+ {
+  "id": "jubilo-iwata",
+  "name_en": "Jubilo Iwata",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "k-fc-kings-league",
+  "name_en": "K FC Kings League",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "kabylie",
+  "name_en": "Kabylie",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "kaiserslautern",
+  "name_en": "Kaiserslautern",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "kaizer",
+  "name_en": "Kaizer",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "kaizer-chiefs",
+  "name_en": "Kaizer Chiefs",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 14
+ },
+ {
+  "id": "kansas-city",
+  "name_en": "Kansas City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 4
+ },
+ {
+  "id": "karlsruhe",
+  "name_en": "Karlsruhe",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "kashima-antlers",
+  "name_en": "Kashima Antlers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 14
+ },
+ {
+  "id": "kashiwa-reysol",
+  "name_en": "Kashiwa Reysol",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "kawasaki",
+  "name_en": "Kawasaki",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "kawasaki-forwards",
+  "name_en": "Kawasaki Forwards",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "kawasaki-frontale",
+  "name_en": "Kawasaki Frontale",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 13
+ },
+ {
+  "id": "kings",
+  "name_en": "Kings",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "kln",
+  "name_en": "Kln",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 4
+ },
+ {
+  "id": "kyoto-sanga",
+  "name_en": "Kyoto Sanga",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "la-corua",
+  "name_en": "la Corua",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "la-coruna",
+  "name_en": "la Coruna",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 6
+ },
+ {
+  "id": "la-galaxy",
+  "name_en": "la Galaxy",
+  "name_ar": "لوس أنجلوس غالاكسي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 43
+ },
+ {
+  "id": "lafc",
+  "name_en": "Lafc",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "lanus",
+  "name_en": "Lanus",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 2
+ },
+ {
+  "id": "las-palmas",
+  "name_en": "Las Palmas",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 33
+ },
+ {
+  "id": "lazio",
+  "name_en": "Lazio",
+  "name_ar": "لاتسيو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 74
+ },
+ {
+  "id": "le-havre",
+  "name_en": "Le Havre",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "lecce",
+  "name_en": "Lecce",
+  "name_ar": "ليتشي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "leeds-united",
+  "name_en": "Leeds United",
+  "name_ar": "ليدز يونايتد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 97
+ },
+ {
+  "id": "leganes",
+  "name_en": "Leganes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 9
+ },
+ {
+  "id": "legia-warszawa",
+  "name_en": "Legia Warszawa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "leicester-city",
+  "name_en": "Leicester City",
+  "name_ar": "ليستر سيتي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 44
+ },
+ {
+  "id": "lens",
+  "name_en": "Lens",
+  "name_ar": "لانس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 30
+ },
+ {
+  "id": "leon",
+  "name_en": "Leon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 13
+ },
+ {
+  "id": "leones-negros",
+  "name_en": "Leones Negros",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 6
+ },
+ {
+  "id": "leonesa",
+  "name_en": "Leonesa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "levante",
+  "name_en": "Levante",
+  "name_ar": "ليفانتي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 11
+ },
+ {
+  "id": "leverkusen",
+  "name_en": "Leverkusen",
+  "name_ar": "باير ليفركوزن",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 53
+ },
+ {
+  "id": "lille",
+  "name_en": "Lille",
+  "name_ar": "ليل",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 36
+ },
+ {
+  "id": "lima",
+  "name_en": "Lima",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "lincoln-city",
+  "name_en": "Lincoln City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "linfield",
+  "name_en": "Linfield",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "lisboa",
+  "name_en": "Lisboa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "lisbon",
+  "name_en": "Lisbon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "primeira-liga",
+  "supplier_albums": 18
+ },
+ {
+  "id": "liverpool",
+  "name_en": "Liverpool",
+  "name_ar": "ليفربول",
+  "name_he": null,
+  "aliases": [
+   "ليفربول",
+   "lfc"
+  ],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "lorient",
+  "name_en": "Lorient",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 6
+ },
+ {
+  "id": "los-angeles",
+  "name_en": "Los Angeles",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 34
+ },
+ {
+  "id": "los-angeles-galaxy",
+  "name_en": "Los Angeles Galaxy",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 4
+ },
+ {
+  "id": "louis",
+  "name_en": "Louis",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 4
+ },
+ {
+  "id": "louis-city",
+  "name_en": "Louis City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 3
+ },
+ {
+  "id": "luton",
+  "name_en": "Luton",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 8
+ },
+ {
+  "id": "luton-town",
+  "name_en": "Luton Town",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 6
+ },
+ {
+  "id": "lyon",
+  "name_en": "Lyon",
+  "name_ar": "ليون",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 63
+ },
+ {
+  "id": "maccabi",
+  "name_en": "Maccabi",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "maccabi-haifa",
+  "name_en": "Maccabi Haifa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 17
+ },
+ {
+  "id": "maccabi-tel-aviv",
+  "name_en": "Maccabi Tel Aviv",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "magdeburg",
+  "name_en": "Magdeburg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "magyarorszag",
+  "name_en": "Magyarorszag",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "mainz",
+  "name_en": "Mainz",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 8
+ },
+ {
+  "id": "malaga",
+  "name_en": "Malaga",
+  "name_ar": "مالقا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 50
+ },
+ {
+  "id": "malaysia",
+  "name_en": "Malaysia",
+  "name_ar": "ماليزيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "mali",
+  "name_en": "Mali",
+  "name_ar": "مالي",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 62
+ },
+ {
+  "id": "mallorca",
+  "name_en": "Mallorca",
+  "name_ar": "مايوركا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 26
+ },
+ {
+  "id": "malmo",
+  "name_en": "Malmo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "mamelodi",
+  "name_en": "Mamelodi",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "mamelodi-sundowns",
+  "name_en": "Mamelodi Sundowns",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "manchester-city",
+  "name_en": "Manchester City",
+  "name_ar": "مانشستر سيتي",
+  "name_he": null,
+  "aliases": [
+   "سيتي",
+   "مان سيتي",
+   "man city"
+  ],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 293
+ },
+ {
+  "id": "manchester-united",
+  "name_en": "Manchester United",
+  "name_ar": "مانشستر يونايتد",
+  "name_he": null,
+  "aliases": [
+   "يونايتد",
+   "مان يونايتد",
+   "المان",
+   "man utd",
+   "man united",
+   "מנצ'סטר יונייטד"
+  ],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 451
+ },
+ {
+  "id": "manchester-united-fa-final",
+  "name_en": "Manchester United Fa Final",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "marinos",
+  "name_en": "Marinos",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "marseille",
+  "name_en": "Marseille",
+  "name_ar": "مارسيليا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 115
+ },
+ {
+  "id": "mazatlan",
+  "name_en": "Mazatlan",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 3
+ },
+ {
+  "id": "mc-alger",
+  "name_en": "Mc Alger",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "mc-algiers",
+  "name_en": "Mc Algiers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "melbourne-city",
+  "name_en": "Melbourne City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "melbourne-victory",
+  "name_en": "Melbourne Victory",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "metz",
+  "name_en": "Metz",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "mexico",
+  "name_en": "Mexico",
+  "name_ar": "المكسيك",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 272
+ },
+ {
+  "id": "miami",
+  "name_en": "Miami",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 46
+ },
+ {
+  "id": "middel",
+  "name_en": "Middel",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "middlesbrough",
+  "name_en": "Middlesbrough",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 23
+ },
+ {
+  "id": "millionaire",
+  "name_en": "Millionaire",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "millionarios",
+  "name_en": "Millionarios",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "millionarios-bogota",
+  "name_en": "Millionarios Bogota",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "millonarios",
+  "name_en": "Millonarios",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "millwall",
+  "name_en": "Millwall",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 5
+ },
+ {
+  "id": "mineiro",
+  "name_en": "Mineiro",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 21
+ },
+ {
+  "id": "minnesota",
+  "name_en": "Minnesota",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "minnesota-united",
+  "name_en": "Minnesota United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 6
+ },
+ {
+  "id": "mirandes",
+  "name_en": "Mirandes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 3
+ },
+ {
+  "id": "mnchengladbach",
+  "name_en": "Mnchengladbach",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 4
+ },
+ {
+  "id": "modena",
+  "name_en": "Modena",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "monaco",
+  "name_en": "Monaco",
+  "name_ar": "موناكو",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 53
+ },
+ {
+  "id": "monterrey",
+  "name_en": "Monterrey",
+  "name_ar": "مونتيري",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 104
+ },
+ {
+  "id": "montreal",
+  "name_en": "Montreal",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 6
+ },
+ {
+  "id": "monza",
+  "name_en": "Monza",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "morocco",
+  "name_en": "Morocco",
+  "name_ar": "المغرب",
+  "name_he": null,
+  "aliases": [
+   "المغرب"
+  ],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 42
+ },
+ {
+  "id": "motagua",
+  "name_en": "Motagua",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 7
+ },
+ {
+  "id": "munich",
+  "name_en": "Munich",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "murcia",
+  "name_en": "Murcia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "murcielagos",
+  "name_en": "Murcielagos",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "nacional",
+  "name_en": "Nacional",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "nagoya-grampus",
+  "name_en": "Nagoya Grampus",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "nantes",
+  "name_en": "Nantes",
+  "name_ar": "نانت",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 16
+ },
+ {
+  "id": "naples",
+  "name_en": "Naples",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "napoli",
+  "name_en": "Napoli",
+  "name_ar": "نابولي",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 120
+ },
+ {
+  "id": "napoli-maradona",
+  "name_en": "Napoli Maradona",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 5
+ },
+ {
+  "id": "napoli-valentine-s-day",
+  "name_en": "Napoli Valentine's Day",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 2
+ },
+ {
+  "id": "nashville",
+  "name_en": "Nashville",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 12
+ },
+ {
+  "id": "national-athletic",
+  "name_en": "National Athletic",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "nautico",
+  "name_en": "Nautico",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "necaxa",
+  "name_en": "Necaxa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 21
+ },
+ {
+  "id": "netherland",
+  "name_en": "Netherland",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 16
+ },
+ {
+  "id": "netherlands",
+  "name_en": "Netherlands",
+  "name_ar": "هولندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 93
+ },
+ {
+  "id": "new-england-revolution",
+  "name_en": "New England Revolution",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 7
+ },
+ {
+  "id": "new-york",
+  "name_en": "New York",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 20
+ },
+ {
+  "id": "new-york-city",
+  "name_en": "New York City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 18
+ },
+ {
+  "id": "new-zealand",
+  "name_en": "New Zealand",
+  "name_ar": "نيوزيلندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "newcastle-united",
+  "name_en": "Newcastle United",
+  "name_ar": "نيوكاسل يونايتد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 161
+ },
+ {
+  "id": "newell-old-boy",
+  "name_en": "Newell Old Boy",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "newells-old-boys",
+  "name_en": "Newells Old Boys",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 4
+ },
+ {
+  "id": "neymar",
+  "name_en": "Neymar",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 5
+ },
+ {
+  "id": "nice",
+  "name_en": "Nice",
+  "name_ar": "نيس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 18
+ },
+ {
+  "id": "nigeria",
+  "name_en": "Nigeria",
+  "name_ar": "نيجيريا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 54
+ },
+ {
+  "id": "norbritz-hokkaido",
+  "name_en": "Norbritz Hokkaido",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "north-ireland",
+  "name_en": "North Ireland",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "north-macedonia",
+  "name_en": "North Macedonia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "northampton",
+  "name_en": "Northampton",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "northern-ireland",
+  "name_en": "Northern Ireland",
+  "name_ar": "أيرلندا الشمالية",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 13
+ },
+ {
+  "id": "northern-macedonia",
+  "name_en": "Northern Macedonia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "norway",
+  "name_en": "Norway",
+  "name_ar": "النرويج",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 28
+ },
+ {
+  "id": "norwich-city",
+  "name_en": "Norwich City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 16
+ },
+ {
+  "id": "nottingham-forest",
+  "name_en": "Nottingham Forest",
+  "name_ar": "نوتنغهام فورست",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 47
+ },
+ {
+  "id": "nuremberg",
+  "name_en": "Nuremberg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "nurnberg",
+  "name_en": "Nurnberg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "oita-trinita",
+  "name_en": "Oita Trinita",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "olimpia",
+  "name_en": "Olimpia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 12
+ },
+ {
+  "id": "olympia",
+  "name_en": "Olympia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "olympiacos",
+  "name_en": "Olympiacos",
+  "name_ar": "أولمبياكوس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 21
+ },
+ {
+  "id": "oman",
+  "name_en": "Oman",
+  "name_ar": "عُمان",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "orlando-city",
+  "name_en": "Orlando City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 19
+ },
+ {
+  "id": "orlando-pirates",
+  "name_en": "Orlando Pirates",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "osasuna",
+  "name_en": "Osasuna",
+  "name_ar": "أوساسونا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 30
+ },
+ {
+  "id": "pachuca",
+  "name_en": "Pachuca",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 20
+ },
+ {
+  "id": "pairs",
+  "name_en": "Pairs",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "palermo",
+  "name_en": "Palermo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 21
+ },
+ {
+  "id": "palestine",
+  "name_en": "Palestine",
+  "name_ar": "فلسطين",
+  "name_he": null,
+  "aliases": [
+   "فلسطين"
+  ],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 158
+ },
+ {
+  "id": "palestino",
+  "name_en": "Palestino",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 34
+ },
+ {
+  "id": "palestino-graffiti",
+  "name_en": "Palestino Graffiti",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "palmeiras",
+  "name_en": "Palmeiras",
+  "name_ar": "بالميراس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 149
+ },
+ {
+  "id": "panama",
+  "name_en": "Panama",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 34
+ },
+ {
+  "id": "panathinaikos",
+  "name_en": "Panathinaikos",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "paraguay",
+  "name_en": "Paraguay",
+  "name_ar": "باراغواي",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 15
+ },
+ {
+  "id": "paranaense",
+  "name_en": "Paranaense",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 5
+ },
+ {
+  "id": "paris-fc",
+  "name_en": "Paris FC",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "paris-flames",
+  "name_en": "Paris Flames",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "paris-jordan",
+  "name_en": "Paris Jordan",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "paris-little-bee",
+  "name_en": "Paris Little Bee",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "paris-players",
+  "name_en": "Paris Players",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "paris-reflective",
+  "name_en": "Paris Reflective",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "paris-saint-germain",
+  "name_en": "Paris Saint-Germain",
+  "name_ar": "باريس سان جيرمان",
+  "name_he": null,
+  "aliases": [
+   "باريس",
+   "بي اس جي",
+   "psg"
+  ],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 385
+ },
+ {
+  "id": "paris-specila",
+  "name_en": "Paris Specila",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 2
+ },
+ {
+  "id": "paris-star",
+  "name_en": "Paris Star",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "parma",
+  "name_en": "Parma",
+  "name_ar": "بارما",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 31
+ },
+ {
+  "id": "paysandu",
+  "name_en": "Paysandu",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 4
+ },
+ {
+  "id": "paysandu-para",
+  "name_en": "Paysandu Para",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 8
+ },
+ {
+  "id": "pearol",
+  "name_en": "Pearol",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "penang",
+  "name_en": "Penang",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "penarol",
+  "name_en": "Penarol",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 17
+ },
+ {
+  "id": "pereira-deportivo",
+  "name_en": "Pereira Deportivo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "persija-jakarta",
+  "name_en": "Persija Jakarta",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "peru",
+  "name_en": "Peru",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 20
+ },
+ {
+  "id": "perugia",
+  "name_en": "Perugia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "philadelphia",
+  "name_en": "Philadelphia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 8
+ },
+ {
+  "id": "philadelphia-union",
+  "name_en": "Philadelphia Union",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 2
+ },
+ {
+  "id": "philippines",
+  "name_en": "Philippines",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "pig-teammate",
+  "name_en": "Pig Teammate",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "pio-fc",
+  "name_en": "Pio FC",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "plymouth",
+  "name_en": "Plymouth",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 10
+ },
+ {
+  "id": "pohang-steelers",
+  "name_en": "Pohang Steelers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "poland",
+  "name_en": "Poland",
+  "name_ar": "بولندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 23
+ },
+ {
+  "id": "port-vale",
+  "name_en": "Port Vale",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "portland",
+  "name_en": "Portland",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 3
+ },
+ {
+  "id": "portland-timbers",
+  "name_en": "Portland Timbers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 14
+ },
+ {
+  "id": "porto",
+  "name_en": "Porto",
+  "name_ar": "بورتو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "primeira-liga",
+  "supplier_albums": 88
+ },
+ {
+  "id": "portsmouth",
+  "name_en": "Portsmouth",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 25
+ },
+ {
+  "id": "portugal",
+  "name_en": "Portugal",
+  "name_ar": "البرتغال",
+  "name_he": null,
+  "aliases": [
+   "البرتغال",
+   "برتغال"
+  ],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 197
+ },
+ {
+  "id": "portugal-euro-lv-jointly",
+  "name_en": "Portugal Euro Lv Jointly",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "portuguesa",
+  "name_en": "Portuguesa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "preston",
+  "name_en": "Preston",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 10
+ },
+ {
+  "id": "preston-north-end",
+  "name_en": "Preston North End",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "preu-en-munster",
+  "name_en": "Preu/en Munster",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "prussia-munster",
+  "name_en": "Prussia Munster",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "psis-semarang",
+  "name_en": "Psis Semarang",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "psv-eindhoven",
+  "name_en": "PSV Eindhoven",
+  "name_ar": "آيندهوفن",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "eredivisie",
+  "supplier_albums": 21
+ },
+ {
+  "id": "psv-eindhoven",
+  "name_en": "Psv Eindhoven",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "eredivisie",
+  "supplier_albums": 14
+ },
+ {
+  "id": "puebla",
+  "name_en": "Puebla",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 7
+ },
+ {
+  "id": "pumas",
+  "name_en": "Pumas",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 61
+ },
+ {
+  "id": "pumas-unam",
+  "name_en": "Pumas Unam",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 4
+ },
+ {
+  "id": "qatar",
+  "name_en": "Qatar",
+  "name_ar": "قطر",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "qsasuna",
+  "name_en": "Qsasuna",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "queens-park",
+  "name_en": "Queens Park",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 8
+ },
+ {
+  "id": "queens-park-rangers",
+  "name_en": "Queens Park Rangers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "scottish-premiership",
+  "supplier_albums": 8
+ },
+ {
+  "id": "queretaro",
+  "name_en": "Queretaro",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 9
+ },
+ {
+  "id": "r-s-c-anderlecht",
+  "name_en": "R.s.c. Anderlecht",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "rangers",
+  "name_en": "Rangers",
+  "name_ar": "رينجرز",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "scottish-premiership",
+  "supplier_albums": 82
+ },
+ {
+  "id": "ravenna",
+  "name_en": "Ravenna",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "rayo-vallecano",
+  "name_en": "Rayo Vallecano",
+  "name_ar": "رايو فاييكانو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 26
+ },
+ {
+  "id": "rb-leipzig",
+  "name_en": "RB Leipzig",
+  "name_ar": "لايبزيغ",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 39
+ },
+ {
+  "id": "rc-lens",
+  "name_en": "Rc Lens",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 21
+ },
+ {
+  "id": "reading",
+  "name_en": "Reading",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "real-betis",
+  "name_en": "Real Betis",
+  "name_ar": "ريال بيتيس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 124
+ },
+ {
+  "id": "real-madrid",
+  "name_en": "Real Madrid",
+  "name_ar": "ريال مدريد",
+  "name_he": null,
+  "aliases": [
+   "الريال",
+   "ريال",
+   "مدريد",
+   "ريال مدريد",
+   "madrid",
+   "ריאל מדריד"
+  ],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 1042
+ },
+ {
+  "id": "real-madrid-balck",
+  "name_en": "Real Madrid Balck",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 4
+ },
+ {
+  "id": "real-madrid-fifa-cwc",
+  "name_en": "Real Madrid Fifa Cwc",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "real-madrid-speical",
+  "name_en": "Real Madrid Speical",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "real-madrid-trainng",
+  "name_en": "Real Madrid Trainng",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "real-murcia",
+  "name_en": "Real Murcia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "real-oviedo",
+  "name_en": "Real Oviedo",
+  "name_ar": "ريال أوفييدو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 26
+ },
+ {
+  "id": "real-salt-lake",
+  "name_en": "Real Salt Lake",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 6
+ },
+ {
+  "id": "real-sociedad",
+  "name_en": "Real Sociedad",
+  "name_ar": "ريال سوسيداد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 33
+ },
+ {
+  "id": "real-valladolid",
+  "name_en": "Real Valladolid",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 28
+ },
+ {
+  "id": "real-zaragoza",
+  "name_en": "Real Zaragoza",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 6
+ },
+ {
+  "id": "recife",
+  "name_en": "Recife",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 30
+ },
+ {
+  "id": "recife-sports",
+  "name_en": "Recife Sports",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 5
+ },
+ {
+  "id": "recreativo-de-huelva",
+  "name_en": "Recreativo de Huelva",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 4
+ },
+ {
+  "id": "reims",
+  "name_en": "Reims",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "remo",
+  "name_en": "Remo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 8
+ },
+ {
+  "id": "rennais",
+  "name_en": "Rennais",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 26
+ },
+ {
+  "id": "rennes",
+  "name_en": "Rennes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 9
+ },
+ {
+  "id": "republic-of-ireland",
+  "name_en": "Republic of Ireland",
+  "name_ar": "جمهورية أيرلندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 71
+ },
+ {
+  "id": "richmond",
+  "name_en": "Richmond",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "river",
+  "name_en": "River",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 3
+ },
+ {
+  "id": "river-plate",
+  "name_en": "River Plate",
+  "name_ar": "ريفر بليت",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 96
+ },
+ {
+  "id": "roma",
+  "name_en": "Roma",
+  "name_ar": "روما",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 38
+ },
+ {
+  "id": "romania",
+  "name_en": "Romania",
+  "name_ar": "رومانيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "rome",
+  "name_en": "Rome",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "rosario",
+  "name_en": "Rosario",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 4
+ },
+ {
+  "id": "rotherham",
+  "name_en": "Rotherham",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "rotherham-united",
+  "name_en": "Rotherham United",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "rotweiss-essen",
+  "name_en": "Rotweiss Essen",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "royal-muthia",
+  "name_en": "Royal Muthia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sabah",
+  "name_en": "Sabah",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "sagan-tosu",
+  "name_en": "Sagan Tosu",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "sagantosu",
+  "name_en": "Sagantosu",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "sailing-party",
+  "name_en": "Sailing Party",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "saint-etienne",
+  "name_en": "Saint Etienne",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 20
+ },
+ {
+  "id": "saint-louis",
+  "name_en": "Saint Louis",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "saiyans-fc",
+  "name_en": "Saiyans FC",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "salernitana",
+  "name_en": "Salernitana",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 5
+ },
+ {
+  "id": "salzburg",
+  "name_en": "Salzburg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sampdoria",
+  "name_en": "Sampdoria",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 17
+ },
+ {
+  "id": "san-diego",
+  "name_en": "San Diego",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 6
+ },
+ {
+  "id": "san-diego-rangers",
+  "name_en": "San Diego Rangers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "san-jose-earthquakes",
+  "name_en": "San Jose Earthquakes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 4
+ },
+ {
+  "id": "san-lorenzo",
+  "name_en": "San Lorenzo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "argentina-primera",
+  "supplier_albums": 7
+ },
+ {
+  "id": "san-luis",
+  "name_en": "San Luis",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sanfrecce-hiroshima",
+  "name_en": "Sanfrecce Hiroshima",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "santa-cruz",
+  "name_en": "Santa Cruz",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 20
+ },
+ {
+  "id": "santa-fe",
+  "name_en": "Santa Fe",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "santiago-wanderers",
+  "name_en": "Santiago Wanderers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "santos",
+  "name_en": "Santos",
+  "name_ar": "سانتوس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 95
+ },
+ {
+  "id": "santos-gols",
+  "name_en": "Santos . Gols",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 1
+ },
+ {
+  "id": "santos-laguna",
+  "name_en": "Santos Laguna",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 4
+ },
+ {
+  "id": "santos-prerace",
+  "name_en": "Santos Prerace",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 2
+ },
+ {
+  "id": "sao-paulo",
+  "name_en": "Sao Paulo",
+  "name_ar": "ساو باولو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 83
+ },
+ {
+  "id": "saprissa",
+  "name_en": "Saprissa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sarsfield",
+  "name_en": "Sarsfield",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "sassuolo",
+  "name_en": "Sassuolo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "saudi-arabia",
+  "name_en": "Saudi Arabia",
+  "name_ar": "السعودية",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 32
+ },
+ {
+  "id": "schalke",
+  "name_en": "Schalke",
+  "name_ar": "شالكه",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 28
+ },
+ {
+  "id": "scotland",
+  "name_en": "Scotland",
+  "name_ar": "اسكتلندا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 74
+ },
+ {
+  "id": "seattle",
+  "name_en": "Seattle",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 6
+ },
+ {
+  "id": "seattle-mariners",
+  "name_en": "Seattle Mariners",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "seattle-sounders",
+  "name_en": "Seattle Sounders",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "selangor",
+  "name_en": "Selangor",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 10
+ },
+ {
+  "id": "senegal",
+  "name_en": "Senegal",
+  "name_ar": "السنغال",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 47
+ },
+ {
+  "id": "seoul",
+  "name_en": "Seoul",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "serbia",
+  "name_en": "Serbia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "servette",
+  "name_en": "Servette",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "sevens-kings-league",
+  "name_en": "Sevens Kings League",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "sevens-league",
+  "name_en": "Sevens League",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sevilla",
+  "name_en": "Sevilla",
+  "name_ar": "إشبيلية",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 39
+ },
+ {
+  "id": "sevilla-fc",
+  "name_en": "Sevilla FC",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 4
+ },
+ {
+  "id": "shakhtar-donetsk",
+  "name_en": "Shakhtar Donetsk",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "shamrock-rovers",
+  "name_en": "Shamrock Rovers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sheffield",
+  "name_en": "Sheffield",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "sheffield-united",
+  "name_en": "Sheffield United",
+  "name_ar": "شيفيلد يونايتد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 55
+ },
+ {
+  "id": "sheffield-wednesday",
+  "name_en": "Sheffield Wednesday",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 17
+ },
+ {
+  "id": "shimizu-spulse",
+  "name_en": "Shimizu Spulse",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 15
+ },
+ {
+  "id": "shizumi-pulse",
+  "name_en": "Shizumi Pulse",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "slovakia",
+  "name_en": "Slovakia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "slovenia",
+  "name_en": "Slovenia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "so-paulo",
+  "name_en": "So Paulo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 19
+ },
+ {
+  "id": "south-africa",
+  "name_en": "South Africa",
+  "name_ar": "جنوب أفريقيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 19
+ },
+ {
+  "id": "south-korea",
+  "name_en": "South Korea",
+  "name_ar": "كوريا الجنوبية",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 35
+ },
+ {
+  "id": "southampton",
+  "name_en": "Southampton",
+  "name_ar": "ساوثهامبتون",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 24
+ },
+ {
+  "id": "soviet-union",
+  "name_en": "Soviet Union",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "soviet-union-cccp",
+  "name_en": "Soviet Union Cccp",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "spain",
+  "name_en": "Spain",
+  "name_ar": "إسبانيا",
+  "name_he": null,
+  "aliases": [
+   "اسبانيا"
+  ],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 157
+ },
+ {
+  "id": "split",
+  "name_en": "Split",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "sport-club-internacional",
+  "name_en": "Sport Club Internacional",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 1
+ },
+ {
+  "id": "sporting-cp",
+  "name_en": "Sporting CP",
+  "name_ar": "سبورتينغ لشبونة",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "primeira-liga",
+  "supplier_albums": 78
+ },
+ {
+  "id": "sporting-cristal",
+  "name_en": "Sporting Cristal",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "sporting-de-gijon",
+  "name_en": "Sporting de Gijon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 19
+ },
+ {
+  "id": "sporting-kansas-city",
+  "name_en": "Sporting Kansas City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "spvgg-greuther-furth",
+  "name_en": "Spvgg Greuther Furth",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "ssc-bari",
+  "name_en": "Ssc Bari",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 4
+ },
+ {
+  "id": "st-patricks",
+  "name_en": "St Patricks",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "st-louis-city-sc",
+  "name_en": "St. Louis City Sc",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 10
+ },
+ {
+  "id": "st-pauli",
+  "name_en": "St. Pauli",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ },
+ {
+  "id": "standard-liege",
+  "name_en": "Standard Liege",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "stoke-city",
+  "name_en": "Stoke City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 9
+ },
+ {
+  "id": "strasbourg",
+  "name_en": "Strasbourg",
+  "name_ar": "ستراسبورغ",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "sunderland",
+  "name_en": "Sunderland",
+  "name_ar": "سندرلاند",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "scottish-premiership",
+  "supplier_albums": 55
+ },
+ {
+  "id": "suwon",
+  "name_en": "Suwon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "suwon-fc",
+  "name_en": "Suwon FC",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "suwon-samsung-bluewings",
+  "name_en": "Suwon Samsung Bluewings",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "swansea-city",
+  "name_en": "Swansea City",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 8
+ },
+ {
+  "id": "sweden",
+  "name_en": "Sweden",
+  "name_ar": "السويد",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 18
+ },
+ {
+  "id": "switzerland",
+  "name_en": "Switzerland",
+  "name_ar": "سويسرا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 17
+ },
+ {
+  "id": "sydney",
+  "name_en": "Sydney",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "tampa-bay-mutiny",
+  "name_en": "Tampa Bay Mutiny",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 2
+ },
+ {
+  "id": "tel-aviv",
+  "name_en": "Tel Aviv",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "tenerife",
+  "name_en": "Tenerife",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 21
+ },
+ {
+  "id": "tigre",
+  "name_en": "Tigre",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 31
+ },
+ {
+  "id": "tigres",
+  "name_en": "Tigres",
+  "name_ar": "تيغريس",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 89
+ },
+ {
+  "id": "tijuana",
+  "name_en": "Tijuana",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 25
+ },
+ {
+  "id": "timnas-indonesia",
+  "name_en": "Timnas Indonesia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "togo",
+  "name_en": "Togo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "tokyo",
+  "name_en": "Tokyo",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "tokyo-verdy",
+  "name_en": "Tokyo Verdy",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "toluca",
+  "name_en": "Toluca",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "liga-mx",
+  "supplier_albums": 51
+ },
+ {
+  "id": "torino",
+  "name_en": "Torino",
+  "name_ar": "تورينو",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 19
+ },
+ {
+  "id": "toronto",
+  "name_en": "Toronto",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 10
+ },
+ {
+  "id": "tottenham-hotspur",
+  "name_en": "Tottenham Hotspur",
+  "name_ar": "توتنهام هوتسبير",
+  "name_he": null,
+  "aliases": [
+   "توتنهام",
+   "spurs"
+  ],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 128
+ },
+ {
+  "id": "tottenham-hotspur-travis-scott",
+  "name_en": "Tottenham Hotspur Travis Scott",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "toulouse",
+  "name_en": "Toulouse",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "ligue-1",
+  "supplier_albums": 15
+ },
+ {
+  "id": "trabzon",
+  "name_en": "Trabzon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "tucuman",
+  "name_en": "Tucuman",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "tunisia",
+  "name_en": "Tunisia",
+  "name_ar": "تونس",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 22
+ },
+ {
+  "id": "turin",
+  "name_en": "Turin",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "turkey",
+  "name_en": "Turkey",
+  "name_ar": "تركيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 19
+ },
+ {
+  "id": "twente",
+  "name_en": "Twente",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "ud-almeria",
+  "name_en": "Ud Almeria",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "udinese",
+  "name_en": "Udinese",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 7
+ },
+ {
+  "id": "ukraine",
+  "name_en": "Ukraine",
+  "name_ar": "أوكرانيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 10
+ },
+ {
+  "id": "ulsan-hyundai",
+  "name_en": "Ulsan Hyundai",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 8
+ },
+ {
+  "id": "ultimate-mostoles",
+  "name_en": "Ultimate Mostoles",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "united-arab-emirates",
+  "name_en": "United Arab Emirates",
+  "name_ar": "الإمارات",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "united-states",
+  "name_en": "United States",
+  "name_ar": "الولايات المتحدة",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 83
+ },
+ {
+  "id": "universidad-catolica",
+  "name_en": "Universidad Catolica",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 54
+ },
+ {
+  "id": "universidad-de-chile",
+  "name_en": "Universidad de Chile",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 77
+ },
+ {
+  "id": "universitario-de-deportes",
+  "name_en": "Universitario de Deportes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "university-of-peru",
+  "name_en": "University Of Peru",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "urawa",
+  "name_en": "Urawa",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "urawa-reds",
+  "name_en": "Urawa Reds",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "uruguay",
+  "name_en": "Uruguay",
+  "name_ar": "الأوروغواي",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 38
+ },
+ {
+  "id": "usm",
+  "name_en": "Usm",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "utrecht",
+  "name_en": "Utrecht",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "uzbekistan",
+  "name_en": "Uzbekistan",
+  "name_ar": "أوزبكستان",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "valencia",
+  "name_en": "Valencia",
+  "name_ar": "فالنسيا",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 39
+ },
+ {
+  "id": "valladolid",
+  "name_en": "Valladolid",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 7
+ },
+ {
+  "id": "vallecano",
+  "name_en": "Vallecano",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 2
+ },
+ {
+  "id": "vancouver",
+  "name_en": "Vancouver",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "vancouver-whitecaps",
+  "name_en": "Vancouver Whitecaps",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 4
+ },
+ {
+  "id": "vasco",
+  "name_en": "Vasco",
+  "name_ar": "فاسكو دا غاما",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 67
+ },
+ {
+  "id": "vasco-da-gama",
+  "name_en": "Vasco Da Gama",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 45
+ },
+ {
+  "id": "venezia",
+  "name_en": "Venezia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "serie-a",
+  "supplier_albums": 56
+ },
+ {
+  "id": "venezuela",
+  "name_en": "Venezuela",
+  "name_ar": "فنزويلا",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 22
+ },
+ {
+  "id": "venice",
+  "name_en": "Venice",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "versailles",
+  "name_en": "Versailles",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 5
+ },
+ {
+  "id": "vfb-stuttgart",
+  "name_en": "VfB Stuttgart",
+  "name_ar": "شتوتغارت",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 35
+ },
+ {
+  "id": "victoria",
+  "name_en": "Victoria",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "brasileirao",
+  "supplier_albums": 13
+ },
+ {
+  "id": "villarreal",
+  "name_en": "Villarreal",
+  "name_ar": "فياريال",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 20
+ },
+ {
+  "id": "vissel-kobe",
+  "name_en": "Vissel Kobe",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 11
+ },
+ {
+  "id": "vitoria",
+  "name_en": "Vitoria",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "primeira-liga",
+  "supplier_albums": 8
+ },
+ {
+  "id": "vitoria-de-guimaraes",
+  "name_en": "Vitoria de Guimaraes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "vitoria-guimaraes",
+  "name_en": "Vitoria Guimaraes",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "wales",
+  "name_en": "Wales",
+  "name_ar": "ويلز",
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 39
+ },
+ {
+  "id": "walsall",
+  "name_en": "Walsall",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "washington",
+  "name_en": "Washington",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "mls",
+  "supplier_albums": 4
+ },
+ {
+  "id": "waterford",
+  "name_en": "Waterford",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 7
+ },
+ {
+  "id": "watford",
+  "name_en": "Watford",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 9
+ },
+ {
+  "id": "welsh",
+  "name_en": "Welsh",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "werder-bremen",
+  "name_en": "Werder Bremen",
+  "name_ar": "فيردر بريمن",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 32
+ },
+ {
+  "id": "west-bromwich",
+  "name_en": "West Bromwich",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 19
+ },
+ {
+  "id": "west-ham-united",
+  "name_en": "West Ham United",
+  "name_ar": "وست هام يونايتد",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 100
+ },
+ {
+  "id": "wimbledon",
+  "name_en": "Wimbledon",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 2
+ },
+ {
+  "id": "wolfsburg",
+  "name_en": "Wolfsburg",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "bundesliga",
+  "supplier_albums": 19
+ },
+ {
+  "id": "wolve",
+  "name_en": "Wolve",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 12
+ },
+ {
+  "id": "wolverhampton-wanderers",
+  "name_en": "Wolverhampton Wanderers",
+  "name_ar": "وولفرهامبتون",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 29
+ },
+ {
+  "id": "wolvers",
+  "name_en": "Wolvers",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 2
+ },
+ {
+  "id": "wrexham",
+  "name_en": "Wrexham",
+  "name_ar": "ريكسهام",
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "premier-league",
+  "supplier_albums": 21
+ },
+ {
+  "id": "wydad",
+  "name_en": "Wydad",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "yokohama",
+  "name_en": "Yokohama",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 1
+ },
+ {
+  "id": "yokohama-f-marinos",
+  "name_en": "Yokohama F. Marinos",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 14
+ },
+ {
+  "id": "yokohama-fc",
+  "name_en": "Yokohama FC",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 4
+ },
+ {
+  "id": "young-africans",
+  "name_en": "Young Africans",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 3
+ },
+ {
+  "id": "yugoslavia",
+  "name_en": "Yugoslavia",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "national",
+  "league": null,
+  "supplier_albums": 9
+ },
+ {
+  "id": "zaragoza",
+  "name_en": "Zaragoza",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": "la-liga",
+  "supplier_albums": 25
+ },
+ {
+  "id": "zenit",
+  "name_en": "Zenit",
+  "name_ar": null,
+  "name_he": null,
+  "aliases": [],
+  "type": "club",
+  "league": null,
+  "supplier_albums": 6
+ }
+]

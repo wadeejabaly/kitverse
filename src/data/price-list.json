@@ -1,0 +1,246 @@
+{
+  "_note": "Owner-approved 2026-10-24: website prices (Wadeea's site) are the single source for site + bot. Amounts in ILS.",
+  "rules": {
+    "womens_cut": "fan version only, priced as fan (proposal; DMs: women's cut exists only as fan)",
+    "retro_definition": "season starting 2023 or earlier (website rule)",
+    "special_edition_and_goalkeeper": "priced by their version/sleeve/era group (proposal)"
+  },
+  "addons": [
+    {
+      "id": "name_number",
+      "per": "shirt",
+      "price": 20,
+      "source": "dm",
+      "name_ar": "الاسم والرقم",
+      "name_en": "Name + number"
+    },
+    {
+      "id": "patch",
+      "per": "patch",
+      "price": 11.99,
+      "source": "website",
+      "name_ar": "الرقعة",
+      "name_en": "Patch"
+    },
+    {
+      "id": "size_3xl",
+      "per": "shirt",
+      "price": 9,
+      "source": "dm",
+      "name_ar": "مقاس 3XL",
+      "name_en": "Size 3XL"
+    },
+    {
+      "id": "size_4xl",
+      "per": "shirt",
+      "price": 12,
+      "source": "dm",
+      "name_ar": "مقاس 4XL",
+      "name_en": "Size 4XL"
+    },
+    {
+      "id": "gift_box",
+      "per": "order",
+      "price": 34.99,
+      "source": "website",
+      "name_ar": "بوكس هدية",
+      "name_en": "Gift box"
+    }
+  ],
+  "groups": [
+    {
+      "id": "fan",
+      "match": {
+        "era": "current",
+        "sleeve": "short",
+        "version": "fan",
+        "audience": [
+          "adult",
+          "women"
+        ]
+      },
+      "price": 95,
+      "source": "dm",
+      "name_ar": "نسخة المشجعين",
+      "name_en": "Fan version"
+    },
+    {
+      "id": "player",
+      "match": {
+        "era": "current",
+        "sleeve": "short",
+        "version": "player",
+        "audience": [
+          "adult"
+        ]
+      },
+      "price": 110,
+      "source": "dm",
+      "name_ar": "نسخة اللاعبين",
+      "name_en": "Player version"
+    },
+    {
+      "id": "retro",
+      "match": {
+        "era": "retro",
+        "sleeve": "short",
+        "audience": [
+          "adult"
+        ]
+      },
+      "price": 135,
+      "source": "website",
+      "name_ar": "النسخة الريترو",
+      "name_en": "Retro (2023 and older)"
+    },
+    {
+      "id": "fan_long",
+      "match": {
+        "era": "current",
+        "sleeve": "long",
+        "version": "fan"
+      },
+      "price": 105,
+      "source": "dm",
+      "name_ar": "نسخة المشجعين بأكمام طويلة",
+      "name_en": "Fan version, long sleeve"
+    },
+    {
+      "id": "player_long",
+      "match": {
+        "era": "current",
+        "sleeve": "long",
+        "version": "player"
+      },
+      "price": 120,
+      "source": "dm",
+      "name_ar": "نسخة اللاعبين بأكمام طويلة",
+      "name_en": "Player version, long sleeve"
+    },
+    {
+      "id": "retro_long",
+      "match": {
+        "era": "retro",
+        "sleeve": "long"
+      },
+      "price": 145,
+      "source": "website",
+      "name_ar": "النسخة الريترو بأكمام طويلة",
+      "name_en": "Retro, long sleeve"
+    },
+    {
+      "id": "kids_kit",
+      "match": {
+        "audience": [
+          "kids"
+        ]
+      },
+      "price": 200,
+      "source": "owner DM price list",
+      "history": [
+        200,
+        180,
+        160
+      ],
+      "name_ar": "طقم الأطفال",
+      "name_en": "Kids kit (shirt + shorts)"
+    },
+    {
+      "id": "adult_kit",
+      "match": {
+        "audience": [
+          "adult"
+        ],
+        "kit_with_shorts": true
+      },
+      "price": 300,
+      "source": "owner DM price list",
+      "history": [
+        300,
+        200,
+        180
+      ],
+      "name_ar": "طقم الكبار",
+      "name_en": "Adult kit (shirt + shorts)"
+    }
+  ],
+  "offers": [
+    {
+      "id": "bundle_3",
+      "_rule": "with 3+ eligible shirts every eligible shirt costs 100 (short) / 110 (long): 3 short=300 (instead of 330), 3 long=330 (instead of 360), mixed=300+10 per long, each extra shirt 100/110. Retro, fan, kids, add-ons and delivery are never included. Source: DMs; mixed + extra long-sleeve price = proposal.",
+      "active": false,
+      "min_qty": 3,
+      "name_ar": "عرض 3 قمصان ب 300₪ (كم طويل 330₪)",
+      "name_en": "3 player shirts for 300₪ (long sleeve 330₪)",
+      "eligible": {
+        "era": "current",
+        "version": "player",
+        "audience": [
+          "adult"
+        ]
+      },
+      "unit_price": {
+        "long": 110,
+        "short": 100
+      }
+    }
+  ],
+  "payment": {
+    "paypal": true,
+    "deposit": {
+      "note": "used on/off in DMs; owner decides",
+      "method": "Bit",
+      "enabled": false,
+      "amount_range": [
+        35,
+        50
+      ],
+      "non_refundable": true
+    },
+    "cash_on_delivery": true
+  },
+  "returns": "14 days from delivery, unworn with tags; printed shirts only if the print is wrong or the shirt is faulty; damage reported with photos within 48h; refund within 5 business days",
+  "currency": "ILS",
+  "delivery": {
+    "per": "order (1 or 10 shirts, same fee)",
+    "zones": [
+      {
+        "id": "north",
+        "fee": 50,
+        "days": "7-14",
+        "name_ar": "الشمال وضواحيه"
+      },
+      {
+        "id": "center",
+        "fee": 60,
+        "days": "7-14",
+        "name_ar": "المركز"
+      },
+      {
+        "id": "negev",
+        "fee": 70,
+        "days": "up to 20",
+        "name_ar": "النقب"
+      },
+      {
+        "id": "jerusalem",
+        "fee": 100,
+        "days": "up to 20",
+        "name_ar": "القدس وضواحيها"
+      },
+      {
+        "id": "jer_ws_eilat",
+        "fee": 100,
+        "days": "up to 20",
+        "name_ar": "الضفة وإيلات"
+      }
+    ],
+    "days_excluded": "Fri + Sat"
+  },
+  "not_offered_now": [
+    {
+      "id": "nba",
+      "price_in_dms": 160
+    }
+  ]
+}

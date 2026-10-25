@@ -5,9 +5,7 @@ import { getVisibleProducts } from "@/data/catalog";
 import type { CartProductInfo } from "@/components/cart/CartView";
 import { CheckoutView } from "@/components/checkout/CheckoutView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
-import { isPayPlusConfigured } from "@/lib/payplus";
 import { alternatesFor } from "@/lib/site";
-import { isSupabaseConfigured } from "@/lib/supabase";
 
 export async function generateMetadata({
   params,
@@ -26,27 +24,10 @@ export async function generateMetadata({
 }
 
 /**
- * Checkout. Like the cart, the page itself is static: the lines live in the
- * visitor's browser and the server contributes only the catalogue facts a
- * line needs to render. Only approved products are sent.
- *
- * The PayPal client id is read here and passed down. It is the one PayPal
- * value that is public by design — the secret, the webhook id and the
- * Supabase service-role key exist only inside src/lib/paypal.ts and
- * src/lib/supabase.ts, both of which are `server-only`.
- *
- * PayPlus contributes NO value to the client at all. Only a boolean crosses
- * the boundary — "is the card method available?" — because the browser never
- * calls PayPlus: it is redirected to a page this server asked for.
- *
- * Cash on delivery (owner decision 2026-10-23: plain, no deposit) needs
- * nothing beyond Supabase itself — there is no owner phone number to gate on
- * any more, so it is simply available whenever the orders database is.
- *
- * Each method is gated independently, and with none configured the page still
- * renders in full and shows a quiet "payments are not configured yet" panel
- * where the payment controls would be, so the store builds and runs with no
- * environment at all.
+ * Checkout. The page is static: cart lines live in the visitor's browser and the server only
+ * contributes the catalogue facts a line needs to render. Placing an order goes to
+ * /api/checkout/cash/start, which re-prices everything with the shared pricing engine.
+ * Cash on delivery only for now; online payment is added on the backend later.
  */
 export default async function CheckoutPage({
   params,
@@ -65,7 +46,6 @@ export default async function CheckoutPage({
     image: product.image,
   }));
 
-  const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? null;
 
   return (
     <Wrap>
@@ -78,9 +58,7 @@ export default async function CheckoutPage({
         <CheckoutView
           products={products}
           locale={locale}
-          paypalClientId={paypalClientId}
-          payplusEnabled={isPayPlusConfigured()}
-          cashEnabled={isSupabaseConfigured()}
+          cashEnabled={!!process.env.SUPABASE_SERVICE_ROLE_KEY}
         />
       </Suspense>
     </Wrap>

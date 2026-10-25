@@ -1,4 +1,16 @@
 import type { Patch, Size, Version } from "./types";
+import priceList from "./price-list.json";
+
+/**
+ * Every number below comes from the bot's price list (src/data/price-list.json, exported from the
+ * database by scripts/export-store-catalog.ts), so the website and the Instagram bot always quote
+ * the same prices. The server re-prices every order with src/lib/pricing/engine.ts.
+ */
+type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number }[]; delivery: { zones: { id: string; fee: number }[] } };
+const pl = priceList as unknown as PL;
+const groupPrice = (id: string) => pl.groups.find((g) => g.id === id)?.price ?? 0;
+const addonPrice = (id: string) => pl.addons.find((a) => a.id === id)?.price ?? 0;
+const zoneFee = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.fee ?? 0;
 
 /**
  * KitVerse pricing — single source of truth (owner-confirmed 2026-09-02).
@@ -27,7 +39,7 @@ import type { Patch, Size, Version } from "./types";
 export const SIZES: Size[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
 export const VERSIONS: Version[] = ["fan", "player"];
 
-const SIZE_SURCHARGE: Partial<Record<Size, number>> = { "3XL": 9, "4XL": 12 };
+const SIZE_SURCHARGE: Partial<Record<Size, number>> = { "3XL": addonPrice("size_3xl"), "4XL": addonPrice("size_4xl") };
 
 /** What this size adds to the base price. 0 for every size below 3XL. */
 export function sizeSurcharge(size: Size): number {
@@ -57,9 +69,9 @@ export function isRetroSeason(season: string): boolean {
   return seasonYear(season) <= RETRO_CUTOFF_YEAR;
 }
 
-const FAN_PRICE = 95;
-const PLAYER_PRICE = 110;
-const RETRO_PRICE = 135;
+const FAN_PRICE = groupPrice("fan");
+const PLAYER_PRICE = groupPrice("player");
+const RETRO_PRICE = groupPrice("retro");
 
 /**
  * Product types the owner is adding to the catalogue with new photography.
@@ -112,7 +124,7 @@ export function round2(value: number): number {
  * Champions League patch cost the same, by owner decision 2026-10-23
  * ("make it 11.99 for all patches").
  */
-export const ADDONS = { nameNumber: 20, patch: 11.99 } as const;
+export const ADDONS = { nameNumber: addonPrice("name_number"), patch: addonPrice("patch") } as const;
 
 /* ------------------------------------------------------------- delivery -- */
 
@@ -133,10 +145,10 @@ export const DELIVERY_REGIONS: DeliveryRegion[] = [
 
 /** "jerusalem" covers Jerusalem, the West Bank and Eilat — one tier, one label. */
 export const SHIPPING_ILS_BY_REGION: Record<DeliveryRegion, number> = {
-  north: 50,
-  center: 60,
-  negev: 70,
-  jerusalem: 100,
+  north: zoneFee("north"),
+  center: zoneFee("center"),
+  negev: zoneFee("negev"),
+  jerusalem: zoneFee("jerusalem"),
 };
 
 export function shippingFor(region: DeliveryRegion): number {
@@ -225,7 +237,7 @@ export function cartTotals(
  * file's usual whole-shekel convention and the first fractional price on the
  * site (the official patch, ADDONS.patch, followed the same decision).
  */
-export const GIFT_BOX_PRICE = 34.99;
+export const GIFT_BOX_PRICE = addonPrice("gift_box");
 
 /** A generous but finite ceiling — mirrors the per-line MAX_QTY (10). */
 export const GIFT_BOX_MAX_QTY = 10;
