@@ -120,6 +120,12 @@
     "Segoe UI",
     sans-serif
   );
+
+  /* The "major headers" pairing (owner decision 2026-10-25): Reem Kufi for
+     h1/h2 and the two display classes, falling back to the primary stack
+     above rather than straight to system sans — see src/lib/fonts.ts. */
+  --type-sans-display: var(--stack-sans-display, var(--type-sans));
+  --type-arabic-display: var(--stack-arabic-display, var(--type-arabic));
 }
 
 /* Dark scheme — honored for both the system preference and an explicit
@@ -256,6 +262,24 @@ body[lang="ar"] {
 [lang="ar"] h5,
 [lang="ar"] h6 {
   letter-spacing: normal;
+}
+
+/* ---------- Major headers ----------
+   Owner decision 2026-10-25: the display pairing (Reem Kufi, see
+   src/lib/fonts.ts) is reserved for the handful of big headline moments —
+   h1/h2, which is also every element carrying .display-sm or
+   .kv-flood-display (both are only ever set on an h1 or h2 — see their own
+   rules further down and each component's usage) — not h3–h6, which stay
+   on the primary stack so card titles and subheadings read at the sizes a
+   heavily stylized display face was never drawn for. */
+h1,
+h2 {
+  font-family: var(--type-sans-display);
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2 {
+  font-family: var(--type-arabic-display);
 }
 
 /* A Latin island inside an Arabic page — brand names, model codes, URLs. */
