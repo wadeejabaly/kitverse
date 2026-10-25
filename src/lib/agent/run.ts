@@ -61,11 +61,13 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
   const messages: Anthropic.Beta.BetaMessageParam[] = [...base];
 
   const call = async (msgs: Anthropic.Beta.BetaMessageParam[], toolChoice?: Anthropic.Beta.BetaToolChoiceNone) => {
+    const t0 = Date.now();
     const r = await anthropic().beta.messages.create({
       model, max_tokens: 4000, system, tools, messages: msgs, ...(toolChoice ? { tool_choice: toolChoice } : {}),
       output_config: { effort: opts.effort ?? "medium" },
       betas: ["server-side-fallback-2026-07-01"], fallbacks: "default",
     });
+    console.log(`[agent] model call ${Date.now() - t0}ms (${r.stop_reason})`);
     const u = r.usage;
     usage.input += u.input_tokens; usage.output += u.output_tokens;
     usage.cacheRead += u.cache_read_input_tokens ?? 0; usage.cacheWrite += u.cache_creation_input_tokens ?? 0;
@@ -122,12 +124,14 @@ export async function runAgent(conv: ConversationRow, customer: CustomerRow, opt
     try {
       const tail = rows.slice(-10).filter((m) => m.text || m.transcript).map((m) => ({ who: m.direction === "in" ? "customer" as const : "owner" as const, text: (m.text ?? m.transcript ?? "").slice(0, 300) }));
       const lastIn = [...rows].reverse().find((m) => m.direction === "in" && (m.text || m.transcript));
+      const t0 = Date.now();
       const user = await voicePrompt({ tail, draft: text, photosSent: ctx.outbox.filter((x) => x.type === "image").length, lastCustomerText: lastIn?.text ?? lastIn?.transcript ?? "" });
       const r = await anthropic().beta.messages.create({
         model, max_tokens: 2000, system: [{ type: "text", text: VOICE_SYSTEM, cache_control: { type: "ephemeral" } }],
         messages: [{ role: "user", content: user }], output_config: { effort: "low" },
         betas: ["server-side-fallback-2026-07-01"], fallbacks: "default",
       });
+      console.log(`[agent] voice pass ${Date.now() - t0}ms`);
       const u = r.usage;
       usage.input += u.input_tokens; usage.output += u.output_tokens;
       usage.cacheRead += u.cache_read_input_tokens ?? 0; usage.cacheWrite += u.cache_creation_input_tokens ?? 0;

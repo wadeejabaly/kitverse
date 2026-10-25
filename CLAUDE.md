@@ -8,7 +8,7 @@ AI sales system for @kitversejerseys: an Instagram-DM sales bot that sounds like
 - Next.js 16 (App Router, `src/`, `proxy.ts` instead of middleware), TypeScript, Tailwind 4.
 - Supabase Postgres (EU, Ireland). Schema lives only in `supabase/migrations/`; apply with `npm run db:push`. Never edit it in the dashboard. Migrations are additive-only on live data.
 - Inngest for background work (`src/inngest/`):
-  - one turn per chat burst (15s debounce, concurrency 1 per chat);
+  - one turn per chat burst (5s debounce, shows "seen" + typing while it works, concurrency 1 per chat);
   - 3h follow-up nudge, approval decided/reminder, spend alert;
   - IG post sync every 15 min.
 - Claude (`ANTHROPIC_MODEL`) runs the agent through tools (`src/lib/agent/`). **The AI never does money math**: totals come only from `src/lib/pricing/engine.ts`.

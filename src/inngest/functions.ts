@@ -8,14 +8,14 @@ import { syncInstagramMedia } from "@/lib/channels/media-sync";
 import { syncSupplierNewArrivals } from "@/lib/catalog/supplier-sync";
 
 /**
- * One bot turn per conversation burst: waits for the customer to stop typing (15s, max 60s),
+ * One bot turn per conversation burst: waits for the customer to stop typing (5s, max 20s),
  * never runs two turns of the same chat at once, retries on transient errors.
  */
 export const conversationTurn = inngest.createFunction(
   {
     id: "conversation-turn",
     triggers: [{ event: EV.messageReceived }, { event: EV.resume }],
-    debounce: { key: "event.data.conversationId", period: "15s", timeout: "60s" },
+    debounce: { key: "event.data.conversationId", period: "5s", timeout: "20s" },
     concurrency: [{ key: "event.data.conversationId", limit: 1 }],
     retries: 3,
   },

@@ -6,6 +6,7 @@ import { notify } from "../notify";
 import { transcribe } from "../stt";
 import { checkGate, settings } from "./limits";
 import { queueOutgoing, sendQueued } from "./deliver";
+import { senderAction } from "../channels/instagram";
 import type { ConversationRow, CustomerRow } from "../agent/state";
 
 export interface TurnResult {
@@ -73,6 +74,12 @@ export async function processConversation(conversationId: string, opts: { extraS
     return { status: "gated", reason: gate.reason };
   }
 
+  // auto mode: the customer sees "seen" + typing right away instead of silence while the reply is written
+  if (conv.mode === "bot" && conv.channel === "instagram" && customer.ig_user_id) {
+    await Promise.all([senderAction(customer.ig_user_id, "mark_seen"), senderAction(customer.ig_user_id, "typing_on")]);
+  }
+  const t0 = Date.now();
+
   const untranscribed = await transcribePending(conv.id);
   const extra = [opts.extraSystem, untranscribed ? `${untranscribed} voice note(s) could not be transcribed. Ask the customer kindly to write it, or request_owner(kind=low_confidence) if it seems important.` : ""].filter(Boolean).join("\n");
 
@@ -123,8 +130,10 @@ export async function processConversation(conversationId: string, opts: { extraS
     return { status: "drafted", outcome: result.outcome, costUsd: result.usage.costUsd, quoteSent, bubbles };
   }
 
+  const t1 = Date.now();
   await queueOutgoing(conv, result.outbox, { sender: "bot", draft: false, runId: run.id });
   await sendQueued(conv, customer);
+  console.log(`[turn] ${conv.id.slice(0, 8)} reply ready ${t1 - t0}ms, sent ${Date.now() - t1}ms`);
   return { status: "sent", outcome: result.outcome, costUsd: result.usage.costUsd, quoteSent, bubbles };
 }
 
