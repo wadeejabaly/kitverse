@@ -79,7 +79,9 @@ export const TOOLS = [
           product_id: p.id, title: p.title_ar ?? p.title_en, title_en: p.title_en, season: p.season, kit: p.kit, era: p.era,
           status: p.status,
           options: [...new Set(p.options.filter((o) => (kids ? o.audience === "kids" : o.audience !== "kids")).map((o) => `${o.audience}/${o.version}/${o.sleeve}`))],
-          note: !p.season
+          note: p.flags?.includes("not_at_supplier")
+            ? "on the website, but NOT in the supplier catalog - take the details, then check_availability before confirming; never promise it's in stock"
+            : !p.season
             ? "SEASON UNKNOWN (supplier didn't say) - never present it as the new/current shirt; show the photo and say which model it is only if certain"
             : p.kit === "Special" || p.kit === "Unstated" ? "design not described in text - send the photo to confirm" : undefined,
         })),

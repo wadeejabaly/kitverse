@@ -129,36 +129,26 @@ export const ADDONS = { nameNumber: addonPrice("name_number"), patch: addonPrice
 /* ------------------------------------------------------------- delivery -- */
 
 /**
- * Regional delivery, replacing the old single flat rate. The shopper picks
- * their region explicitly at checkout (CustomerSchema in src/lib/checkout.ts)
- * — it is never inferred from the free-text city field, which is far too
- * unreliable to bill shipping from.
+ * Owner decision 2026-10-25: the shopper never picks a region — they just type
+ * their city (CustomerSchema.city in src/lib/checkout.ts), and the server
+ * matches it against the same town → zone list the Instagram bot already uses
+ * (src/lib/localities.ts, backed by the `localities` table) to work out the
+ * fee. Two tiers only: "north" (through Kfar Qara) and "rest" (everywhere
+ * else, the West Bank included) — shown separately so a northern customer
+ * never thinks everyone pays the higher fee.
+ *
+ * This file only has the two FIGURES, for display before the city is known
+ * (the checkout summary, the /shipping page). The actual city → tier lookup
+ * needs the database and happens server-side — see /api/checkout/resolve-city
+ * and resolveTown() in src/lib/localities.ts.
  */
-export type DeliveryRegion = "north" | "center" | "negev" | "jerusalem";
+export type ShippingTier = "north" | "rest";
 
-export const DELIVERY_REGIONS: DeliveryRegion[] = [
-  "north",
-  "center",
-  "negev",
-  "jerusalem",
-];
-
-/** "jerusalem" covers Jerusalem, the West Bank and Eilat — one tier, one label. */
-export const SHIPPING_ILS_BY_REGION: Record<DeliveryRegion, number> = {
+export const SHIPPING_ILS_BY_TIER: Record<ShippingTier, number> = {
   north: zoneFee("north"),
-  center: zoneFee("center"),
-  negev: zoneFee("negev"),
-  jerusalem: zoneFee("jerusalem"),
+  // center/negev/jerusalem/jer_ws_eilat are now priced identically — any one of them reads the shared "rest" fee.
+  rest: zoneFee("center"),
 };
-
-export function shippingFor(region: DeliveryRegion): number {
-  return SHIPPING_ILS_BY_REGION[region];
-}
-
-/** Membership test for anything arriving from outside — a form, a wire body. */
-export function isDeliveryRegion(value: unknown): value is DeliveryRegion {
-  return typeof value === "string" && (DELIVERY_REGIONS as string[]).includes(value);
-}
 
 /**
  * One cart line, already priced. `unitPrice` is `priceFor(...)` plus any
@@ -193,9 +183,9 @@ export function priceLine(
 /**
  * Cart totals. `shipping` is supplied by the caller rather than read from a
  * constant, because there is no longer one rate to read: the cart page shows
- * "calculated by region at checkout" because it does not yet know the
- * shopper's region, and checkout computes `shippingFor(region)` once the
- * delivery form has one. Defaulting to 0 is what lets the cart page total a
+ * "calculated once we know your city" because it does not yet know the
+ * shopper's city, and checkout resolves it (POST /api/checkout/resolve-city)
+ * once they've typed one. Defaulting to 0 is what lets the cart page total a
  * basket honestly without inventing a rate.
  *
  * `giftBoxQty` (owner decision 2026-10-23) is the CHECKOUT-only gift-box

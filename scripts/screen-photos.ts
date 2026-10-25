@@ -2,6 +2,7 @@
  * Screen product photos with the quality gate (no labels, watermarks, kids/baby items, ugly shots).
  *   npm run photos:screen -- --featured          featured shirts (website + most asked)
  *   npm run photos:screen -- --reset --featured  forget earlier decisions first
+ *   npm run photos:screen -- --recheck-featured  re-check the website shirts' chosen photos with the latest rules (e.g. no shorts)
  * Costs ~$0.002-0.004 per photo checked (small vision model).
  */
 import { config } from "dotenv";
@@ -18,8 +19,13 @@ async function main() {
     await db().from("products").update({ primary_image_url: null }).not("primary_image_url", "like", "%/cleaned.jpg").neq("photo_status", "owner_upload");
     console.log("reset photo decisions");
   }
+  if (process.argv.includes("--recheck-featured")) {
+    // earlier assessments are kept and reused only if they already answer the newest questions
+    await db().from("products").update({ photo_status: "unchecked", primary_image_url: null }).eq("status", "featured").eq("photo_status", "good");
+    console.log("website shirts marked for a re-check");
+  }
   let q = db().from("products").select("id,handle,title_en,primary_image_url,supplier_cover,photo_status").eq("photo_status", "unchecked");
-  if (process.argv.includes("--featured")) q = q.eq("status", "featured");
+  if (process.argv.includes("--featured") || process.argv.includes("--recheck-featured")) q = q.eq("status", "featured");
   const { data } = await q.limit(2000);
   const list = data ?? [];
   console.log(`screening ${list.length} products`);
