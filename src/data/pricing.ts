@@ -6,11 +6,12 @@ import priceList from "./price-list.json";
  * database by scripts/export-store-catalog.ts), so the website and the Instagram bot always quote
  * the same prices. The server re-prices every order with src/lib/pricing/engine.ts.
  */
-type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number }[]; delivery: { zones: { id: string; fee: number }[] } };
+type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] } };
 const pl = priceList as unknown as PL;
 const groupPrice = (id: string) => pl.groups.find((g) => g.id === id)?.price ?? 0;
 const addonPrice = (id: string) => pl.addons.find((a) => a.id === id)?.price ?? 0;
 const zoneFee = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.fee ?? 0;
+const zoneLabel = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.name_ar ?? "";
 
 /**
  * KitVerse pricing — single source of truth (owner-confirmed 2026-09-02).
@@ -148,6 +149,15 @@ export const SHIPPING_ILS_BY_TIER: Record<ShippingTier, number> = {
   north: zoneFee("north"),
   // center/negev/jerusalem/jer_ws_eilat are now priced identically — any one of them reads the shared "rest" fee.
   rest: zoneFee("center"),
+};
+
+/** The zone's own Arabic label (e.g. "الشمال (لحد كفر قرع)" / "باقي المناطق") — matches exactly
+ *  what POST /api/checkout/resolve-city returns as `label` for a server-resolved town, so the
+ *  CityCombobox's instant local pick (src/components/checkout/CityCombobox.tsx) shows the same
+ *  text as a server round trip would, no round trip needed. */
+export const SHIPPING_LABEL_BY_TIER: Record<ShippingTier, string> = {
+  north: zoneLabel("north"),
+  rest: zoneLabel("center"),
 };
 
 /**

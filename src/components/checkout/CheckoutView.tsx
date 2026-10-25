@@ -5,11 +5,13 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, cartTotals, priceLine } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, cartTotals, priceLine } from "@/data/pricing";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
 import type { CartProductInfo } from "@/components/cart/CartView";
 import { Figure, Price } from "@/components/shared/Money";
 import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
+import { CityCombobox } from "@/components/checkout/CityCombobox";
+import type { TownOption } from "@/data/localities";
 
 /**
  * Checkout.
@@ -159,6 +161,18 @@ export function CheckoutView({
     }, 500);
     return () => { if (cityCheckTimer.current) clearTimeout(cityCheckTimer.current); };
   }, [values.city]);
+
+  /**
+   * Picking a row from the CityCombobox's dropdown already tells us the shipping tier (the town
+   * list it filters is grouped by tier — src/data/localities.ts) — no need to wait on the
+   * debounced server round trip above for this case, which still runs for free-typed cities that
+   * don't match a dropdown row. Cancel any pending check so it can't overwrite this with a stale
+   * result a moment later.
+   */
+  function handleSelectTown(town: TownOption) {
+    if (cityCheckTimer.current) clearTimeout(cityCheckTimer.current);
+    setCityCheck({ status: "found", fee: SHIPPING_ILS_BY_TIER[town.tier], label: SHIPPING_LABEL_BY_TIER[town.tier] });
+  }
 
   /**
    * The card page's failure and cancel URLs come back here with `?pay=`.
@@ -373,15 +387,16 @@ export function CheckoutView({
             onChange={setField}
             onBlur={() => setTouched((current) => ({ ...current, houseNumber: true }))}
           />
-          <Field
-            name="city"
+          <CityCombobox
+            id="checkout-city"
             label={t("fieldCity")}
             value={values.city}
             invalid={touched.city === true && fieldErrors.city === true}
             error={t("errorCity")}
-            autoComplete="address-level2"
-            onChange={setField}
+            locale={locale}
+            onChange={(value) => setField("city", value)}
             onBlur={() => setTouched((current) => ({ ...current, city: true }))}
+            onSelectTown={handleSelectTown}
           />
 
           {/* Owner decision 2026-10-25: no region picker. The city above is
