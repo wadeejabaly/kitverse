@@ -33,6 +33,12 @@ Test phase: the webhook drops every chat whose username isn't on the tester list
 
 Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/decided`.
 
+## Admin
+- Overview numbers use Israel days (`src/lib/time.ts`); sales skip cancelled and test-bot (`sim:`) orders. "AI cost today" / the spend cap = `agent_runs` (bot turns) + `ai_usage` (photo checks, post matching; `src/lib/ai-cost.ts`).
+- Catalog page is read-only: the website list is Wadeea's `catalog/store-selection.json` (changing it is a code change + `scripts/apply-store-selection.ts`).
+- Pricing page: full price list, one-click two-tier delivery fees, "Approve & publish".
+- Owner photo uploads call `VERCEL_DEPLOY_HOOK_URL` (if set) so the static website catalog rebuilds.
+
 ## Photos
 Customers only ever see photos that passed `src/lib/catalog/photo-qa.ts`:
 - no added text, labels or watermarks;
