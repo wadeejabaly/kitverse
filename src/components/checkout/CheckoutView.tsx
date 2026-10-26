@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, cartTotals, priceLine, round2 } from "@/data/pricing";
+import { PATCH_PROP_KEYS } from "@/data/patches";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
 import type { CartAccessoryInfo, CartProductInfo } from "@/components/cart/CartView";
 import { Figure, Price } from "@/components/shared/Money";
@@ -217,7 +218,7 @@ export function CheckoutView({
         product,
         priced: priceLine(product.season, item.size, item.version, item.qty, {
           nameNumber: Boolean(item.nameNumber),
-          patch: item.patch,
+          patchCount: item.patches.length,
         }),
         key: lineKey(item),
       };
@@ -294,7 +295,7 @@ export function CheckoutView({
           handle: item.handle,
           size: item.size,
           version: item.version,
-          patch: item.patch,
+          patches: item.patches,
           qty: item.qty,
           ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
         })),
@@ -539,14 +540,10 @@ export function CheckoutView({
                     </bdi>
                   </span>
                 ) : null}
-                {item.patch !== "none" ? (
+                {item.patches.length > 0 ? (
                   <span className="block text-ink-soft">
                     {tCart("propPatch")}:{" "}
-                    {item.patch === "ucl"
-                      ? tCart("propPatchUcl")
-                      : item.patch === "worldcup"
-                        ? tCart("propPatchWorldCup")
-                        : tCart("propPatchLeague")}
+                    {item.patches.map((p) => tCart(PATCH_PROP_KEYS[p])).join(" + ")}
                   </span>
                 ) : null}
               </span>

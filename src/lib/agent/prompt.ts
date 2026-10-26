@@ -91,7 +91,16 @@ Put the exact text the customer will receive inside ONE <reply>...</reply> block
 /** Price list as the model sees it (second cached system block). */
 export function priceListBlock(list: PriceListData, status: "published" | "draft"): string {
   const g = list.groups.map((x) => `- ${x.name_ar} (${x.name_en}): ${x.price}₪`).join("\n");
-  const a = list.addons.map((x) => `- ${x.name_ar} (${x.name_en}): ${x.price}₪ per ${x.per}${x.team_id ? ` (only ${x.team_id})` : ""}`).join("\n");
+  const a = list.addons.map((x) => {
+    // Tiered addons (the patch add-on, owner decision 2026-10-26): spell out
+    // the 1st/2nd/3rd price rather than one flat figure, since the bot must
+    // tell the customer the running cost as patches are added, not just the
+    // first one's price.
+    const price = x.price_tiers?.length
+      ? `${x.price_tiers.join("₪ / ")}₪ (1st / 2nd / 3rd patch on the same shirt)`
+      : `${x.price}₪`;
+    return `- ${x.name_ar} (${x.name_en}): ${price} per ${x.per}${x.team_id ? ` (only ${x.team_id})` : ""}`;
+  }).join("\n");
   const o = list.offers.filter((x) => x.active).map((x) => `- ${x.name_ar} / ${x.name_en}: from ${x.min_qty} eligible shirts each costs ${x.unit_price.short}₪${x.unit_price.long ? ` (long sleeve ${x.unit_price.long}₪)` : ""}; eligible: ${JSON.stringify(x.eligible)}${x.ends_at ? `; until ${x.ends_at}` : ""}`).join("\n");
   const z = list.delivery.zones.map((x) => `- ${x.name_ar} (${x.id}): ${x.fee}₪, ${x.days} days`).join("\n");
   return `# Current price list${status === "draft" ? " (draft - owner has not approved it yet, but use it)" : ""}

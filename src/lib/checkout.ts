@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS } from "@/data/pricing";
-import type { Patch, Size, Version } from "@/data/types";
+import type { Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX } from "@/lib/product";
+import { PATCHES, type PatchId } from "@/lib/orders/rules";
+import { MAX_PATCHES_NATIONAL } from "@/data/patches";
 
 /**
  * The checkout wire contract — shared by the browser form and the API routes.
@@ -26,7 +28,8 @@ const SizeSchema = z.custom<Size>(
 const VersionSchema = z.custom<Version>(
   (value) => typeof value === "string" && (VERSIONS as string[]).includes(value),
 );
-const PatchSchema = z.enum(["none", "league", "ucl", "worldcup"]) satisfies z.ZodType<Patch>;
+const PATCH_IDS = Object.keys(PATCHES) as [PatchId, ...PatchId[]];
+const PatchIdSchema = z.enum(PATCH_IDS) satisfies z.ZodType<PatchId>;
 
 /** One cart line as it crosses the wire. Matches CartItem minus any money. */
 export const CheckoutItemSchema = z.object({
@@ -34,11 +37,13 @@ export const CheckoutItemSchema = z.object({
   size: SizeSchema,
   version: VersionSchema,
   nameNumber: z.string().max(NAME_NUMBER_MAX * 2).optional(),
-  // Replaces the old `badge: boolean` (owner decision 2026-10-23). Whether
-  // "league"/"ucl" is actually billable for this handle is re-checked
-  // server-side against the catalogue in repriceCart — a national-team
-  // product (no league) is never charged for a patch, whatever is sent here.
-  patch: PatchSchema,
+  // Replaced the single `patch` enum (owner decisions 2026-10-23/25) with a
+  // SET of patches (owner decision 2026-10-26, tiered pricing): whether each
+  // id is actually billable/eligible for this handle (team type, league,
+  // the 2-for-clubs/3-for-nationals cap) is re-checked server-side against
+  // the catalogue — see sanitizePatches() in lib/product.ts — whatever is
+  // sent here. The array bound is a sanity ceiling, not the real cap.
+  patches: z.array(PatchIdSchema).max(MAX_PATCHES_NATIONAL).default([]),
   // Clamped rather than rejected server-side; the bound here is a sanity
   // ceiling so an absurd number never reaches the clamp.
   qty: z.number().int().min(1).max(1000),

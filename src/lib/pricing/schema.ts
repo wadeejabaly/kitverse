@@ -25,6 +25,18 @@ export const Addon = z.object({
   price: z.number().nonnegative(),
   per: z.enum(["shirt", "patch", "order"]),
   team_id: z.string().optional(),   // team-specific add-ons (gift boxes)
+  /**
+   * Tiered per-unit pricing (owner decision 2026-10-26, the patch picker
+   * ask): when set, the Nth unit of this addon on one line costs
+   * `price_tiers[N-1]` (the last entry repeats for any further unit beyond
+   * the array's length) instead of the flat `price` × count. Today this is
+   * only the `patch` addon - 12.99 / 9.99 / 6.99 for the 1st / 2nd / 3rd
+   * patch on the same shirt - but it is a generic field so any other
+   * per-unit addon could use it later. `price` stays authoritative when this
+   * is absent, and equal to `price_tiers[0]` when present, so any reader
+   * that only knows about `price` still shows a sane single-unit figure.
+   */
+  price_tiers: z.array(z.number().nonnegative()).min(1).optional(),
 });
 
 /**

@@ -43,19 +43,39 @@ export const PATCHES = {
   europa_league: { label_ar: "شارة الدوري الأوروبي", clubs: true, nations: false },
   club_world_cup: { label_ar: "شارة كأس العالم للأندية", clubs: true, nations: false },
   league: { label_ar: "شارة الدوري", clubs: true, nations: false },
+  // Coppa Italia (added 2026-10-26, the patch-picker ask): a real competition
+  // restriction, not just a storefront display limit - an Italian cup patch
+  // on a Barcelona shirt would be wrong on Instagram too, so it is enforced
+  // here (`leagues`), not only in the storefront's own eligibility list.
+  coppa_italia: { label_ar: "شارة كأس إيطاليا", clubs: true, nations: false, leagues: ["serie-a"] },
   world_cup: { label_ar: "شارة كأس العالم", clubs: false, nations: true },
+  // Added 2026-10-26 alongside coppa_italia: national-team shirts can now
+  // carry up to 3 patches at once (the World Cup badge plus these two), see
+  // the per-team-type cap below.
+  world_cup_peace: { label_ar: "شارة السلام لكأس العالم", clubs: false, nations: true },
+  world_cup_champions: { label_ar: "شارة أبطال كأس العالم", clubs: false, nations: true },
 } as const;
 export type PatchId = keyof typeof PATCHES;
 
-/** null = fine; string = reason it needs the owner (unusual combination). */
+/** null = fine; string = reason it needs the owner (unusual combination).
+ *
+ * Cap owner decision 2026-10-26: a club shirt still takes at most 2 patches
+ * (one per sleeve); a national-team shirt can take up to 3 (the World Cup
+ * badge plus the Peace and Champions badges, all three at once if the
+ * customer wants them).
+ */
 export function checkPatches(patches: PatchId[], team: { type: "club" | "national"; league_id: string | null }): string | null {
-  if (patches.length > 2) return "more than 2 patches (one per sleeve)";
+  const max = team.type === "national" ? 3 : 2;
+  if (patches.length > max) return `more than ${max} patches allowed`;
   for (const p of patches) {
     const rule = PATCHES[p];
     if (!rule) return `unknown patch ${p}`;
     if (team.type === "club" && !rule.clubs) return `${p} patch is for national teams`;
     if (team.type === "national" && !rule.nations) return `${p} patch is for clubs`;
     if (p === "league" && !team.league_id) return "team's league is unknown - check which league patch";
+    if ("leagues" in rule && rule.leagues && (!team.league_id || !(rule.leagues as readonly string[]).includes(team.league_id))) {
+      return `${p} patch is not offered for this team's league`;
+    }
   }
   if (new Set(patches).size !== patches.length) return "same patch twice";
   return null;

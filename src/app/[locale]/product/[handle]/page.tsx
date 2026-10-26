@@ -161,8 +161,10 @@ export default async function ProductPage({
           <ProductForm
             handle={product.handle}
             season={product.season}
+            league={product.league}
+            team={product.team}
+            kind={product.kind}
             leagueName={leagueName}
-            isNational={product.kind === "national"}
           />
 
           <div className="mt-8 border-t border-rule">

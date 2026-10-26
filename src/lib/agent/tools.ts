@@ -40,7 +40,7 @@ const Audience = z.enum(["adult", "women", "kids"]);
 const Version = z.enum(["fan", "player"]);
 const Sleeve = z.enum(["short", "long"]);
 const Kit = z.enum(["Home", "Away", "Third", "Fourth", "Goalkeeper", "Special", "Unstated"]);
-const Patch = z.enum(["champions_league", "europa_league", "club_world_cup", "league", "world_cup"]);
+const Patch = z.enum(["champions_league", "europa_league", "club_world_cup", "league", "coppa_italia", "world_cup", "world_cup_peace", "world_cup_champions"]);
 
 const ils = (agorot: number) => agorot / 100;
 function quoteView(q: Awaited<ReturnType<typeof requote>>) {

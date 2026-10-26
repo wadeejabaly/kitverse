@@ -21,7 +21,10 @@ function diff(live: PriceListData, next: PriceListData): PriceChange[] {
     }
   };
   compare(live.groups, next.groups, (g) => g.name_en, (g) => `₪${g.price}`);
-  compare(live.addons, next.addons, (a) => a.name_en, (a) => `+₪${a.price}`);
+  // Tiered addons (owner decision 2026-10-26, the patch picker) show their
+  // full 1st/2nd/3rd ladder here, not just the flat price, so the owner sees
+  // the real change before approving it.
+  compare(live.addons, next.addons, (a) => a.name_en, (a) => (a.price_tiers?.length ? `+₪${a.price_tiers.join("/")}` : `+₪${a.price}`));
   compare(live.offers, next.offers, (o) => o.name_en, (o) => (o.active ? `on: ₪${o.unit_price.short} each from ${o.min_qty}` : "off"));
   compare(live.delivery.zones, next.delivery.zones, (z) => `Delivery: ${z.name_ar}`, (z) => `₪${z.fee} · ${z.days} days`);
   for (const z of next.delivery.zones) {

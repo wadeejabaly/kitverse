@@ -1,12 +1,12 @@
 import "server-only";
 import { db, must } from "../db";
 import { notify } from "../notify";
-import { normalizePhone, validatePrint, type PatchId } from "./rules";
+import { normalizePhone, validatePrint } from "./rules";
 import { requote, type OrderRow } from "./draft";
 import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
-import { sanitizePatch } from "../product";
+import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
 
 /**
@@ -22,8 +22,6 @@ import { resolveTown } from "../localities";
 export type WebOrderResult =
   | { ok: true; number: number; token: string; url: string; total: number }
   | { ok: false; code: "invalid_request" | "cart_empty" | "unknown_city" | "server_error"; detail?: string };
-
-const PATCH: Record<string, PatchId[]> = { none: [], league: ["league"], ucl: ["champions_league"], worldcup: ["world_cup"] };
 
 /** "MESSI 10" / "10 MESSI" / "MESSI" / "10" -> printed name + number */
 export function splitNameNumber(raw?: string): { name: string | null; number: string | null } {
@@ -74,10 +72,10 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
   try {
     must(await db().from("order_items").insert(lines.map(({ i, p }) => {
       const { name, number } = splitNameNumber(i.nameNumber);
-      // club shirts: league/UCL patch, national shirts: World Cup patch - anything else is dropped
+      // re-validated against the catalogue (team type, league, the cap) - whatever the browser sent, only an eligible set is ever stored
       const store = getStoreProduct(i.handle);
-      const patch = store ? sanitizePatch(i.patch, store) : "none";
-      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: "short", size: i.size, qty: i.qty, print_name: name, print_number: number, patches: PATCH[patch] ?? [] };
+      const patches = store ? sanitizePatches(i.patches, store) : [];
+      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: "short", size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
     })).select("id"), "web items");
     const q = await requote(order);
     // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —

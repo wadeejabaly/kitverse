@@ -4,6 +4,7 @@
  * All results are in agorot (integer); the price list itself is in whole ILS.
  */
 import type { PriceListData, PriceGroup, Offer } from "./schema";
+import { tieredTotal } from "./tiers";
 
 export type Audience = "adult" | "women" | "kids";
 export type Version = "fan" | "player";
@@ -139,7 +140,15 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
     const nn = addon("name_number");
     if (i.printNameNumber && nn) adds.push({ id: nn.id, label: nn.name_ar, amount: A(nn.price) });
     const patch = addon("patch");
-    if (i.patches && i.patches > 0 && patch) adds.push({ id: patch.id, label: `${patch.name_ar} ×${i.patches}`, amount: A(patch.price) * i.patches });
+    // Tiered (owner decision 2026-10-26): the 1st patch on a shirt costs
+    // patch.price_tiers[0], the 2nd price_tiers[1], etc - NOT a flat
+    // price × count. A×tieredTotal(...) would round each tier separately and
+    // could drift by a cent across patches, so the sum is taken in ILS first
+    // and rounded to agorot once, same as every other money figure here.
+    if (i.patches && i.patches > 0 && patch) {
+      const amount = A(tieredTotal(patch.price_tiers, patch.price, i.patches));
+      adds.push({ id: patch.id, label: `${patch.name_ar} ×${i.patches}`, amount });
+    }
     const sz = sizeAddon(i.size, list.addons);
     if (sz) adds.push({ id: sz.id, label: sz.name_ar, amount: A(sz.price) });
     const perShirt = adds.reduce((s, a) => s + a.amount, 0);

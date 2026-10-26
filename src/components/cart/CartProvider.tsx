@@ -9,8 +9,9 @@ import {
   useState,
 } from "react";
 import { SIZES, VERSIONS } from "@/data/pricing";
-import type { AccessoryCartItem, CartItem, JerseyCartItem, Patch, Size, Version } from "@/data/types";
+import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
+import { PATCHES } from "@/lib/orders/rules";
 
 /**
  * The cart: client-side only, persisted to localStorage, prices never stored.
@@ -57,19 +58,24 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 /**
  * A line's identity. For a jersey: the same shirt in the same size, version,
- * personalisation and patch choice is one line whose quantity grows; change
- * any option and it is a different line, because it is a different physical
- * product. For an accessory: there is nothing to configure, so the handle
- * alone is the identity — adding the same keychain twice just grows its qty.
+ * personalisation and patch SET is one line whose quantity grows; change any
+ * option and it is a different line, because it is a different physical
+ * product. The patches are sorted before joining — price is by count, not
+ * order, so {A,B} and {B,A} are the same line. For an accessory: there is
+ * nothing to configure, so the handle alone is the identity — adding the
+ * same keychain twice just grows its qty.
  */
 export function lineKey(item: CartItem): string {
   if (item.kind === "accessory") return `accessory|${item.handle}`;
-  return ["jersey", item.handle, item.size, item.version, item.nameNumber ?? "", item.patch].join("|");
+  const patches = [...item.patches].sort().join("+");
+  return ["jersey", item.handle, item.size, item.version, item.nameNumber ?? "", patches].join("|");
 }
 
 const SIZE_SET = new Set<string>(SIZES);
 const VERSION_SET = new Set<string>(VERSIONS);
-const PATCH_SET = new Set<string>(["none", "league", "ucl", "worldcup"]);
+const PATCH_ID_SET = new Set<string>(Object.keys(PATCHES));
+/** Legacy single-value `Patch` → the new `PatchId[]` (a cart saved before 2026-10-26). */
+const LEGACY_PATCH_MAP: Record<string, PatchId[]> = { none: [], league: ["league"], ucl: ["champions_league"], worldcup: ["world_cup"] };
 
 function parseJerseyEntry(value: Record<string, unknown>): JerseyCartItem | null {
   if (typeof value.handle !== "string" || value.handle === "") return null;
@@ -82,24 +88,29 @@ function parseJerseyEntry(value: Record<string, unknown>): JerseyCartItem | null
     typeof value.nameNumber === "string" && value.nameNumber.trim() !== ""
       ? sanitizeNameNumber(value.nameNumber).slice(0, NAME_NUMBER_MAX)
       : undefined;
-  // `patch` replaced the old `badge: boolean` (owner decision 2026-10-23).
-  // A cart saved by an earlier release has `badge: true/false` and no
-  // `patch` at all — migrate it on read: `badge: true` becomes the generic
-  // "league" patch (the closest match to the old single generic add-on),
-  // `badge: false`/absent becomes "none".
-  const patch: Patch =
-    typeof value.patch === "string" && PATCH_SET.has(value.patch)
-      ? (value.patch as Patch)
+  // `patches: PatchId[]` replaced the single `patch` enum (owner decision
+  // 2026-10-26) — which itself had replaced the old `badge: boolean` (owner
+  // decision 2026-10-23). A cart saved by an earlier release has one of:
+  //   - `patches: string[]` already (this release) — keep whatever is a
+  //     known id, dropping anything that isn't (a removed/renamed id);
+  //   - `patch: "none"|"league"|"ucl"|"worldcup"` (the single-value release)
+  //     — map it through LEGACY_PATCH_MAP;
+  //   - `badge: true/false` or neither (the original release) — `true`
+  //     becomes the generic "league" patch, `false`/absent becomes none.
+  const patches: PatchId[] = Array.isArray(value.patches)
+    ? value.patches.filter((p): p is PatchId => typeof p === "string" && PATCH_ID_SET.has(p))
+    : typeof value.patch === "string" && value.patch in LEGACY_PATCH_MAP
+      ? LEGACY_PATCH_MAP[value.patch]
       : value.badge === true
-        ? "league"
-        : "none";
+        ? ["league"]
+        : [];
 
   return {
     kind: "jersey",
     handle: value.handle,
     size: value.size as Size,
     version: value.version as Version,
-    patch,
+    patches,
     qty,
     ...(nameNumber ? { nameNumber } : {}),
   };

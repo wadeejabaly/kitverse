@@ -6,6 +6,9 @@
  * (wave 3), and pricing.ts imports these types rather than redeclaring them.
  */
 
+import type { PatchId } from "@/lib/orders/rules";
+export type { PatchId };
+
 export type Kind = "national" | "current" | "previous";
 export type Kit = "Home" | "Away" | "Third";
 export type Size = "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "4XL";
@@ -14,21 +17,32 @@ export type Version = "fan" | "player";
 /**
  * The official-patch add-on (owner decision 2026-10-23, replacing the single
  * generic "badge" boolean; extended 2026-10-25 with a World Cup patch for
- * national-team shirts). A shopper picks AT MOST ONE patch per shirt:
+ * national-team shirts; extended again 2026-10-26 into a MULTI-select,
+ * TIERED-price picker with real patch artwork). A shopper now picks a SET of
+ * patches per shirt, `PatchId[]` (imported from the order/DB layer's own
+ * vocabulary in lib/orders/rules.ts — the single source of truth for which
+ * ids exist and which team types each is for):
  *
- *   - a CLUB product (`Product.league !== null`) offers "league" (that
- *     club's own domestic league patch) or "ucl" (Champions League) — never
- *     both;
+ *   - a CLUB product (`Product.league !== null`) can carry up to 2 patches
+ *     (one per sleeve): its own league's patch (only for leagues we have
+ *     artwork for — see src/data/patches.ts), the Champions League patch
+ *     (with per-club trophy-count artwork), the Europa League patch, and —
+ *     Serie A clubs only — the Coppa Italia patch;
  *   - a NATIONAL-TEAM product (`Product.kind === "national"`,
- *     `Product.league === null`) offers only "worldcup";
+ *     `Product.league === null`) can carry up to 3: the World Cup, Peace and
+ *     Champions badges, any or all of them at once.
  *
- * — and the two sets never overlap: a club shirt can never carry "worldcup"
- * and a national shirt can never carry "league" or "ucl". All three cost the
- * same flat ADDONS.patch. See ProductForm's patchOptionsFor() for the
- * product → allowed-values mapping, and sanitizePatch() in lib/product.ts
- * for the server-side mirror of that same rule.
+ * Each patch is priced on a tier by COUNT, not by which ones are picked: the
+ * 1st costs price_tiers[0] (₪12.99), the 2nd price_tiers[1] (₪9.99), the 3rd
+ * price_tiers[2] (₪6.99) — see Addon.price_tiers in lib/pricing/schema.ts and
+ * tieredTotal() in lib/pricing/tiers.ts.
+ *
+ * src/data/patches.ts's patchOptionsFor() is the single place that decides
+ * which options (with which photo) a product offers; sanitizePatches() in
+ * lib/product.ts is its server-side mirror, built on the same PATCHES/
+ * checkPatches rules the Instagram bot already uses, so the two can never
+ * drift apart silently.
  */
-export type Patch = "none" | "league" | "ucl" | "worldcup";
 
 export interface Product {
   handle: string; // normalized, ASCII, unique
@@ -65,7 +79,8 @@ export interface JerseyCartItem {
   size: Size;
   version: Version;
   nameNumber?: string; // <=18 chars, trimmed, uppercase-latin+digits+space allowed
-  patch: Patch;
+  /** Zero or more patches, cheapest-tier-first order not required — price is by count, not identity. */
+  patches: PatchId[];
   qty: number; // 1..10
 }
 

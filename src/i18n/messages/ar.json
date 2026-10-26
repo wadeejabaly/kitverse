@@ -245,10 +245,9 @@
     "nameNumberToggle": "أضف اسم ورقم",
     "nameNumberLabel": "الاسم والرقم",
     "nameNumberHint": "بنطبعه حسب الطلب. بيضيف ⁦₪19.99⁩ ويومين على موعد الشحن.",
-    "patchLegend": "الرقعة الرسمية",
+    "patchLegend": "الرقعات الرسمية",
     "patchLeague": "رقعة {league}",
-    "patchUcl": "رقعة دوري أبطال أوروبا",
-    "patchHint": "رقعة رسمية مخيّطة على الكم. بتضيف ⁦₪11.99⁩.",
+    "patchHint": "اختار قد ما بدك. اول رقعة ⁦₪12.99⁩، التانية ⁦₪9.99⁩، والتالتة ⁦₪6.99⁩.",
     "quantity": "الكمية",
     "added": "انضاف للسلة.",
     "viewCart": "شوف السلة",
@@ -263,9 +262,13 @@
     "related": "المزيد من {team}",
     "metaDescription": "{title} — نسخة مشجّع ونسخة لاعب، مقاسات من S إلى 4XL، مع إمكانية طباعة الاسم والرقم. الأسعار بالشيكل وشاملة الضريبة.",
     "galleryPhoto": "صورة {index}",
-    "patchToggle": "أضف رقعة رسمية",
     "patchWorldCup": "رقعة كأس العالم",
-    "patchSelectLabel": "اختار الرقعة"
+    "patchMaxHint": "اقصى شي {max} رقعات لهاد القميص.",
+    "patchChampionsLeague": "رقعة دوري الأبطال",
+    "patchEuropaLeague": "رقعة الدوري الأوروبي",
+    "patchCoppaItalia": "رقعة كأس إيطاليا",
+    "patchWorldCupChampions": "رقعة أبطال كأس العالم",
+    "patchWorldCupPeace": "رقعة السلام لكأس العالم"
   },
   "cart": {
     "eyebrow": "السلة",
@@ -276,9 +279,8 @@
     "propSize": "المقاس",
     "propVersion": "النسخة",
     "propNameNumber": "الاسم والرقم",
-    "propPatch": "الرقعة",
+    "propPatch": "الرقعات",
     "propPatchLeague": "رقعة الدوري",
-    "propPatchUcl": "رقعة دوري الأبطال",
     "propPatchWorldCup": "رقعة كأس العالم",
     "subtotal": "المجموع الفرعي",
     "shipping": "الشحن",
@@ -288,7 +290,12 @@
     "deliveryNote": "التوصيل من 7 إلى 14 يوم. القمصان المطبوعة بتضيف يومين.",
     "decrease": "إنقاص الكمية",
     "increase": "زيادة الكمية",
-    "unavailable": "هذا القميص ما عاد متوفر وانشال من سلّتك."
+    "unavailable": "هذا القميص ما عاد متوفر وانشال من سلّتك.",
+    "propPatchChampionsLeague": "رقعة دوري الأبطال",
+    "propPatchEuropaLeague": "رقعة الدوري الأوروبي",
+    "propPatchCoppaItalia": "رقعة كأس إيطاليا",
+    "propPatchWorldCupChampions": "رقعة أبطال كأس العالم",
+    "propPatchWorldCupPeace": "رقعة السلام لكأس العالم"
   },
   "search": {
     "eyebrow": "بحث",

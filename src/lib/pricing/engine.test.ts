@@ -93,6 +93,23 @@ describe("real DM orders", () => {
   });
 });
 
+describe("tiered patch pricing (owner decision 2026-10-26)", () => {
+  it("the 1st patch costs the fixture's tier[0] (same as the old flat price)", () => {
+    const q = quote(list, { items: [shirt({ patches: 1 })] });
+    expect(q.lines[0].addons.find((a) => a.id === "patch")?.amount).toBe(ILS(12));
+  });
+
+  it("the 2nd and 3rd patches on the same shirt use the cheaper tiers, not another flat charge", () => {
+    const q = quote(list, { items: [shirt({ patches: 3 })] });
+    expect(q.lines[0].addons.find((a) => a.id === "patch")?.amount).toBe(ILS(12 + 9 + 6));
+  });
+
+  it("a 4th patch repeats the last named tier", () => {
+    const q = quote(list, { items: [shirt({ patches: 4 })] });
+    expect(q.lines[0].addons.find((a) => a.id === "patch")?.amount).toBe(ILS(12 + 9 + 6 + 6));
+  });
+});
+
 describe("order add-ons, discounts, delivery", () => {
   it("box is charged once per order", () => {
     const q = quote(list, { items: [shirt({ boxAddonId: "box_real" }), shirt({ boxAddonId: "box_real" }), shirt()] });

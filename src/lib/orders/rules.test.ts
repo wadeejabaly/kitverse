@@ -36,6 +36,7 @@ describe("print", () => {
 
 describe("patches", () => {
   const club = { type: "club" as const, league_id: "la-liga" };
+  const serieAClub = { type: "club" as const, league_id: "serie-a" };
   const nation = { type: "national" as const, league_id: null };
   it("allows normal combinations", () => {
     expect(checkPatches(["champions_league", "league"], club)).toBeNull();
@@ -45,6 +46,15 @@ describe("patches", () => {
     expect(checkPatches(["world_cup"], club)).toMatch(/national/);
     expect(checkPatches(["league"], nation)).toMatch(/clubs/);
     expect(checkPatches(["champions_league", "league", "club_world_cup"], club)).toMatch(/2/);
+  });
+  it("a national-team shirt can carry all 3 World Cup patches at once", () => {
+    expect(checkPatches(["world_cup", "world_cup_peace", "world_cup_champions"], nation)).toBeNull();
+    expect(checkPatches(["world_cup", "world_cup_peace", "world_cup_champions", "world_cup"], nation)).toMatch(/3|twice/);
+  });
+  it("Coppa Italia is Serie A only", () => {
+    expect(checkPatches(["coppa_italia"], serieAClub)).toBeNull();
+    expect(checkPatches(["coppa_italia"], club)).toMatch(/league/);
+    expect(checkPatches(["coppa_italia"], nation)).toMatch(/clubs/);
   });
 });
 

@@ -1,15 +1,17 @@
-import type { Patch, Size, Version } from "./types";
+import type { Size, Version } from "./types";
 import priceList from "./price-list.json";
+import { tieredTotal } from "@/lib/pricing/tiers";
 
 /**
  * Every number below comes from the bot's price list (src/data/price-list.json, exported from the
  * database by scripts/export-store-catalog.ts), so the website and the Instagram bot always quote
  * the same prices. The server re-prices every order with src/lib/pricing/engine.ts.
  */
-type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] } };
+type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number; price_tiers?: number[] }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] } };
 const pl = priceList as unknown as PL;
 const groupPrice = (id: string) => pl.groups.find((g) => g.id === id)?.price ?? 0;
 const addonPrice = (id: string) => pl.addons.find((a) => a.id === id)?.price ?? 0;
+const addonTiers = (id: string) => pl.addons.find((a) => a.id === id)?.price_tiers;
 const zoneFee = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.fee ?? 0;
 const zoneLabel = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.name_ar ?? "";
 
@@ -119,13 +121,22 @@ export function round2(value: number): number {
 }
 
 /**
- * Add-ons (owner decisions 2026-09-02 and 2026-10-23). `patch` replaced the
- * old flat `badge` boolean add-on: it is charged once whenever a shirt's
- * chosen Patch is anything other than "none" — the league patch and the
- * Champions League patch cost the same, by owner decision 2026-10-23
- * ("make it 11.99 for all patches").
+ * Add-ons (owner decisions 2026-09-02, 2026-10-23 and 2026-10-26). `patch`
+ * is now TIERED by how many patches are on the same shirt, not a flat price
+ * per patch: `ADDONS.patch` stays the single-patch figure (what the 1st one
+ * costs) for anything that only needs one number, and `ADDONS.patchTiers`
+ * carries the full ladder — 1st/2nd/3rd — for `patchesTotal()` below. Every
+ * patch id costs the same regardless of WHICH one it is; only the COUNT on
+ * the shirt changes the price.
  */
 export const ADDONS = { nameNumber: addonPrice("name_number"), patch: addonPrice("patch") } as const;
+
+const PATCH_TIERS = addonTiers("patch");
+
+/** What `count` patches on one shirt cost in total (tier 1 + tier 2 + …), rounded to the cent. */
+export function patchesTotal(count: number): number {
+  return round2(tieredTotal(PATCH_TIERS, ADDONS.patch, count));
+}
 
 /* ------------------------------------------------------------- delivery -- */
 
@@ -180,12 +191,12 @@ export function priceLine(
   size: Size,
   version: Version,
   qty: number,
-  addons: { nameNumber?: boolean; patch?: Patch } = {},
+  addons: { nameNumber?: boolean; patchCount?: number } = {},
 ): PricedLine {
   const unitPrice = round2(
     priceFor(season, size, version) +
       (addons.nameNumber ? ADDONS.nameNumber : 0) +
-      (addons.patch && addons.patch !== "none" ? ADDONS.patch : 0),
+      patchesTotal(addons.patchCount ?? 0),
   );
   return { unitPrice, qty, lineTotal: round2(unitPrice * qty) };
 }

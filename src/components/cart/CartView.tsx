@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { cartTotals, priceLine, round2 } from "@/data/pricing";
+import { PATCH_PROP_KEYS } from "@/data/patches";
 import { lineKey, useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 
@@ -71,7 +72,7 @@ export function CartView({
       if (!product) return null;
       const priced = priceLine(product.season, item.size, item.version, item.qty, {
         nameNumber: Boolean(item.nameNumber),
-        patch: item.patch,
+        patchCount: item.patches.length,
       });
       return { item, product, priced, key: lineKey(item) };
     })
@@ -161,13 +162,9 @@ export function CartView({
                     </bdi>
                   </Prop>
                 ) : null}
-                {item.patch !== "none" ? (
+                {item.patches.length > 0 ? (
                   <Prop label={t("propPatch")}>
-                    {item.patch === "ucl"
-                      ? t("propPatchUcl")
-                      : item.patch === "worldcup"
-                        ? t("propPatchWorldCup")
-                        : t("propPatchLeague")}
+                    {item.patches.map((p) => t(PATCH_PROP_KEYS[p])).join(" + ")}
                   </Prop>
                 ) : null}
               </dl>

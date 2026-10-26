@@ -136,9 +136,14 @@
       "id": "patch",
       "name_en": "Patch",
       "name_ar": "الرقعة",
-      "price": 11.99,
+      "price": 12.99,
       "per": "patch",
-      "source": "website"
+      "source": "website",
+      "price_tiers": [
+        12.99,
+        9.99,
+        6.99
+      ]
     },
     {
       "id": "size_3xl",

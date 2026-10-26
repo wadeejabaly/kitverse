@@ -9,6 +9,7 @@ import {
   cartTotals,
   giftBoxTotalFor,
   isRetroSeason,
+  patchesTotal,
   priceFor,
   priceLine,
   round2,
@@ -113,9 +114,25 @@ describe("ADDONS", () => {
   it("exposes the confirmed addon prices", () => {
     // Owner decision: name + number moved from a flat 20 to ₪19.99.
     expect(ADDONS.nameNumber).toBe(19.99);
-    // Owner decision 2026-10-23: the official patch (replacing the old flat
-    // `badge` boolean add-on) is ₪11.99 for either patch choice.
-    expect(ADDONS.patch).toBe(11.99);
+    // Owner decision 2026-10-26: the 1st patch on a shirt is ₪12.99 (the
+    // 2nd and 3rd are cheaper — see patchesTotal below).
+    expect(ADDONS.patch).toBe(12.99);
+  });
+});
+
+describe("patchesTotal — tiered by how many patches are on the same shirt", () => {
+  it("is free with no patches", () => {
+    expect(patchesTotal(0)).toBe(0);
+  });
+
+  it("charges ₪12.99 / ₪9.99 / ₪6.99 for the 1st / 2nd / 3rd patch", () => {
+    expect(patchesTotal(1)).toBe(12.99);
+    expect(patchesTotal(2)).toBe(round2(12.99 + 9.99));
+    expect(patchesTotal(3)).toBe(round2(12.99 + 9.99 + 6.99));
+  });
+
+  it("repeats the last tier for any patch beyond the named ones", () => {
+    expect(patchesTotal(4)).toBe(round2(12.99 + 9.99 + 6.99 + 6.99));
   });
 });
 
@@ -153,25 +170,21 @@ describe("priceLine + cartTotals — addon math and totals", () => {
   });
 
   it("priceLine adds nameNumber and a patch onto the unit price before multiplying by qty", () => {
-    const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, patch: "league" });
-    expect(line.unitPrice).toBe(round2(95 + 19.99 + 11.99));
-    expect(line.lineTotal).toBe(round2((95 + 19.99 + 11.99) * 3));
+    const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, patchCount: 1 });
+    expect(line.unitPrice).toBe(round2(95 + 19.99 + 12.99));
+    expect(line.lineTotal).toBe(round2((95 + 19.99 + 12.99) * 3));
   });
 
-  it("the league patch, the Champions League patch, and the World Cup patch all cost exactly the same", () => {
-    const league = priceLine("2026/27", "M", "fan", 1, { patch: "league" });
-    const ucl = priceLine("2026/27", "M", "fan", 1, { patch: "ucl" });
-    const worldcup = priceLine("2026/27", "M", "fan", 1, { patch: "worldcup" });
-    expect(league.unitPrice).toBe(ucl.unitPrice);
-    expect(league.unitPrice).toBe(worldcup.unitPrice);
-    expect(league.unitPrice).toBe(round2(95 + 11.99));
+  it("a second patch on the same shirt costs the cheaper 2nd tier, not another 1st-tier charge", () => {
+    const two = priceLine("2026/27", "M", "fan", 1, { patchCount: 2 });
+    expect(two.unitPrice).toBe(round2(95 + 12.99 + 9.99));
   });
 
-  it('a patch of "none" charges nothing, same as omitting it', () => {
-    const withNone = priceLine("2026/27", "M", "fan", 1, { patch: "none" });
+  it("a patch count of 0 charges nothing, same as omitting it", () => {
+    const withZero = priceLine("2026/27", "M", "fan", 1, { patchCount: 0 });
     const omitted = priceLine("2026/27", "M", "fan", 1);
-    expect(withNone.unitPrice).toBe(95);
-    expect(withNone.unitPrice).toBe(omitted.unitPrice);
+    expect(withZero.unitPrice).toBe(95);
+    expect(withZero.unitPrice).toBe(omitted.unitPrice);
   });
 
   it("priceLine respects the size surcharge together with addons", () => {
@@ -190,11 +203,11 @@ describe("priceLine + cartTotals — addon math and totals", () => {
   it("cartTotals sums line totals into subtotal and adds the given shipping once", () => {
     const lines = [
       priceLine("2026/27", "M", "fan", 1),
-      priceLine("2022", "L", "player", 2, { patch: "league" }),
+      priceLine("2022", "L", "player", 2, { patchCount: 1 }),
     ];
     const rest = SHIPPING_ILS_BY_TIER.rest;
     const totals = cartTotals(lines, rest);
-    const expectedSubtotal = round2(95 + round2(135 + 11.99) * 2);
+    const expectedSubtotal = round2(95 + round2(135 + 12.99) * 2);
     expect(totals.subtotal).toBe(expectedSubtotal);
     expect(totals.shipping).toBe(rest);
     expect(totals.giftBox).toBe(0);
