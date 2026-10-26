@@ -17,6 +17,7 @@ import { requote, type OrderRow } from "@/lib/orders/draft";
 import { isBotModel } from "@/lib/agent/models";
 import { israelDayEnd } from "@/lib/time";
 import { conversationPatch } from "@/lib/conversation/gate";
+import { TEST_CHAT_USER } from "@/lib/conversation/test-chat";
 
 async function audit(actor: string | null, action: string, entity: string, entityId: string, after?: unknown) {
   await db().from("audit_log").insert({ actor, action, entity, entity_id: entityId, after: after ?? null });
@@ -167,9 +168,9 @@ export async function ownerSend(form: FormData) {
 // ---------------------------------------------------------------- test chat (simulator)
 
 export async function testChatSend(form: FormData) {
-  const staff = await requireStaff();
+  await requireStaff();
   const text = String(form.get("text") ?? "").trim();
-  const user = `admin-${staff.id ?? "dev"}`;
+  const user = TEST_CHAT_USER; // one test chat shared by every admin
   if (form.get("reset") === "1") {
     const { conv, customer } = await getOrCreateConversation("simulator", user);
     await db().from("orders").delete().eq("conversation_id", conv.id).in("status", ["draft", "quoted", "awaiting_details", "awaiting_confirmation"]);

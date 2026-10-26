@@ -1,6 +1,7 @@
 import { RotateCcw, FlaskConical } from "lucide-react";
 import { requireStaff } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { TEST_CHAT_USER } from "@/lib/conversation/test-chat";
 import { testChatSend } from "../../actions";
 import { Thread, type ThreadMsg } from "../thread";
 import { PageHeader, Card, EmptyState, Badge, button } from "../../ui";
@@ -10,8 +11,8 @@ export const dynamic = "force-dynamic";
 
 /** Talk to the bot as if you were a customer. Same brain, prices and tools; nothing goes to Instagram. */
 export default async function TestChat() {
-  const staff = await requireStaff();
-  const customer = (await db().from("customers").select("id").eq("ig_user_id", `sim:admin-${staff.id ?? "dev"}`).maybeSingle()).data;
+  await requireStaff();
+  const customer = (await db().from("customers").select("id").eq("ig_user_id", `sim:${TEST_CHAT_USER}`).maybeSingle()).data;
   const conv = customer ? (await db().from("conversations").select("id").eq("customer_id", customer.id).eq("channel", "simulator").maybeSingle()).data : null;
   const msgs = conv ? ((await db().from("messages").select("id,direction,sender,kind,text,transcript,media,status,created_at")
     .eq("conversation_id", conv.id).neq("status", "discarded").order("created_at").limit(200)).data ?? []) as ThreadMsg[] : [];
