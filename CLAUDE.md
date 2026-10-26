@@ -40,6 +40,7 @@ Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/dec
 - Pricing page: the owner edits every price there (shirts, extras, offers, delivery fees/days/area names) + "Approve & publish". Saving updates the live price list (bot + checkout at once) and calls the deploy hook so the website's shown prices follow.
 - **Prices live only in the database price list, changed in admin Pricing.** Never hardcode a price in code, prompts or translations: website copy uses placeholders filled from `src/data/pricing.ts`; `src/data/price-list.json` is re-exported from the database on every build (editing it by hand changes nothing); `pricing/price-list.draft.json` is only the first-time seed.
 - Owner photo uploads call `VERCEL_DEPLOY_HOOK_URL` (if set) so the static website catalog rebuilds.
+- Discount codes (owner feature 2026-10-26): admin Discounts creates/pauses/deletes codes (percent or fixed ₪ off, optional min order / date range / max uses) in the `discount_codes` table. A shopper types one at checkout; `src/app/api/checkout/discount/check` previews it, `src/lib/orders/web.ts` re-validates and applies it for real as an `adjustments` row (`kind: 'discount_code'`) when the order is placed - no owner approval needed, the code is its own authority. `src/lib/discounts.ts` has the lookup/amount/use-tracking logic.
 
 ## Photos
 Customers only ever see photos that passed `src/lib/catalog/photo-qa.ts`:

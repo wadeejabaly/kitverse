@@ -78,6 +78,7 @@ const ERROR_CODES: readonly CheckoutErrorCode[] = [
   "invalid_request",
   "cart_empty",
   "unknown_city",
+  "invalid_discount_code",
   "payments_unconfigured",
   "paypal_failed",
   "payplus_failed",
@@ -86,6 +87,17 @@ const ERROR_CODES: readonly CheckoutErrorCode[] = [
   "rate_limited",
   "server_error",
 ];
+
+/** What the discount-code field currently shows — checked against the server
+ *  (POST /api/checkout/discount/check), never computed client-side. A code
+ *  that checks out but doesn't yet meet its own minimum order stays
+ *  "applied" rather than reverting to idle, so it kicks in on its own the
+ *  moment the shopper's cart grows enough — see discountPreview below. */
+type DiscountCheck =
+  | { status: "idle" }
+  | { status: "checking" }
+  | { status: "applied"; code: string; kind: "percent" | "fixed"; value: number; minOrder: number }
+  | { status: "invalid" };
 
 /** What the city field currently shows, resolved against the server's town → zone list
  *  (POST /api/checkout/resolve-city) — never guessed client-side. */
@@ -136,6 +148,13 @@ export function CheckoutView({
   // not a per-shirt flag — 0 means no box at all.
   const [giftBoxQty, setGiftBoxQty] = useState(0);
 
+  // Discount code (owner feature 2026-10-26): typed and checked here purely
+  // as a preview, same posture as the city check below — the order itself is
+  // always re-validated and re-priced server-side (src/lib/orders/web.ts),
+  // which never trusts what this check said a code was worth.
+  const [discountInput, setDiscountInput] = useState("");
+  const [discountCheck, setDiscountCheck] = useState<DiscountCheck>({ status: "idle" });
+
   /**
    * Owner decision 2026-10-25: no region picker — the shopper just types
    * their city, and this resolves it against the same town → zone list the
@@ -183,6 +202,34 @@ export function CheckoutView({
   function handleSelectTown(town: TownOption) {
     if (cityCheckTimer.current) clearTimeout(cityCheckTimer.current);
     setCityCheck({ status: "found", fee: SHIPPING_ILS_BY_TIER[town.tier], label: SHIPPING_LABEL_BY_TIER[town.tier] });
+  }
+
+  async function applyDiscountCode() {
+    const code = discountInput.trim();
+    if (!code) return;
+    setDiscountCheck({ status: "checking" });
+    try {
+      const res = await fetch("/api/checkout/discount/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const data = (await res.json().catch(() => null)) as
+        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown }
+        | null;
+      if (data?.ok && (data.kind === "percent" || data.kind === "fixed") && typeof data.value === "number") {
+        setDiscountCheck({ status: "applied", code: code.toUpperCase(), kind: data.kind, value: data.value, minOrder: typeof data.minOrder === "number" ? data.minOrder : 0 });
+      } else {
+        setDiscountCheck({ status: "invalid" });
+      }
+    } catch {
+      setDiscountCheck({ status: "invalid" });
+    }
+  }
+
+  function clearDiscountCode() {
+    setDiscountInput("");
+    setDiscountCheck({ status: "idle" });
   }
 
   /**
@@ -256,6 +303,17 @@ export function CheckoutView({
     giftBoxQty,
   );
 
+  // Mirrors the server engine's own split (src/lib/pricing/engine.ts): a
+  // code is worth a cut of the shirts + gift box, never of shipping, and
+  // "qualifies" compares against that same pre-shipping figure, not the
+  // grand total.
+  const itemsSubtotal = round2(totals.subtotal + totals.giftBox);
+  const discountQualifies = discountCheck.status === "applied" && itemsSubtotal >= discountCheck.minOrder;
+  const discountAmount = discountQualifies && discountCheck.status === "applied"
+    ? Math.min(itemsSubtotal, round2(discountCheck.kind === "percent" ? (itemsSubtotal * discountCheck.value) / 100 : discountCheck.value))
+    : 0;
+  const grandTotal = round2(totals.total - discountAmount);
+
   const parsed = CustomerSchema.safeParse({
     ...values,
     notes: values.notes.trim() === "" ? undefined : values.notes,
@@ -304,6 +362,9 @@ export function CheckoutView({
       customer: parsed.success ? parsed.data : null,
       locale,
       giftBoxQty,
+      // Only sent once it actually qualifies against this cart — see
+      // discountQualifies above. The server re-checks it regardless.
+      ...(discountQualifies && discountCheck.status === "applied" ? { discountCode: discountCheck.code } : {}),
     });
   }
 
@@ -344,7 +405,12 @@ export function CheckoutView({
     }
 
     setPhase("form");
-    setErrorCode(isErrorCode(payload?.code) ? payload.code : "server_error");
+    const code = isErrorCode(payload?.code) ? payload.code : "server_error";
+    // A code the server rejected at the last moment (expired or used up
+    // between the preview and now) would otherwise keep being resent on
+    // every retry — clear it so "Send order" can actually succeed next time.
+    if (code === "invalid_discount_code") clearDiscountCode();
+    setErrorCode(code);
   }
 
   if (!hydrated) return <div className="min-h-[40vh]" aria-hidden />;
@@ -613,6 +679,48 @@ export function CheckoutView({
           </select>
         </div>
 
+        {/* Discount code (owner feature 2026-10-26): checked against the
+            server as the shopper types it, same preview-only posture as the
+            city field above. */}
+        <div className="border-b border-rule py-5">
+          <label htmlFor="checkout-discount" className="mono-eyebrow mb-2.5 block text-ink-soft">
+            {t("discountLabel")}
+          </label>
+          {discountCheck.status === "applied" ? (
+            <div className="flex items-center justify-between gap-3">
+              <span dir="ltr" className="latin text-sm font-medium">{discountCheck.code}</span>
+              <button type="button" className="text-xs text-ink-soft underline underline-offset-4" onClick={clearDiscountCode}>
+                {t("discountRemove")}
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                id="checkout-discount"
+                dir="ltr"
+                value={discountInput}
+                onChange={(event) => { setDiscountInput(event.target.value); setDiscountCheck({ status: "idle" }); }}
+                className="latin w-full border border-rule bg-field px-3.5 py-2.5 text-sm text-ink"
+              />
+              <button
+                type="button"
+                className="btn-quiet shrink-0"
+                disabled={!discountInput.trim() || discountCheck.status === "checking"}
+                onClick={applyDiscountCode}
+              >
+                {discountCheck.status === "checking" ? t("discountChecking") : t("discountApply")}
+              </button>
+            </div>
+          )}
+          {discountCheck.status === "invalid" ? (
+            <p className="mt-2 text-xs text-ink-soft">{t("discountInvalid")}</p>
+          ) : discountCheck.status === "applied" && !discountQualifies ? (
+            <p className="mt-2 text-xs text-ink-soft">
+              {t("discountMinOrder", { amount: String(discountCheck.minOrder) })}
+            </p>
+          ) : null}
+        </div>
+
         <div className="flex flex-col gap-2.5 pt-5">
           <Row label={tCart("subtotal")}>
             <Price value={totals.subtotal} />
@@ -632,9 +740,16 @@ export function CheckoutView({
               <Price value={totals.giftBox} />
             </Row>
           ) : null}
+          {discountAmount > 0 ? (
+            <Row label={t("discountRow", { code: discountCheck.status === "applied" ? discountCheck.code : "" })}>
+              <span dir="ltr">
+                -<Price value={discountAmount} />
+              </span>
+            </Row>
+          ) : null}
           <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
             <span>{tCart("total")}</span>
-            <Price value={totals.total} />
+            <Price value={grandTotal} />
           </div>
           <p className="text-xs text-ink-soft">{tCart("deliveryNote")}</p>
         </div>
@@ -715,6 +830,8 @@ function ErrorMessage({ code }: { code: CheckoutErrorCode }) {
       return <>{t("errorCartEmpty")}</>;
     case "unknown_city":
       return <>{t("cityUnknown")}</>;
+    case "invalid_discount_code":
+      return <>{t("errorDiscountCode")}</>;
     case "payments_unconfigured":
       return <>{t("errorUnconfigured")}</>;
     case "rate_limited":

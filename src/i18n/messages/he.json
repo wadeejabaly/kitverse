@@ -387,6 +387,7 @@
     "errorUnconfigured": "התשלום לא זמין כרגע. כתבו לנו ונשלים את ההזמנה בשבילכם.",
     "errorRateLimited": "יותר מדי ניסיונות בזמן קצר. חכו דקה ונסו שוב.",
     "errorCapture": "לא הצלחנו לאשר את התשלום. אם חויבתם, כתבו לנו מיד ונסדר את זה.",
+    "errorDiscountCode": "קוד ההנחה לא התקבל. הסירו אותו ונסו שוב.",
     "payTitle": "תשלום",
     "payCard": "תשלום בכרטיס",
     "payCardNote": "תשלום מאובטח בכרטיס. אנחנו מעבירים אתכם לעמוד של ספק הסליקה כדי להזין את פרטי הכרטיס, ואז מחזירים אתכם לכאן.",
@@ -402,7 +403,14 @@
     "giftBoxLegend": "קופסת מתנה",
     "giftBoxHint": "קופסת מתנה לחולצות שלכם — קופסה אחת מתאימה ליותר מחולצה אחת. ⁦₪{price}⁩ לקופסה.",
     "giftBoxNone": "בלי קופסת מתנה",
-    "giftBoxRow": "קופסת מתנה × ⁦{qty}⁩"
+    "giftBoxRow": "קופסת מתנה × ⁦{qty}⁩",
+    "discountLabel": "קוד הנחה",
+    "discountApply": "החל",
+    "discountChecking": "בודקים…",
+    "discountRemove": "הסר",
+    "discountInvalid": "הקוד הזה לא תקף.",
+    "discountMinOrder": "דורש הזמנה מינימלית של ⁦₪{amount}⁩ כדי לחול.",
+    "discountRow": "הנחה (⁦{code}⁩)"
   },
   "thankYou": {
     "eyebrow": "ההזמנה בוצעה",

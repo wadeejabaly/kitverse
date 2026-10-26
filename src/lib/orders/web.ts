@@ -8,6 +8,7 @@ import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
+import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, type DiscountCode } from "../discounts";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
@@ -21,7 +22,7 @@ import { resolveTown } from "../localities";
  */
 export type WebOrderResult =
   | { ok: true; number: number; token: string; url: string; total: number }
-  | { ok: false; code: "invalid_request" | "cart_empty" | "unknown_city" | "server_error"; detail?: string };
+  | { ok: false; code: "invalid_request" | "cart_empty" | "unknown_city" | "invalid_discount_code" | "server_error"; detail?: string };
 
 /** "MESSI 10" / "10 MESSI" / "MESSI" / "10" -> printed name + number */
 export function splitNameNumber(raw?: string): { name: string | null; number: string | null } {
@@ -36,6 +37,18 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
   const c = req.customer;
   const phone = normalizePhone(c.phone);
   if (!phone) return { ok: false, code: "invalid_request", detail: "phone" };
+
+  // Discount code (owner feature 2026-10-26): checked here, before anything
+  // is written, same as the other fail-fast checks in this function. Only
+  // the CODE is ever trusted from the browser — what it's worth and whether
+  // the cart meets its minimum order are both re-derived below from the
+  // server's own quote, never from anything the checkout page showed.
+  let discount: DiscountCode | null = null;
+  if (req.discountCode && req.discountCode.trim()) {
+    const lookup = await findActiveDiscountCode(req.discountCode);
+    if (!lookup.ok) return { ok: false, code: "invalid_discount_code", detail: lookup.reason };
+    discount = lookup.row;
+  }
 
   // The shopper never picks a region any more — match their typed city against
   // the same town → zone list the Instagram bot uses. An unrecognised town
@@ -80,7 +93,21 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
       const patches = store ? sanitizePatches(i.patches, store) : [];
       return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
     })).select("id"), "web items");
-    const q = await requote(order);
+    let q = await requote(order);
+
+    if (discount) {
+      if (q.itemsTotal < discount.min_order) {
+        await db().from("orders").update({ status: "cancelled", notes: "checkout cancelled: discount code minimum order not met" }).eq("id", order.id);
+        return { ok: false, code: "invalid_discount_code", detail: "min_order" };
+      }
+      const amount = discountAmount(discount, q.itemsTotal);
+      if (amount > 0) {
+        must(await db().from("adjustments").insert({ order_id: order.id, kind: "discount_code", amount, reason: discount.code, discount_code: discount.code }).select("id"), "discount code");
+        await recordDiscountCodeUse(discount.code);
+        q = await requote(order); // re-price now that the adjustment row exists
+      }
+    }
+
     // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —
     // the owner approves or declines it from /admin/orders (approveWebOrder / declineWebOrder).
     const row = must(await db().from("orders").update({ payment_method: "cod", total: q.total })

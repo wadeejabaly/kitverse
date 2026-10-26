@@ -387,6 +387,7 @@
     "errorUnconfigured": "Payment is not available right now. Write to us and we will complete your order.",
     "errorRateLimited": "Too many attempts in a short time. Wait a minute and try again.",
     "errorCapture": "We could not confirm the payment. If you were charged, write to us straight away and we will sort it out.",
+    "errorDiscountCode": "That discount code didn't go through. Remove it and try again.",
     "payTitle": "Payment",
     "payCard": "Pay by card",
     "payCardNote": "Secure card payment. We take you to our payment provider's page to enter your card, then bring you back here.",
@@ -402,7 +403,14 @@
     "giftBoxLegend": "Gift box",
     "giftBoxHint": "A gift box for your shirts — one box fits more than one shirt. ₪{price} each.",
     "giftBoxNone": "No gift box",
-    "giftBoxRow": "Gift box × {qty}"
+    "giftBoxRow": "Gift box × {qty}",
+    "discountLabel": "Discount code",
+    "discountApply": "Apply",
+    "discountChecking": "Checking…",
+    "discountRemove": "Remove",
+    "discountInvalid": "That code isn't valid.",
+    "discountMinOrder": "Needs a minimum order of ₪{amount} to apply.",
+    "discountRow": "Discount ({code})"
   },
   "thankYou": {
     "eyebrow": "Order placed",

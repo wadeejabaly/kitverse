@@ -99,6 +99,10 @@ export const CreateOrderRequestSchema = z.object({
   // boxes, not a per-shirt flag. Optional on the wire so an older client
   // omitting it still prices as "no gift box" rather than failing validation.
   giftBoxQty: z.number().int().min(0).max(GIFT_BOX_MAX_QTY).optional().default(0),
+  // Discount code (owner feature 2026-10-26): optional, re-validated and
+  // re-priced server-side in src/lib/orders/web.ts — the amount here is
+  // never trusted, only the code string itself.
+  discountCode: z.string().trim().max(40).optional(),
 });
 
 export type CreateOrderRequest = z.infer<typeof CreateOrderRequestSchema>;
@@ -119,6 +123,7 @@ export type CheckoutErrorCode =
   | "invalid_request"
   | "cart_empty"
   | "unknown_city"
+  | "invalid_discount_code"
   | "payments_unconfigured"
   | "paypal_failed"
   | "payplus_failed"

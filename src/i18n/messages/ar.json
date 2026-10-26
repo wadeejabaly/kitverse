@@ -387,6 +387,7 @@
     "errorUnconfigured": "الدفع مش متاح هلق. راسلنا ومنكمّل طلبك معك.",
     "errorRateLimited": "محاولات كتير بوقت قصير. استنى دقيقة وجرّب كمان مرة.",
     "errorCapture": "ما قدرنا نأكّد الدفع. إذا انخصم المبلغ راسلنا فورًا ومنتابعه.",
+    "errorDiscountCode": "كود الخصم ما انطبّق. شيله وجرّب كمان مرة.",
     "payTitle": "الدفع",
     "payCard": "ادفع بالبطاقة",
     "payCardNote": "دفع آمن بالبطاقة. منحوّلك لصفحة مزوّد الدفع تتعبّي بيانات البطاقة، وبعدها بترجع لهون.",
@@ -402,7 +403,14 @@
     "giftBoxLegend": "علبة هدية",
     "giftBoxHint": "علبة هدية لقمصانك — علبة واحدة بتستوعب أكثر من قميص. ⁦₪{price}⁩ للعلبة.",
     "giftBoxNone": "بدون علبة هدية",
-    "giftBoxRow": "علبة هدية × ⁦{qty}⁩"
+    "giftBoxRow": "علبة هدية × ⁦{qty}⁩",
+    "discountLabel": "كود الخصم",
+    "discountApply": "تطبيق",
+    "discountChecking": "عم نتأكّد…",
+    "discountRemove": "إزالة",
+    "discountInvalid": "هاد الكود مش صالح.",
+    "discountMinOrder": "بده حدّ أدنى للطلب ⁦₪{amount}⁩ حتى ينطبّق.",
+    "discountRow": "خصم (⁦{code}⁩)"
   },
   "thankYou": {
     "eyebrow": "تم الطلب",
