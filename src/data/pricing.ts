@@ -138,6 +138,9 @@ export function patchesTotal(count: number): number {
   return round2(tieredTotal(PATCH_TIERS, ADDONS.patch, count));
 }
 
+/** What the Nth patch (1-based) on one shirt adds - for the "1st / 2nd / 3rd" hint. */
+export const patchPrice = (n: number) => round2(patchesTotal(n) - patchesTotal(n - 1));
+
 /* ------------------------------------------------------------- delivery -- */
 
 /**

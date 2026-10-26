@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { byKind, getLeagues, getVisibleProducts, retroProducts } from "@/data/catalog";
-import { priceFor } from "@/data/pricing";
+import { ADDONS, priceFor } from "@/data/pricing";
 import { HeroD } from "@/components/hero/HeroD";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductGrid } from "@/components/shop/ProductCard";
@@ -263,7 +263,7 @@ export default async function HomePage({
                 </span>
                 <h3 className="mt-6 mb-2.5 text-[17px]">{t(`values.${key}.title`)}</h3>
                 <p className="max-w-[34ch] text-sm text-ink-soft">
-                  {t(`values.${key}.body`)}
+                  {t(`values.${key}.body`, { price: `₪${ADDONS.nameNumber}` })}
                 </p>
               </div>
             ))}
