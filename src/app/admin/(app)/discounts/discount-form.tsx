@@ -36,6 +36,10 @@ export function DiscountForm() {
       <label className={field}>Ends (optional)
         <input name="endsAt" type="datetime-local" className={input} />
       </label>
+      <label className="flex items-end gap-2 text-sm text-ink">
+        <input type="checkbox" name="stackable" className="h-4 w-4 accent-[var(--pitch)]" />
+        Can be combined with other codes
+      </label>
       <div className="flex items-end">
         <button className={cx(button.primary, "w-full")}>Create code</button>
       </div>

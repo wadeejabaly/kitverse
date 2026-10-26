@@ -25,11 +25,12 @@ export async function POST(req: NextRequest) {
   const lookup = await findActiveDiscountCode(parsed.data.code);
   if (!lookup.ok) return NextResponse.json({ ok: false, reason: lookup.reason });
 
-  const { kind, value, min_order } = lookup.row;
+  const { kind, value, min_order, stackable } = lookup.row;
   return NextResponse.json({
     ok: true,
     kind,
     value: kind === "fixed" ? value / 100 : value,
     minOrder: min_order / 100,
+    stackable,
   });
 }

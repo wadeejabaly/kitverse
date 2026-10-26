@@ -60,13 +60,15 @@ export async function createDiscountCode(form: FormData) {
   const endsAt = isoOrNull(form.get("endsAt"));
   if (startsAt && endsAt && startsAt >= endsAt) return bad("The end date has to be after the start date");
 
+  const stackable = form.get("stackable") === "on";
+
   const ins = await db().from("discount_codes").insert({
-    code, kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt, active: true,
+    code, kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt, active: true, stackable,
   }).select("code");
   if (ins.error) {
     return bad(ins.error.code === "23505" ? `A code "${code}" already exists` : "Couldn't save that code");
   }
-  await db().from("audit_log").insert({ actor: staff.id, action: "discount_code.create", entity: "discount_codes", entity_id: code, after: { kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt } });
+  await db().from("audit_log").insert({ actor: staff.id, action: "discount_code.create", entity: "discount_codes", entity_id: code, after: { kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt, stackable } });
   revalidatePath("/admin/discounts");
   redirect("/admin/discounts?saved=1");
 }

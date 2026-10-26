@@ -8,7 +8,7 @@ import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
-import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, type DiscountCode } from "../discounts";
+import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, type DiscountCode } from "../discounts";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
@@ -38,17 +38,20 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
   const phone = normalizePhone(c.phone);
   if (!phone) return { ok: false, code: "invalid_request", detail: "phone" };
 
-  // Discount code (owner feature 2026-10-26): checked here, before anything
-  // is written, same as the other fail-fast checks in this function. Only
-  // the CODE is ever trusted from the browser — what it's worth and whether
-  // the cart meets its minimum order are both re-derived below from the
-  // server's own quote, never from anything the checkout page showed.
-  let discount: DiscountCode | null = null;
-  if (req.discountCode && req.discountCode.trim()) {
-    const lookup = await findActiveDiscountCode(req.discountCode);
+  // Discount codes (owner feature 2026-10-26): checked here, before
+  // anything is written, same as the other fail-fast checks in this
+  // function. Only the CODE strings are ever trusted from the browser —
+  // what each is worth, whether the cart meets its minimum order, and
+  // whether this combination is even allowed are all re-derived below from
+  // the server's own quote and each code's own `stackable` flag, never from
+  // anything the checkout page showed.
+  const discounts: DiscountCode[] = [];
+  for (const raw of new Set((req.discountCodes ?? []).map((c) => c.trim()).filter(Boolean))) {
+    const lookup = await findActiveDiscountCode(raw);
     if (!lookup.ok) return { ok: false, code: "invalid_discount_code", detail: lookup.reason };
-    discount = lookup.row;
+    discounts.push(lookup.row);
   }
+  if (!codesCanCombine(discounts)) return { ok: false, code: "invalid_discount_code", detail: "not_stackable" };
 
   // The shopper never picks a region any more — match their typed city against
   // the same town → zone list the Instagram bot uses. An unrecognised town
@@ -95,17 +98,24 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
     })).select("id"), "web items");
     let q = await requote(order);
 
-    if (discount) {
-      if (q.itemsTotal < discount.min_order) {
+    if (discounts.length) {
+      // Every code quotes its own cut of the SAME pre-discount items total,
+      // never a shrinking base — so the order they were typed in can't
+      // change what they're worth. quote() itself still caps the combined
+      // total at itemsTotal (src/lib/pricing/engine.ts), so stacking several
+      // codes can never discount more than 100% of the order.
+      if (discounts.some((d) => q.itemsTotal < d.min_order)) {
         await db().from("orders").update({ status: "cancelled", notes: "checkout cancelled: discount code minimum order not met" }).eq("id", order.id);
         return { ok: false, code: "invalid_discount_code", detail: "min_order" };
       }
-      const amount = discountAmount(discount, q.itemsTotal);
-      if (amount > 0) {
-        must(await db().from("adjustments").insert({ order_id: order.id, kind: "discount_code", amount, reason: discount.code, discount_code: discount.code }).select("id"), "discount code");
-        await recordDiscountCodeUse(discount.code);
-        q = await requote(order); // re-price now that the adjustment row exists
+      for (const d of discounts) {
+        const amount = discountAmount(d, q.itemsTotal);
+        if (amount > 0) {
+          must(await db().from("adjustments").insert({ order_id: order.id, kind: "discount_code", amount, reason: d.code, discount_code: d.code }).select("id"), "discount code");
+          await recordDiscountCodeUse(d.code);
+        }
       }
+      q = await requote(order); // re-price now that every adjustment row exists
     }
 
     // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —

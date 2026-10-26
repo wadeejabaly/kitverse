@@ -99,10 +99,11 @@ export const CreateOrderRequestSchema = z.object({
   // boxes, not a per-shirt flag. Optional on the wire so an older client
   // omitting it still prices as "no gift box" rather than failing validation.
   giftBoxQty: z.number().int().min(0).max(GIFT_BOX_MAX_QTY).optional().default(0),
-  // Discount code (owner feature 2026-10-26): optional, re-validated and
-  // re-priced server-side in src/lib/orders/web.ts — the amount here is
-  // never trusted, only the code string itself.
-  discountCode: z.string().trim().max(40).optional(),
+  // Discount codes (owner feature 2026-10-26): zero or more. Re-validated,
+  // re-priced and checked for stacking permission server-side in
+  // src/lib/orders/web.ts — the amounts here are never trusted, only the
+  // code strings themselves.
+  discountCodes: z.array(z.string().trim().min(1).max(40)).max(5).optional(),
 });
 
 export type CreateOrderRequest = z.infer<typeof CreateOrderRequestSchema>;

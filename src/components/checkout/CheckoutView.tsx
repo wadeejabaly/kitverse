@@ -88,16 +88,23 @@ const ERROR_CODES: readonly CheckoutErrorCode[] = [
   "server_error",
 ];
 
-/** What the discount-code field currently shows — checked against the server
- *  (POST /api/checkout/discount/check), never computed client-side. A code
- *  that checks out but doesn't yet meet its own minimum order stays
- *  "applied" rather than reverting to idle, so it kicks in on its own the
- *  moment the shopper's cart grows enough — see discountPreview below. */
+/** Mirrors the cap in src/lib/checkout.ts's CreateOrderRequestSchema. */
+const MAX_DISCOUNT_CODES = 5;
+
+/** A code the shopper has typed and the server confirmed exists (checked
+ *  against POST /api/checkout/discount/check, never computed client-side).
+ *  One that checks out but doesn't yet meet its own minimum order stays in
+ *  this list rather than being dropped, so it kicks in on its own the
+ *  moment the cart grows enough — see discountQualifies below. */
+type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean };
+
+/** What the discount-code input is doing right now. */
 type DiscountCheck =
   | { status: "idle" }
   | { status: "checking" }
-  | { status: "applied"; code: string; kind: "percent" | "fixed"; value: number; minOrder: number }
-  | { status: "invalid" };
+  // Owner feature 2026-10-26: a non-stackable code can only be used alone —
+  // the same rule the server enforces (src/lib/discounts.ts codesCanCombine).
+  | { status: "invalid"; reason: "not_found" | "not_stackable" };
 
 /** What the city field currently shows, resolved against the server's town → zone list
  *  (POST /api/checkout/resolve-city) — never guessed client-side. */
@@ -148,11 +155,12 @@ export function CheckoutView({
   // not a per-shirt flag — 0 means no box at all.
   const [giftBoxQty, setGiftBoxQty] = useState(0);
 
-  // Discount code (owner feature 2026-10-26): typed and checked here purely
+  // Discount codes (owner feature 2026-10-26): typed and checked here purely
   // as a preview, same posture as the city check below — the order itself is
-  // always re-validated and re-priced server-side (src/lib/orders/web.ts),
-  // which never trusts what this check said a code was worth.
+  // always re-validated, re-priced, and re-checked for stacking server-side
+  // (src/lib/orders/web.ts), which never trusts what this preview said.
   const [discountInput, setDiscountInput] = useState("");
+  const [appliedDiscounts, setAppliedDiscounts] = useState<AppliedDiscount[]>([]);
   const [discountCheck, setDiscountCheck] = useState<DiscountCheck>({ status: "idle" });
 
   /**
@@ -207,6 +215,8 @@ export function CheckoutView({
   async function applyDiscountCode() {
     const code = discountInput.trim();
     if (!code) return;
+    const upper = code.toUpperCase();
+    if (appliedDiscounts.some((d) => d.code === upper)) { setDiscountInput(""); return; }
     setDiscountCheck({ status: "checking" });
     try {
       const res = await fetch("/api/checkout/discount/check", {
@@ -215,19 +225,40 @@ export function CheckoutView({
         body: JSON.stringify({ code }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown }
+        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown }
         | null;
       if (data?.ok && (data.kind === "percent" || data.kind === "fixed") && typeof data.value === "number") {
-        setDiscountCheck({ status: "applied", code: code.toUpperCase(), kind: data.kind, value: data.value, minOrder: typeof data.minOrder === "number" ? data.minOrder : 0 });
+        const next: AppliedDiscount = {
+          code: upper, kind: data.kind, value: data.value,
+          minOrder: typeof data.minOrder === "number" ? data.minOrder : 0,
+          stackable: data.stackable === true,
+        };
+        // Same rule the server enforces (src/lib/discounts.ts
+        // codesCanCombine): more than one code only works when EVERY one of
+        // them is marked combinable.
+        const combined = [...appliedDiscounts, next];
+        if (combined.length > 1 && !combined.every((d) => d.stackable)) {
+          setDiscountCheck({ status: "invalid", reason: "not_stackable" });
+          return;
+        }
+        setAppliedDiscounts(combined);
+        setDiscountInput("");
+        setDiscountCheck({ status: "idle" });
       } else {
-        setDiscountCheck({ status: "invalid" });
+        setDiscountCheck({ status: "invalid", reason: "not_found" });
       }
     } catch {
-      setDiscountCheck({ status: "invalid" });
+      setDiscountCheck({ status: "invalid", reason: "not_found" });
     }
   }
 
-  function clearDiscountCode() {
+  function removeDiscountCode(code: string) {
+    setAppliedDiscounts((current) => current.filter((d) => d.code !== code));
+    setDiscountCheck({ status: "idle" });
+  }
+
+  function clearDiscountCodes() {
+    setAppliedDiscounts([]);
     setDiscountInput("");
     setDiscountCheck({ status: "idle" });
   }
@@ -306,12 +337,14 @@ export function CheckoutView({
   // Mirrors the server engine's own split (src/lib/pricing/engine.ts): a
   // code is worth a cut of the shirts + gift box, never of shipping, and
   // "qualifies" compares against that same pre-shipping figure, not the
-  // grand total.
+  // grand total. Each applied code is quoted independently against that
+  // SAME figure (not a shrinking base) — same as the server
+  // (src/lib/orders/web.ts) — and the combined cut is capped at the items
+  // subtotal so stacking several codes can never discount past 100%.
   const itemsSubtotal = round2(totals.subtotal + totals.giftBox);
-  const discountQualifies = discountCheck.status === "applied" && itemsSubtotal >= discountCheck.minOrder;
-  const discountAmount = discountQualifies && discountCheck.status === "applied"
-    ? Math.min(itemsSubtotal, round2(discountCheck.kind === "percent" ? (itemsSubtotal * discountCheck.value) / 100 : discountCheck.value))
-    : 0;
+  const qualifyingDiscounts = appliedDiscounts.filter((d) => itemsSubtotal >= d.minOrder);
+  const perCodeAmount = (d: AppliedDiscount) => round2(d.kind === "percent" ? (itemsSubtotal * d.value) / 100 : d.value);
+  const discountAmount = Math.min(itemsSubtotal, round2(qualifyingDiscounts.reduce((sum, d) => sum + perCodeAmount(d), 0)));
   const grandTotal = round2(totals.total - discountAmount);
 
   const parsed = CustomerSchema.safeParse({
@@ -362,9 +395,11 @@ export function CheckoutView({
       customer: parsed.success ? parsed.data : null,
       locale,
       giftBoxQty,
-      // Only sent once it actually qualifies against this cart — see
-      // discountQualifies above. The server re-checks it regardless.
-      ...(discountQualifies && discountCheck.status === "applied" ? { discountCode: discountCheck.code } : {}),
+      // Only the codes that actually qualify against this cart right now —
+      // see qualifyingDiscounts above. The server re-checks everything
+      // (eligibility, minimum order, and whether they're even allowed to
+      // combine) regardless of what's sent here.
+      ...(qualifyingDiscounts.length ? { discountCodes: qualifyingDiscounts.map((d) => d.code) } : {}),
     });
   }
 
@@ -406,10 +441,11 @@ export function CheckoutView({
 
     setPhase("form");
     const code = isErrorCode(payload?.code) ? payload.code : "server_error";
-    // A code the server rejected at the last moment (expired or used up
-    // between the preview and now) would otherwise keep being resent on
-    // every retry — clear it so "Send order" can actually succeed next time.
-    if (code === "invalid_discount_code") clearDiscountCode();
+    // A code (or combination) the server rejected at the last moment
+    // (expired, used up, or no longer stackable between the preview and
+    // now) would otherwise keep being resent on every retry — clear them so
+    // "Send order" can actually succeed next time.
+    if (code === "invalid_discount_code") clearDiscountCodes();
     setErrorCode(code);
   }
 
@@ -679,21 +715,28 @@ export function CheckoutView({
           </select>
         </div>
 
-        {/* Discount code (owner feature 2026-10-26): checked against the
-            server as the shopper types it, same preview-only posture as the
-            city field above. */}
+        {/* Discount codes (owner feature 2026-10-26): checked against the
+            server as the shopper types each one, same preview-only posture
+            as the city field above. More than one can be applied together
+            only when every one of them is marked combinable in admin
+            Discounts — see applyDiscountCode. */}
         <div className="border-b border-rule py-5">
           <label htmlFor="checkout-discount" className="mono-eyebrow mb-2.5 block text-ink-soft">
             {t("discountLabel")}
           </label>
-          {discountCheck.status === "applied" ? (
-            <div className="flex items-center justify-between gap-3">
-              <span dir="ltr" className="latin text-sm font-medium">{discountCheck.code}</span>
-              <button type="button" className="text-xs text-ink-soft underline underline-offset-4" onClick={clearDiscountCode}>
-                {t("discountRemove")}
-              </button>
-            </div>
-          ) : (
+          {appliedDiscounts.length > 0 ? (
+            <ul className="mb-2.5 flex flex-col gap-1.5">
+              {appliedDiscounts.map((d) => (
+                <li key={d.code} className="flex items-center justify-between gap-3 text-sm">
+                  <span dir="ltr" className="latin font-medium">{d.code}</span>
+                  <button type="button" className="text-xs text-ink-soft underline underline-offset-4" onClick={() => removeDiscountCode(d.code)}>
+                    {t("discountRemove")}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {appliedDiscounts.length < MAX_DISCOUNT_CODES ? (
             <div className="flex gap-2">
               <input
                 id="checkout-discount"
@@ -711,14 +754,17 @@ export function CheckoutView({
                 {discountCheck.status === "checking" ? t("discountChecking") : t("discountApply")}
               </button>
             </div>
-          )}
+          ) : null}
           {discountCheck.status === "invalid" ? (
-            <p className="mt-2 text-xs text-ink-soft">{t("discountInvalid")}</p>
-          ) : discountCheck.status === "applied" && !discountQualifies ? (
             <p className="mt-2 text-xs text-ink-soft">
-              {t("discountMinOrder", { amount: String(discountCheck.minOrder) })}
+              {discountCheck.reason === "not_stackable" ? t("discountNotStackable") : t("discountInvalid")}
             </p>
           ) : null}
+          {appliedDiscounts.filter((d) => itemsSubtotal < d.minOrder).map((d) => (
+            <p key={d.code} className="mt-2 text-xs text-ink-soft">
+              {t("discountMinOrder", { code: d.code, amount: String(d.minOrder) })}
+            </p>
+          ))}
         </div>
 
         <div className="flex flex-col gap-2.5 pt-5">
@@ -740,13 +786,13 @@ export function CheckoutView({
               <Price value={totals.giftBox} />
             </Row>
           ) : null}
-          {discountAmount > 0 ? (
-            <Row label={t("discountRow", { code: discountCheck.status === "applied" ? discountCheck.code : "" })}>
+          {qualifyingDiscounts.map((d) => (
+            <Row key={d.code} label={t("discountRow", { code: d.code })}>
               <span dir="ltr">
-                -<Price value={discountAmount} />
+                -<Price value={perCodeAmount(d)} />
               </span>
             </Row>
-          ) : null}
+          ))}
           <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
             <span>{tCart("total")}</span>
             <Price value={grandTotal} />

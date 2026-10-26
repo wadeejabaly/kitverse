@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 type Row = {
   code: string; kind: "percent" | "fixed"; value: number; min_order: number;
-  starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number; active: boolean;
+  starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number; active: boolean; stackable: boolean;
 };
 
 function statusOf(r: Row): { label: string; tone: Tone } {
@@ -28,12 +28,12 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
   const sp = await searchParams;
   const saved = sp.saved === "1";
   const error = typeof sp.error === "string" ? sp.error : null;
-  const rows = ((await db().from("discount_codes").select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count,active")
+  const rows = ((await db().from("discount_codes").select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count,active,stackable")
     .order("created_at", { ascending: false })).data ?? []) as Row[];
 
   return (
     <>
-      <PageHeader title="Discounts" subtitle="Codes shoppers type at checkout for a percent or a flat amount off." />
+      <PageHeader title="Discounts" subtitle='Codes shoppers type at checkout for a percent or a flat amount off. By default a code works alone - check "Can be combined with other codes" to let it stack with other combinable codes.' />
 
       {error ? <p className="mb-4 rounded-xl bg-red-soft px-3 py-2.5 text-sm text-red">{error}</p> : null}
       {saved ? <p className="mb-4 rounded-xl bg-pitch-soft/60 px-3 py-2.5 text-sm text-ink">Code saved - it works at checkout right away.</p> : null}
@@ -55,6 +55,7 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
                   <div className="flex flex-wrap items-center gap-2">
                     <span dir="ltr" className="font-mono text-sm font-medium tracking-wide">{r.code}</span>
                     <Badge tone={status.tone}>{status.label}</Badge>
+                    {r.stackable ? <Badge>Combinable</Badge> : null}
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted">
                     <span>{worth(r)}</span>

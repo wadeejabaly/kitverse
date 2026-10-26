@@ -409,7 +409,8 @@
     "discountChecking": "בודקים…",
     "discountRemove": "הסר",
     "discountInvalid": "הקוד הזה לא תקף.",
-    "discountMinOrder": "דורש הזמנה מינימלית של ⁦₪{amount}⁩ כדי לחול.",
+    "discountNotStackable": "הקוד הזה לא יכול להצטרף לקוד או לקודים שכבר הוספתם.",
+    "discountMinOrder": "⁦{code}⁩ דורש הזמנה מינימלית של ⁦₪{amount}⁩ כדי לחול.",
     "discountRow": "הנחה (⁦{code}⁩)"
   },
   "thankYou": {

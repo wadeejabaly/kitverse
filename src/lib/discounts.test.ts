@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { discountAmount } from "./discounts";
+import { discountAmount, codesCanCombine } from "./discounts";
 
 const ILS = (n: number) => n * 100;
 
@@ -28,5 +28,18 @@ describe("discountAmount", () => {
 
   it("never goes negative for a zero or bogus subtotal", () => {
     expect(discountAmount({ kind: "percent", value: 10, min_order: 0 }, 0)).toBe(0);
+  });
+});
+
+describe("codesCanCombine", () => {
+  it("allows zero or one code with no stackable flag needed", () => {
+    expect(codesCanCombine([])).toBe(true);
+    expect(codesCanCombine([{ stackable: false }])).toBe(true);
+  });
+
+  it("allows two or more only when every one of them is stackable", () => {
+    expect(codesCanCombine([{ stackable: true }, { stackable: true }])).toBe(true);
+    expect(codesCanCombine([{ stackable: true }, { stackable: false }])).toBe(false);
+    expect(codesCanCombine([{ stackable: false }, { stackable: false }])).toBe(false);
   });
 });

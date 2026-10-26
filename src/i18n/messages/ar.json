@@ -409,7 +409,8 @@
     "discountChecking": "عم نتأكّد…",
     "discountRemove": "إزالة",
     "discountInvalid": "هاد الكود مش صالح.",
-    "discountMinOrder": "بده حدّ أدنى للطلب ⁦₪{amount}⁩ حتى ينطبّق.",
+    "discountNotStackable": "هاد الكود ما بينضم مع الكود/الأكواد يلي ضفتها.",
+    "discountMinOrder": "⁦{code}⁩ بده حدّ أدنى للطلب ⁦₪{amount}⁩ حتى ينطبّق.",
     "discountRow": "خصم (⁦{code}⁩)"
   },
   "thankYou": {

@@ -409,7 +409,8 @@
     "discountChecking": "Checking…",
     "discountRemove": "Remove",
     "discountInvalid": "That code isn't valid.",
-    "discountMinOrder": "Needs a minimum order of ₪{amount} to apply.",
+    "discountNotStackable": "That code can't be combined with the one(s) you already applied.",
+    "discountMinOrder": "{code} needs a minimum order of ₪{amount} to apply.",
     "discountRow": "Discount ({code})"
   },
   "thankYou": {

@@ -26,6 +26,10 @@ export type DiscountCode = {
   max_uses: number | null;
   used_count: number;
   active: boolean;
+  // Owner decision 2026-10-26: can this code be used together with other
+  // codes on the same order? Default false (every code created before this
+  // existed keeps its old, exclusive-only behaviour).
+  stackable: boolean;
   created_at: string;
 };
 
@@ -47,6 +51,16 @@ export async function findActiveDiscountCode(raw: string): Promise<DiscountLooku
   if (row.ends_at && now > new Date(row.ends_at)) return { ok: false, reason: "expired" };
   if (row.max_uses != null && row.used_count >= row.max_uses) return { ok: false, reason: "used_up" };
   return { ok: true, row };
+}
+
+/**
+ * Whether a set of codes is allowed to apply together on one order. A single
+ * code never needs permission; two or more are only allowed when EVERY one
+ * of them is marked stackable - one exclusive code in the mix means the
+ * shopper has to pick just that one.
+ */
+export function codesCanCombine(rows: Pick<DiscountCode, "stackable">[]): boolean {
+  return rows.length <= 1 || rows.every((r) => r.stackable);
 }
 
 /** The agorot amount a code is worth against a given items subtotal (0 if the subtotal doesn't meet min_order). Never exceeds the subtotal. */
