@@ -475,18 +475,6 @@ export function CheckoutView({
             <p className="text-xs text-ink-soft">{t("cityUnknown")}</p>
           ) : null}
 
-          {/* Country is not a choice at launch — saying so is more honest than
-              a select with one option in it. */}
-          <div>
-            <span className="mono-eyebrow mb-2 block text-ink-soft">
-              {t("fieldCountry")}
-            </span>
-            <p className="border border-rule bg-chip px-3.5 py-3 text-sm">
-              {t("countryValue")}
-            </p>
-            <p className="mt-2 text-xs text-ink-soft">{t("countryNote")}</p>
-          </div>
-
           <Field
             name="notes"
             label={t("fieldNotes")}
