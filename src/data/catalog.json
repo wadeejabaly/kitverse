@@ -515,8 +515,13 @@
       "kit": "Home",
       "league": "la-liga",
       "edition": "standard",
-      "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/barcelona-2026-27-home-shirt/s-ab7dee0410.jpg",
-      "sourceHash": "4c750c71b5",
+      "image": "/products/barcelona-2026-27-home-shirt.jpg",
+      "images": [
+        "/products/barcelona-2026-27-home-shirt-back.jpg",
+        "/products/barcelona-2026-27-home-shirt-crest.jpg",
+        "/products/barcelona-2026-27-home-shirt-detail.jpg"
+      ],
+      "sourceHash": "f32b8df1",
       "visible": true
     },
     {
@@ -530,8 +535,13 @@
       "kit": "Away",
       "league": "la-liga",
       "edition": "standard",
-      "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/barcelona-2026-27-away-shirt/pick-0189b49101.jpg",
-      "sourceHash": "0189b49101",
+      "image": "/products/barcelona-2026-27-away-shirt.jpg",
+      "images": [
+        "/products/barcelona-2026-27-away-shirt-back.jpg",
+        "/products/barcelona-2026-27-away-shirt-crest.jpg",
+        "/products/barcelona-2026-27-away-shirt-crest-2.jpg"
+      ],
+      "sourceHash": "1ae43c5f",
       "visible": true
     },
     {
@@ -545,8 +555,12 @@
       "kit": "Third",
       "league": "la-liga",
       "edition": "standard",
-      "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/barcelona-2026-27-third-shirt/pick-f3953a2211.jpg",
-      "sourceHash": "f3953a2211",
+      "image": "/products/barcelona-2026-27-third-shirt.jpg",
+      "images": [
+        "/products/barcelona-2026-27-third-shirt-back.jpg",
+        "/products/barcelona-2026-27-third-shirt-crest.jpg"
+      ],
+      "sourceHash": "356a1996",
       "visible": true
     },
     {
