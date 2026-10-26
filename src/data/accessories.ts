@@ -14,13 +14,14 @@ import type { Accessory } from "./types";
  * scripts/seed-accessories.ts for the prepared seed script.
  *
  * One keychain per team (2026-10-25, the owner's choice over a single
- * generic keychain), generated from every team already in
- * src/data/collections.json — national and club alike, the same set
- * src/data/catalog.ts's getTeams() reads. ₪14.99 flat (owner decision
- * 2026-10-25), a placeholder photo until real product photography exists
- * (the same public/products/_placeholder.jpg every photo-less jersey already
- * uses, so a keychain tile looks exactly like an unphotographed shirt tile
- * does today — a known, already-handled empty state, not a broken image).
+ * generic keychain), originally generated for every team in
+ * src/data/collections.json (national and club alike — the same set
+ * src/data/catalog.ts's getTeams() reads) with a placeholder photo. Owner
+ * decision 2026-10-26: cut the list down to only the teams with a real
+ * product photo (19, including Al Nassr — not a jersey-catalog team, added
+ * for this category only) rather than ship 96 placeholder tiles; the rest
+ * can be added back once photographed. ₪14.99 flat (owner decision
+ * 2026-10-25).
  */
 
 const accessories: Accessory[] = accessoriesData.accessories as Accessory[];

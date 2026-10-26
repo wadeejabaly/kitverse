@@ -21,11 +21,12 @@ export async function generateMetadata({
 }
 
 /**
- * Every team-branded keychain, one card per team (national + club alike —
- * the same set src/data/catalog.ts's getTeams() lists). Flat list today
- * rather than the shop's league/team filter rail: 96 cards is small enough
- * to browse directly, and adding a filter rail here is easy to revisit once
- * there is more than one accessory type to tell apart.
+ * Every team-branded keychain with a real product photo (owner decision
+ * 2026-10-26: launch with only the teams that have one, instead of 96
+ * placeholder tiles — the rest can be added back once photographed). Flat
+ * list rather than the shop's league/team filter rail: this few cards is
+ * small enough to browse directly, and adding a filter rail here is easy to
+ * revisit once there is more than one accessory type to tell apart.
  */
 export default async function KeychainsPage({
   params,
