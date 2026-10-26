@@ -51,8 +51,8 @@ export default async function Pricing({ searchParams }: PageProps<"/admin/pricin
             <div className="px-4 pt-4 sm:px-5"><SectionTitle>Extras</SectionTitle></div>
             <div className="divide-y divide-line border-t border-line">
               {p.addons.map((a) => a.per === "patch"
-                ? row(<span>{a.name_en}<span className="block text-xs text-muted">1st / 2nd / 3rd patch on the same shirt</span></span>,
-                  <div className="flex flex-wrap items-center gap-2">{[1, 2, 3].map((n) => <span key={n}>{money(`a:${a.id}:${n}`, a.price_tiers?.[n - 1] ?? a.price, n === 1 ? "+₪" : "")}</span>)}</div>, a.id)
+                ? row(<span>{a.name_en}<span className="block text-xs text-muted">price of each patch on the same shirt</span></span>,
+                  <div className="flex flex-wrap items-center gap-2">{[1, 2, 3].map((n) => <span key={n}>{money(`a:${a.id}:${n}`, a.price_tiers?.[n - 1] ?? a.price, `${["1st", "2nd", "3rd"][n - 1]} +₪`)}</span>)}</div>, a.id)
                 : row(a.name_en, money(`a:${a.id}`, a.price, "+₪"), a.id))}
             </div>
           </Card>
