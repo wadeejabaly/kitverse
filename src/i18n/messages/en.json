@@ -72,7 +72,7 @@
       },
       "three": {
         "title": "Name and number printing",
-        "body": "Any name, any number, printed to order. Adds ₪20 to the shirt and two days before dispatch."
+        "body": "Any name, any number, printed to order. Adds {price} to the shirt and two days before dispatch."
       }
     },
     "empty": "The catalogue is being photographed. Shirts appear here as soon as their images are approved."
@@ -244,11 +244,11 @@
     "nameNumber": "Name and number — optional",
     "nameNumberToggle": "Add a name and number",
     "nameNumberLabel": "Name and number",
-    "nameNumberHint": "Printed to order. Adds ₪19.99 and two days to dispatch.",
+    "nameNumberHint": "Printed to order. Adds {price} and two days to dispatch.",
     "patchLegend": "Official patches",
     "patchLeague": "{league} patch",
     "patchWorldCup": "World Cup patch",
-    "patchHint": "Pick as many as you like. 1st patch ₪12.99, 2nd ₪9.99, 3rd ₪6.99.",
+    "patchHint": "Pick as many as you like. 1st patch {p1}, 2nd {p2}, 3rd {p3}.",
     "quantity": "Quantity",
     "added": "Added to your cart.",
     "viewCart": "View cart",
@@ -317,7 +317,7 @@
     "colLength": "Length (cm)",
     "colFits": "Fits (EU)",
     "note": "Chest is measured flat across the shirt under the arms and doubled. Length runs from the highest point of the shoulder to the hem. The Player version is cut slimmer than the Fan version — take one size up if you prefer a looser fit.",
-    "surcharge": "3XL adds ₪9 to the shirt price and 4XL adds ₪12."
+    "surcharge": "3XL adds {xl3} to the shirt price and 4XL adds {xl4}."
   },
   "shippingPage": {
     "eyebrow": "Shipping and returns",

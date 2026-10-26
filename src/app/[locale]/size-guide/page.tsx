@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Figure } from "@/components/shared/Money";
+import { sizeSurcharge } from "@/data/pricing";
 import { PageLede, Prose, ProseParagraph, Wrap } from "@/components/shared/PageLede";
 import { alternatesFor } from "@/lib/site";
 
@@ -81,7 +82,7 @@ export default async function SizeGuidePage({
 
       <Prose>
         <ProseParagraph>{t("note")}</ProseParagraph>
-        <ProseParagraph>{t("surcharge")}</ProseParagraph>
+        <ProseParagraph>{t("surcharge", { xl3: `₪${sizeSurcharge("3XL")}`, xl4: `₪${sizeSurcharge("4XL")}` })}</ProseParagraph>
       </Prose>
     </Wrap>
   );

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ADDONS, SIZES, VERSIONS, isRetroSeason, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
+import { ADDONS, SIZES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
 import type { Kind, PatchId, Size, Version } from "@/data/types";
 import { maxPatchesFor, patchOptionsFor } from "@/data/patches";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
@@ -198,7 +198,7 @@ export function ProductForm({
               aria-label={t("nameNumberLabel")}
               className="latin w-full border border-rule bg-field px-3.5 py-3 text-sm text-ink"
             />
-            <p className="mt-2 text-xs text-ink-soft">{t("nameNumberHint")}</p>
+            <p className="mt-2 text-xs text-ink-soft">{t("nameNumberHint", { price: `₪${ADDONS.nameNumber}` })}</p>
           </div>
         ) : null}
       </fieldset>
@@ -213,7 +213,7 @@ export function ProductForm({
           <legend className="mono-eyebrow mb-2.5 block text-ink-soft">
             {t("patchLegend")}
           </legend>
-          <p className="mb-3 text-xs text-ink-soft">{t("patchHint")}</p>
+          <p className="mb-3 text-xs text-ink-soft">{t("patchHint", { p1: `₪${patchPrice(1)}`, p2: `₪${patchPrice(2)}`, p3: `₪${patchPrice(3)}` })}</p>
           <div className="flex flex-wrap gap-2.5">
             {patchOptions.map((option) => {
               const selected = patches.includes(option.id);
