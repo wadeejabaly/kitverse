@@ -463,9 +463,11 @@
       "edition": "standard",
       "image": "/products/real-madrid-2026-27-home-shirt.jpg",
       "images": [
-        "/products/real-madrid-2026-27-home-shirt-back.jpg"
+        "/products/real-madrid-2026-27-home-shirt-back.jpg",
+        "/products/real-madrid-2026-27-home-shirt-crest.jpg",
+        "/products/real-madrid-2026-27-home-shirt-detail.jpg"
       ],
-      "sourceHash": "a708f9b893",
+      "sourceHash": "cdd74a24",
       "visible": true
     },
     {
@@ -481,9 +483,10 @@
       "edition": "standard",
       "image": "/products/real-madrid-2026-27-away-shirt.jpg",
       "images": [
-        "/products/real-madrid-2026-27-away-shirt-back.jpg"
+        "/products/real-madrid-2026-27-away-shirt-back.jpg",
+        "/products/real-madrid-2026-27-away-shirt-detail.jpg"
       ],
-      "sourceHash": "74c3643d09",
+      "sourceHash": "4854e1c0",
       "visible": true
     },
     {
@@ -501,7 +504,7 @@
       "images": [
         "/products/real-madrid-2026-27-third-shirt-back.jpg"
       ],
-      "sourceHash": "702a9f91fb",
+      "sourceHash": "2e08cfe5",
       "visible": true
     },
     {
@@ -1834,8 +1837,13 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/paris-saint-germain-2026-27-home-shirt/s-093ce10e28.jpg",
-      "sourceHash": "17ed13201b",
+      "image": "/products/paris-saint-germain-2026-27-home-shirt.jpg",
+      "images": [
+        "/products/paris-saint-germain-2026-27-home-shirt-back.jpg",
+        "/products/paris-saint-germain-2026-27-home-shirt-crest.jpg",
+        "/products/paris-saint-germain-2026-27-home-shirt-detail.jpg"
+      ],
+      "sourceHash": "3f6fb88a",
       "visible": true
     },
     {
@@ -1849,8 +1857,12 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/paris-saint-germain-2026-27-away-shirt/pick-fd645f85f5.jpg",
-      "sourceHash": "7e808fb6ed",
+      "image": "/products/paris-saint-germain-2026-27-away-shirt.jpg",
+      "images": [
+        "/products/paris-saint-germain-2026-27-away-shirt-back.jpg",
+        "/products/paris-saint-germain-2026-27-away-shirt-crest.jpg"
+      ],
+      "sourceHash": "fe2139ad",
       "visible": true
     },
     {
@@ -1864,8 +1876,8 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/paris-saint-germain-2026-27-third-shirt/pick-66355c7fc0.jpg",
-      "sourceHash": "66355c7fc0",
+      "image": "/products/paris-saint-germain-2026-27-third-shirt.jpg",
+      "sourceHash": "67d520d9",
       "visible": true
     },
     {

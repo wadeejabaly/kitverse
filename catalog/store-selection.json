@@ -494,7 +494,9 @@
       "edition": "standard",
       "image": "/products/real-madrid-2026-27-home-shirt.jpg",
       "images": [
-        "/products/real-madrid-2026-27-home-shirt-back.jpg"
+        "/products/real-madrid-2026-27-home-shirt-back.jpg",
+        "/products/real-madrid-2026-27-home-shirt-crest.jpg",
+        "/products/real-madrid-2026-27-home-shirt-detail.jpg"
       ],
       "sourceHash": "cdd74a24",
       "visible": true,
@@ -513,7 +515,8 @@
       "edition": "standard",
       "image": "/products/real-madrid-2026-27-away-shirt.jpg",
       "images": [
-        "/products/real-madrid-2026-27-away-shirt-back.jpg"
+        "/products/real-madrid-2026-27-away-shirt-back.jpg",
+        "/products/real-madrid-2026-27-away-shirt-detail.jpg"
       ],
       "sourceHash": "4854e1c0",
       "visible": true,
@@ -1955,7 +1958,12 @@
       "kit": "Home",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/_placeholder.jpg",
+      "image": "/products/paris-saint-germain-2026-27-home-shirt.jpg",
+      "images": [
+        "/products/paris-saint-germain-2026-27-home-shirt-back.jpg",
+        "/products/paris-saint-germain-2026-27-home-shirt-crest.jpg",
+        "/products/paris-saint-germain-2026-27-home-shirt-detail.jpg"
+      ],
       "sourceHash": "3f6fb88a",
       "visible": true,
       "productHandle": "paris-saint-germain-2026-27-home-shirt"
@@ -1971,7 +1979,11 @@
       "kit": "Away",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/_placeholder.jpg",
+      "image": "/products/paris-saint-germain-2026-27-away-shirt.jpg",
+      "images": [
+        "/products/paris-saint-germain-2026-27-away-shirt-back.jpg",
+        "/products/paris-saint-germain-2026-27-away-shirt-crest.jpg"
+      ],
       "sourceHash": "fe2139ad",
       "visible": true,
       "productHandle": "paris-saint-germain-2026-27-away-shirt"
@@ -1987,7 +1999,7 @@
       "kit": "Third",
       "league": "ligue-1",
       "edition": "standard",
-      "image": "/products/_placeholder.jpg",
+      "image": "/products/paris-saint-germain-2026-27-third-shirt.jpg",
       "sourceHash": "67d520d9",
       "visible": true,
       "productHandle": "paris-saint-germain-2026-27-third-shirt"
