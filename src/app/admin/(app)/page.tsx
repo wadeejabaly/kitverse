@@ -16,7 +16,7 @@ export default async function Overview() {
     db().from("orders").select("total,customer:customers(ig_user_id)").gte("confirmed_at", since).neq("status", "cancelled"),
     db().from("conversations").select("id,messages(direction,created_at)").eq("mode", "owner").eq("channel", "instagram")
       .order("created_at", { referencedTable: "messages", ascending: false }).limit(1, { referencedTable: "messages" }),
-    db().from("orders").select("id,number,total,status,address,confirmed_at").not("confirmed_at", "is", null).order("confirmed_at", { ascending: false }).limit(5),
+    db().from("orders").select("id,number,total,status,address,confirmed_at").not("confirmed_at", "is", null).neq("status", "cancelled").order("confirmed_at", { ascending: false }).limit(5),
     db().from("products").select("id", { count: "exact", head: true }).eq("status", "featured").not("photo_status", "in", "(good,owner_upload)"),
   ]);
   // real sales only: test-bot orders (sim: customers) and cancelled orders don't count
