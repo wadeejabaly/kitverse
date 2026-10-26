@@ -6,11 +6,20 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
+/** Message key under "nav" for each locale's own-language name, e.g. t(LOCALE_LABEL_KEYS.he). */
+const LOCALE_LABEL_KEYS: Record<string, string> = {
+  ar: "toArabic",
+  en: "toEnglish",
+  he: "toHebrew",
+};
+
 /**
- * ar ⇄ en on the current page.
+ * Switches to any OTHER locale from the current page (ar / en / he — three
+ * now, not just two, so this renders every other locale rather than picking
+ * a single "the other one").
  *
  * `usePathname` from next-intl gives the path with the locale prefix already
- * stripped, so the same value re-prefixes correctly for the other locale and
+ * stripped, so the same value re-prefixes correctly for each other locale and
  * the reader lands on the page they were on, not the home page.
  *
  * The query string is picked up from the browser after mount rather than with
@@ -28,19 +37,28 @@ export function LocaleToggle({ className }: { className?: string }) {
     setQuery(window.location.search);
   }, [pathname]);
 
-  const other = routing.locales.find((candidate) => candidate !== locale) ?? locale;
-  const label = other === "ar" ? t("toArabic") : t("toEnglish");
+  const others = routing.locales.filter((candidate) => candidate !== locale);
 
   return (
-    <Link
-      href={`${pathname}${query}`}
-      locale={other}
-      lang={other}
-      hrefLang={other}
-      aria-label={`${t("language")}: ${label}`}
-      className={cn("transition-colors hover:text-ink", className)}
-    >
-      {label}
-    </Link>
+    <span className={cn("flex items-center gap-2", className)}>
+      {others.map((other, i) => {
+        const label = t(LOCALE_LABEL_KEYS[other] ?? other);
+        return (
+          <span key={other} className="flex items-center gap-2">
+            {i > 0 ? <span aria-hidden>·</span> : null}
+            <Link
+              href={`${pathname}${query}`}
+              locale={other}
+              lang={other}
+              hrefLang={other}
+              aria-label={`${t("language")}: ${label}`}
+              className="transition-colors hover:text-ink"
+            >
+              {label}
+            </Link>
+          </span>
+        );
+      })}
+    </span>
   );
 }
