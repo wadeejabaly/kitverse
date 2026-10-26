@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useProductSleeve } from "@/components/product/ProductSleeveContext";
 
 /**
  * The PDP's photo tile. Almost every product today has exactly one photo —
@@ -16,17 +17,39 @@ import { useTranslations } from "next-intl";
  * static initial useState, not something JS has to compute), so it still
  * paints on frame one with `priority` regardless of whether this component
  * has hydrated yet. Only the thumbnail row needs the client.
+ *
+ * Long sleeve (owner decision 2026-10-26): when the shopper picks "Long
+ * sleeve" in <ProductForm> (the choice lives in <ProductSleeveProvider>,
+ * their shared parent on the page) and this product has `imagesLongSleeve`,
+ * the tile swaps to that set instead. Most products have no such set yet —
+ * the toggle is offered everywhere ahead of the photos that will back it
+ * shirt by shirt — so `shown` falls back to the normal set, unchanged.
  */
 export function ProductGallery({
   images,
+  imagesLongSleeve,
   alt,
 }: {
   images: string[];
+  imagesLongSleeve?: string[];
   alt: string;
 }) {
   const t = useTranslations("product");
+  const [sleeve] = useProductSleeve();
+  const activeSet = sleeve === "long" && imagesLongSleeve?.length ? imagesLongSleeve : images;
   const [active, setActive] = useState(0);
-  const shown = images[active] ?? images[0];
+  // Switching sleeve can swap to a shorter or differently-ordered set — jump
+  // back to its first (front) photo rather than keep whatever index the
+  // reader had picked in the other set, which could now point at the wrong
+  // photo. Adjusted during render (React's documented pattern for resetting
+  // state when a prop/derived value changes), not in an effect, so the wrong
+  // photo never paints even for one frame.
+  const previousSet = useRef(activeSet);
+  if (previousSet.current !== activeSet) {
+    previousSet.current = activeSet;
+    if (active !== 0) setActive(0);
+  }
+  const shown = activeSet[active] ?? activeSet[0];
 
   return (
     <div>
@@ -42,9 +65,9 @@ export function ProductGallery({
         />
       </div>
 
-      {images.length > 1 ? (
+      {activeSet.length > 1 ? (
         <div className="mt-3 flex gap-2">
-          {images.map((src, index) => (
+          {activeSet.map((src, index) => (
             <button
               key={src}
               type="button"

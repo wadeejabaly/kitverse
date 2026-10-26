@@ -13,6 +13,13 @@ export type Kind = "national" | "current" | "previous";
 export type Kit = "Home" | "Away" | "Third";
 export type Size = "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "4XL";
 export type Version = "fan" | "player";
+/**
+ * Short or long sleeve (owner decision 2026-10-26: offered on every shirt,
+ * priced from the `fan_long`/`player_long`/`retro_long` groups the price list
+ * already carries — see src/data/pricing.ts). "short" is the default
+ * everywhere a stored value predates this field (a cart line, an order).
+ */
+export type Sleeve = "short" | "long";
 
 /**
  * The official-patch add-on (owner decision 2026-10-23, replacing the single
@@ -71,6 +78,15 @@ export interface Product {
    * carrying the field forward by hand afterwards.
    */
   images?: string[];
+  /**
+   * The long-sleeve cut's own photo set (owner decision 2026-10-26), same
+   * shape as `images` — first entry is the primary long-sleeve photo. Its
+   * presence is what the PDP gallery swaps to when the shopper picks "Long
+   * sleeve"; absent, the gallery just keeps showing `image`/`images` either
+   * way, which is every product today (the toggle itself is on everywhere —
+   * see ProductForm — ahead of the photos that will back it per shirt).
+   */
+  imagesLongSleeve?: string[];
   sourceHash: string; // supplier provenance
   visible: boolean; // approved review state AND not deduped-away
 }
@@ -80,6 +96,10 @@ export interface JerseyCartItem {
   handle: string;
   size: Size;
   version: Version;
+  /** Short or long sleeve (owner decision 2026-10-26). A line stored before
+   *  this field existed has none — CartProvider's parseJerseyEntry reads
+   *  that as "short", the only cut that could ever have been in the cart. */
+  sleeve: Sleeve;
   nameNumber?: string; // <=18 chars, trimmed, uppercase-latin+digits+space allowed
   /** Zero or more patches, cheapest-tier-first order not required — price is by count, not identity. */
   patches: PatchId[];

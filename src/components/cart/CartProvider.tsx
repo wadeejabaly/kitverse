@@ -8,8 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
-import { SIZES, VERSIONS } from "@/data/pricing";
-import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Size, Version } from "@/data/types";
+import { SIZES, SLEEVES, VERSIONS } from "@/data/pricing";
+import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Sleeve, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { PATCHES } from "@/lib/orders/rules";
 
@@ -19,7 +19,7 @@ import { PATCHES } from "@/lib/orders/rules";
  * Three rules shape this file.
  *
  * 1. Prices are NEVER persisted. A stored jersey line is {kind:"jersey",
- *    handle, size, version, nameNumber, patch, qty}; a stored accessory line
+ *    handle, size, version, sleeve, nameNumber, patch, qty}; a stored accessory line
  *    is {kind:"accessory", handle, qty}. Every figure the customer sees is
  *    recomputed at render time (jersey lines from src/data/pricing.ts,
  *    accessory lines from src/data/accessories.ts), so a price change can
@@ -68,11 +68,12 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function lineKey(item: CartItem): string {
   if (item.kind === "accessory") return `accessory|${item.handle}`;
   const patches = [...item.patches].sort().join("+");
-  return ["jersey", item.handle, item.size, item.version, item.nameNumber ?? "", patches].join("|");
+  return ["jersey", item.handle, item.size, item.version, item.sleeve, item.nameNumber ?? "", patches].join("|");
 }
 
 const SIZE_SET = new Set<string>(SIZES);
 const VERSION_SET = new Set<string>(VERSIONS);
+const SLEEVE_SET = new Set<string>(SLEEVES);
 const PATCH_ID_SET = new Set<string>(Object.keys(PATCHES));
 /** Legacy single-value `Patch` → the new `PatchId[]` (a cart saved before 2026-10-26). */
 const LEGACY_PATCH_MAP: Record<string, PatchId[]> = { none: [], league: ["league"], ucl: ["champions_league"], worldcup: ["world_cup"] };
@@ -81,6 +82,11 @@ function parseJerseyEntry(value: Record<string, unknown>): JerseyCartItem | null
   if (typeof value.handle !== "string" || value.handle === "") return null;
   if (typeof value.size !== "string" || !SIZE_SET.has(value.size)) return null;
   if (typeof value.version !== "string" || !VERSION_SET.has(value.version)) return null;
+  // New field (owner decision 2026-10-26): a cart line saved before long
+  // sleeve existed has none at all, which reads the same as "short" — the
+  // only cut that could ever have been added before this.
+  const sleeve: Sleeve =
+    typeof value.sleeve === "string" && SLEEVE_SET.has(value.sleeve) ? (value.sleeve as Sleeve) : "short";
 
   const qtyRaw = typeof value.qty === "number" ? Math.floor(value.qty) : 1;
   const qty = Math.min(MAX_QTY, Math.max(1, qtyRaw));
@@ -110,6 +116,7 @@ function parseJerseyEntry(value: Record<string, unknown>): JerseyCartItem | null
     handle: value.handle,
     size: value.size as Size,
     version: value.version as Version,
+    sleeve,
     patches,
     qty,
     ...(nameNumber ? { nameNumber } : {}),

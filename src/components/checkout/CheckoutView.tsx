@@ -219,6 +219,7 @@ export function CheckoutView({
         priced: priceLine(product.season, item.size, item.version, item.qty, {
           nameNumber: Boolean(item.nameNumber),
           patchCount: item.patches.length,
+          sleeve: item.sleeve,
         }),
         key: lineKey(item),
       };
@@ -295,6 +296,7 @@ export function CheckoutView({
           handle: item.handle,
           size: item.size,
           version: item.version,
+          sleeve: item.sleeve,
           patches: item.patches,
           qty: item.qty,
           ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
@@ -529,6 +531,10 @@ export function CheckoutView({
                   {item.version === "fan"
                     ? tProduct("versionFan")
                     : tProduct("versionPlayer")}
+                  {" · "}
+                  {item.sleeve === "long"
+                    ? tProduct("sleeveLong")
+                    : tProduct("sleeveShort")}
                   {" · "}
                   <Figure>{item.qty}</Figure>
                 </span>

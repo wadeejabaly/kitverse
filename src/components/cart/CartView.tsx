@@ -73,6 +73,7 @@ export function CartView({
       const priced = priceLine(product.season, item.size, item.version, item.qty, {
         nameNumber: Boolean(item.nameNumber),
         patchCount: item.patches.length,
+        sleeve: item.sleeve,
       });
       return { item, product, priced, key: lineKey(item) };
     })
@@ -154,6 +155,11 @@ export function CartView({
                   {item.version === "fan"
                     ? tProduct("versionFan")
                     : tProduct("versionPlayer")}
+                </Prop>
+                <Prop label={t("propSleeve")}>
+                  {item.sleeve === "long"
+                    ? tProduct("sleeveLong")
+                    : tProduct("sleeveShort")}
                 </Prop>
                 {item.nameNumber ? (
                   <Prop label={t("propNameNumber")}>

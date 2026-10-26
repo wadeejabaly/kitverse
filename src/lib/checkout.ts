@@ -36,6 +36,10 @@ export const CheckoutItemSchema = z.object({
   handle: z.string().min(1).max(120),
   size: SizeSchema,
   version: VersionSchema,
+  // Short or long sleeve (owner decision 2026-10-26). Defaults to "short" so
+  // an older client that doesn't send it yet still prices and orders the
+  // same as before this field existed.
+  sleeve: z.enum(["short", "long"]).default("short"),
   nameNumber: z.string().max(NAME_NUMBER_MAX * 2).optional(),
   // Replaced the single `patch` enum (owner decisions 2026-10-23/25) with a
   // SET of patches (owner decision 2026-10-26, tiered pricing): whether each

@@ -1,4 +1,4 @@
-import type { Size, Version } from "./types";
+import type { Sleeve, Size, Version } from "./types";
 import priceList from "./price-list.json";
 import { tieredTotal } from "@/lib/pricing/tiers";
 
@@ -41,6 +41,7 @@ const zoneLabel = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.na
 
 export const SIZES: Size[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
 export const VERSIONS: Version[] = ["fan", "player"];
+export const SLEEVES: Sleeve[] = ["short", "long"];
 
 const SIZE_SURCHARGE: Partial<Record<Size, number>> = { "3XL": addonPrice("size_3xl"), "4XL": addonPrice("size_4xl") };
 
@@ -77,32 +78,40 @@ const PLAYER_PRICE = groupPrice("player");
 const RETRO_PRICE = groupPrice("retro");
 
 /**
- * Product types the owner is adding to the catalogue with new photography.
- * The prices are confirmed; the products are not in `catalog.json` yet and
- * there is no selectable long-sleeve/kids/adult/NBA dimension, so NOTHING in
- * this file or the storefront reads these constants. They are parked here so
- * the figure lives in the one money file when the product data lands.
+ * Long-sleeve prices (owner decision 2026-10-26: offered on every shirt, not
+ * gated behind a kids/adult/NBA-style "not live yet" dimension — see
+ * ProductForm's Sleeve fieldset). Each is the admin-edited `*_long` price
+ * group (`fan_long`/`player_long`/`retro_long` in the price list), never a
+ * literal +10 computed here: the owner can reprice short and long sleeve
+ * independently in admin Pricing, same as every other figure in this file.
+ */
+const FAN_LONG_PRICE = groupPrice("fan_long");
+const PLAYER_LONG_PRICE = groupPrice("player_long");
+const RETRO_LONG_PRICE = groupPrice("retro_long");
+
+/**
+ * Still parked here, unused: the owner hasn't added these product types'
+ * photography/catalogue entries yet, so nothing reads these constants.
  */
 export const FUTURE_PRICES = {
-  fanLongSleeve: 105,
-  playerLongSleeve: 120,
-  retroLongSleeve: 145,
   kidsKit: 200,
   adultKit: 300,
   nbaVersion: 160,
 } as const;
 
 /**
- * Base price + size surcharge for a jersey identified by its season and the
- * shopper's fan/player choice. Retro seasons ignore `version` — there is one
- * Retro price, not a Retro-Fan and a Retro-Player.
+ * Base price + size surcharge for a jersey identified by its season, the
+ * shopper's fan/player choice, and sleeve length. Retro seasons ignore
+ * `version` — there is one Retro price (short or long), not a Retro-Fan and
+ * a Retro-Player.
  */
-export function priceFor(season: string, size: Size, version: Version): number {
+export function priceFor(season: string, size: Size, version: Version, sleeve: Sleeve = "short"): number {
+  const long = sleeve === "long";
   const base = isRetroSeason(season)
-    ? RETRO_PRICE
+    ? (long ? RETRO_LONG_PRICE : RETRO_PRICE)
     : version === "player"
-      ? PLAYER_PRICE
-      : FAN_PRICE;
+      ? (long ? PLAYER_LONG_PRICE : PLAYER_PRICE)
+      : (long ? FAN_LONG_PRICE : FAN_PRICE);
   return base + sizeSurcharge(size);
 }
 
@@ -194,10 +203,10 @@ export function priceLine(
   size: Size,
   version: Version,
   qty: number,
-  addons: { nameNumber?: boolean; patchCount?: number } = {},
+  addons: { nameNumber?: boolean; patchCount?: number; sleeve?: Sleeve } = {},
 ): PricedLine {
   const unitPrice = round2(
-    priceFor(season, size, version) +
+    priceFor(season, size, version, addons.sleeve ?? "short") +
       (addons.nameNumber ? ADDONS.nameNumber : 0) +
       patchesTotal(addons.patchCount ?? 0),
   );

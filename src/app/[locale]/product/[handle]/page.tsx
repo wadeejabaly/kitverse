@@ -9,6 +9,7 @@ import { slugify } from "@/data/slug";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductForm } from "@/components/product/ProductForm";
 import { ProductGallery } from "@/components/product/ProductGallery";
+import { ProductSleeveProvider } from "@/components/product/ProductSleeveContext";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { Season } from "@/components/shared/Money";
 import { SectionHead, Wrap } from "@/components/shared/PageLede";
@@ -133,59 +134,70 @@ export default async function ProductPage({
         </span>
       </nav>
 
-      <section className="grid items-start gap-10 pt-8 pb-10 wide:grid-cols-2 wide:gap-14">
-        {/* The tile is sticky so the buy box can scroll past it on tall
-            screens. Most products have one photo today; a product with more
-            (see Product.images) gets a thumbnail row under the tile — see
-            <ProductGallery>.
+      {/* Wraps both columns in one shared Sleeve choice (owner decision
+          2026-10-26): picking "Long sleeve" in <ProductForm> can swap
+          <ProductGallery>'s photo too, even though the two sit in different
+          columns below with no other parent in common — see
+          ProductSleeveContext.tsx. */}
+      <ProductSleeveProvider>
+        <section className="grid items-start gap-10 pt-8 pb-10 wide:grid-cols-2 wide:gap-14">
+          {/* The tile is sticky so the buy box can scroll past it on tall
+              screens. Most products have one photo today; a product with more
+              (see Product.images) gets a thumbnail row under the tile — see
+              <ProductGallery>.
 
-            No reveal on the gallery: the first photo is the LCP element on
-            this page, and an entrance on the thing the reader came to see is
-            the one place where motion costs more than it gives. The details
-            column opposite carries the entrance instead, 90ms behind the
-            fold — enough to read as "the page settled", not as a curtain. */}
-        <div className="wide:sticky wide:top-24">
-          <ProductGallery images={[product.image, ...(product.images ?? [])]} alt={title} />
-        </div>
-
-        <Reveal delay={90}>
-          <span className="mono-eyebrow text-ink-soft">
-            {team}
-            <span aria-hidden className="mx-2">
-              ·
-            </span>
-            <Season value={product.season} />
-          </span>
-          <h1 className="mt-2.5 mb-1.5 text-[28px] leading-tight">{title}</h1>
-
-          <ProductForm
-            handle={product.handle}
-            season={product.season}
-            league={product.league}
-            team={product.team}
-            kind={product.kind}
-            leagueName={leagueName}
-          />
-
-          <div className="mt-8 border-t border-rule">
-            <Accordion summary={t("accordionShipping")} open>
-              {t("accordionShippingBody")}
-            </Accordion>
-            <Accordion summary={t("accordionReturns")}>
-              {t("accordionReturnsBody")}
-            </Accordion>
-            <Accordion summary={t("accordionSizing")}>
-              {t("accordionSizingBody")}{" "}
-              <Link
-                href="/size-guide"
-                className="text-ink underline underline-offset-4"
-              >
-                {t("accordionSizingLink")}
-              </Link>
-            </Accordion>
+              No reveal on the gallery: the first photo is the LCP element on
+              this page, and an entrance on the thing the reader came to see is
+              the one place where motion costs more than it gives. The details
+              column opposite carries the entrance instead, 90ms behind the
+              fold — enough to read as "the page settled", not as a curtain. */}
+          <div className="wide:sticky wide:top-24">
+            <ProductGallery
+              images={[product.image, ...(product.images ?? [])]}
+              imagesLongSleeve={product.imagesLongSleeve}
+              alt={title}
+            />
           </div>
-        </Reveal>
-      </section>
+
+          <Reveal delay={90}>
+            <span className="mono-eyebrow text-ink-soft">
+              {team}
+              <span aria-hidden className="mx-2">
+                ·
+              </span>
+              <Season value={product.season} />
+            </span>
+            <h1 className="mt-2.5 mb-1.5 text-[28px] leading-tight">{title}</h1>
+
+            <ProductForm
+              handle={product.handle}
+              season={product.season}
+              league={product.league}
+              team={product.team}
+              kind={product.kind}
+              leagueName={leagueName}
+            />
+
+            <div className="mt-8 border-t border-rule">
+              <Accordion summary={t("accordionShipping")} open>
+                {t("accordionShippingBody")}
+              </Accordion>
+              <Accordion summary={t("accordionReturns")}>
+                {t("accordionReturnsBody")}
+              </Accordion>
+              <Accordion summary={t("accordionSizing")}>
+                {t("accordionSizingBody")}{" "}
+                <Link
+                  href="/size-guide"
+                  className="text-ink underline underline-offset-4"
+                >
+                  {t("accordionSizingLink")}
+                </Link>
+              </Accordion>
+            </div>
+          </Reveal>
+        </section>
+      </ProductSleeveProvider>
 
       {related.length > 0 ? (
         <>

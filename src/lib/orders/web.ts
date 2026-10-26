@@ -78,7 +78,7 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
       // re-validated against the catalogue (team type, league, the cap) - whatever the browser sent, only an eligible set is ever stored
       const store = getStoreProduct(i.handle);
       const patches = store ? sanitizePatches(i.patches, store) : [];
-      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: "short", size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
+      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
     })).select("id"), "web items");
     const q = await requote(order);
     // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —

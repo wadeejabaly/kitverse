@@ -66,6 +66,40 @@ describe("priceFor — flat ladder by type, no season split for Fan/Player", () 
   });
 });
 
+describe("priceFor — long sleeve (owner decision 2026-10-26)", () => {
+  it("defaults to short sleeve when the argument is omitted", () => {
+    for (const season of [...CURRENT_SEASONS, ...RETRO_SEASONS]) {
+      for (const version of VERSIONS) {
+        expect(priceFor(season, "M", version)).toBe(priceFor(season, "M", version, "short"));
+      }
+    }
+  });
+
+  it("Fan long sleeve is 105 and Player long sleeve is 120, at every non-retro season", () => {
+    for (const season of CURRENT_SEASONS) {
+      for (const size of NON_SURCHARGE_SIZES) {
+        expect(priceFor(season, size, "fan", "long")).toBe(105);
+        expect(priceFor(season, size, "player", "long")).toBe(120);
+      }
+    }
+  });
+
+  it("Retro long sleeve is 145 regardless of fan/player choice, at every retro season", () => {
+    for (const season of RETRO_SEASONS) {
+      for (const size of NON_SURCHARGE_SIZES) {
+        expect(priceFor(season, size, "fan", "long")).toBe(145);
+        expect(priceFor(season, size, "player", "long")).toBe(145);
+      }
+    }
+  });
+
+  it("still adds the size surcharge on top of a long-sleeve base price", () => {
+    expect(priceFor("2026/27", "3XL", "fan", "long")).toBe(105 + 9);
+    expect(priceFor("2026/27", "4XL", "player", "long")).toBe(120 + 12);
+    expect(priceFor("2022", "3XL", "fan", "long")).toBe(145 + 9);
+  });
+});
+
 describe("priceFor — 3XL/4XL surcharge", () => {
   it("adds +9 at 3XL and +12 at 4XL, on top of any base price", () => {
     for (const season of [...CURRENT_SEASONS, ...RETRO_SEASONS]) {
@@ -198,6 +232,17 @@ describe("priceLine + cartTotals — addon math and totals", () => {
     const asPlayer = priceLine("2019/20", "M", "player", 1);
     expect(asFan.unitPrice).toBe(135);
     expect(asPlayer.unitPrice).toBe(135);
+  });
+
+  it("priceLine charges the long-sleeve price when addons.sleeve is long", () => {
+    const line = priceLine("2026/27", "M", "player", 2, { sleeve: "long" });
+    expect(line.unitPrice).toBe(120);
+    expect(line.lineTotal).toBe(240);
+  });
+
+  it("priceLine defaults to short sleeve when addons.sleeve is omitted", () => {
+    const line = priceLine("2026/27", "M", "player", 1);
+    expect(line.unitPrice).toBe(110);
   });
 
   it("cartTotals sums line totals into subtotal and adds the given shipping once", () => {

@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ADDONS, SIZES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
+import { ADDONS, SIZES, SLEEVES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
 import type { Kind, PatchId, Size, Version } from "@/data/types";
 import { maxPatchesFor, patchOptionsFor } from "@/data/patches";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
+import { useProductSleeve } from "@/components/product/ProductSleeveContext";
 
 /**
  * The buy box.
@@ -63,6 +64,10 @@ export function ProductForm({
 
   const [size, setSize] = useState<Size>("M");
   const [version, setVersion] = useState<Version>("fan");
+  // Shared with <ProductGallery> via <ProductSleeveProvider> on the page, so
+  // picking "Long sleeve" here can swap the photo tile too (owner decision
+  // 2026-10-26) — everything else on this form stays purely local state.
+  const [sleeve, setSleeve] = useProductSleeve();
   const [personalise, setPersonalise] = useState(false);
   const [nameNumber, setNameNumber] = useState("");
   const [patches, setPatches] = useState<PatchId[]>([]);
@@ -73,7 +78,7 @@ export function ProductForm({
   const hasName = trimmedName !== "";
 
   const unitPrice =
-    priceFor(season, size, version) +
+    priceFor(season, size, version, sleeve) +
     (hasName ? ADDONS.nameNumber : 0) +
     patchesTotal(patches.length);
 
@@ -99,6 +104,7 @@ export function ProductForm({
       handle,
       size,
       version,
+      sleeve,
       patches,
       qty,
       ...(hasName ? { nameNumber: trimmedName } : {}),
@@ -159,6 +165,27 @@ export function ProductForm({
           </div>
         </fieldset>
       )}
+
+      {/* Sleeve (owner decision 2026-10-26): offered on every shirt, retro
+          included — unlike Version, there is no era this hides for, since
+          the price list has a long-sleeve group for retro too. */}
+      <fieldset className="mb-6 border-0 p-0">
+        <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("sleeve")}</legend>
+        <div className="flex flex-wrap gap-2">
+          {SLEEVES.map((option) => (
+            <OptionButton
+              key={option}
+              pressed={sleeve === option}
+              onClick={() => setSleeve(option)}
+            >
+              {option === "short" ? t("sleeveShort") : t("sleeveLong")}
+              <small className="ms-1.5 text-ink-soft">
+                <Price value={priceFor(season, size, version, option)} />
+              </small>
+            </OptionButton>
+          ))}
+        </div>
+      </fieldset>
 
       {/* Name and number */}
       <fieldset className="mb-6 border-0 p-0">
