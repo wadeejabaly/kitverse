@@ -90,7 +90,7 @@ export type CustomerInput = z.infer<typeof CustomerSchema>;
 export const CreateOrderRequestSchema = z.object({
   items: z.array(CheckoutItemSchema).min(1).max(MAX_CART_LINES),
   customer: CustomerSchema,
-  locale: z.enum(["ar", "en"]),
+  locale: z.enum(["ar", "en", "he"]),
   // The checkout-only gift-box add-on (owner decision 2026-10-23): how many
   // boxes, not a per-shirt flag. Optional on the wire so an older client
   // omitting it still prices as "no gift box" rather than failing validation.

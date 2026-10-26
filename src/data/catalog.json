@@ -17,7 +17,9 @@
       "images": [
         "/products/manchester-united-2026-27-home-shirt-back.jpg",
         "/products/manchester-united-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית מנצ'סטר יונייטד 2026/27",
+      "teamHe": "מנצ'סטר יונייטד"
     },
     {
       "handle": "manchester-united-2026-27-away-shirt",
@@ -35,7 +37,9 @@
       "visible": true,
       "images": [
         "/products/manchester-united-2026-27-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ מנצ'סטר יונייטד 2026/27",
+      "teamHe": "מנצ'סטר יונייטד"
     },
     {
       "handle": "manchester-united-2026-27-third-shirt",
@@ -53,7 +57,9 @@
       "visible": true,
       "images": [
         "/products/manchester-united-2026-27-third-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית מנצ'סטר יונייטד 2026/27",
+      "teamHe": "מנצ'סטר יונייטד"
     },
     {
       "handle": "manchester-city-2026-27-home-shirt",
@@ -72,7 +78,9 @@
       "images": [
         "/products/manchester-city-2026-27-home-shirt-back.jpg",
         "/products/manchester-city-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית מנצ'סטר סיטי 2026/27",
+      "teamHe": "מנצ'סטר סיטי"
     },
     {
       "handle": "manchester-city-2026-27-away-shirt",
@@ -90,7 +98,9 @@
       "visible": true,
       "images": [
         "/products/manchester-city-2026-27-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ מנצ'סטר סיטי 2026/27",
+      "teamHe": "מנצ'סטר סיטי"
     },
     {
       "handle": "manchester-city-2026-27-third-shirt",
@@ -108,7 +118,9 @@
       "visible": true,
       "images": [
         "/products/manchester-city-2026-27-third-shirt-detail.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית מנצ'סטר סיטי 2026/27",
+      "teamHe": "מנצ'סטר סיטי"
     },
     {
       "handle": "liverpool-2026-27-home-shirt",
@@ -127,7 +139,9 @@
       "images": [
         "/products/liverpool-2026-27-home-shirt-back.jpg",
         "/products/liverpool-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית ליברפול 2026/27",
+      "teamHe": "ליברפול"
     },
     {
       "handle": "liverpool-2026-27-away-shirt",
@@ -146,7 +160,9 @@
       "images": [
         "/products/liverpool-2026-27-away-shirt-back.jpg",
         "/products/liverpool-2026-27-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ ליברפול 2026/27",
+      "teamHe": "ליברפול"
     },
     {
       "handle": "liverpool-2026-27-third-shirt",
@@ -164,7 +180,9 @@
       "visible": true,
       "images": [
         "/products/liverpool-2026-27-third-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית ליברפול 2026/27",
+      "teamHe": "ליברפול"
     },
     {
       "handle": "arsenal-2026-27-home-shirt",
@@ -183,7 +201,9 @@
       "images": [
         "/products/arsenal-2026-27-home-shirt-back.jpg",
         "/products/arsenal-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית ארסנל 2026/27",
+      "teamHe": "ארסנל"
     },
     {
       "handle": "arsenal-2026-27-away-shirt",
@@ -201,7 +221,9 @@
       "visible": true,
       "images": [
         "/products/arsenal-2026-27-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ ארסנל 2026/27",
+      "teamHe": "ארסנל"
     },
     {
       "handle": "arsenal-2026-27-third-shirt",
@@ -219,7 +241,9 @@
       "visible": true,
       "images": [
         "/products/arsenal-2026-27-third-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית ארסנל 2026/27",
+      "teamHe": "ארסנל"
     },
     {
       "handle": "chelsea-2026-27-home-shirt",
@@ -238,7 +262,9 @@
       "images": [
         "/products/chelsea-2026-27-home-shirt-back.jpg",
         "/products/chelsea-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית צ'לסי 2026/27",
+      "teamHe": "צ'לסי"
     },
     {
       "handle": "chelsea-2026-27-away-shirt",
@@ -257,7 +283,9 @@
       "images": [
         "/products/chelsea-2026-27-away-shirt-back.jpg",
         "/products/chelsea-2026-27-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ צ'לסי 2026/27",
+      "teamHe": "צ'לסי"
     },
     {
       "handle": "chelsea-2026-27-third-shirt",
@@ -276,7 +304,9 @@
       "images": [
         "/products/chelsea-2026-27-third-shirt-back.jpg",
         "/products/chelsea-2026-27-third-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית צ'לסי 2026/27",
+      "teamHe": "צ'לסי"
     },
     {
       "handle": "tottenham-hotspur-2026-27-home-shirt",
@@ -295,7 +325,9 @@
       "images": [
         "/products/tottenham-hotspur-2026-27-home-shirt-back.jpg",
         "/products/tottenham-hotspur-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית טוטנהאם 2026/27",
+      "teamHe": "טוטנהאם"
     },
     {
       "handle": "tottenham-hotspur-2026-27-away-shirt",
@@ -314,7 +346,9 @@
       "images": [
         "/products/tottenham-hotspur-2026-27-away-shirt-back.jpg",
         "/products/tottenham-hotspur-2026-27-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ טוטנהאם 2026/27",
+      "teamHe": "טוטנהאם"
     },
     {
       "handle": "tottenham-hotspur-2026-27-third-shirt",
@@ -333,7 +367,9 @@
       "images": [
         "/products/tottenham-hotspur-2026-27-third-shirt-back.jpg",
         "/products/tottenham-hotspur-2026-27-third-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית טוטנהאם 2026/27",
+      "teamHe": "טוטנהאם"
     },
     {
       "handle": "newcastle-united-2026-27-home-shirt",
@@ -348,7 +384,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/newcastle-united-2026-27-home-shirt/pick-97c4471caa.jpg",
       "sourceHash": "97c4471caa",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ניוקאסל יונייטד 2026/27",
+      "teamHe": "ניוקאסל יונייטד"
     },
     {
       "handle": "newcastle-united-2026-27-away-shirt",
@@ -363,7 +401,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "65ae07c278",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ניוקאסל יונייטד 2026/27",
+      "teamHe": "ניוקאסל יונייטד"
     },
     {
       "handle": "newcastle-united-2026-27-third-shirt",
@@ -378,7 +418,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/newcastle-united-2026-27-third-shirt/pick-58a313f1ab.jpg",
       "sourceHash": "58a313f1ab",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ניוקאסל יונייטד 2026/27",
+      "teamHe": "ניוקאסל יונייטד"
     },
     {
       "handle": "west-ham-united-2026-27-home-shirt",
@@ -393,7 +435,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/west-ham-united-2026-27-home-shirt/pick-24dbcc5eb6.jpg",
       "sourceHash": "0ed46b075d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ווסט האם יונייטד 2026/27",
+      "teamHe": "ווסט האם יונייטד"
     },
     {
       "handle": "west-ham-united-2026-27-away-shirt",
@@ -408,7 +452,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/west-ham-united-2026-27-away-shirt/pick-4a3617d0c7.jpg",
       "sourceHash": "4a3617d0c7",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ווסט האם יונייטד 2026/27",
+      "teamHe": "ווסט האם יונייטד"
     },
     {
       "handle": "west-ham-united-2026-27-third-shirt",
@@ -423,7 +469,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/west-ham-united-2026-27-third-shirt/pick-691eeafd1d.jpg",
       "sourceHash": "691eeafd1d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ווסט האם יונייטד 2026/27",
+      "teamHe": "ווסט האם יונייטד"
     },
     {
       "handle": "aston-villa-2026-27-home-shirt",
@@ -438,7 +486,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/aston-villa-2026-27-home-shirt/pick-130af4c3.jpg",
       "sourceHash": "130af4c3",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אסטון וילה 2026/27",
+      "teamHe": "אסטון וילה"
     },
     {
       "handle": "aston-villa-2026-27-away-shirt",
@@ -453,7 +503,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/aston-villa-2026-27-away-shirt/pick-f15216020e.jpg",
       "sourceHash": "f15216020e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אסטון וילה 2026/27",
+      "teamHe": "אסטון וילה"
     },
     {
       "handle": "aston-villa-2026-27-third-shirt",
@@ -468,7 +520,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/aston-villa-2026-27-third-shirt/pick-46d1402bb9.jpg",
       "sourceHash": "46d1402bb9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אסטון וילה 2026/27",
+      "teamHe": "אסטון וילה"
     },
     {
       "handle": "everton-2026-27-home-shirt",
@@ -483,7 +537,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/everton-2026-27-home-shirt/pick-838b11352b.jpg",
       "sourceHash": "838b11352b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אוורטון 2026/27",
+      "teamHe": "אוורטון"
     },
     {
       "handle": "everton-2026-27-away-shirt",
@@ -498,7 +554,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/everton-2026-27-away-shirt/pick-9f0c9c6d9a.jpg",
       "sourceHash": "9f0c9c6d9a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אוורטון 2026/27",
+      "teamHe": "אוורטון"
     },
     {
       "handle": "everton-2026-27-third-shirt",
@@ -513,7 +571,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/everton-2026-27-third-shirt/pick-5c729d8b8b.jpg",
       "sourceHash": "5c729d8b8b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אוורטון 2026/27",
+      "teamHe": "אוורטון"
     },
     {
       "handle": "real-madrid-2026-27-home-shirt",
@@ -533,7 +593,9 @@
         "/products/real-madrid-2026-27-home-shirt-detail.jpg"
       ],
       "sourceHash": "cdd74a24",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ריאל מדריד 2026/27",
+      "teamHe": "ריאל מדריד"
     },
     {
       "handle": "real-madrid-2026-27-away-shirt",
@@ -552,7 +614,9 @@
         "/products/real-madrid-2026-27-away-shirt-detail.jpg"
       ],
       "sourceHash": "4854e1c0",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ריאל מדריד 2026/27",
+      "teamHe": "ריאל מדריד"
     },
     {
       "handle": "real-madrid-2026-27-third-shirt",
@@ -570,7 +634,9 @@
         "/products/real-madrid-2026-27-third-shirt-back.jpg"
       ],
       "sourceHash": "2e08cfe5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ריאל מדריד 2026/27",
+      "teamHe": "ריאל מדריד"
     },
     {
       "handle": "barcelona-2026-27-home-shirt",
@@ -590,7 +656,9 @@
         "/products/barcelona-2026-27-home-shirt-detail.jpg"
       ],
       "sourceHash": "f32b8df1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ברצלונה 2026/27",
+      "teamHe": "ברצלונה"
     },
     {
       "handle": "barcelona-2026-27-away-shirt",
@@ -610,7 +678,9 @@
         "/products/barcelona-2026-27-away-shirt-crest-2.jpg"
       ],
       "sourceHash": "1ae43c5f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ברצלונה 2026/27",
+      "teamHe": "ברצלונה"
     },
     {
       "handle": "barcelona-2026-27-third-shirt",
@@ -629,7 +699,9 @@
         "/products/barcelona-2026-27-third-shirt-crest.jpg"
       ],
       "sourceHash": "356a1996",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ברצלונה 2026/27",
+      "teamHe": "ברצלונה"
     },
     {
       "handle": "atletico-madrid-2026-27-home-shirt",
@@ -647,7 +719,9 @@
       "visible": true,
       "images": [
         "/products/atletico-madrid-2026-27-home-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית אתלטיקו מדריד 2026/27",
+      "teamHe": "אתלטיקו מדריד"
     },
     {
       "handle": "atletico-madrid-2026-27-away-shirt",
@@ -665,7 +739,9 @@
       "visible": true,
       "images": [
         "/products/atletico-madrid-2026-27-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ אתלטיקו מדריד 2026/27",
+      "teamHe": "אתלטיקו מדריד"
     },
     {
       "handle": "atletico-madrid-2026-27-third-shirt",
@@ -683,7 +759,9 @@
       "visible": true,
       "images": [
         "/products/atletico-madrid-2026-27-third-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית אתלטיקו מדריד 2026/27",
+      "teamHe": "אתלטיקו מדריד"
     },
     {
       "handle": "sevilla-2026-27-home-shirt",
@@ -698,7 +776,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/sevilla-2026-27-home-shirt/pick-0b49a7024a.jpg",
       "sourceHash": "0b49a7024a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית סביליה 2026/27",
+      "teamHe": "סביליה"
     },
     {
       "handle": "sevilla-2026-27-away-shirt",
@@ -713,7 +793,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/sevilla-2026-27-away-shirt/pick-b443ef52d8.jpg",
       "sourceHash": "b443ef52d8",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ סביליה 2026/27",
+      "teamHe": "סביליה"
     },
     {
       "handle": "sevilla-2026-27-third-shirt",
@@ -728,7 +810,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/sevilla-2026-27-third-shirt/pick-ceca31c124.jpg",
       "sourceHash": "ceca31c124",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית סביליה 2026/27",
+      "teamHe": "סביליה"
     },
     {
       "handle": "valencia-2026-27-home-shirt",
@@ -743,7 +827,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/valencia-2026-27-home-shirt/pick-e8fce5aa0c.jpg",
       "sourceHash": "e8fce5aa0c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ולנסיה 2026/27",
+      "teamHe": "ולנסיה"
     },
     {
       "handle": "valencia-2026-27-away-shirt",
@@ -758,7 +844,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/valencia-2026-27-away-shirt/pick-3e40141545.jpg",
       "sourceHash": "3e40141545",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ולנסיה 2026/27",
+      "teamHe": "ולנסיה"
     },
     {
       "handle": "valencia-2026-27-third-shirt",
@@ -773,7 +861,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/valencia-2026-27-third-shirt/pick-3caabcaef5.jpg",
       "sourceHash": "5c2a01035b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ולנסיה 2026/27",
+      "teamHe": "ולנסיה"
     },
     {
       "handle": "athletic-bilbao-2026-27-home-shirt",
@@ -788,7 +878,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/athletic-bilbao-2026-27-home-shirt/pick-6356f7a68d.jpg",
       "sourceHash": "6356f7a68d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אתלטיק בילבאו 2026/27",
+      "teamHe": "אתלטיק בילבאו"
     },
     {
       "handle": "athletic-bilbao-2026-27-away-shirt",
@@ -803,7 +895,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/athletic-bilbao-2026-27-away-shirt/pick-04a40bdc9a.jpg",
       "sourceHash": "04a40bdc9a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אתלטיק בילבאו 2026/27",
+      "teamHe": "אתלטיק בילבאו"
     },
     {
       "handle": "athletic-bilbao-2026-27-third-shirt",
@@ -818,7 +912,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/athletic-bilbao-2026-27-third-shirt/pick-498b7d859a.jpg",
       "sourceHash": "498b7d859a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אתלטיק בילבאו 2026/27",
+      "teamHe": "אתלטיק בילבאו"
     },
     {
       "handle": "real-betis-2026-27-home-shirt",
@@ -833,7 +929,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/real-betis-2026-27-home-shirt/pick-5f08f432f3.jpg",
       "sourceHash": "5f08f432f3",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ריאל בטיס 2026/27",
+      "teamHe": "ריאל בטיס"
     },
     {
       "handle": "real-betis-2026-27-away-shirt",
@@ -848,7 +946,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/real-betis-2026-27-away-shirt/pick-eb65a7a345.jpg",
       "sourceHash": "eb65a7a345",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ריאל בטיס 2026/27",
+      "teamHe": "ריאל בטיס"
     },
     {
       "handle": "real-betis-2026-27-third-shirt",
@@ -863,7 +963,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/real-betis-2026-27-third-shirt/pick-9c811a679b.jpg",
       "sourceHash": "9c811a679b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ריאל בטיס 2026/27",
+      "teamHe": "ריאל בטיס"
     },
     {
       "handle": "real-sociedad-2026-27-home-shirt",
@@ -878,7 +980,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/real-sociedad-2026-27-home-shirt/pick-d8dfd0490a.jpg",
       "sourceHash": "d8dfd0490a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ריאל סוסיאדד 2026/27",
+      "teamHe": "ריאל סוסיאדד"
     },
     {
       "handle": "real-sociedad-2026-27-away-shirt",
@@ -893,7 +997,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/real-sociedad-2026-27-away-shirt/pick-b161e8344e.jpg",
       "sourceHash": "b161e8344e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ריאל סוסיאדד 2026/27",
+      "teamHe": "ריאל סוסיאדד"
     },
     {
       "handle": "real-sociedad-2026-27-third-shirt",
@@ -908,7 +1014,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/real-sociedad-2026-27-third-shirt/pick-5b046a430b.jpg",
       "sourceHash": "5b046a430b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ריאל סוסיאדד 2026/27",
+      "teamHe": "ריאל סוסיאדד"
     },
     {
       "handle": "villarreal-2026-27-home-shirt",
@@ -923,7 +1031,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/villarreal-2026-27-home-shirt/pick-f44aaae400.jpg",
       "sourceHash": "32c0e827a1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ויאריאל 2026/27",
+      "teamHe": "ויאריאל"
     },
     {
       "handle": "villarreal-2026-27-away-shirt",
@@ -938,7 +1048,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "06b83d67d9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ויאריאל 2026/27",
+      "teamHe": "ויאריאל"
     },
     {
       "handle": "villarreal-2026-27-third-shirt",
@@ -953,7 +1065,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a2d50111",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ויאריאל 2026/27",
+      "teamHe": "ויאריאל"
     },
     {
       "handle": "celta-vigo-2026-27-home-shirt",
@@ -968,7 +1082,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/celta-vigo-2026-27-home-shirt/pick-95ee3a0f59.jpg",
       "sourceHash": "95ee3a0f59",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית סלטה ויגו 2026/27",
+      "teamHe": "סלטה ויגו"
     },
     {
       "handle": "celta-vigo-2026-27-away-shirt",
@@ -983,7 +1099,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/celta-vigo-2026-27-away-shirt/pick-e06bde1e57.jpg",
       "sourceHash": "e06bde1e57",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ סלטה ויגו 2026/27",
+      "teamHe": "סלטה ויגו"
     },
     {
       "handle": "celta-vigo-2026-27-third-shirt",
@@ -998,7 +1116,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/celta-vigo-2026-27-third-shirt/pick-5688f65982.jpg",
       "sourceHash": "5688f65982",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית סלטה ויגו 2026/27",
+      "teamHe": "סלטה ויגו"
     },
     {
       "handle": "juventus-2026-27-home-shirt",
@@ -1017,7 +1137,9 @@
       "images": [
         "/products/juventus-2026-27-home-shirt-back.jpg",
         "/products/juventus-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית יובנטוס 2026/27",
+      "teamHe": "יובנטוס"
     },
     {
       "handle": "juventus-2026-27-away-shirt",
@@ -1036,7 +1158,9 @@
       "images": [
         "/products/juventus-2026-27-away-shirt-back.jpg",
         "/products/juventus-2026-27-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ יובנטוס 2026/27",
+      "teamHe": "יובנטוס"
     },
     {
       "handle": "juventus-2026-27-third-shirt",
@@ -1055,7 +1179,9 @@
       "images": [
         "/products/juventus-2026-27-third-shirt-back.jpg",
         "/products/juventus-2026-27-third-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית יובנטוס 2026/27",
+      "teamHe": "יובנטוס"
     },
     {
       "handle": "inter-milan-2026-27-home-shirt",
@@ -1074,7 +1200,9 @@
       "images": [
         "/products/inter-milan-2026-27-home-shirt-back.jpg",
         "/products/inter-milan-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית אינטר מילאן 2026/27",
+      "teamHe": "אינטר מילאן"
     },
     {
       "handle": "inter-milan-2026-27-away-shirt",
@@ -1093,7 +1221,9 @@
       "images": [
         "/products/inter-milan-2026-27-away-shirt-back.jpg",
         "/products/inter-milan-2026-27-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ אינטר מילאן 2026/27",
+      "teamHe": "אינטר מילאן"
     },
     {
       "handle": "inter-milan-2026-27-third-shirt",
@@ -1112,7 +1242,9 @@
       "images": [
         "/products/inter-milan-2026-27-third-shirt-back.jpg",
         "/products/inter-milan-2026-27-third-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית אינטר מילאן 2026/27",
+      "teamHe": "אינטר מילאן"
     },
     {
       "handle": "ac-milan-2026-27-home-shirt",
@@ -1127,7 +1259,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ac-milan-2026-27-home-shirt/pick-4a82c8f967.jpg",
       "sourceHash": "9e7e001bf7",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית מילאן 2026/27",
+      "teamHe": "מילאן"
     },
     {
       "handle": "ac-milan-2026-27-away-shirt",
@@ -1142,7 +1276,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ac-milan-2026-27-away-shirt/pick-f0097c6613.jpg",
       "sourceHash": "f0097c6613",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ מילאן 2026/27",
+      "teamHe": "מילאן"
     },
     {
       "handle": "ac-milan-2026-27-third-shirt",
@@ -1157,7 +1293,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ac-milan-2026-27-third-shirt/pick-71df6ac958.jpg",
       "sourceHash": "ea122a0c08",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית מילאן 2026/27",
+      "teamHe": "מילאן"
     },
     {
       "handle": "napoli-2026-27-home-shirt",
@@ -1172,7 +1310,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/napoli-2026-27-home-shirt/pick-86a35065bb.jpg",
       "sourceHash": "86a35065bb",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית נאפולי 2026/27",
+      "teamHe": "נאפולי"
     },
     {
       "handle": "napoli-2026-27-away-shirt",
@@ -1187,7 +1327,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/napoli-2026-27-away-shirt/pick-2316f835d1.jpg",
       "sourceHash": "69dc86a167",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ נאפולי 2026/27",
+      "teamHe": "נאפולי"
     },
     {
       "handle": "napoli-2026-27-third-shirt",
@@ -1202,7 +1344,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/napoli-2026-27-third-shirt/cleaned.jpg",
       "sourceHash": "550de66e82",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית נאפולי 2026/27",
+      "teamHe": "נאפולי"
     },
     {
       "handle": "roma-2026-27-home-shirt",
@@ -1217,7 +1361,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/roma-2026-27-home-shirt/pick-dac8bdd7f1.jpg",
       "sourceHash": "dac8bdd7f1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית רומא 2026/27",
+      "teamHe": "רומא"
     },
     {
       "handle": "roma-2026-27-away-shirt",
@@ -1232,7 +1378,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/roma-2026-27-away-shirt/pick-810012c85a.jpg",
       "sourceHash": "18bf15c04e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ רומא 2026/27",
+      "teamHe": "רומא"
     },
     {
       "handle": "roma-2026-27-third-shirt",
@@ -1247,7 +1395,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/roma-2026-27-third-shirt/pick-40e2ffc906.jpg",
       "sourceHash": "40e2ffc906",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית רומא 2026/27",
+      "teamHe": "רומא"
     },
     {
       "handle": "lazio-2026-27-home-shirt",
@@ -1262,7 +1412,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "3eef9b03",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית לאציו 2026/27",
+      "teamHe": "לאציו"
     },
     {
       "handle": "lazio-2026-27-away-shirt",
@@ -1277,7 +1429,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lazio-2026-27-away-shirt/pick-adfa52a05b.jpg",
       "sourceHash": "cf9a2ab702",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ לאציו 2026/27",
+      "teamHe": "לאציו"
     },
     {
       "handle": "lazio-2026-27-third-shirt",
@@ -1292,7 +1446,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lazio-2026-27-third-shirt/pick-fa7e48c3a1.jpg",
       "sourceHash": "fa7e48c3a1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית לאציו 2026/27",
+      "teamHe": "לאציו"
     },
     {
       "handle": "fiorentina-2026-27-home-shirt",
@@ -1307,7 +1463,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/fiorentina-2026-27-home-shirt/pick-d51320cbc9.jpg",
       "sourceHash": "d51320cbc9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית פיורנטינה 2026/27",
+      "teamHe": "פיורנטינה"
     },
     {
       "handle": "fiorentina-2026-27-away-shirt-256969189",
@@ -1322,7 +1480,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/fiorentina-2026-27-away-shirt-256969189/pick-fad8e365fb.jpg",
       "sourceHash": "fad8e365fb",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ פיורנטינה 2026/27",
+      "teamHe": "פיורנטינה"
     },
     {
       "handle": "fiorentina-2026-27-third-shirt",
@@ -1337,7 +1497,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "c2155901",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית פיורנטינה 2026/27",
+      "teamHe": "פיורנטינה"
     },
     {
       "handle": "atalanta-2026-27-home-shirt",
@@ -1352,7 +1514,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/atalanta-2026-27-home-shirt/pick-575e098e9e.jpg",
       "sourceHash": "575e098e9e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אטאלנטה 2026/27",
+      "teamHe": "אטאלנטה"
     },
     {
       "handle": "atalanta-2026-27-away-shirt",
@@ -1367,7 +1531,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/atalanta-2026-27-away-shirt/pick-551791a79c.jpg",
       "sourceHash": "4485438e00",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אטאלנטה 2026/27",
+      "teamHe": "אטאלנטה"
     },
     {
       "handle": "atalanta-2026-27-third-shirt",
@@ -1382,7 +1548,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "3912736e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אטאלנטה 2026/27",
+      "teamHe": "אטאלנטה"
     },
     {
       "handle": "torino-2026-27-home-shirt",
@@ -1397,7 +1565,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/torino-2026-27-home-shirt/pick-17de9800c2.jpg",
       "sourceHash": "17de9800c2",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית טורינו 2026/27",
+      "teamHe": "טורינו"
     },
     {
       "handle": "torino-2026-27-away-shirt",
@@ -1412,7 +1582,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/torino-2026-27-away-shirt/pick-138f18bd4f.jpg",
       "sourceHash": "138f18bd4f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ טורינו 2026/27",
+      "teamHe": "טורינו"
     },
     {
       "handle": "torino-2026-27-third-shirt",
@@ -1427,7 +1599,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "887a9255",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית טורינו 2026/27",
+      "teamHe": "טורינו"
     },
     {
       "handle": "bologna-2026-27-home-shirt",
@@ -1442,7 +1616,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/bologna-2026-27-home-shirt/pick-5c4d5da99d.jpg",
       "sourceHash": "5c4d5da99d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית בולוניה 2026/27",
+      "teamHe": "בולוניה"
     },
     {
       "handle": "bologna-2026-27-away-shirt",
@@ -1457,7 +1633,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "291d7dea",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ בולוניה 2026/27",
+      "teamHe": "בולוניה"
     },
     {
       "handle": "bologna-2026-27-third-shirt",
@@ -1472,7 +1650,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "c573b726",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית בולוניה 2026/27",
+      "teamHe": "בולוניה"
     },
     {
       "handle": "bayern-munich-2026-27-home-shirt",
@@ -1491,7 +1671,9 @@
       "images": [
         "/products/bayern-munich-2026-27-home-shirt-back.jpg",
         "/products/bayern-munich-2026-27-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית באיירן מינכן 2026/27",
+      "teamHe": "באיירן מינכן"
     },
     {
       "handle": "bayern-munich-2026-27-away-shirt",
@@ -1510,7 +1692,9 @@
       "images": [
         "/products/bayern-munich-2026-27-away-shirt-back.jpg",
         "/products/bayern-munich-2026-27-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ באיירן מינכן 2026/27",
+      "teamHe": "באיירן מינכן"
     },
     {
       "handle": "bayern-munich-2026-27-third-shirt",
@@ -1529,7 +1713,9 @@
       "images": [
         "/products/bayern-munich-2026-27-third-shirt-back.jpg",
         "/products/bayern-munich-2026-27-third-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית באיירן מינכן 2026/27",
+      "teamHe": "באיירן מינכן"
     },
     {
       "handle": "borussia-dortmund-2026-27-home-shirt",
@@ -1547,7 +1733,9 @@
       "visible": true,
       "images": [
         "/products/borussia-dortmund-2026-27-home-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית בורוסיה דורטמונד 2026/27",
+      "teamHe": "בורוסיה דורטמונד"
     },
     {
       "handle": "borussia-dortmund-2026-27-away-shirt",
@@ -1565,7 +1753,9 @@
       "visible": true,
       "images": [
         "/products/borussia-dortmund-2026-27-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ בורוסיה דורטמונד 2026/27",
+      "teamHe": "בורוסיה דורטמונד"
     },
     {
       "handle": "borussia-dortmund-2026-27-third-shirt",
@@ -1583,7 +1773,9 @@
       "visible": true,
       "images": [
         "/products/borussia-dortmund-2026-27-third-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית בורוסיה דורטמונד 2026/27",
+      "teamHe": "בורוסיה דורטמונד"
     },
     {
       "handle": "rb-leipzig-2026-27-home-shirt",
@@ -1598,7 +1790,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/rb-leipzig-2026-27-home-shirt/pick-98b5d463e7.jpg",
       "sourceHash": "212218c51b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית לייפציג 2026/27",
+      "teamHe": "לייפציג"
     },
     {
       "handle": "rb-leipzig-2026-27-away-shirt",
@@ -1613,7 +1807,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/rb-leipzig-2026-27-away-shirt/pick-3f091d3f4a.jpg",
       "sourceHash": "3f091d3f4a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ לייפציג 2026/27",
+      "teamHe": "לייפציג"
     },
     {
       "handle": "rb-leipzig-2026-27-third-shirt",
@@ -1628,7 +1824,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "6cbf9d8a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית לייפציג 2026/27",
+      "teamHe": "לייפציג"
     },
     {
       "handle": "bayer-leverkusen-2026-27-home-shirt",
@@ -1643,7 +1841,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "ed0b3d47",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית באייר לברקוזן 2026/27",
+      "teamHe": "באייר לברקוזן"
     },
     {
       "handle": "bayer-leverkusen-2026-27-away-shirt",
@@ -1658,7 +1858,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "cc014533",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ באייר לברקוזן 2026/27",
+      "teamHe": "באייר לברקוזן"
     },
     {
       "handle": "bayer-leverkusen-2026-27-third-shirt",
@@ -1673,7 +1875,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "05ad04a9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית באייר לברקוזן 2026/27",
+      "teamHe": "באייר לברקוזן"
     },
     {
       "handle": "schalke-04-2026-27-home-shirt",
@@ -1688,7 +1892,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "34174a11",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית שאלקה 04 2026/27",
+      "teamHe": "שאלקה 04"
     },
     {
       "handle": "schalke-04-2026-27-away-shirt",
@@ -1703,7 +1909,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a4056927",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ שאלקה 04 2026/27",
+      "teamHe": "שאלקה 04"
     },
     {
       "handle": "schalke-04-2026-27-third-shirt",
@@ -1718,7 +1926,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "f5693a33",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית שאלקה 04 2026/27",
+      "teamHe": "שאלקה 04"
     },
     {
       "handle": "borussia-monchengladbach-2026-27-home-shirt",
@@ -1733,7 +1943,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/borussia-monchengladbach-2026-27-home-shirt/pick-4ab9488baf.jpg",
       "sourceHash": "4ab9488baf",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית בורוסיה מנשנגלדבאך 2026/27",
+      "teamHe": "בורוסיה מנשנגלדבאך"
     },
     {
       "handle": "borussia-monchengladbach-2026-27-away-shirt",
@@ -1748,7 +1960,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/borussia-monchengladbach-2026-27-away-shirt/pick-37a1a6a248.jpg",
       "sourceHash": "37a1a6a248",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ בורוסיה מנשנגלדבאך 2026/27",
+      "teamHe": "בורוסיה מנשנגלדבאך"
     },
     {
       "handle": "borussia-monchengladbach-2026-27-third-shirt",
@@ -1763,7 +1977,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/borussia-monchengladbach-2026-27-third-shirt/pick-72863f23b4.jpg",
       "sourceHash": "72863f23b4",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית בורוסיה מנשנגלדבאך 2026/27",
+      "teamHe": "בורוסיה מנשנגלדבאך"
     },
     {
       "handle": "eintracht-frankfurt-2026-27-home-shirt",
@@ -1778,7 +1994,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/eintracht-frankfurt-2026-27-home-shirt/pick-0803a54f9a.jpg",
       "sourceHash": "0803a54f9a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית איינטרכט פרנקפורט 2026/27",
+      "teamHe": "איינטרכט פרנקפורט"
     },
     {
       "handle": "eintracht-frankfurt-2026-27-away-shirt",
@@ -1793,7 +2011,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/eintracht-frankfurt-2026-27-away-shirt/pick-f5d0774e0d.jpg",
       "sourceHash": "f5d0774e0d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ איינטרכט פרנקפורט 2026/27",
+      "teamHe": "איינטרכט פרנקפורט"
     },
     {
       "handle": "eintracht-frankfurt-2026-27-third-shirt",
@@ -1808,7 +2028,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/eintracht-frankfurt-2026-27-third-shirt/pick-2be42f611d.jpg",
       "sourceHash": "2be42f611d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית איינטרכט פרנקפורט 2026/27",
+      "teamHe": "איינטרכט פרנקפורט"
     },
     {
       "handle": "vfb-stuttgart-2026-27-home-shirt",
@@ -1823,7 +2045,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/vfb-stuttgart-2026-27-home-shirt/pick-68a2e51fb1.jpg",
       "sourceHash": "68a2e51fb1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית שטוטגארט 2026/27",
+      "teamHe": "שטוטגארט"
     },
     {
       "handle": "vfb-stuttgart-2026-27-away-shirt",
@@ -1838,7 +2062,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/vfb-stuttgart-2026-27-away-shirt/pick-da76d01d80.jpg",
       "sourceHash": "198912f2db",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ שטוטגארט 2026/27",
+      "teamHe": "שטוטגארט"
     },
     {
       "handle": "vfb-stuttgart-2026-27-third-shirt",
@@ -1853,7 +2079,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/vfb-stuttgart-2026-27-third-shirt/pick-7eabdad702.jpg",
       "sourceHash": "7eabdad702",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית שטוטגארט 2026/27",
+      "teamHe": "שטוטגארט"
     },
     {
       "handle": "werder-bremen-2026-27-home-shirt",
@@ -1868,7 +2096,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/werder-bremen-2026-27-home-shirt/pick-d7fa9a9682.jpg",
       "sourceHash": "d7fa9a9682",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ורדר ברמן 2026/27",
+      "teamHe": "ורדר ברמן"
     },
     {
       "handle": "werder-bremen-2026-27-away-shirt",
@@ -1883,7 +2113,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/werder-bremen-2026-27-away-shirt/pick-9a3987ba04.jpg",
       "sourceHash": "9a3987ba04",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ורדר ברמן 2026/27",
+      "teamHe": "ורדר ברמן"
     },
     {
       "handle": "werder-bremen-2026-27-third-shirt",
@@ -1898,7 +2130,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/werder-bremen-2026-27-third-shirt/pick-9115447b63.jpg",
       "sourceHash": "9115447b63",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ורדר ברמן 2026/27",
+      "teamHe": "ורדר ברמן"
     },
     {
       "handle": "hamburger-sv-2026-27-home-shirt",
@@ -1913,7 +2147,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/hamburger-sv-2026-27-home-shirt/pick-1f05bfa839.jpg",
       "sourceHash": "1f05bfa839",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית המבורג 2026/27",
+      "teamHe": "המבורג"
     },
     {
       "handle": "hamburger-sv-2026-27-away-shirt",
@@ -1928,7 +2164,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/hamburger-sv-2026-27-away-shirt/pick-38a4982307.jpg",
       "sourceHash": "38a4982307",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ המבורג 2026/27",
+      "teamHe": "המבורג"
     },
     {
       "handle": "hamburger-sv-2026-27-third-shirt",
@@ -1943,7 +2181,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/hamburger-sv-2026-27-third-shirt/pick-60749657f3.jpg",
       "sourceHash": "60749657f3",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית המבורג 2026/27",
+      "teamHe": "המבורג"
     },
     {
       "handle": "paris-saint-germain-2026-27-home-shirt",
@@ -1963,7 +2203,9 @@
         "/products/paris-saint-germain-2026-27-home-shirt-detail.jpg"
       ],
       "sourceHash": "3f6fb88a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית פריז סן ז'רמן 2026/27",
+      "teamHe": "פריז סן ז'רמן"
     },
     {
       "handle": "paris-saint-germain-2026-27-away-shirt",
@@ -1982,7 +2224,9 @@
         "/products/paris-saint-germain-2026-27-away-shirt-crest.jpg"
       ],
       "sourceHash": "fe2139ad",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ פריז סן ז'רמן 2026/27",
+      "teamHe": "פריז סן ז'רמן"
     },
     {
       "handle": "paris-saint-germain-2026-27-third-shirt",
@@ -1997,7 +2241,9 @@
       "edition": "standard",
       "image": "/products/paris-saint-germain-2026-27-third-shirt.jpg",
       "sourceHash": "67d520d9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית פריז סן ז'רמן 2026/27",
+      "teamHe": "פריז סן ז'רמן"
     },
     {
       "handle": "marseille-2026-27-home-shirt",
@@ -2012,7 +2258,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/marseille-2026-27-home-shirt/pick-36cfd9af8e.jpg",
       "sourceHash": "36cfd9af8e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אולימפיק מארסיי 2026/27",
+      "teamHe": "אולימפיק מארסיי"
     },
     {
       "handle": "marseille-2026-27-away-shirt",
@@ -2027,7 +2275,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/marseille-2026-27-away-shirt/pick-f804759e10.jpg",
       "sourceHash": "f804759e10",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אולימפיק מארסיי 2026/27",
+      "teamHe": "אולימפיק מארסיי"
     },
     {
       "handle": "marseille-2026-27-third-shirt",
@@ -2042,7 +2292,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/marseille-2026-27-third-shirt/pick-35642f40da.jpg",
       "sourceHash": "35642f40da",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אולימפיק מארסיי 2026/27",
+      "teamHe": "אולימפיק מארסיי"
     },
     {
       "handle": "olympique-lyonnais-2026-27-home-shirt",
@@ -2057,7 +2309,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "6dae5466",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אולימפיק ליון 2026/27",
+      "teamHe": "אולימפיק ליון"
     },
     {
       "handle": "olympique-lyonnais-2026-27-away-shirt",
@@ -2072,7 +2326,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a40bff47",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אולימפיק ליון 2026/27",
+      "teamHe": "אולימפיק ליון"
     },
     {
       "handle": "olympique-lyonnais-2026-27-third-shirt",
@@ -2087,7 +2343,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "770774cf",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אולימפיק ליון 2026/27",
+      "teamHe": "אולימפיק ליון"
     },
     {
       "handle": "as-monaco-2026-27-home-shirt",
@@ -2102,7 +2360,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "d7b48351",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית מונקו 2026/27",
+      "teamHe": "מונקו"
     },
     {
       "handle": "as-monaco-2026-27-away-shirt",
@@ -2117,7 +2377,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "adeefb5f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ מונקו 2026/27",
+      "teamHe": "מונקו"
     },
     {
       "handle": "as-monaco-2026-27-third-shirt",
@@ -2132,7 +2394,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "0d61007e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית מונקו 2026/27",
+      "teamHe": "מונקו"
     },
     {
       "handle": "lille-2026-27-home-shirt",
@@ -2147,7 +2411,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lille-2026-27-home-shirt/pick-8c837d726f.jpg",
       "sourceHash": "8c837d726f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ליל 2026/27",
+      "teamHe": "ליל"
     },
     {
       "handle": "lille-2026-27-away-shirt",
@@ -2162,7 +2428,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "9af3476030",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ליל 2026/27",
+      "teamHe": "ליל"
     },
     {
       "handle": "lille-2026-27-third-shirt",
@@ -2177,7 +2445,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lille-2026-27-third-shirt/pick-7faef1aa4d.jpg",
       "sourceHash": "7faef1aa4d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ליל 2026/27",
+      "teamHe": "ליל"
     },
     {
       "handle": "saint-etienne-2026-27-home-shirt",
@@ -2192,7 +2462,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/saint-etienne-2026-27-home-shirt/pick-d6badc3690.jpg",
       "sourceHash": "d6badc3690",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית סנט אטיין 2026/27",
+      "teamHe": "סנט אטיין"
     },
     {
       "handle": "saint-etienne-2026-27-away-shirt",
@@ -2207,7 +2479,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/saint-etienne-2026-27-away-shirt/pick-3d1cd0c2dc.jpg",
       "sourceHash": "ff02b8089d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ סנט אטיין 2026/27",
+      "teamHe": "סנט אטיין"
     },
     {
       "handle": "saint-etienne-2026-27-third-shirt",
@@ -2222,7 +2496,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/saint-etienne-2026-27-third-shirt/pick-b189e76a.jpg",
       "sourceHash": "b189e76a",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית סנט אטיין 2026/27",
+      "teamHe": "סנט אטיין"
     },
     {
       "handle": "nice-2026-27-home-shirt",
@@ -2237,7 +2513,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/nice-2026-27-home-shirt/pick-3151c3e06c.jpg",
       "sourceHash": "3151c3e06c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ניס 2026/27",
+      "teamHe": "ניס"
     },
     {
       "handle": "nice-2026-27-away-shirt",
@@ -2252,7 +2530,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/nice-2026-27-away-shirt/pick-241bfdc552.jpg",
       "sourceHash": "241bfdc552",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ניס 2026/27",
+      "teamHe": "ניס"
     },
     {
       "handle": "nice-2026-27-third-shirt",
@@ -2267,7 +2547,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "6bddc27d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ניס 2026/27",
+      "teamHe": "ניס"
     },
     {
       "handle": "rennes-2026-27-home-shirt",
@@ -2282,7 +2564,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "e4888caa",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית רנס 2026/27",
+      "teamHe": "רנס"
     },
     {
       "handle": "rennes-2026-27-away-shirt",
@@ -2297,7 +2581,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "aafb4bc9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ רנס 2026/27",
+      "teamHe": "רנס"
     },
     {
       "handle": "rennes-2026-27-third-shirt",
@@ -2312,7 +2598,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "ad4f52f4",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית רנס 2026/27",
+      "teamHe": "רנס"
     },
     {
       "handle": "lens-2026-27-home-shirt",
@@ -2327,7 +2615,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lens-2026-27-home-shirt/pick-53849870d6.jpg",
       "sourceHash": "54e2d25261",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית לאנס 2026/27",
+      "teamHe": "לאנס"
     },
     {
       "handle": "lens-2026-27-away-shirt",
@@ -2342,7 +2632,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lens-2026-27-away-shirt/pick-3fab0b8a20.jpg",
       "sourceHash": "3fab0b8a20",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ לאנס 2026/27",
+      "teamHe": "לאנס"
     },
     {
       "handle": "lens-2026-27-third-shirt",
@@ -2357,7 +2649,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/lens-2026-27-third-shirt/pick-617bce5529.jpg",
       "sourceHash": "617bce5529",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית לאנס 2026/27",
+      "teamHe": "לאנס"
     },
     {
       "handle": "nantes-2026-27-home-shirt",
@@ -2372,7 +2666,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/nantes-2026-27-home-shirt/pick-d67223c6fb.jpg",
       "sourceHash": "d67223c6fb",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית נאנט 2026/27",
+      "teamHe": "נאנט"
     },
     {
       "handle": "nantes-2026-27-away-shirt",
@@ -2387,7 +2683,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a1c9a7ef",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ נאנט 2026/27",
+      "teamHe": "נאנט"
     },
     {
       "handle": "nantes-2026-27-third-shirt",
@@ -2402,7 +2700,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "77b454f0",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית נאנט 2026/27",
+      "teamHe": "נאנט"
     },
     {
       "handle": "qatar-2026-home-shirt",
@@ -2417,7 +2717,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "d3c4daaa",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית קטאר 2026",
+      "teamHe": "קטאר"
     },
     {
       "handle": "qatar-2026-away-shirt",
@@ -2432,7 +2734,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/qatar-2026-away-shirt/pick-80818b724c.jpg",
       "sourceHash": "80818b724c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ קטאר 2026",
+      "teamHe": "קטאר"
     },
     {
       "handle": "qatar-2026-third-shirt",
@@ -2447,7 +2751,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "6b897feb",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית קטאר 2026",
+      "teamHe": "קטאר"
     },
     {
       "handle": "ecuador-2026-home-shirt",
@@ -2462,7 +2768,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ecuador-2026-home-shirt/pick-5cb5fb14.jpg",
       "sourceHash": "3dd452bc",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אקוודור 2026",
+      "teamHe": "אקוודור"
     },
     {
       "handle": "ecuador-2026-away-shirt",
@@ -2477,7 +2785,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ecuador-2026-away-shirt/pick-03d2ca02.jpg",
       "sourceHash": "03d2ca02",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אקוודור 2026",
+      "teamHe": "אקוודור"
     },
     {
       "handle": "ecuador-2026-third-shirt",
@@ -2492,7 +2802,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ecuador-2026-third-shirt/pick-29434859.jpg",
       "sourceHash": "01c0476e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אקוודור 2026",
+      "teamHe": "אקוודור"
     },
     {
       "handle": "senegal-2026-home-shirt",
@@ -2507,7 +2819,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/senegal-2026-home-shirt/pick-248def7d.jpg",
       "sourceHash": "248def7d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית סנגל 2026",
+      "teamHe": "סנגל"
     },
     {
       "handle": "senegal-2026-away-shirt",
@@ -2522,7 +2836,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/senegal-2026-away-shirt/pick-e0f97e35.jpg",
       "sourceHash": "e0f97e35",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ סנגל 2026",
+      "teamHe": "סנגל"
     },
     {
       "handle": "senegal-2026-third-shirt",
@@ -2537,7 +2853,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "7477f53b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית סנגל 2026",
+      "teamHe": "סנגל"
     },
     {
       "handle": "netherlands-2026-home-shirt",
@@ -2552,7 +2870,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/netherlands-2026-home-shirt/pick-1a066663.jpg",
       "sourceHash": "1a066663",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית הולנד 2026",
+      "teamHe": "הולנד"
     },
     {
       "handle": "netherlands-2026-away-shirt",
@@ -2567,7 +2887,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "3c8d6480b2",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ הולנד 2026",
+      "teamHe": "הולנד"
     },
     {
       "handle": "netherlands-2026-third-shirt",
@@ -2582,7 +2904,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "5a68b3ec",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית הולנד 2026",
+      "teamHe": "הולנד"
     },
     {
       "handle": "england-2026-home-shirt",
@@ -2601,7 +2925,9 @@
       "images": [
         "/products/england-2026-home-shirt-back.jpg",
         "/products/england-2026-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית אנגליה 2026",
+      "teamHe": "אנגליה"
     },
     {
       "handle": "england-2026-away-shirt",
@@ -2620,7 +2946,9 @@
       "images": [
         "/products/england-2026-away-shirt-back.jpg",
         "/products/england-2026-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ אנגליה 2026",
+      "teamHe": "אנגליה"
     },
     {
       "handle": "england-2026-third-shirt",
@@ -2635,7 +2963,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "6ff1cd3e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אנגליה 2026",
+      "teamHe": "אנגליה"
     },
     {
       "handle": "iran-2026-home-shirt",
@@ -2650,7 +2980,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/iran-2026-home-shirt/pick-d46a266c17.jpg",
       "sourceHash": "d46a266c17",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית איראן 2026",
+      "teamHe": "איראן"
     },
     {
       "handle": "iran-2026-away-shirt",
@@ -2665,7 +2997,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/iran-2026-away-shirt/pick-e672506bb3.jpg",
       "sourceHash": "e672506bb3",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ איראן 2026",
+      "teamHe": "איראן"
     },
     {
       "handle": "iran-2026-third-shirt",
@@ -2680,7 +3014,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/iran-2026-third-shirt/pick-1709871549.jpg",
       "sourceHash": "871c566ba6",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית איראן 2026",
+      "teamHe": "איראן"
     },
     {
       "handle": "usa-2026-home-shirt",
@@ -2695,7 +3031,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "462c3bf5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ארצות הברית 2026",
+      "teamHe": "ארצות הברית"
     },
     {
       "handle": "usa-2026-away-shirt",
@@ -2710,7 +3048,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a66729a4",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ארצות הברית 2026",
+      "teamHe": "ארצות הברית"
     },
     {
       "handle": "usa-2026-third-shirt",
@@ -2725,7 +3065,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "0945f75d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ארצות הברית 2026",
+      "teamHe": "ארצות הברית"
     },
     {
       "handle": "wales-2026-home-shirt",
@@ -2740,7 +3082,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "d3da1f90",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ויילס 2026",
+      "teamHe": "ויילס"
     },
     {
       "handle": "wales-2026-away-shirt",
@@ -2755,7 +3099,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "e65d0790",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ויילס 2026",
+      "teamHe": "ויילס"
     },
     {
       "handle": "wales-2026-third-shirt",
@@ -2770,7 +3116,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "db926239",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ויילס 2026",
+      "teamHe": "ויילס"
     },
     {
       "handle": "argentina-2026-home-shirt",
@@ -2789,7 +3137,9 @@
       "images": [
         "/products/argentina-2026-home-shirt-back.jpg",
         "/products/argentina-2026-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית ארגנטינה 2026",
+      "teamHe": "ארגנטינה"
     },
     {
       "handle": "argentina-2026-away-shirt",
@@ -2807,7 +3157,9 @@
       "visible": true,
       "images": [
         "/products/argentina-2026-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ ארגנטינה 2026",
+      "teamHe": "ארגנטינה"
     },
     {
       "handle": "argentina-2026-third-shirt",
@@ -2825,7 +3177,9 @@
       "visible": true,
       "images": [
         "/products/argentina-2026-third-shirt-detail.jpg"
-      ]
+      ],
+      "titleHe": "חולצת שלישית ארגנטינה 2026",
+      "teamHe": "ארגנטינה"
     },
     {
       "handle": "saudi-arabia-2026-home-shirt",
@@ -2840,7 +3194,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "0b6da857",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ערב הסעודית 2026",
+      "teamHe": "ערב הסעודית"
     },
     {
       "handle": "saudi-arabia-2026-away-shirt",
@@ -2855,7 +3211,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/saudi-arabia-2026-away-shirt/pick-d6271dbcba.jpg",
       "sourceHash": "d6271dbcba",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ערב הסעודית 2026",
+      "teamHe": "ערב הסעודית"
     },
     {
       "handle": "saudi-arabia-2026-third-shirt",
@@ -2870,7 +3228,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "49721a65",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ערב הסעודית 2026",
+      "teamHe": "ערב הסעודית"
     },
     {
       "handle": "mexico-2026-home-shirt",
@@ -2885,7 +3245,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/mexico-2026-home-shirt/pick-ae4b1432.jpg",
       "sourceHash": "0f014c07",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית מקסיקו 2026",
+      "teamHe": "מקסיקו"
     },
     {
       "handle": "mexico-2026-away-shirt",
@@ -2900,7 +3262,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "ed7be715",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ מקסיקו 2026",
+      "teamHe": "מקסיקו"
     },
     {
       "handle": "mexico-2026-third-shirt",
@@ -2915,7 +3279,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "f0c22eef16",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית מקסיקו 2026",
+      "teamHe": "מקסיקו"
     },
     {
       "handle": "poland-2026-home-shirt",
@@ -2930,7 +3296,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/poland-2026-home-shirt/pick-ce806ba1d8.jpg",
       "sourceHash": "ce806ba1d8",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית פולין 2026",
+      "teamHe": "פולין"
     },
     {
       "handle": "poland-2026-away-shirt",
@@ -2945,7 +3313,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "b5d1e16bdf",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ פולין 2026",
+      "teamHe": "פולין"
     },
     {
       "handle": "poland-2026-third-shirt",
@@ -2960,7 +3330,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "dfd923a0",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית פולין 2026",
+      "teamHe": "פולין"
     },
     {
       "handle": "france-2026-home-shirt",
@@ -2979,7 +3351,9 @@
       "images": [
         "/products/france-2026-home-shirt-back.jpg",
         "/products/france-2026-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית צרפת 2026",
+      "teamHe": "צרפת"
     },
     {
       "handle": "france-2026-away-shirt",
@@ -2998,7 +3372,9 @@
       "images": [
         "/products/france-2026-away-shirt-back.jpg",
         "/products/france-2026-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ צרפת 2026",
+      "teamHe": "צרפת"
     },
     {
       "handle": "france-2026-third-shirt",
@@ -3013,7 +3389,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "7303a208",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית צרפת 2026",
+      "teamHe": "צרפת"
     },
     {
       "handle": "australia-2026-27-home-shirt",
@@ -3028,7 +3406,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/australia-2026-27-home-shirt/pick-4bc219e2.jpg",
       "sourceHash": "4bc219e2",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אוסטרליה 2026",
+      "teamHe": "אוסטרליה"
     },
     {
       "handle": "australia-2026-27-away-shirt",
@@ -3043,7 +3423,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/australia-2026-27-away-shirt/pick-e45d10d6.jpg",
       "sourceHash": "e45d10d6",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אוסטרליה 2026",
+      "teamHe": "אוסטרליה"
     },
     {
       "handle": "australia-2026-third-shirt",
@@ -3058,7 +3440,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "31d8c52f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אוסטרליה 2026",
+      "teamHe": "אוסטרליה"
     },
     {
       "handle": "denmark-2026-27-home-shirt",
@@ -3073,7 +3457,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/denmark-2026-27-home-shirt/pick-331623f7.jpg",
       "sourceHash": "331623f7",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית דנמרק 2026",
+      "teamHe": "דנמרק"
     },
     {
       "handle": "denmark-2026-27-away-shirt",
@@ -3088,7 +3474,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/denmark-2026-27-away-shirt/pick-9f8135cd63.jpg",
       "sourceHash": "9f8135cd63",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ דנמרק 2026",
+      "teamHe": "דנמרק"
     },
     {
       "handle": "denmark-2026-third-shirt",
@@ -3103,7 +3491,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "e91d86e5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית דנמרק 2026",
+      "teamHe": "דנמרק"
     },
     {
       "handle": "tunisia-2026-home-shirt",
@@ -3118,7 +3508,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/tunisia-2026-home-shirt/cleaned.jpg",
       "sourceHash": "ffc547fc",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית תוניסיה 2026",
+      "teamHe": "תוניסיה"
     },
     {
       "handle": "tunisia-2026-27-away-shirt",
@@ -3133,7 +3525,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/tunisia-2026-27-away-shirt/pick-18cf4f82ff.jpg",
       "sourceHash": "18cf4f82ff",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ תוניסיה 2026",
+      "teamHe": "תוניסיה"
     },
     {
       "handle": "tunisia-2026-27-third-shirt",
@@ -3148,7 +3542,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/tunisia-2026-27-third-shirt/cleaned.jpg",
       "sourceHash": "7b13f97d3c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית תוניסיה 2026",
+      "teamHe": "תוניסיה"
     },
     {
       "handle": "spain-2026-home-shirt",
@@ -3166,7 +3562,9 @@
       "visible": true,
       "images": [
         "/products/spain-2026-home-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית ספרד 2026",
+      "teamHe": "ספרד"
     },
     {
       "handle": "spain-2026-away-shirt",
@@ -3184,7 +3582,9 @@
       "visible": true,
       "images": [
         "/products/spain-2026-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ ספרד 2026",
+      "teamHe": "ספרד"
     },
     {
       "handle": "spain-2026-third-shirt",
@@ -3199,7 +3599,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/spain-2026-third-shirt/pick-64a5ff913c.jpg",
       "sourceHash": "64a5ff913c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ספרד 2026",
+      "teamHe": "ספרד"
     },
     {
       "handle": "costa-rica-2026-home-shirt",
@@ -3214,7 +3616,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/costa-rica-2026-home-shirt/pick-397cc18a.jpg",
       "sourceHash": "8b6a1d54",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית קוסטה ריקה 2026",
+      "teamHe": "קוסטה ריקה"
     },
     {
       "handle": "costa-rica-2026-27-away-shirt",
@@ -3229,7 +3633,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/costa-rica-2026-27-away-shirt/pick-51a07cd4.jpg",
       "sourceHash": "51a07cd4",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ קוסטה ריקה 2026",
+      "teamHe": "קוסטה ריקה"
     },
     {
       "handle": "costa-rica-2026-third-shirt",
@@ -3244,7 +3650,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "d9ed4758",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית קוסטה ריקה 2026",
+      "teamHe": "קוסטה ריקה"
     },
     {
       "handle": "germany-2026-home-shirt",
@@ -3263,7 +3671,9 @@
       "images": [
         "/products/germany-2026-home-shirt-back.jpg",
         "/products/germany-2026-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית גרמניה 2026",
+      "teamHe": "גרמניה"
     },
     {
       "handle": "germany-2026-away-shirt",
@@ -3282,7 +3692,9 @@
       "images": [
         "/products/germany-2026-away-shirt-back.jpg",
         "/products/germany-2026-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ גרמניה 2026",
+      "teamHe": "גרמניה"
     },
     {
       "handle": "germany-2026-27-third-shirt",
@@ -3297,7 +3709,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/germany-2026-27-third-shirt/pick-7c4476016b.jpg",
       "sourceHash": "7c4476016b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית גרמניה 2026",
+      "teamHe": "גרמניה"
     },
     {
       "handle": "japan-2026-home-shirt",
@@ -3312,7 +3726,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "c328d2e5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית יפן 2026",
+      "teamHe": "יפן"
     },
     {
       "handle": "japan-2026-away-shirt",
@@ -3327,7 +3743,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/japan-2026-away-shirt/pick-5cefa424.jpg",
       "sourceHash": "587ca3b1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ יפן 2026",
+      "teamHe": "יפן"
     },
     {
       "handle": "japan-2026-third-shirt",
@@ -3342,7 +3760,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "07fceb7e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית יפן 2026",
+      "teamHe": "יפן"
     },
     {
       "handle": "belgium-2026-home-shirt",
@@ -3357,7 +3777,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/belgium-2026-home-shirt/pick-8c6bcacb.jpg",
       "sourceHash": "fdd9225d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית בלגיה 2026",
+      "teamHe": "בלגיה"
     },
     {
       "handle": "belgium-2026-away-shirt",
@@ -3372,7 +3794,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/belgium-2026-away-shirt/pick-07578f50.jpg",
       "sourceHash": "07578f50",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ בלגיה 2026",
+      "teamHe": "בלגיה"
     },
     {
       "handle": "belgium-2026-third-shirt",
@@ -3387,7 +3811,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "5e50a3ee",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית בלגיה 2026",
+      "teamHe": "בלגיה"
     },
     {
       "handle": "canada-2026-home-shirt",
@@ -3402,7 +3828,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/canada-2026-home-shirt/pick-94624eab.jpg",
       "sourceHash": "94624eab",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית קנדה 2026",
+      "teamHe": "קנדה"
     },
     {
       "handle": "canada-2026-away-shirt",
@@ -3417,7 +3845,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/canada-2026-away-shirt/pick-b9967aea.jpg",
       "sourceHash": "b9967aea",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ קנדה 2026",
+      "teamHe": "קנדה"
     },
     {
       "handle": "canada-2026-third-shirt",
@@ -3432,7 +3862,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "c8522e02",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית קנדה 2026",
+      "teamHe": "קנדה"
     },
     {
       "handle": "morocco-2026-home-shirt",
@@ -3450,7 +3882,9 @@
       "visible": true,
       "images": [
         "/products/morocco-2026-home-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית מרוקו 2026",
+      "teamHe": "מרוקו"
     },
     {
       "handle": "morocco-2026-away-shirt",
@@ -3468,7 +3902,9 @@
       "visible": true,
       "images": [
         "/products/morocco-2026-away-shirt-back.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ מרוקו 2026",
+      "teamHe": "מרוקו"
     },
     {
       "handle": "morocco-2026-27-third-shirt",
@@ -3483,7 +3919,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a865902277",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית מרוקו 2026",
+      "teamHe": "מרוקו"
     },
     {
       "handle": "croatia-2026-home-shirt",
@@ -3498,7 +3936,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "07127de56c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית קרואטיה 2026",
+      "teamHe": "קרואטיה"
     },
     {
       "handle": "croatia-2026-away-shirt",
@@ -3513,7 +3953,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/croatia-2026-away-shirt/pick-516c2ba3.jpg",
       "sourceHash": "516c2ba3",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ קרואטיה 2026",
+      "teamHe": "קרואטיה"
     },
     {
       "handle": "croatia-2026-third-shirt",
@@ -3528,7 +3970,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "2eab0175",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית קרואטיה 2026",
+      "teamHe": "קרואטיה"
     },
     {
       "handle": "brazil-2026-home-shirt",
@@ -3547,7 +3991,9 @@
       "images": [
         "/products/brazil-2026-home-shirt-back.jpg",
         "/products/brazil-2026-home-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת בית ברזיל 2026",
+      "teamHe": "ברזיל"
     },
     {
       "handle": "brazil-2026-away-shirt",
@@ -3566,7 +4012,9 @@
       "images": [
         "/products/brazil-2026-away-shirt-back.jpg",
         "/products/brazil-2026-away-shirt-crest.jpg"
-      ]
+      ],
+      "titleHe": "חולצת חוץ ברזיל 2026",
+      "teamHe": "ברזיל"
     },
     {
       "handle": "brazil-2026-third-shirt",
@@ -3581,7 +4029,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/brazil-2026-third-shirt/pick-9e3f3b62.jpg",
       "sourceHash": "02921d23",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ברזיל 2026",
+      "teamHe": "ברזיל"
     },
     {
       "handle": "serbia-2026-home-shirt",
@@ -3596,7 +4046,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "ff28fbbf",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית סרביה 2026",
+      "teamHe": "סרביה"
     },
     {
       "handle": "serbia-2026-away-shirt",
@@ -3611,7 +4063,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "eb3e6d94",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ סרביה 2026",
+      "teamHe": "סרביה"
     },
     {
       "handle": "serbia-2026-third-shirt",
@@ -3626,7 +4080,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "1d77ac0e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית סרביה 2026",
+      "teamHe": "סרביה"
     },
     {
       "handle": "switzerland-2026-home-shirt",
@@ -3641,7 +4097,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/switzerland-2026-home-shirt/pick-e9c0872d.jpg",
       "sourceHash": "2aed3328",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית שווייץ 2026",
+      "teamHe": "שווייץ"
     },
     {
       "handle": "switzerland-2026-away-shirt",
@@ -3656,7 +4114,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "652337f6",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ שווייץ 2026",
+      "teamHe": "שווייץ"
     },
     {
       "handle": "switzerland-2026-third-shirt",
@@ -3671,7 +4131,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a2c06ca1",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית שווייץ 2026",
+      "teamHe": "שווייץ"
     },
     {
       "handle": "cameroon-2026-home-shirt",
@@ -3686,7 +4148,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "1ed546db",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית קמרון 2026",
+      "teamHe": "קמרון"
     },
     {
       "handle": "cameroon-2026-27-away-shirt",
@@ -3701,7 +4165,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/cameroon-2026-27-away-shirt/pick-faaea8e5.jpg",
       "sourceHash": "faaea8e5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ קמרון 2026",
+      "teamHe": "קמרון"
     },
     {
       "handle": "cameroon-2026-27-third-shirt",
@@ -3716,7 +4182,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/cameroon-2026-27-third-shirt/pick-3fad2319.jpg",
       "sourceHash": "3fad2319",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית קמרון 2026",
+      "teamHe": "קמרון"
     },
     {
       "handle": "portugal-2026-home-shirt",
@@ -3731,7 +4199,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/portugal-2026-home-shirt/pick-c97d1d04.jpg",
       "sourceHash": "35482db6",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית פורטוגל 2026",
+      "teamHe": "פורטוגל"
     },
     {
       "handle": "portugal-2026-away-shirt",
@@ -3746,7 +4216,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "b94d7924",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ פורטוגל 2026",
+      "teamHe": "פורטוגל"
     },
     {
       "handle": "portugal-2026-third-shirt",
@@ -3761,7 +4233,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "1b6eb946",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית פורטוגל 2026",
+      "teamHe": "פורטוגל"
     },
     {
       "handle": "ghana-2026-home-shirt",
@@ -3776,7 +4250,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "345028fc",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית גאנה 2026",
+      "teamHe": "גאנה"
     },
     {
       "handle": "ghana-2026-away-shirt",
@@ -3791,7 +4267,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ghana-2026-away-shirt/pick-5db52bfc03.jpg",
       "sourceHash": "5db52bfc03",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ גאנה 2026",
+      "teamHe": "גאנה"
     },
     {
       "handle": "ghana-2026-27-third-shirt",
@@ -3806,7 +4284,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ghana-2026-27-third-shirt/pick-8952473e.jpg",
       "sourceHash": "8952473e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית גאנה 2026",
+      "teamHe": "גאנה"
     },
     {
       "handle": "uruguay-2026-home-shirt",
@@ -3821,7 +4301,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/uruguay-2026-home-shirt/pick-7acb7c56.jpg",
       "sourceHash": "01f12dc5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אורוגוואי 2026",
+      "teamHe": "אורוגוואי"
     },
     {
       "handle": "uruguay-2026-away-shirt",
@@ -3836,7 +4318,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "5ee0ad68",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אורוגוואי 2026",
+      "teamHe": "אורוגוואי"
     },
     {
       "handle": "uruguay-2026-third-shirt",
@@ -3851,7 +4335,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "2c42c86c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אורוגוואי 2026",
+      "teamHe": "אורוגוואי"
     },
     {
       "handle": "south-korea-2026-home-shirt",
@@ -3866,7 +4352,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/south-korea-2026-home-shirt/pick-bcf0a9bb.jpg",
       "sourceHash": "bcf0a9bb",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית דרום קוריאה 2026",
+      "teamHe": "דרום קוריאה"
     },
     {
       "handle": "south-korea-2026-away-shirt",
@@ -3881,7 +4369,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/south-korea-2026-away-shirt/pick-c2192e6f.jpg",
       "sourceHash": "c2192e6f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ דרום קוריאה 2026",
+      "teamHe": "דרום קוריאה"
     },
     {
       "handle": "south-korea-2026-third-shirt",
@@ -3896,7 +4386,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "20173b63",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית דרום קוריאה 2026",
+      "teamHe": "דרום קוריאה"
     },
     {
       "handle": "czechia-2026-home-shirt",
@@ -3911,7 +4403,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a5770bc2",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית צ'כיה 2026",
+      "teamHe": "צ'כיה"
     },
     {
       "handle": "czechia-2026-away-shirt",
@@ -3926,7 +4420,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "108b6fce",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ צ'כיה 2026",
+      "teamHe": "צ'כיה"
     },
     {
       "handle": "czechia-2026-third-shirt",
@@ -3941,7 +4437,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "755a32ac",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית צ'כיה 2026",
+      "teamHe": "צ'כיה"
     },
     {
       "handle": "scotland-2026-home-shirt",
@@ -3956,7 +4454,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "9384e9b3",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית סקוטלנד 2026",
+      "teamHe": "סקוטלנד"
     },
     {
       "handle": "scotland-2026-away-shirt",
@@ -3971,7 +4471,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "27306a39",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ סקוטלנד 2026",
+      "teamHe": "סקוטלנד"
     },
     {
       "handle": "scotland-2026-third-shirt",
@@ -3986,7 +4488,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "c2e7daad",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית סקוטלנד 2026",
+      "teamHe": "סקוטלנד"
     },
     {
       "handle": "turkey-2026-home-shirt",
@@ -4001,7 +4505,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "9bd0fd12",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית טורקיה 2026",
+      "teamHe": "טורקיה"
     },
     {
       "handle": "turkey-2026-away-shirt",
@@ -4016,7 +4522,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "d5904dc9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ טורקיה 2026",
+      "teamHe": "טורקיה"
     },
     {
       "handle": "turkey-2026-third-shirt",
@@ -4031,7 +4539,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a1f3a123",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית טורקיה 2026",
+      "teamHe": "טורקיה"
     },
     {
       "handle": "sweden-2026-home-shirt",
@@ -4046,7 +4556,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "27626776",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית שוודיה 2026",
+      "teamHe": "שוודיה"
     },
     {
       "handle": "sweden-2026-away-shirt",
@@ -4061,7 +4573,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/sweden-2026-away-shirt/pick-8f036a43.jpg",
       "sourceHash": "8f036a43",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ שוודיה 2026",
+      "teamHe": "שוודיה"
     },
     {
       "handle": "sweden-2026-third-shirt",
@@ -4076,7 +4590,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "c5aa4fa5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית שוודיה 2026",
+      "teamHe": "שוודיה"
     },
     {
       "handle": "norway-2026-home-shirt",
@@ -4091,7 +4607,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "20d1c3f8",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית נורווגיה 2026",
+      "teamHe": "נורווגיה"
     },
     {
       "handle": "norway-2026-away-shirt",
@@ -4106,7 +4624,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/norway-2026-away-shirt/pick-970a6a1c.jpg",
       "sourceHash": "970a6a1c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ נורווגיה 2026",
+      "teamHe": "נורווגיה"
     },
     {
       "handle": "norway-2026-27-third-shirt",
@@ -4121,7 +4641,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/norway-2026-27-third-shirt/pick-18e187955e.jpg",
       "sourceHash": "18e187955e",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית נורווגיה 2026",
+      "teamHe": "נורווגיה"
     },
     {
       "handle": "austria-2026-home-shirt",
@@ -4136,7 +4658,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/austria-2026-home-shirt/pick-d38ed9ad.jpg",
       "sourceHash": "d38ed9ad",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אוסטריה 2026",
+      "teamHe": "אוסטריה"
     },
     {
       "handle": "austria-2026-27-away-shirt",
@@ -4151,7 +4675,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/austria-2026-27-away-shirt/pick-91059b53f8.jpg",
       "sourceHash": "91059b53f8",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אוסטריה 2026",
+      "teamHe": "אוסטריה"
     },
     {
       "handle": "austria-2026-third-shirt",
@@ -4166,7 +4692,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "11c8ca7d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אוסטריה 2026",
+      "teamHe": "אוסטריה"
     },
     {
       "handle": "south-africa-2026-home-shirt",
@@ -4181,7 +4709,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/south-africa-2026-home-shirt/pick-528e6116.jpg",
       "sourceHash": "528e6116",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית דרום אפריקה 2026",
+      "teamHe": "דרום אפריקה"
     },
     {
       "handle": "south-africa-2026-away-shirt",
@@ -4196,7 +4726,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/south-africa-2026-away-shirt/pick-0d458792.jpg",
       "sourceHash": "0d458792",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ דרום אפריקה 2026",
+      "teamHe": "דרום אפריקה"
     },
     {
       "handle": "south-africa-2026-27-third-shirt",
@@ -4211,7 +4743,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/south-africa-2026-27-third-shirt/pick-9009b99774.jpg",
       "sourceHash": "9009b99774",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית דרום אפריקה 2026",
+      "teamHe": "דרום אפריקה"
     },
     {
       "handle": "paraguay-2026-home-shirt",
@@ -4226,7 +4760,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "a088bc62",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית פרגוואי 2026",
+      "teamHe": "פרגוואי"
     },
     {
       "handle": "paraguay-2026-away-shirt",
@@ -4241,7 +4777,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "f1a650ca",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ פרגוואי 2026",
+      "teamHe": "פרגוואי"
     },
     {
       "handle": "paraguay-2026-third-shirt",
@@ -4256,7 +4794,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "25d882cf",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית פרגוואי 2026",
+      "teamHe": "פרגוואי"
     },
     {
       "handle": "ivory-coast-2026-home-shirt",
@@ -4271,7 +4811,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/ivory-coast-2026-home-shirt/pick-7d214ec0.jpg",
       "sourceHash": "075dd996c6",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית חוף השנהב 2026",
+      "teamHe": "חוף השנהב"
     },
     {
       "handle": "ivory-coast-2026-away-shirt",
@@ -4286,7 +4828,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "d486f16f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ חוף השנהב 2026",
+      "teamHe": "חוף השנהב"
     },
     {
       "handle": "ivory-coast-2026-third-shirt",
@@ -4301,7 +4845,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "11ee1722",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית חוף השנהב 2026",
+      "teamHe": "חוף השנהב"
     },
     {
       "handle": "egypt-2026-27-home-shirt",
@@ -4316,7 +4862,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/egypt-2026-27-home-shirt/pick-495fef776c.jpg",
       "sourceHash": "495fef776c",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית מצרים 2026",
+      "teamHe": "מצרים"
     },
     {
       "handle": "egypt-2026-away-shirt",
@@ -4331,7 +4879,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/egypt-2026-away-shirt/pick-3e23d9a6.jpg",
       "sourceHash": "6cb32e41",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ מצרים 2026",
+      "teamHe": "מצרים"
     },
     {
       "handle": "egypt-2026-third-shirt",
@@ -4346,7 +4896,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "e47547f5",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית מצרים 2026",
+      "teamHe": "מצרים"
     },
     {
       "handle": "algeria-2026-home-shirt",
@@ -4361,7 +4913,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/algeria-2026-home-shirt/pick-878359cd.jpg",
       "sourceHash": "878359cd",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית אלג'יריה 2026",
+      "teamHe": "אלג'יריה"
     },
     {
       "handle": "algeria-2026-away-shirt",
@@ -4376,7 +4930,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/algeria-2026-away-shirt/pick-eab8de3f.jpg",
       "sourceHash": "eab8de3f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ אלג'יריה 2026",
+      "teamHe": "אלג'יריה"
     },
     {
       "handle": "algeria-2026-third-shirt",
@@ -4391,7 +4947,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "5c9e982d",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית אלג'יריה 2026",
+      "teamHe": "אלג'יריה"
     },
     {
       "handle": "jordan-2026-home-shirt",
@@ -4406,7 +4964,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/jordan-2026-home-shirt/cleaned.jpg",
       "sourceHash": "4e931a93",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית ירדן 2026",
+      "teamHe": "ירדן"
     },
     {
       "handle": "jordan-2026-away-shirt",
@@ -4421,7 +4981,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/jordan-2026-away-shirt/cleaned.jpg",
       "sourceHash": "b412e614",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ ירדן 2026",
+      "teamHe": "ירדן"
     },
     {
       "handle": "jordan-2026-third-shirt",
@@ -4436,7 +4998,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/jordan-2026-third-shirt/cleaned.jpg",
       "sourceHash": "3bc048c0",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית ירדן 2026",
+      "teamHe": "ירדן"
     },
     {
       "handle": "colombia-2026-home-shirt",
@@ -4451,7 +5015,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/colombia-2026-home-shirt/cleaned.jpg",
       "sourceHash": "b9dcfdb9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית קולומביה 2026",
+      "teamHe": "קולומביה"
     },
     {
       "handle": "colombia-2026-away-shirt",
@@ -4466,7 +5032,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/colombia-2026-away-shirt/pick-b1dc4788.jpg",
       "sourceHash": "b9e04220",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ קולומביה 2026",
+      "teamHe": "קולומביה"
     },
     {
       "handle": "colombia-2026-third-shirt",
@@ -4481,7 +5049,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "ccb85f9f",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת שלישית קולומביה 2026",
+      "teamHe": "קולומביה"
     },
     {
       "handle": "iraq-2026-home-shirt",
@@ -4496,7 +5066,9 @@
       "edition": "standard",
       "image": "/products/_placeholder.jpg",
       "sourceHash": "69e6f60dc9",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת בית עיראק 2026",
+      "teamHe": "עיראק"
     },
     {
       "handle": "iraq-2026-away-shirt",
@@ -4511,7 +5083,9 @@
       "edition": "standard",
       "image": "https://kbzpzggsedliunhjegyj.supabase.co/storage/v1/object/public/media/products/iraq-2026-away-shirt/pick-54795ca10b.jpg",
       "sourceHash": "54795ca10b",
-      "visible": true
+      "visible": true,
+      "titleHe": "חולצת חוץ עיראק 2026",
+      "teamHe": "עיראק"
     }
   ]
 }

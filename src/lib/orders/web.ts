@@ -57,7 +57,10 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
   // one customer per phone number (Instagram customers who also buy on the site get matched later by the owner)
   let customerId = (await db().from("customers").select("id").eq("phone", phone).is("ig_user_id", null).limit(1).maybeSingle()).data?.id as string | undefined;
   if (!customerId) {
-    customerId = (must(await db().from("customers").insert({ full_name: c.name, phone, email: c.email, preferred_language: req.locale === "en" ? "en" : "ar" }).select("id").single(), "web customer") as { id: string }).id;
+    // preferred_language's CHECK already allows 'he' (supabase/migrations/20260930120000_core_schema.sql) —
+    // record whichever storefront locale the shopper actually checked out in.
+    const preferredLanguage = req.locale === "en" ? "en" : req.locale === "he" ? "he" : "ar";
+    customerId = (must(await db().from("customers").insert({ full_name: c.name, phone, email: c.email, preferred_language: preferredLanguage }).select("id").single(), "web customer") as { id: string }).id;
   }
 
   const address = {

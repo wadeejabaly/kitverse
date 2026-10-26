@@ -2,7 +2,7 @@
 
 # Kitverse
 
-AI sales system for @kitversejerseys: an Instagram-DM sales bot that sounds like the owner, an owner admin, and the storefront (Wadeea's design, `src/app/[locale]`, Arabic default + /en). One app, one database: website and Instagram orders land in the same orders table and admin. Customers are mostly Arabic-speaking (northern Palestinian / Israeli-Arab dialect, Hebrew loanwords), in Israel. One supplier: jerseyxie.x.yupoo.com. The shirts are 1:1 replicas, and the bot says so honestly.
+AI sales system for @kitversejerseys: an Instagram-DM sales bot that sounds like the owner, an owner admin, and the storefront (Wadeea's design, `src/app/[locale]`, Arabic default + /en + /he). One app, one database: website and Instagram orders land in the same orders table and admin. Customers are mostly Arabic-speaking (northern Palestinian / Israeli-Arab dialect, Hebrew loanwords), in Israel. One supplier: jerseyxie.x.yupoo.com. The shirts are 1:1 replicas, and the bot says so honestly.
 
 ## Stack
 - Next.js 16 (App Router, `src/`, `proxy.ts` instead of middleware), TypeScript, Tailwind 4.
@@ -19,6 +19,7 @@ AI sales system for @kitversejerseys: an Instagram-DM sales bot that sounds like
 - Catalog + prices are static JSON written from the database by `npm run store:export` (runs as `prebuild`): featured shirts with a checked photo -> `src/data/catalog.json`, the current price list -> `src/data/price-list.json`. `src/data/pricing.ts` reads its numbers from that file, so the site and the bot always quote the same prices.
 - Checkout: `POST /api/checkout/cash/start` -> `src/lib/orders/web.ts` re-prices with the engine, saves a confirmed cash-on-delivery order (`orders.source = 'website'`), alerts the owner, returns the signed order-page token. No PayPal/PayPlus yet.
 - `src/proxy.ts`: /admin auth guard, everything else next-intl locale routing.
+- Hebrew (owner decision 2026-10-26): a third storefront locale, `/he`, alongside the Arabic default and `/en` — RTL like Arabic (`src/i18n/config.ts`). `titleHe`/`teamHe`/`nameHe` fields sit beside the existing `*Ar` ones in the catalog/collections/accessories data and `Product`/`Team`/`League` types; `preferred_language` on `customers` already allows `'he'`.
 
 ## Bot flow
 webhook → `storeInbound` → event → `processConversation`:

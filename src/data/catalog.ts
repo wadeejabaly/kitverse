@@ -14,12 +14,14 @@ export interface League {
   slug: string;
   name: string;
   nameAr: string;
+  nameHe: string;
 }
 
 export interface Team {
   slug: string;
   name: string;
   nameAr: string;
+  nameHe: string;
   kind: "national" | "club";
 }
 
@@ -27,8 +29,10 @@ export interface SearchEntry {
   handle: string;
   title: string;
   titleAr: string;
+  titleHe: string;
   team: string;
   teamAr: string;
+  teamHe: string;
 }
 
 const products: Product[] = catalogData.products as Product[];
@@ -81,12 +85,14 @@ export function retroProducts(): Product[] {
 
 /** Lightweight index for client-side search — visible products only. */
 export function searchIndex(): SearchEntry[] {
-  return getVisibleProducts().map(({ handle, title, titleAr, team, teamAr }) => ({
+  return getVisibleProducts().map(({ handle, title, titleAr, titleHe, team, teamAr, teamHe }) => ({
     handle,
     title,
     titleAr,
+    titleHe,
     team,
     teamAr,
+    teamHe,
   }));
 }
 

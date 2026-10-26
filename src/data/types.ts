@@ -48,8 +48,10 @@ export interface Product {
   handle: string; // normalized, ASCII, unique
   title: string; // EN
   titleAr: string;
+  titleHe: string;
   team: string; // EN
   teamAr: string;
+  teamHe: string;
   kind: Kind;
   season: string; // "2026/27" | "2026" | "2025/26"
   kit: Kit;
@@ -119,6 +121,7 @@ export interface Accessory {
   category: AccessoryCategory;
   team: string; // EN
   teamAr: string;
+  teamHe: string;
   price: number; // ILS, flat — e.g. 14.99. No size/version pricing.
   image: string;
   visible: boolean;

@@ -3,27 +3,32 @@
     {
       "slug": "premier-league",
       "name": "Premier League",
-      "nameAr": "الدوري الإنجليزي الممتاز"
+      "nameAr": "الدوري الإنجليزي الممتاز",
+      "nameHe": "הליגה האנגלית"
     },
     {
       "slug": "la-liga",
       "name": "La Liga",
-      "nameAr": "الدوري الإسباني"
+      "nameAr": "الدوري الإسباني",
+      "nameHe": "הליגה הספרדית"
     },
     {
       "slug": "serie-a",
       "name": "Serie A",
-      "nameAr": "الدوري الإيطالي"
+      "nameAr": "الدوري الإيطالي",
+      "nameHe": "הליגה האיטלקית"
     },
     {
       "slug": "bundesliga",
       "name": "Bundesliga",
-      "nameAr": "الدوري الألماني"
+      "nameAr": "الدوري الألماني",
+      "nameHe": "הליגה הגרמנית"
     },
     {
       "slug": "ligue-1",
       "name": "Ligue 1",
-      "nameAr": "الدوري الفرنسي"
+      "nameAr": "الدوري الفرنسي",
+      "nameHe": "הליגה הצרפתית"
     }
   ],
   "teams": [
@@ -31,577 +36,673 @@
       "slug": "ac-milan",
       "name": "AC Milan",
       "nameAr": "ميلان",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "מילאן"
     },
     {
       "slug": "algeria",
       "name": "Algeria",
       "nameAr": "الجزائر",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "אלג'יריה"
     },
     {
       "slug": "argentina",
       "name": "Argentina",
       "nameAr": "الأرجنتين",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ארגנטינה"
     },
     {
       "slug": "arsenal",
       "name": "Arsenal",
       "nameAr": "أرسنال",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ארסנל"
     },
     {
       "slug": "as-monaco",
       "name": "AS Monaco",
       "nameAr": "موناكو",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "מונקו"
     },
     {
       "slug": "as-roma",
       "name": "AS Roma",
       "nameAr": "روما",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "רומא"
     },
     {
       "slug": "aston-villa",
       "name": "Aston Villa",
       "nameAr": "أستون فيلا",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אסטון וילה"
     },
     {
       "slug": "atalanta",
       "name": "Atalanta",
       "nameAr": "أتالانتا",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אטאלנטה"
     },
     {
       "slug": "athletic-bilbao",
       "name": "Athletic Bilbao",
       "nameAr": "أتلتيك بيلباو",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אתלטיק בילבאו"
     },
     {
       "slug": "atletico-madrid",
       "name": "Atlético Madrid",
       "nameAr": "أتلتيكو مدريد",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אתלטיקו מדריד"
     },
     {
       "slug": "australia",
       "name": "Australia",
       "nameAr": "أستراليا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "אוסטרליה"
     },
     {
       "slug": "austria",
       "name": "Austria",
       "nameAr": "النمسا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "אוסטריה"
     },
     {
       "slug": "barcelona",
       "name": "Barcelona",
       "nameAr": "برشلونة",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ברצלונה"
     },
     {
       "slug": "bayer-leverkusen",
       "name": "Bayer Leverkusen",
       "nameAr": "باير ليفركوزن",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "באייר לברקוזן"
     },
     {
       "slug": "bayern-munich",
       "name": "Bayern Munich",
       "nameAr": "بايرن ميونخ",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "באיירן מינכן"
     },
     {
       "slug": "belgium",
       "name": "Belgium",
       "nameAr": "بلجيكا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "בלגיה"
     },
     {
       "slug": "bologna",
       "name": "Bologna",
       "nameAr": "بولونيا",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "בולוניה"
     },
     {
       "slug": "borussia-dortmund",
       "name": "Borussia Dortmund",
       "nameAr": "بوروسيا دورتموند",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "בורוסיה דורטמונד"
     },
     {
       "slug": "borussia-monchengladbach",
       "name": "Borussia Mönchengladbach",
       "nameAr": "بوروسيا مونشنغلادباخ",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "בורוסיה מנשנגלדבאך"
     },
     {
       "slug": "brazil",
       "name": "Brazil",
       "nameAr": "البرازيل",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ברזיל"
     },
     {
       "slug": "cameroon",
       "name": "Cameroon",
       "nameAr": "الكاميرون",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "קמרון"
     },
     {
       "slug": "canada",
       "name": "Canada",
       "nameAr": "كندا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "קנדה"
     },
     {
       "slug": "celta-vigo",
       "name": "Celta Vigo",
       "nameAr": "سيلتا فيغو",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "סלטה ויגו"
     },
     {
       "slug": "chelsea",
       "name": "Chelsea",
       "nameAr": "تشيلسي",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "צ'לסי"
     },
     {
       "slug": "colombia",
       "name": "Colombia",
       "nameAr": "كولومبيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "קולומביה"
     },
     {
       "slug": "costa-rica",
       "name": "Costa Rica",
       "nameAr": "كوستاريكا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "קוסטה ריקה"
     },
     {
       "slug": "croatia",
       "name": "Croatia",
       "nameAr": "كرواتيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "קרואטיה"
     },
     {
       "slug": "czechia",
       "name": "Czechia",
       "nameAr": "التشيك",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "צ'כיה"
     },
     {
       "slug": "denmark",
       "name": "Denmark",
       "nameAr": "الدنمارك",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "דנמרק"
     },
     {
       "slug": "ecuador",
       "name": "Ecuador",
       "nameAr": "الإكوادور",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "אקוודור"
     },
     {
       "slug": "egypt",
       "name": "Egypt",
       "nameAr": "مصر",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "מצרים"
     },
     {
       "slug": "eintracht-frankfurt",
       "name": "Eintracht Frankfurt",
       "nameAr": "آينتراخت فرانكفورت",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "איינטרכט פרנקפורט"
     },
     {
       "slug": "england",
       "name": "England",
       "nameAr": "إنجلترا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "אנגליה"
     },
     {
       "slug": "everton",
       "name": "Everton",
       "nameAr": "إيفرتون",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אוורטון"
     },
     {
       "slug": "fiorentina",
       "name": "Fiorentina",
       "nameAr": "فيورنتينا",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "פיורנטינה"
     },
     {
       "slug": "france",
       "name": "France",
       "nameAr": "فرنسا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "צרפת"
     },
     {
       "slug": "germany",
       "name": "Germany",
       "nameAr": "ألمانيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "גרמניה"
     },
     {
       "slug": "ghana",
       "name": "Ghana",
       "nameAr": "غانا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "גאנה"
     },
     {
       "slug": "hamburger-sv",
       "name": "Hamburger SV",
       "nameAr": "هامبورغ",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "המבורג"
     },
     {
       "slug": "inter-milan",
       "name": "Inter Milan",
       "nameAr": "إنتر ميلان",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אינטר מילאן"
     },
     {
       "slug": "iran",
       "name": "Iran",
       "nameAr": "إيران",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "איראן"
     },
     {
       "slug": "iraq",
       "name": "Iraq",
       "nameAr": "العراق",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "עיראק"
     },
     {
       "slug": "ivory-coast",
       "name": "Ivory Coast",
       "nameAr": "ساحل العاج",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "חוף השנהב"
     },
     {
       "slug": "japan",
       "name": "Japan",
       "nameAr": "اليابان",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "יפן"
     },
     {
       "slug": "jordan",
       "name": "Jordan",
       "nameAr": "الأردن",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ירדן"
     },
     {
       "slug": "juventus",
       "name": "Juventus",
       "nameAr": "يوفنتوس",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "יובנטוס"
     },
     {
       "slug": "lazio",
       "name": "Lazio",
       "nameAr": "لاتسيو",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "לאציו"
     },
     {
       "slug": "lens",
       "name": "Lens",
       "nameAr": "لانس",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "לאנס"
     },
     {
       "slug": "lille",
       "name": "Lille",
       "nameAr": "ليل",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ליל"
     },
     {
       "slug": "liverpool",
       "name": "Liverpool",
       "nameAr": "ليفربول",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ליברפול"
     },
     {
       "slug": "manchester-city",
       "name": "Manchester City",
       "nameAr": "مانشستر سيتي",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "מנצ'סטר סיטי"
     },
     {
       "slug": "manchester-united",
       "name": "Manchester United",
       "nameAr": "مانشستر يونايتد",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "מנצ'סטר יונייטד"
     },
     {
       "slug": "mexico",
       "name": "Mexico",
       "nameAr": "المكسيك",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "מקסיקו"
     },
     {
       "slug": "morocco",
       "name": "Morocco",
       "nameAr": "المغرب",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "מרוקו"
     },
     {
       "slug": "nantes",
       "name": "Nantes",
       "nameAr": "نانت",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "נאנט"
     },
     {
       "slug": "napoli",
       "name": "Napoli",
       "nameAr": "نابولي",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "נאפולי"
     },
     {
       "slug": "netherlands",
       "name": "Netherlands",
       "nameAr": "هولندا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "הולנד"
     },
     {
       "slug": "newcastle-united",
       "name": "Newcastle United",
       "nameAr": "نيوكاسل يونايتد",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ניוקאסל יונייטד"
     },
     {
       "slug": "nice",
       "name": "Nice",
       "nameAr": "نيس",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ניס"
     },
     {
       "slug": "norway",
       "name": "Norway",
       "nameAr": "النرويج",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "נורווגיה"
     },
     {
       "slug": "olympique-lyonnais",
       "name": "Olympique Lyonnais",
       "nameAr": "أولمبيك ليون",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אולימפיק ליון"
     },
     {
       "slug": "olympique-marseille",
       "name": "Olympique Marseille",
       "nameAr": "أولمبيك مارسيليا",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "אולימפיק מארסיי"
     },
     {
       "slug": "paraguay",
       "name": "Paraguay",
       "nameAr": "باراغواي",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "פרגוואי"
     },
     {
       "slug": "paris-saint-germain",
       "name": "Paris Saint-Germain",
       "nameAr": "باريس سان جيرمان",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "פריז סן ז'רמן"
     },
     {
       "slug": "poland",
       "name": "Poland",
       "nameAr": "بولندا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "פולין"
     },
     {
       "slug": "portugal",
       "name": "Portugal",
       "nameAr": "البرتغال",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "פורטוגל"
     },
     {
       "slug": "qatar",
       "name": "Qatar",
       "nameAr": "قطر",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "קטאר"
     },
     {
       "slug": "rb-leipzig",
       "name": "RB Leipzig",
       "nameAr": "آر بي لايبزيغ",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "לייפציג"
     },
     {
       "slug": "real-betis",
       "name": "Real Betis",
       "nameAr": "ريال بيتيس",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ריאל בטיס"
     },
     {
       "slug": "real-madrid",
       "name": "Real Madrid",
       "nameAr": "ريال مدريد",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ריאל מדריד"
     },
     {
       "slug": "real-sociedad",
       "name": "Real Sociedad",
       "nameAr": "ريال سوسييداد",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ריאל סוסיאדד"
     },
     {
       "slug": "rennes",
       "name": "Rennes",
       "nameAr": "رين",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "רנס"
     },
     {
       "slug": "saint-etienne",
       "name": "Saint-Étienne",
       "nameAr": "سانت إيتيان",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "סנט אטיין"
     },
     {
       "slug": "saudi-arabia",
       "name": "Saudi Arabia",
       "nameAr": "السعودية",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ערב הסעודית"
     },
     {
       "slug": "schalke-04",
       "name": "Schalke 04",
       "nameAr": "شالكه 04",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "שאלקה 04"
     },
     {
       "slug": "scotland",
       "name": "Scotland",
       "nameAr": "اسكتلندا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "סקוטלנד"
     },
     {
       "slug": "senegal",
       "name": "Senegal",
       "nameAr": "السنغال",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "סנגל"
     },
     {
       "slug": "serbia",
       "name": "Serbia",
       "nameAr": "صربيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "סרביה"
     },
     {
       "slug": "sevilla",
       "name": "Sevilla",
       "nameAr": "إشبيلية",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "סביליה"
     },
     {
       "slug": "south-africa",
       "name": "South Africa",
       "nameAr": "جنوب أفريقيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "דרום אפריקה"
     },
     {
       "slug": "south-korea",
       "name": "South Korea",
       "nameAr": "كوريا الجنوبية",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "דרום קוריאה"
     },
     {
       "slug": "spain",
       "name": "Spain",
       "nameAr": "إسبانيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ספרד"
     },
     {
       "slug": "sweden",
       "name": "Sweden",
       "nameAr": "السويد",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "שוודיה"
     },
     {
       "slug": "switzerland",
       "name": "Switzerland",
       "nameAr": "سويسرا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "שווייץ"
     },
     {
       "slug": "torino",
       "name": "Torino",
       "nameAr": "تورينو",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "טורינו"
     },
     {
       "slug": "tottenham-hotspur",
       "name": "Tottenham Hotspur",
       "nameAr": "توتنهام",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "טוטנהאם"
     },
     {
       "slug": "tunisia",
       "name": "Tunisia",
       "nameAr": "تونس",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "תוניסיה"
     },
     {
       "slug": "turkey",
       "name": "Turkey",
       "nameAr": "تركيا",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "טורקיה"
     },
     {
       "slug": "uruguay",
       "name": "Uruguay",
       "nameAr": "الأوروغواي",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "אורוגוואי"
     },
     {
       "slug": "usa",
       "name": "USA",
       "nameAr": "الولايات المتحدة",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ארצות הברית"
     },
     {
       "slug": "valencia",
       "name": "Valencia",
       "nameAr": "فالنسيا",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ולנסיה"
     },
     {
       "slug": "vfb-stuttgart",
       "name": "VfB Stuttgart",
       "nameAr": "شتوتغارت",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "שטוטגארט"
     },
     {
       "slug": "villarreal",
       "name": "Villarreal",
       "nameAr": "فياريال",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ויאריאל"
     },
     {
       "slug": "wales",
       "name": "Wales",
       "nameAr": "ويلز",
-      "kind": "national"
+      "kind": "national",
+      "nameHe": "ויילס"
     },
     {
       "slug": "werder-bremen",
       "name": "Werder Bremen",
       "nameAr": "فيردر بريمن",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ורדר ברמן"
     },
     {
       "slug": "west-ham-united",
       "name": "West Ham United",
       "nameAr": "وست هام يونايتد",
-      "kind": "club"
+      "kind": "club",
+      "nameHe": "ווסט האם יונייטד"
     }
   ]
 }
