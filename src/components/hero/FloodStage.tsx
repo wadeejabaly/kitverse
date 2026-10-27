@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { heavyMotionAllowed, motionAllowed } from "@/components/motion/env";
-import { Price } from "@/components/shared/Money";
 
 export interface FloodShirt {
   handle: string;
@@ -109,6 +108,9 @@ export function FloodStage({
         <Image src="/brand/badge-glow.png" alt="" width={480} height={480} />
       </div>
       <div aria-hidden className="kv-flood-shirt-glow" />
+      {/* The podium the cutout shirt appears to stand on (owner reference
+          2026-10-27) — sits behind every shirt layer, see .kv-flood-podium. */}
+      <div aria-hidden className="kv-flood-podium" />
       {shirts.map((shirt, index) => {
         const shown = index === active;
         return (
@@ -169,15 +171,6 @@ export function FloodStage({
               sizes="(max-width: 900px) 86vw, 560px"
               className="kv-flood-shirt-shadow h-auto max-h-[84%] w-auto max-w-[84%] object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
             />
-            {/* The chip belongs to the SAME crossfading layer as its shirt (not
-                a separate stacked row like Variant A's caption), so it can only
-                ever be on screen with the shirt it names. */}
-            <span className="kv-flood-chip absolute end-2 bottom-2 px-4 py-2.5 text-[13px]">
-              {shirt.title}{" "}
-              <strong>
-                <Price value={shirt.price} />
-              </strong>
-            </span>
           </Link>
         );
       })}

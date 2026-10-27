@@ -114,7 +114,7 @@
      same way a product tile is always white — the hero is always this
      stage. See "THE FLOODLIGHT HERO" further down for the surface itself. */
   --flood-ground: #0a1024;
-  --flood-ground-2: #0d1530;
+  --flood-ground-2: #0b1228; /* barely lifted off --flood-ground now — see the owner note by .kv-flood-glow */
   --flood-blue: #2f6bff;
   --flood-blue-2: #5b8cff;
   --flood-gold: #c9a55c;
@@ -873,8 +873,21 @@ h2 {
   overflow: hidden;
   color: var(--band-ink);
   background-color: var(--accent);
+  /* Owner note 2026-10-27: the far stop used to land the edge of this
+     full-bleed slab at ~63% electric — vivid enough that the jump from the
+     page's off-white ground into it, and back out to the footer, read as
+     harsh rather than as one more rich surface. The grain, the diagonal
+     clip and the oversized numerals all stayed; only the fill got quieter —
+     color-mix tempers the far stop toward --accent so the surface stays
+     navy-led with the electric blue threaded through it, not the other way
+     round, while it is still built from the same two tokens as everywhere
+     else (no new colour introduced). */
   background-image: var(--kv-grain),
-    linear-gradient(115deg, var(--accent) 15%, var(--electric) 150%);
+    linear-gradient(
+      115deg,
+      var(--accent) 5%,
+      color-mix(in srgb, var(--electric) 38%, var(--accent) 62%) 165%
+    );
   background-size:
     240px 240px,
     auto;
@@ -1196,6 +1209,10 @@ h2 {
   --flood-corner-x2: 100%;
   --flood-beam-angle: 115deg;
   --flood-beam-tilt: 8deg;
+  /* The shirt stage's side — the OPPOSITE of --flood-corner-x (the text
+     side) — used to park the watermark wordmark behind the shirt in
+     both directions without a second [dir="ltr"] override block. */
+  --flood-shirt-x: 29%;
   background: var(--flood-ground);
   color: var(--flood-ink);
 }
@@ -1205,22 +1222,45 @@ h2 {
   --flood-corner-x2: 0%;
   --flood-beam-angle: 245deg;
   --flood-beam-tilt: -8deg;
+  --flood-shirt-x: 71%;
 }
 
+/* Owner note 2026-10-27 ("too much blue/dark purple — keep it complex, not
+   harsh"): the wash and the beam below kept every layer (parallax, grain,
+   the diagonal beam, the breathing glow) — nothing here got simpler. First
+   pass only cut the alphas a third to a half and the owner correctly called
+   it invisible; this pass cuts them again (roughly in half a second time,
+   so the brightest corner is now under a third of the ORIGINAL strength)
+   and shrinks the radii too, so the wash reads as smaller as well as
+   dimmer. The ground itself is also flatter now — --flood-ground-2 barely
+   lifts off --flood-ground — since most of what read as "purple" was the
+   blue glow additively brightening an otherwise-navy gradient, not the navy
+   itself. */
 .kv-flood-glow {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
+    /* Owner reference 2026-10-27 ("darker areas behind the Arabic text to
+       maintain readability"): a plain dark vignette, reusing
+       --flood-corner-x rather than a new direction-specific rule — that
+       variable already sits on the TEXT side in both directions (see the
+       note on .kv-flood above), so this darkens the reading side in LTR
+       and RTL alike with no [dir="ltr"] override needed. */
     radial-gradient(
-      760px 520px at var(--flood-corner-x) -6%,
-      rgb(47 107 255 / 0.55),
+      900px 700px at var(--flood-corner-x) 40%,
+      rgb(0 0 0 / 0.4),
       transparent 60%
     ),
     radial-gradient(
-      620px 460px at var(--flood-corner-x2) 30%,
-      rgb(91 140 255 / 0.28),
-      transparent 65%
+      560px 380px at var(--flood-corner-x) -6%,
+      rgb(47 107 255 / 0.16),
+      transparent 58%
+    ),
+    radial-gradient(
+      440px 320px at var(--flood-corner-x2) 30%,
+      rgb(91 140 255 / 0.08),
+      transparent 62%
     ),
     linear-gradient(180deg, var(--flood-ground) 0%, var(--flood-ground-2) 100%);
 }
@@ -1234,9 +1274,9 @@ h2 {
   pointer-events: none;
   background: linear-gradient(
     var(--flood-beam-angle),
-    rgb(47 107 255 / 0) 40%,
-    rgb(47 107 255 / 0.16) 48%,
-    rgb(47 107 255 / 0) 56%
+    rgb(47 107 255 / 0) 42%,
+    rgb(47 107 255 / 0.045) 48%,
+    rgb(47 107 255 / 0) 54%
   );
   transform: rotate(var(--flood-beam-tilt));
 }
@@ -1307,18 +1347,26 @@ h2 {
 .btn-flood {
   background: var(--flood-blue-2);
   color: var(--flood-ground);
-  box-shadow: 0 18px 34px -12px rgb(47 107 255 / 0.6);
+  box-shadow: 0 14px 26px -12px rgb(47 107 255 / 0.3);
   animation: kv-pulse-flood 4s ease-in-out infinite;
 }
 
 @keyframes kv-pulse-flood {
   0%,
   100% {
-    box-shadow: 0 18px 34px -12px rgb(47 107 255 / 0.6);
+    box-shadow: 0 14px 26px -12px rgb(47 107 255 / 0.3);
   }
   50% {
-    box-shadow: 0 20px 44px -10px rgb(47 107 255 / 0.8);
+    box-shadow: 0 16px 32px -10px rgb(47 107 255 / 0.4);
   }
+}
+
+/* The CTA arrow (owner reference 2026-10-27 — both hero buttons carry a
+   directional arrow in the mockup). A plain inline SVG, mirrored in RTL the
+   same way .kv-flood-badge-arrow and .kv-cat-card-arrow already are, so all
+   three "arrow" spots on the page follow one convention. */
+[dir="rtl"] .btn-flood-arrow svg {
+  transform: scaleX(-1);
 }
 
 /* The local glow behind the shirt itself — distinct from the ambient
@@ -1333,7 +1381,7 @@ h2 {
   width: 65%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(47 107 255 / 0.5), rgb(47 107 255 / 0) 70%);
+  background: radial-gradient(circle, rgb(47 107 255 / 0.2), rgb(47 107 255 / 0) 70%);
   filter: blur(2px);
   pointer-events: none;
   animation: kv-breathe 6.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
@@ -1343,11 +1391,11 @@ h2 {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.5;
+    opacity: 0.22;
   }
   50% {
     transform: scale(1.07);
-    opacity: 0.68;
+    opacity: 0.32;
   }
 }
 
@@ -1359,9 +1407,355 @@ h2 {
   color: var(--flood-ink-soft);
 }
 
+/* ---- Stadium lights (owner reference 2026-10-27, "like this") ----
+   A row of small warm bulbs along the hero's top edge plus a vignette that
+   darkens the corners — the cheapest possible read of "floodlit stadium"
+   that is still honestly a CSS pattern, not a claim to be a photo. Two
+   repeating-radial-gradient layers at different sizes/offsets so the dots
+   don't fall into one obvious grid, warm white/gold rather than blue (the
+   hero's blue budget is already spent on the shirt glow — see the note by
+   .kv-flood-glow), and kept to the very top of the stage so it reads as a
+   light source above the scene rather than a pattern over the content. */
+.kv-flood-lights {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    /* Five larger soft bokeh floodlights (owner reference 2026-10-27 —
+       the mockup's lights vary in size, not a uniform row of pinpoints),
+       layered ABOVE the pinpoint row below so the biggest, brightest
+       lights read as the actual fixtures and the small dots as distant
+       ones beyond them. */
+    radial-gradient(34px 34px at 9% 14%, rgb(214 230 255 / 0.5), transparent 70%),
+    radial-gradient(46px 46px at 27% 6%, rgb(255 248 230 / 0.6), transparent 70%),
+    radial-gradient(30px 30px at 51% 11%, rgb(214 230 255 / 0.45), transparent 70%),
+    radial-gradient(42px 42px at 73% 5%, rgb(255 248 230 / 0.55), transparent 70%),
+    radial-gradient(32px 32px at 91% 15%, rgb(214 230 255 / 0.45), transparent 70%),
+    radial-gradient(1.5px 1.5px at 4% 6%, rgb(255 248 230 / 0.55), transparent 100%),
+    radial-gradient(1.5px 1.5px at 12% 3%, rgb(255 248 230 / 0.4), transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 7%, rgb(201 165 92 / 0.45), transparent 100%),
+    radial-gradient(1.5px 1.5px at 33% 2%, rgb(255 248 230 / 0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 46% 5%, rgb(255 248 230 / 0.35), transparent 100%),
+    radial-gradient(1.5px 1.5px at 58% 3%, rgb(201 165 92 / 0.4), transparent 100%),
+    radial-gradient(1.5px 1.5px at 69% 6%, rgb(255 248 230 / 0.5), transparent 100%),
+    radial-gradient(1.5px 1.5px at 79% 2%, rgb(255 248 230 / 0.4), transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 7%, rgb(201 165 92 / 0.45), transparent 100%),
+    radial-gradient(1.5px 1.5px at 96% 4%, rgb(255 248 230 / 0.55), transparent 100%),
+    radial-gradient(ellipse 140% 90% at 50% 0%, rgb(255 248 230 / 0.07), transparent 55%),
+    radial-gradient(ellipse 120% 100% at 50% 100%, rgb(0 0 0 / 0.35), transparent 60%);
+}
+
+/* ---- The podium (same reference, redrawn 2026-10-27 — "its not looking
+   the same as the picture") ----
+   The first pass was ONLY a gold glow — no solid body, so there was no
+   actual pedestal to see, just a halo where one should be. This is now a
+   true two-layer disc: .kv-flood-podium itself is the solid dark-marble
+   top tier (a radial gradient standing in for an overhead highlight on a
+   glossy surface, plus a real drop shadow so it grounds the shirt), with
+   the original gold glow demoted to ::before — now a WIDER, LOWER halo
+   behind it, reading as the light spilling off the rim onto the stage
+   rather than the pedestal's only visible feature — and ::after still the
+   crisp gold rim line on the top tier's own edge. Three CSS layers, still
+   no image. Sits in its own stacking layer behind the shirt in
+   FloodStage.tsx. */
+.kv-flood-podium {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  translate: -50% 0;
+  width: 70%;
+  height: 8%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    color-mix(in srgb, var(--flood-tile) 88%, white 12%) 0%,
+    color-mix(in srgb, var(--flood-tile) 92%, black 8%) 45%,
+    black 100%
+  );
+  box-shadow: 0 16px 30px 6px rgb(0 0 0 / 0.6);
+}
+
+.kv-flood-podium::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 60%;
+  translate: -50% 0;
+  width: 132%;
+  height: 230%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--flood-gold) 40%, transparent) 0%,
+    color-mix(in srgb, var(--flood-gold) 14%, transparent) 45%,
+    transparent 72%
+  );
+  filter: blur(1px);
+}
+
+.kv-flood-podium::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--flood-gold) 80%, transparent);
+  box-shadow: 0 0 12px 1px color-mix(in srgb, var(--flood-gold) 55%, transparent);
+  opacity: 0.9;
+}
+
+/* ---- The gold rule beside the eyebrow (same reference) ----
+   A thin line growing out from the eyebrow label, standing in for the
+   reference's hairline-and-label lockup. Fixed length rather than flex-grow
+   to the container edge, so it reads as a short flourish, not a divider.
+   A SEPARATE class from .kv-flood-eyebrow (which only sets the gold colour
+   and is also used alone, e.g. on the narrow badge, where this rule has no
+   room and would wrap). */
+.kv-flood-eyebrow-rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.kv-flood-eyebrow-rule::after {
+  content: "";
+  display: inline-block;
+  width: 2.5em;
+  height: 1px;
+  background: var(--flood-gold);
+  opacity: 0.7;
+}
+
+/* ---- The stadium signage watermark (owner reference 2026-10-27) ----
+   A faint "KITVERSE JERSEYS" wordmark standing behind the shirt, reading as
+   an ad board at the back of the stadium the way the reference's does.
+   Plain decorative text, not an image — the brand name itself is NOT
+   translated (a stadium hoarding wouldn't be), which is also why this sits
+   on --flood-ink at low opacity rather than taking a translated key.
+   `left` + `translate`, not a logical inset: --flood-shirt-x is a PHYSICAL
+   x position (same convention as --flood-corner-x in the radial-gradients
+   above), already flipped per [dir] on .kv-flood itself, so one rule here
+   covers both directions. */
+.kv-flood-watermark {
+  position: absolute;
+  inset-block: 0;
+  left: var(--flood-shirt-x);
+  translate: -50% 0;
+  align-items: center;
+  pointer-events: none;
+  /* display is Tailwind's `hidden wide:flex` on the element itself (see
+     HeroD.tsx) — not set here, so the utility's cascade position always
+     wins instead of racing this rule for specificity. */
+}
+
+.kv-flood-watermark span {
+  display: block;
+  font-family: var(--type-sans);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--flood-ink);
+  opacity: 0.06;
+  white-space: nowrap;
+}
+
+/* ---- The Fan/Player/Retro meta row (same reference) ----
+   Three small gold glyphs with a label each, hairline-separated — replaces
+   the hero's old plain-text price line with the reference's icon row. Icons
+   are hand-drawn inline SVGs (shirt / diamond / crown), not a logo or an
+   imported icon font, so there is nothing to license. */
+.kv-flood-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.1rem 1.4rem;
+}
+
+.kv-flood-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+}
+
+.kv-flood-meta-item svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  color: var(--flood-gold);
+}
+
+/* ---- The new-season badge (same reference) ----
+   A small vertical card beside the shirt: gold eyebrow, the entry price,
+   an arrow button. Static — unlike the per-shirt .kv-flood-chip, it names
+   the season rather than whichever shirt is crossfading, so it never has
+   to change mid-cycle. */
+.kv-flood-badge {
+  background: color-mix(in srgb, var(--flood-tile) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--flood-gold) 45%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.6);
+}
+
+.kv-flood-badge-arrow {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--flood-ink) 35%, transparent);
+  color: var(--flood-ink);
+  transition:
+    background-color 200ms ease-out,
+    color 200ms ease-out,
+    border-color 200ms ease-out;
+}
+
+.kv-flood-badge:hover .kv-flood-badge-arrow {
+  background: var(--flood-blue-2);
+  border-color: var(--flood-blue-2);
+  color: var(--flood-ground);
+}
+
+[dir="rtl"] .kv-flood-badge-arrow svg {
+  transform: scaleX(-1);
+}
+
 .kv-flood-chip strong {
   color: var(--flood-blue-2);
   font-weight: 700;
+}
+
+/* ───────────── THE CATEGORY GRID ─────────────
+   Replaces the old text-link "THE WAYS IN" row (owner reference 2026-10-27,
+   the four-up Clubs/National Teams/Retro Classics/Accessories photo-card
+   grid) — see CategoryGrid.tsx for why it is a replacement, not an addition,
+   and why the four doors differ slightly from the old `ways` array.
+
+   A second dark-on-photo surface, built the same way .energy-band is: the
+   tint and shade are --accent/--electric color-mixes, not new colour, and
+   the text sits on --band-ink — the token both THE BAND and .energy-band
+   already use for "ink on a navy surface" — rather than reaching for the
+   hero's --flood-ink, which is explicitly scoped to the hero alone (see its
+   own note further up). So this stays a THIRD dark moment built from the
+   same two tokens as the other two, not a fourth colour introduced for one
+   grid.
+
+   The photo itself is a plain CSS background-image (not next/image — see
+   category-images.ts for why) sitting under two more layers: a navy/electric
+   duotone tint (multiply, so a bright photo still reads on-brand) and a
+   bottom-weighted shade (plain darken, so the heading is legible over any
+   photo, light or dark, without the tint fighting it there).
+
+   Revised 2026-10-27 (owner: "its not looking the same as the picture i
+   provided"): full-bleed, flush under the hero, short wide cards instead of
+   tall ones — see CategoryGrid.tsx's own note for the full list. No vw-based
+   full-bleed hack needed: like <HeroD/>'s own <section> and .energy-band,
+   this renders OUTSIDE <Wrap> directly in the page body, which already spans
+   the full width — see page.tsx. .kv-cat-strip's own --accent background
+   shows through the grid's gap/padding (set in CategoryGrid.tsx, not here)
+   as a thin navy margin around each card, echoing the reference's rounded,
+   separated tiles rather than the first pass's flush 1px-divider grid.
+
+   Revised again the same day (owner's follow-up spec): rounded corners and a
+   thin border, ALL CAPS bold titles — a deliberate, scoped exception to the
+   sitewide 0px --radius-* tokens, see CategoryGrid.tsx's own note. */
+.kv-cat-strip {
+  background-color: var(--accent);
+}
+
+.kv-cat-card {
+  background-color: var(--accent);
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--band-ink) 14%, transparent);
+}
+
+.kv-cat-card-media,
+.kv-cat-card-tint,
+.kv-cat-card-shade {
+  border-radius: inherit;
+}
+
+.kv-cat-card-media {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+}
+
+.kv-cat-card-tint {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--accent) 85%, transparent) 0%,
+    color-mix(in srgb, var(--electric) 55%, transparent) 100%
+  );
+}
+
+.kv-cat-card-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 38%,
+    color-mix(in srgb, var(--accent) 80%, black 20%) 100%
+  );
+}
+
+.kv-cat-card-content {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  padding: 1.25rem 1.3rem 1.4rem;
+  padding-inline-end: 4rem; /* clears the circular arrow, both directions */
+}
+
+.kv-cat-card-title {
+  color: var(--band-ink);
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.kv-cat-card-sub {
+  color: color-mix(in srgb, var(--band-ink) 76%, transparent);
+  font-size: 13px;
+  max-width: 26ch;
+}
+
+.kv-cat-card-arrow {
+  position: absolute;
+  inset-inline-end: 1.1rem;
+  bottom: 1.3rem;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--band-ink) 55%, transparent);
+  color: var(--band-ink);
+  transition:
+    background-color 200ms ease-out,
+    color 200ms ease-out,
+    border-color 200ms ease-out;
+}
+
+.kv-cat-card:hover .kv-cat-card-arrow {
+  background: var(--band-ink);
+  border-color: var(--band-ink);
+  color: var(--accent);
+}
+
+[dir="rtl"] .kv-cat-card-arrow svg {
+  transform: scaleX(-1);
 }
 
 /* ---- Floodlight, pushed further (owner request 2026-10-23) ----

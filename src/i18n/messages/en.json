@@ -26,11 +26,19 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "The full catalogue",
-      "titleA": "Every shirt,",
-      "titleB": "in one place.",
-      "sub": "Clubs and national teams from the major leagues — home, away and third, this season and last.",
-      "cta": "Browse the catalogue"
+      "eyebrow": "The Kitverse Collection",
+      "titleA": "Your club.",
+      "titleB": "Your colors.",
+      "titleC": "Your era.",
+      "sub": "Discover home, away and third kits from the world's biggest clubs — plus iconic retro shirts.",
+      "cta": "Explore the collection",
+      "ctaSecondary": "Shop national teams",
+      "from": "from",
+      "retroLabel": "Retro classics",
+      "fanLabel": "Fan",
+      "playerLabel": "Player",
+      "badgeEyebrow": "New season",
+      "badgeFrom": "From"
     },
     "browseEyebrow": "Browse",
     "kinds": {
@@ -76,7 +84,25 @@
         "body": "Any name, any number, printed to order. Adds {price} to the shirt and two days before dispatch."
       }
     },
-    "empty": "The catalogue is being photographed. Shirts appear here as soon as their images are approved."
+    "empty": "The catalogue is being photographed. Shirts appear here as soon as their images are approved.",
+    "categories": {
+      "clubs": {
+        "title": "Clubs",
+        "body": "All the biggest clubs from around the world."
+      },
+      "national": {
+        "title": "National Teams",
+        "body": "Represent your country with pride."
+      },
+      "retro": {
+        "title": "Retro Classics",
+        "body": "Iconic shirts. Timeless stories."
+      },
+      "accessories": {
+        "title": "Accessories",
+        "body": "Complete your look with names, numbers, badges and more."
+      }
+    }
   },
   "common": {
     "addToCart": "Add to cart",
@@ -121,7 +147,7 @@
   },
   "consent": {
     "message": "We use essential cookies to run the site and your cart. Non-essential analytics or marketing tools only run after you accept, and you can change your choice at any time from \"Cookie settings\" at the bottom of the page.",
-    "accept": "Accept",
+    "accept": "Accept all",
     "decline": "Decline",
     "settingsTitle": "Cookie settings"
   },

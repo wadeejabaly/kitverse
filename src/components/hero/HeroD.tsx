@@ -6,6 +6,7 @@ import { Wrap } from "@/components/shared/PageLede";
 import { Price } from "@/components/shared/Money";
 import { titleFor } from "@/lib/product";
 import { FloodStage, type FloodShirt } from "./FloodStage";
+import { HERO_CUTOUTS } from "./hero-cutouts";
 import { pickShirts } from "./shirts";
 
 /**
@@ -75,11 +76,13 @@ export async function HeroD({
   priority?: boolean;
 }) {
   const t = await getTranslations("home.hero");
-  const tProduct = await getTranslations("product");
 
   const shirts: FloodShirt[] = pickShirts(D_SHIRTS, 3).map((product) => ({
     handle: product.handle,
-    image: product.image,
+    // The cutout when one exists for this handle (the art-directed D_SHIRTS
+    // three, normally), else the product's own photo — see hero-cutouts.ts
+    // for why this can never break.
+    image: HERO_CUTOUTS[product.handle] ?? product.image,
     title: titleFor(product, locale),
     // The "from" price, exactly as the cards state it: smallest size, Fan.
     price: priceFor(product.season, "S", "fan"),
@@ -109,55 +112,143 @@ export async function HeroD({
       <Parallax speed={0.08} className="absolute inset-0">
         <div aria-hidden className="kv-flood-glow" />
         <div aria-hidden className="kv-flood-beam" />
+        <div aria-hidden className="kv-flood-lights" />
+        {/* The stadium signage watermark (owner reference 2026-10-27) — the
+            brand name itself, not a translated string, standing in as the
+            ad board at the back of the stage. See .kv-flood-watermark. */}
+        {/* Hidden below `wide`: on a phone the shirt stacks ABOVE the text
+            (see the badge's own note below for the same pattern) rather
+            than sitting beside it, so this would land behind the headline
+            instead of the shirt and fight the text-side vignette's whole
+            point. */}
+        <div aria-hidden className="kv-flood-watermark hidden wide:flex">
+          <span>
+            KITVERSE
+            <br />
+            JERSEYS
+          </span>
+        </div>
       </Parallax>
 
       <Wrap className="relative">
         <div className="grid items-center gap-10 py-10 wide:grid-cols-[1.02fr_0.98fr] wide:gap-14 wide:py-16">
           <div className="order-2 wide:order-none">
-            <span className="mono-eyebrow kv-flood-eyebrow">{t("eyebrow")}</span>
-            {/* Two authored lines, each rising out of its own clip box —
+            <span className="mono-eyebrow kv-flood-eyebrow kv-flood-eyebrow-rule">{t("eyebrow")}</span>
+            {/* Three authored lines, each rising out of its own clip box —
                 transform only, since this is the LCP text and it has to paint
-                at full opacity on the first frame. Only the second line takes
-                the gradient treatment: one line stays plain ink so the
-                gradient reads as an accent, not as decoration on every word.
+                at full opacity on the first frame. Owner reference 2026-10-27
+                ("نادريك. / ألوانك. / عصرك.") moved this from two lines to
+                three; only the LAST line takes the gradient treatment now —
+                the first two stay plain ink so the gradient still reads as
+                an accent on the final word, not decoration on every line.
                 .kv-flood-display, not .display-sm — see the hero's own note. */}
             <h1 className="kv-flood-display mt-4 mb-6">
-              {(["titleA", "titleB"] as const).map((key, index) => (
+              {(["titleA", "titleB", "titleC"] as const).map((key, index) => (
                 <span key={key} className="line-mask">
                   <span
-                    className={index === 1 ? "kv-flood-gradient-text" : undefined}
+                    className={index === 2 ? "kv-flood-gradient-text" : undefined}
                     style={{ "--kv-delay": `${index * 90}ms` } as React.CSSProperties}
                   >
                     {t(key)}
-                    {index === 0 ? " " : null}
+                    {index < 2 ? " " : null}
                   </span>
                 </span>
               ))}
             </h1>
             <p className="kv-flood-sub mb-8 max-w-[36ch]">{t("sub")}</p>
-            <div className="flex flex-wrap items-center gap-6">
-              <Link href="/shop" className="btn btn-flood">
+            <div className="mb-8 flex flex-wrap items-center gap-6">
+              <Link href="/shop" className="btn btn-flood inline-flex items-center gap-2">
                 {t("cta")}
+                <span aria-hidden className="btn-flood-arrow">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
               </Link>
-              <span className="kv-flood-sub text-[13px]">
-                {tProduct("versionFan")}{" "}
+              <Link
+                href="/shop/national-teams"
+                className="underline-draw kv-flood-sub inline-flex items-center gap-1.5 text-[13px]"
+              >
+                {t("ctaSecondary")}
+                <span aria-hidden className="btn-flood-arrow">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </Link>
+            </div>
+
+            {/* The reference's icon row (owner, 2026-10-27): Fan/Player's
+                entry prices plus Retro as a standing invitation rather than a
+                price, each with a small hand-drawn glyph — see .kv-flood-meta
+                in globals.css. Replaces the old plain-text price line. */}
+            <div className="kv-flood-meta text-[13px]">
+              <span className="kv-flood-meta-item kv-flood-sub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path
+                    d="M8 4 4 7l2.2 2.5L8 8v12h8V8l1.8 1.5L20 7l-4-3-2 1.5h-4L8 4Z"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {t("fanLabel")} {t("from")}{" "}
                 <Price value={fanFrom} className="kv-flood-strong" />
-                {" · "}
-                {tProduct("versionPlayer")}{" "}
+              </span>
+              <span className="kv-flood-meta-item kv-flood-sub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M12 3 4 10l8 11 8-11-8-7Z" strokeLinejoin="round" />
+                  <path d="M4 10h16M9 10 12 3l3 7M9 10l3 11 3-11" strokeLinejoin="round" />
+                </svg>
+                {t("playerLabel")} {t("from")}{" "}
                 <Price value={playerFrom} className="kv-flood-strong" />
+              </span>
+              <span className="kv-flood-meta-item kv-flood-sub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path
+                    d="M4 8 7 6l3 3 2-4 2 4 3-3 3 2-1.5 8h-13L4 8Z"
+                    strokeLinejoin="round"
+                  />
+                  <path d="M6 19h12" strokeLinecap="round" />
+                </svg>
+                {t("retroLabel")}
               </span>
             </div>
           </div>
 
           {/* Same fold-safety budget as Variant A: 82% of the measure on a
               phone, where the shirt stacks above the whole text block, and one
-              viewport minus the header/padding/caption on a desktop. */}
-          <Parallax
-            speed={0.18}
-            className="order-1 w-full max-w-[82%] justify-self-start wide:order-none wide:max-w-[calc(100svh-16rem)] wide:justify-self-end"
-          >
-            <FloodStage shirts={shirts} priority={priority} />
-          </Parallax>
+              viewport minus the header/padding/caption on a desktop. The badge
+              is a sibling of the Parallax stage rather than inside it, so its
+              own entrance/position stay simple while the stage keeps its
+              tilt/parallax motion untouched. */}
+          <div className="relative order-1 w-full max-w-[82%] justify-self-start wide:order-none wide:max-w-[calc(100svh-16rem)] wide:justify-self-end">
+            <Parallax speed={0.18}>
+              <FloodStage shirts={shirts} priority={priority} />
+            </Parallax>
+
+            {/* The reference's standalone "new season" badge (owner,
+                2026-10-27) — static, unlike the per-shirt chip inside
+                FloodStage, so it never has to change mid-crossfade. Hidden
+                below `wide` purely for room: the stage is already near its
+                82%-of-viewport budget on a phone and this would overlap the
+                shirt rather than sit beside it. */}
+            <Link
+              href="/shop"
+              className="kv-flood-badge absolute end-0 top-[58%] hidden w-[132px] -translate-y-1/2 translate-x-[38%] flex-col gap-1 px-4 py-4 wide:flex rtl:-translate-x-[38%]"
+            >
+              <span className="mono-eyebrow kv-flood-eyebrow text-[10px]">{t("badgeEyebrow")}</span>
+              <span className="kv-flood-sub mt-1 text-[11px] uppercase tracking-wide">
+                {t("badgeFrom")}
+              </span>
+              <span className="text-xl text-[var(--flood-ink)]">
+                <Price value={fanFrom} />
+              </span>
+              <span className="kv-flood-badge-arrow mt-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </Link>
+          </div>
         </div>
       </Wrap>
 
