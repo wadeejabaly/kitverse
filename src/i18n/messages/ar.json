@@ -94,7 +94,8 @@
     "total": "المجموع",
     "menu": "القائمة",
     "from": "ابتداءً من",
-    "viewShirt": "اعرض القميص"
+    "viewShirt": "اعرض القميص",
+    "outOfStock": "نفد من المخزون"
   },
   "notFound": {
     "title": "الصفحة مش موجودة",
@@ -272,7 +273,8 @@
     "patchEuropaLeague": "رقعة الدوري الأوروبي",
     "patchCoppaItalia": "رقعة كأس إيطاليا",
     "patchWorldCupChampions": "رقعة أبطال كأس العالم",
-    "patchWorldCupPeace": "رقعة السلام لكأس العالم"
+    "patchWorldCupPeace": "رقعة السلام لكأس العالم",
+    "outOfStock": "نفد من المخزون"
   },
   "cart": {
     "eyebrow": "السلة",

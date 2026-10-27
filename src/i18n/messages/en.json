@@ -94,7 +94,8 @@
     "total": "Total",
     "menu": "Menu",
     "from": "From",
-    "viewShirt": "View shirt"
+    "viewShirt": "View shirt",
+    "outOfStock": "Out of stock"
   },
   "notFound": {
     "title": "Page not found",
@@ -272,7 +273,8 @@
     "patchEuropaLeague": "Europa League patch",
     "patchCoppaItalia": "Coppa Italia patch",
     "patchWorldCupChampions": "World Cup Champions patch",
-    "patchWorldCupPeace": "FIFA Peace patch"
+    "patchWorldCupPeace": "FIFA Peace patch",
+    "outOfStock": "Out of stock"
   },
   "cart": {
     "eyebrow": "Cart",

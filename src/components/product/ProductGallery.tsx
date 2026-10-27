@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useProductSleeve } from "@/components/product/ProductSleeveContext";
+import { hasPhoto } from "@/lib/product";
 
 /**
  * The PDP's photo tile. Almost every product today has exactly one photo —
@@ -54,15 +55,19 @@ export function ProductGallery({
   return (
     <div>
       <div className="grid aspect-square place-items-center bg-tile">
-        <Image
-          src={shown}
-          alt={alt}
-          width={2048}
-          height={2048}
-          priority
-          sizes="(max-width: 900px) 100vw, 560px"
-          className="h-auto w-[90%]"
-        />
+        {hasPhoto(shown) ? (
+          <Image
+            src={shown}
+            alt={alt}
+            width={2048}
+            height={2048}
+            priority
+            sizes="(max-width: 900px) 100vw, 560px"
+            className="h-auto w-[90%]"
+          />
+        ) : (
+          <span className="mono-eyebrow text-ink-soft">{t("outOfStock")}</span>
+        )}
       </div>
 
       {activeSet.length > 1 ? (

@@ -18,6 +18,18 @@ export function teamFor(product: Product, locale: string): string {
 }
 
 /**
+ * Whether a photo path is a real, checked product photo rather than the
+ * "no confirmed photo yet" placeholder (`export-store-catalog.ts` falls back
+ * to `/products/_placeholder.jpg` for any product with no approved photo).
+ * Owner decision 2026-10-26: until a real photo exists, the storefront shows
+ * "Out of stock" instead of that placeholder image, everywhere a product's
+ * photo is shown to a shopper (the card grid, the product page).
+ */
+export function hasPhoto(image: string): boolean {
+  return !image.includes("_placeholder");
+}
+
+/**
  * The short season label used in card meta rows: "2025/26" → "25/26". A
  * single-year national season ("2026") is left whole. Always rendered inside
  * a bidi-isolated, LTR span — see <Season/>.

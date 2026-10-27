@@ -5,7 +5,7 @@ import { priceFor } from "@/data/pricing";
 import type { Product } from "@/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Price, Season } from "@/components/shared/Money";
-import { shortSeason, titleFor } from "@/lib/product";
+import { hasPhoto, shortSeason, titleFor } from "@/lib/product";
 
 /**
  * The product card from the mockup: a square photo on a white tile, the title,
@@ -41,19 +41,24 @@ export function ProductCard({
   // for a 2023-and-earlier season, since priceFor ignores "fan" there.
   // Selections on the PDP move it.
   const price = priceFor(product.season, "S", "fan");
+  const inStock = hasPhoto(product.image);
 
   return (
     <Link href={`/product/${product.handle}`} className="group block text-start">
       <div className="mb-3.5 grid aspect-square place-items-center overflow-hidden bg-tile ring-1 ring-inset ring-transparent transition-colors duration-300 ease-out group-hover:ring-electric">
-        <Image
-          src={product.image}
-          alt={title}
-          width={900}
-          height={900}
-          priority={priority}
-          sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
-          className="h-auto w-[86%] transition-transform duration-300 ease-out group-hover:scale-[1.03]"
-        />
+        {inStock ? (
+          <Image
+            src={product.image}
+            alt={title}
+            width={900}
+            height={900}
+            priority={priority}
+            sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
+            className="h-auto w-[86%] transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+          />
+        ) : (
+          <span className="mono-eyebrow text-ink-soft">{t("outOfStock")}</span>
+        )}
       </div>
       <h3 className="mb-1 text-sm font-normal">{title}</h3>
       <div className="flex items-baseline justify-between gap-2.5">

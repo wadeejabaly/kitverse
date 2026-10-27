@@ -94,7 +94,8 @@
     "total": "סה״כ",
     "menu": "תפריט",
     "from": "החל מ-",
-    "viewShirt": "צפייה בחולצה"
+    "viewShirt": "צפייה בחולצה",
+    "outOfStock": "אזל מהמלאי"
   },
   "notFound": {
     "title": "העמוד לא נמצא",
@@ -272,7 +273,8 @@
     "patchEuropaLeague": "פאטש הליגה האירופית",
     "patchCoppaItalia": "פאטש קופה איטליה",
     "patchWorldCupChampions": "פאטש אלופות המונדיאל",
-    "patchWorldCupPeace": "פאטש השלום של המונדיאל"
+    "patchWorldCupPeace": "פאטש השלום של המונדיאל",
+    "outOfStock": "אזל מהמלאי"
   },
   "cart": {
     "eyebrow": "עגלה",
