@@ -58,4 +58,11 @@ describe("sizing", () => {
     expect(recommendSize(177, 80, "player").recommended).toBe("L");
     expect(recommendSize(185, 96, "player").recommended).toBe("XXL");
   });
+  it("matches the five real fit reports added 2026-11-02", () => {
+    expect(recommendSize(177, 83, "fan").recommended).toBe("L"); // XL was a bit big
+    expect(recommendSize(182, 62, "fan").recommended).toBe("M"); // fits well
+    expect(recommendSize(185, 60, "fan").recommended).toBe("L"); // M was tight
+    expect(recommendSize(192, 70, "fan").recommended).toBe("XXL"); // fits well
+    expect(recommendSize(179, 85, "fan").recommended).toBe("XL");
+  });
 });

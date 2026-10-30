@@ -4,6 +4,7 @@ import { Figure } from "@/components/shared/Money";
 import { sizeSurcharge } from "@/data/pricing";
 import { PageLede, Prose, ProseParagraph, Wrap } from "@/components/shared/PageLede";
 import { alternatesFor } from "@/lib/site";
+import { SizeHelper } from "@/components/product/SizeHelper";
 
 /**
  * Measurements as supplied, S through 4XL. Centimetres, and the European size
@@ -46,6 +47,10 @@ export default async function SizeGuidePage({
   return (
     <Wrap>
       <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")} />
+
+      {/* No `onPick` here — this page has no size selection of its own to
+          write a result into, unlike the one in the product buy box. */}
+      <SizeHelper />
 
       {/* The table is the one wide thing on the site: it scrolls inside its
           own container so the page body never scrolls sideways on a phone. */}

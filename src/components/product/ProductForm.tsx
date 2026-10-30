@@ -11,6 +11,7 @@ import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { useProductSleeve } from "@/components/product/ProductSleeveContext";
+import { SizeHelper } from "@/components/product/SizeHelper";
 
 /**
  * The buy box.
@@ -142,6 +143,7 @@ export function ProductForm({
             );
           })}
         </div>
+        <SizeHelper initialVersion={version} onPick={setSize} />
       </fieldset>
 
       {/* Version — Retro has none: one product, one price, so offering the

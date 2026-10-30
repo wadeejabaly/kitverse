@@ -300,7 +300,15 @@
     "patchCoppaItalia": "رقعة كأس إيطاليا",
     "patchWorldCupChampions": "رقعة أبطال كأس العالم",
     "patchWorldCupPeace": "رقعة السلام لكأس العالم",
-    "outOfStock": "نفد من المخزون"
+    "outOfStock": "نفد من المخزون",
+    "sizeHelperOpen": "مش متأكد من مقاسك؟ لاقيه",
+    "sizeHelperHide": "إخفاء حاسبة المقاس",
+    "sizeHelperHeight": "الطول (سم)",
+    "sizeHelperWeight": "الوزن (كغم)",
+    "sizeHelperHint": "دخّل طولك ووزنك وبنقترحلك مقاس.",
+    "sizeHelperResult": "منقترح مقاس {size}.",
+    "sizeHelperLoose": "بتحب الواسع؟ خذ {size}.",
+    "sizeHelperUse": "اختر مقاس {size}"
   },
   "cart": {
     "eyebrow": "السلة",

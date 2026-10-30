@@ -300,7 +300,15 @@
     "patchCoppaItalia": "פאטש קופה איטליה",
     "patchWorldCupChampions": "פאטש אלופות המונדיאל",
     "patchWorldCupPeace": "פאטש השלום של המונדיאל",
-    "outOfStock": "אזל מהמלאי"
+    "outOfStock": "אזל מהמלאי",
+    "sizeHelperOpen": "לא בטוחים במידה? מצאו אותה",
+    "sizeHelperHide": "הסתרת מחשבון המידות",
+    "sizeHelperHeight": "גובה (ס\"מ)",
+    "sizeHelperWeight": "משקל (ק\"ג)",
+    "sizeHelperHint": "הזינו גובה ומשקל ונציע לכם מידה.",
+    "sizeHelperResult": "אנחנו ממליצים על מידה {size}.",
+    "sizeHelperLoose": "אוהבים רפוי יותר? קחו {size}.",
+    "sizeHelperUse": "בחרו מידה {size}"
   },
   "cart": {
     "eyebrow": "עגלה",

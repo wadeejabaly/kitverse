@@ -300,7 +300,15 @@
     "patchCoppaItalia": "Coppa Italia patch",
     "patchWorldCupChampions": "World Cup Champions patch",
     "patchWorldCupPeace": "FIFA Peace patch",
-    "outOfStock": "Out of stock"
+    "outOfStock": "Out of stock",
+    "sizeHelperOpen": "Not sure of your size? Find it",
+    "sizeHelperHide": "Hide the size finder",
+    "sizeHelperHeight": "Height (cm)",
+    "sizeHelperWeight": "Weight (kg)",
+    "sizeHelperHint": "Enter your height and weight for a recommendation.",
+    "sizeHelperResult": "We'd recommend size {size}.",
+    "sizeHelperLoose": "Prefer it loose? Go {size}.",
+    "sizeHelperUse": "Use size {size}"
   },
   "cart": {
     "eyebrow": "Cart",
