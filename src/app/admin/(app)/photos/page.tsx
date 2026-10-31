@@ -6,6 +6,7 @@ import { env } from "@/lib/env";
 import { retryProductPhoto, renameProduct } from "../../photos-actions";
 import { PageHeader, Card, Badge, EmptyState, cx, button } from "../../ui";
 import { PhotoUploadButton } from "./photo-upload-button";
+import { PhotoManagerButton } from "./photo-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -116,8 +117,9 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                   <RenameControl id={p.id} titleEn={p.title_en} titleAr={p.title_ar} />
                 </div>
               </div>
-              <div className="ml-[3.25rem] sm:ml-0">
+              <div className="ml-[3.25rem] flex gap-2 sm:ml-0">
                 <PhotoUploadButton productId={p.id} label="Upload" variant="row" />
+                <PhotoManagerButton productId={p.id} label="All photos" variant="row" />
               </div>
               {p.supplier_primary_album ? <form action={retryProductPhoto}><input type="hidden" name="productId" value={p.id} /><button className="grid h-9 w-9 place-items-center rounded-xl text-muted hover:bg-raised hover:text-ink" aria-label="Check supplier photos again"><RotateCcw className="h-4 w-4" /></button></form> : null}
             </div>
@@ -134,8 +136,9 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
               )}
               <div className="p-2.5">
                 <div className="truncate text-xs font-medium">{p.title_en}</div>
-                <div className="mt-2">
+                <div className="mt-2 flex flex-col gap-1.5">
                   <PhotoUploadButton productId={p.id} label="Replace" variant="card" />
+                  <PhotoManagerButton productId={p.id} label="All photos" variant="card" />
                 </div>
                 <div className="mt-1.5">
                   <RenameControl id={p.id} titleEn={p.title_en} titleAr={p.title_ar} />

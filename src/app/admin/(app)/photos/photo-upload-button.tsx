@@ -7,9 +7,16 @@ import { button, cx } from "../../ui";
 
 const VIEWPORT = 320; // the crop window, css px - matches the square thumbnails everywhere else
 
-function loadImage(url: string): Promise<HTMLImageElement> {
+/**
+ * `crossOrigin` is needed to re-edit a photo that's already sitting on Supabase storage (an existing
+ * URL, not a freshly picked File/blob URL) - without it, CropEditor's canvas reads back as "tainted"
+ * and toBlob()/toDataURL() throw. A same-origin blob: URL (a fresh file pick) neither needs nor is
+ * hurt by it.
+ */
+export function loadImage(url: string, opts?: { crossOrigin?: boolean }): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
+    if (opts?.crossOrigin) img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error("decode failed"));
     img.src = url;
@@ -82,7 +89,7 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
   );
 }
 
-function CropEditor({ img, productId, onClose }: { img: HTMLImageElement; productId: string; onClose: () => void }) {
+export function CropEditor({ img, productId, onClose }: { img: HTMLImageElement; productId: string; onClose: () => void }) {
   const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0);
   const [zoom, setZoom] = useState(1); // 1 = fills the frame exactly, up to 3 = zoomed/cropped in tighter
   const [off, setOff] = useState({ x: 0, y: 0 });

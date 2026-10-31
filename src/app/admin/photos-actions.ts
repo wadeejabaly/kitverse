@@ -7,6 +7,24 @@ import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { env } from "@/lib/env";
 
+/** Deploy hook helper shared by every action below that changes what the website shows. */
+async function kickDeploy() {
+  const hook = env().VERCEL_DEPLOY_HOOK_URL;
+  if (hook) await fetch(hook, { method: "POST" }).catch((e) => console.error("deploy hook failed", (e as Error).message));
+}
+
+/**
+ * "media" storage paths are stored as full public URLs
+ * (db().storage.from("media").getPublicUrl(path).data.publicUrl below) - this is the inverse, so a
+ * row can be deleted from storage by the same path it was uploaded to. Returns null for a URL that
+ * isn't actually in our "media" bucket (nothing to delete from storage, e.g. a committed real photo).
+ */
+function mediaStoragePath(url: string): string | null {
+  const marker = "/storage/v1/object/public/media/";
+  const i = url.indexOf(marker);
+  return i === -1 ? null : url.slice(i + marker.length);
+}
+
 /** Owner uploads a clean photo for a shirt (used instead of supplier photos from now on). */
 export async function uploadProductPhoto(form: FormData) {
   const staff = await requireStaff();
@@ -35,6 +53,83 @@ export async function retryProductPhoto(form: FormData) {
   await requireStaff();
   const productId = z.string().uuid().parse(form.get("productId"));
   await db().from("products").update({ photo_status: "unchecked" }).eq("id", productId);
+  revalidatePath("/admin/photos");
+}
+
+/**
+ * Every photo this product has on file - not just its current primary - so the owner can pick,
+ * re-edit, or throw away any of them (owner report 2026-11-02: "i want the ability to remove more
+ * than just the main picture i want to remove and edit all of them and choose the key picture" -
+ * until now "Change a photo" only ever showed the ONE picture currently live and offered no way to
+ * see, or do anything with, whatever else is sitting in product_images for that shirt).
+ */
+export async function listProductPhotos(productId: string) {
+  await requireStaff();
+  const id = z.string().uuid().parse(productId);
+  const product = must(await db().from("products").select("primary_image_url").eq("id", id).single(), "product") as { primary_image_url: string | null };
+  const rows = must(
+    await db().from("product_images").select("id,url,status,source,role,created_at").eq("product_id", id).order("created_at", { ascending: false }),
+    "product photos",
+  ) as { id: string; url: string; status: string; source: string; role: string; created_at: string }[];
+  return rows.map((r) => ({ ...r, isPrimary: r.url === product.primary_image_url }));
+}
+
+/**
+ * Make an EXISTING photo (already in product_images, not a fresh upload) the shirt's main picture.
+ * Always sets photo_status to "owner_upload" - not just "good" - because that's the flag
+ * scripts/export-store-catalog.ts actually checks to let an admin choice win over a committed "real"
+ * photo file on disk (see commit "Make an admin photo upload always win on the website, even over a
+ * committed photo"): a deliberate pick from this list is exactly as deliberate as a fresh upload, and
+ * needs the same authority or the website can keep ignoring it (owner report 2026-11-02: "the admin
+ * picture isnt the same picture as the website" - this is the same class of bug for the picker, not
+ * just the uploader).
+ */
+export async function setPrimaryPhoto(form: FormData) {
+  const staff = await requireStaff();
+  const productId = z.string().uuid().parse(form.get("productId"));
+  const imageId = z.string().uuid().parse(form.get("imageId"));
+  const image = must(await db().from("product_images").select("url,product_id").eq("id", imageId).single(), "photo") as { url: string; product_id: string };
+  if (image.product_id !== productId) throw new Error("photo does not belong to this product");
+  must(await db().from("products").update({ primary_image_url: image.url, photo_status: "owner_upload" }).eq("id", productId).select("id"), "set primary photo");
+  await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_set_primary", entity: "product", entity_id: productId });
+  await kickDeploy();
+  revalidatePath("/admin/photos");
+}
+
+/**
+ * Permanently remove one photo - from storage (when it's one of ours, not a supplier hotlink) and
+ * from product_images. If it was the shirt's current primary, auto-promote the next-best remaining
+ * photo (an owner upload first, else whichever is newest) so the shirt doesn't silently lose its
+ * picture; with nothing left, falls back to the placeholder exactly like a shirt that never had a
+ * photo (photo_status "none_clean" - the same state "Needs a photo" already looks for).
+ */
+export async function deleteProductPhoto(form: FormData) {
+  const staff = await requireStaff();
+  const productId = z.string().uuid().parse(form.get("productId"));
+  const imageId = z.string().uuid().parse(form.get("imageId"));
+
+  const image = must(await db().from("product_images").select("url,product_id").eq("id", imageId).single(), "photo") as { url: string; product_id: string };
+  if (image.product_id !== productId) throw new Error("photo does not belong to this product");
+
+  const path = mediaStoragePath(image.url);
+  if (path) await db().storage.from("media").remove([path]); // best-effort: a stray row with no file shouldn't block the delete below
+
+  const del = await db().from("product_images").delete().eq("id", imageId);
+  if (del.error) throw new Error(`delete photo: ${del.error.message}`);
+
+  const product = must(await db().from("products").select("primary_image_url").eq("id", productId).single(), "product") as { primary_image_url: string | null };
+  if (product.primary_image_url === image.url) {
+    const remaining = (await db().from("product_images").select("url,source").eq("product_id", productId).eq("status", "good")
+      .order("created_at", { ascending: false }).limit(20)).data as { url: string; source: string }[] | null;
+    // prefer another owner-picked photo over a supplier/cleaned one, both newest-first
+    const next = remaining?.find((r) => r.source === "owner") ?? remaining?.[0] ?? null;
+    await db().from("products").update(
+      next ? { primary_image_url: next.url, photo_status: next.source === "owner" ? "owner_upload" : "good" } : { primary_image_url: null, photo_status: "none_clean" },
+    ).eq("id", productId);
+  }
+
+  await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_delete", entity: "product", entity_id: productId });
+  await kickDeploy();
   revalidatePath("/admin/photos");
 }
 
