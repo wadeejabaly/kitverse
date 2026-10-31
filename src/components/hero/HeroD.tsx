@@ -137,7 +137,7 @@ export async function HeroD({
             {/* Three authored lines, each rising out of its own clip box —
                 transform only, since this is the LCP text and it has to paint
                 at full opacity on the first frame. Owner reference 2026-10-27
-                ("نادريك. / ألوانك. / عصرك.") moved this from two lines to
+                ("ناديك. / ألوانك. / عصرك.") moved this from two lines to
                 three; only the LAST line takes the gradient treatment now —
                 the first two stay plain ink so the gradient still reads as
                 an accent on the final word, not decoration on every line.
@@ -167,7 +167,10 @@ export async function HeroD({
               </Link>
               <Link
                 href="/shop/national-teams"
-                className="underline-draw kv-flood-sub inline-flex items-center gap-1.5 text-[13px]"
+                // Owner report 2026-11-02: this read too thin next to the filled
+                // primary CTA - font-bold only, same color/size/position/spacing
+                // as before, so it's not a second button, just a stronger weight.
+                className="underline-draw kv-flood-sub inline-flex items-center gap-1.5 text-[13px] font-bold"
               >
                 {t("ctaSecondary")}
                 <span aria-hidden className="btn-flood-arrow">

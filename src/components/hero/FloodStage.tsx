@@ -126,7 +126,28 @@ export function FloodStage({
               opacity: shown ? 1 : 0,
               pointerEvents: shown ? undefined : "none",
             }}
-            className="kv-crossfade group absolute inset-0 grid place-items-center overflow-hidden"
+            // Owner report 2026-10-31: "the jersey floating above the
+            // pedestal" — the three cutouts (hero-cutouts.ts) aren't the same
+            // shape: each is cropped tight to its own garment, so a shirt
+            // photographed/laid out more compactly (AC Milan's cutout file
+            // is ~18% shorter relative to its width than Arsenal's or Real
+            // Madrid's) renders shorter at the same width-bound scale. With
+            // `place-items-center` this element was a single-item CSS grid,
+            // and a lone auto-sized grid row has an INDEFINITE height for
+            // percentage resolution — which is why the image's own
+            // `max-h-[84%]` below was silently never actually applied (it
+            // was rendering taller than that cap): every cutout centered
+            // inside a row sized to ITS OWN content height, so a shorter
+            // cutout's hem landed higher up, nowhere near the fixed-position
+            // .kv-flood-podium beneath it. Dropping the grid and anchoring
+            // the Image directly (`absolute bottom-0`, centered manually)
+            // gives it this element's own DEFINITE box to measure against
+            // instead, so `max-h-[84%]` finally constrains it as written,
+            // and every shirt's hem — whatever its own cutout's height —
+            // meets the podium at the same line, the way a real shirt resting
+            // on a pedestal would, rather than floating by an amount that
+            // depends on how each supplier photo happened to be cropped.
+            className="kv-crossfade group absolute inset-0 overflow-hidden"
           >
             {/* Fixed 2026-10-25, final shape — this element is now ABSOLUTELY
                 POSITIONED (inset-0), matching its stacked siblings above
@@ -169,7 +190,7 @@ export function FloodStage({
               height={1200}
               priority={priority && index === 0}
               sizes="(max-width: 900px) 86vw, 560px"
-              className="kv-flood-shirt-shadow h-auto max-h-[84%] w-auto max-w-[84%] object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+              className="kv-flood-shirt-shadow absolute bottom-0 left-1/2 h-auto max-h-[84%] w-auto max-w-[84%] -translate-x-1/2 object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
             />
           </Link>
         );
