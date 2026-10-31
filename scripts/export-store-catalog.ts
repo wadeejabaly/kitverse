@@ -1,7 +1,8 @@
 /**
  * Writes the storefront's static catalog (src/data/catalog.json + collections.json): exactly the
  * hand-picked shirts in catalog/store-selection.json (nav from catalog/store-collections.json), each
- * showing its checked database photo, or the owner's real photo, or the placeholder.
+ * showing its checked database photo, or the owner's real photo, or the placeholder, and its
+ * hand-authored name unless the owner renamed it in admin (products.title_override).
  * Runs before every build when the database is reachable; otherwise the committed JSON is used as is.
  *   npm run store:export
  */
@@ -14,7 +15,7 @@ config({ path: ".env.local", quiet: true });
 
 
 type Row = {
-  id: string; handle: string; title_en: string; title_ar: string | null; season: string | null; kit: string;
+  id: string; handle: string; title_en: string; title_ar: string | null; title_override: boolean; season: string | null; kit: string;
   primary_image_url: string | null; photo_status: string | null; supplier_cover: string | null;
   team: { id: string; name_en: string; name_ar: string | null; type: "club" | "national"; league_id: string | null };
 };
@@ -30,7 +31,7 @@ async function main() {
   const rows: Row[] = [];
   for (let i = 0; i < handles.length; i += 200) {
     const { data, error } = await db.from("products")
-      .select("id,handle,title_en,title_ar,season,kit,primary_image_url,photo_status,supplier_cover,team:teams(id,name_en,name_ar,type,league_id)")
+      .select("id,handle,title_en,title_ar,title_override,season,kit,primary_image_url,photo_status,supplier_cover,team:teams(id,name_en,name_ar,type,league_id)")
       .in("handle", handles.slice(i, i + 200));
     if (error) throw error;
     rows.push(...(data as unknown as Row[]));
@@ -48,9 +49,15 @@ async function main() {
   const products: Product[] = selection.map(({ productHandle, ...s }) => {
     const r = byHandle.get(productHandle ?? s.handle);
     const upload = ownerUpload(r);
+    // owner report 2026-11-02: "like real madrid 25/26 you labeled some wrong i just want to be able
+    // to fix them" - a rename in admin (products.title_override) wins over this entry's own
+    // hand-authored name, same as an owner photo upload already wins above. Falls back to the
+    // existing hand-authored Arabic/Hebrew name when the owner only corrected the English one.
+    const renamed = r?.title_override;
     return {
       ...s,
       handle: r?.handle ?? s.handle, // the database handle, so checkout finds the product
+      ...(renamed ? { title: r.title_en, titleAr: r.title_ar ?? s.titleAr } : {}),
       image: upload ?? (real(s) ? s.image : checked(r) ?? "/products/_placeholder.jpg"),
       ...(real(s) && s.images?.length ? { images: s.images } : {}),
       sourceHash: r?.supplier_cover ?? s.sourceHash,

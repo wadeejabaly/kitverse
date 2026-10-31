@@ -37,3 +37,24 @@ export async function retryProductPhoto(form: FormData) {
   await db().from("products").update({ photo_status: "unchecked" }).eq("id", productId);
   revalidatePath("/admin/photos");
 }
+
+/**
+ * Owner corrects a shirt's name (owner report 2026-11-02: "like real madrid 25/26 you labeled some
+ * wrong i just want to be able to fix them"). Sets title_override so the website export prefers this
+ * over its own hand-authored catalog/store-selection.json entry for this shirt, the same way an
+ * owner photo upload already wins over a committed photo - everything else keeps its current name
+ * until the owner renames it.
+ */
+export async function renameProduct(form: FormData) {
+  const staff = await requireStaff();
+  const productId = z.string().uuid().parse(form.get("productId"));
+  const titleEn = z.string().trim().min(1).max(200).parse(form.get("titleEn"));
+  const titleArRaw = form.get("titleAr");
+  const titleAr = typeof titleArRaw === "string" && titleArRaw.trim() ? titleArRaw.trim().slice(0, 200) : null;
+  must(await db().from("products").update({ title_en: titleEn, title_ar: titleAr, title_override: true }).eq("id", productId).select("id"), "rename");
+  await db().from("audit_log").insert({ actor: staff.id, action: "product.rename", entity: "product", entity_id: productId });
+  // the website name is baked into the exported catalog at deploy time, same as a photo (~2 min)
+  const hook = env().VERCEL_DEPLOY_HOOK_URL;
+  if (hook) await fetch(hook, { method: "POST" }).catch((e) => console.error("deploy hook failed", (e as Error).message));
+  revalidatePath("/admin/photos");
+}

@@ -1,22 +1,58 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { ImageOff, RotateCcw, ShieldCheck } from "lucide-react";
+import { ImageOff, Pencil, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
-import { retryProductPhoto } from "../../photos-actions";
-import { PageHeader, Card, Badge, EmptyState, cx } from "../../ui";
+import { retryProductPhoto, renameProduct } from "../../photos-actions";
+import { PageHeader, Card, Badge, EmptyState, cx, button } from "../../ui";
 import { PhotoUploadButton } from "./photo-upload-button";
 
 export const dynamic = "force-dynamic";
+
+const ctrl = "rounded-lg border border-line-2 bg-paper px-3 py-2 text-sm text-ink placeholder:text-muted/70 outline-none focus:border-pitch focus:ring-2 focus:ring-pitch/15";
+
+/** Collapsed by default so 400 shirts don't turn into 400 open text fields - click to fix a wrong name in place. */
+function RenameControl({ id, titleEn, titleAr }: { id: string; titleEn: string; titleAr: string | null }) {
+  return (
+    <details>
+      <summary className="inline-flex cursor-pointer items-center gap-1 text-[11px] text-muted hover:text-ink">
+        <Pencil className="h-3 w-3" /> Rename
+      </summary>
+      <form action={renameProduct} className="mt-1.5 flex flex-col gap-1.5">
+        <input type="hidden" name="productId" value={id} />
+        <input name="titleEn" defaultValue={titleEn} required placeholder="English name" className={cx(ctrl, "px-2 py-1 text-xs")} />
+        <input name="titleAr" defaultValue={titleAr ?? ""} dir="rtl" placeholder="الاسم بالعربية (اختياري)" className={cx(ctrl, "px-2 py-1 text-xs")} />
+        <button className="self-start rounded-md bg-pitch-fill px-2 py-1 text-[11px] font-medium text-white hover:bg-pitch-fill-2">Save name</button>
+      </form>
+    </details>
+  );
+}
 
 /** Shirts without a usable photo: website shirts showing the blank placeholder, and bot-only shirts whose supplier photos all failed the check. */
 export default async function Photos({ searchParams }: PageProps<"/admin/photos">) {
   const sp = await searchParams;
   const tab = sp.tab === "rejected" ? "rejected" : sp.tab === "all" ? "all" : "missing";
-  const missing = ((await db().from("products").select("id,title_en,status,photo_status,flags,supplier_primary_album")
+  const q = typeof sp.q === "string" ? sp.q.trim() : "";
+  const cat = typeof sp.cat === "string" ? sp.cat : "";
+  const qs = (t: string) => `/admin/photos?tab=${t}${q ? `&q=${encodeURIComponent(q)}` : ""}${cat ? `&cat=${encodeURIComponent(cat)}` : ""}`;
+
+  // Filtering by "category" (owner request 2026-11-02: "a way to search for the shirt by writing the
+  // name or to filter by categories") means by league or national team - there's no separate category
+  // column, so a league/national pick resolves to the matching team ids first, same groups the Catalog
+  // page already shows the owner (leagues + a national-teams bucket).
+  const leagues = ((await db().from("leagues").select("id,name_en").order("name_en")).data ?? []) as { id: string; name_en: string }[];
+  let teamIds: string[] | null = null;
+  if (cat === "national") teamIds = ((await db().from("teams").select("id").eq("type", "national")).data ?? []).map((t) => t.id);
+  else if (cat) teamIds = ((await db().from("teams").select("id").eq("league_id", cat)).data ?? []).map((t) => t.id);
+
+  let missingQuery = db().from("products").select("id,title_en,title_ar,status,photo_status,flags,supplier_primary_album,team_id")
     .or("photo_status.eq.none_clean,and(status.eq.featured,photo_status.not.in.(good,owner_upload))")
-    .order("status", { ascending: false }).order("title_en").limit(400)).data ?? []) as { id: string; title_en: string; status: string; photo_status: string; flags: string[] | null; supplier_primary_album: string | null }[];
+    .order("status", { ascending: false }).order("title_en").limit(400);
+  if (q) missingQuery = missingQuery.ilike("search_text", `%${q}%`);
+  if (teamIds) missingQuery = missingQuery.in("team_id", teamIds);
+  const missing = ((await missingQuery).data ?? []) as { id: string; title_en: string; title_ar: string | null; status: string; photo_status: string; flags: string[] | null; supplier_primary_album: string | null }[];
   const why = (p: (typeof missing)[number]) => (p.flags ?? []).includes("not_at_supplier") ? "Not at the supplier" : p.photo_status === "none_clean" ? "Supplier photos not usable" : "No supplier photos";
+
   const rejected = tab === "rejected" ? ((await db().from("product_images").select("id,url,quality,product:products(title_en)").eq("status", "bad")
     .order("checked_at", { ascending: false }).limit(48)).data ?? []) as unknown as { id: string; url: string; quality: Record<string, unknown> | null; product: { title_en: string } }[] : [];
   const reason = (q: Record<string, unknown> | null) => !q ? "unreadable" : q.baby_bodysuit ? "baby item" : q.kids_item ? "kids item" : q.overlay_text ? "text on photo" : q.watermark ? "watermark" : q.front_view === false ? "not the front" : q.blurry_or_dark ? "blurry/dark" : "not attractive";
@@ -27,20 +63,44 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
   // that had none yet; the action itself already just overwrites
   // primary_image_url whichever shirt it's called on, so this tab needed no
   // change there, only a place to call it from).
-  const all = tab === "all" ? ((await db().from("products").select("id,title_en,primary_image_url")
+  let allQuery = db().from("products").select("id,title_en,title_ar,primary_image_url,team_id")
     .eq("status", "featured").in("photo_status", ["good", "owner_upload"])
-    .order("title_en").limit(400)).data ?? []) as { id: string; title_en: string; primary_image_url: string | null }[] : [];
+    .order("title_en").limit(400);
+  if (q) allQuery = allQuery.ilike("search_text", `%${q}%`);
+  if (teamIds) allQuery = allQuery.in("team_id", teamIds);
+  const all = tab === "all" ? ((await allQuery).data ?? []) as { id: string; title_en: string; title_ar: string | null; primary_image_url: string | null }[] : [];
 
   return (
     <>
       <PageHeader title="Photos" subtitle={`Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots. ${env().VERCEL_DEPLOY_HOOK_URL ? "Photos you upload show on the website about 2 minutes later." : "Photos you upload reach the bot right away and the website after the next site update."}`} />
-      <div className="mb-4 inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
-        <Link href="/admin/photos" className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-ink text-paper" : "text-ink-2")}>Needs a photo ({missing.length})</Link>
-        <Link href="/admin/photos?tab=all" className={cx("rounded-lg px-3 py-1.5", tab === "all" ? "bg-ink text-paper" : "text-ink-2")}>Change a photo</Link>
-        <Link href="/admin/photos?tab=rejected" className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-ink text-paper" : "text-ink-2")}>Rejected photos</Link>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
+          <Link href={qs("missing")} className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-ink text-paper" : "text-ink-2")}>Needs a photo ({missing.length})</Link>
+          <Link href={qs("all")} className={cx("rounded-lg px-3 py-1.5", tab === "all" ? "bg-ink text-paper" : "text-ink-2")}>Change a photo</Link>
+          <Link href={qs("rejected")} className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-ink text-paper" : "text-ink-2")}>Rejected photos</Link>
+        </div>
+        {tab !== "rejected" ? (
+          <form className="flex flex-wrap items-center gap-2" action="/admin/photos">
+            <input type="hidden" name="tab" value={tab} />
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+              <input type="search" name="q" defaultValue={q} placeholder="Search by name" className={cx(ctrl, "w-44 pl-8")} />
+            </div>
+            <select name="cat" defaultValue={cat} className={ctrl}>
+              <option value="">All categories</option>
+              <option value="national">National teams</option>
+              {leagues.map((l) => <option key={l.id} value={l.id}>{l.name_en}</option>)}
+            </select>
+            <button className={cx(button.ghost, "px-3")}>Filter</button>
+            {q || cat ? <Link href={`/admin/photos?tab=${tab}`} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink" aria-label="Clear filters"><X className="h-4 w-4" /></Link> : null}
+          </form>
+        ) : null}
       </div>
 
-      {tab === "missing" ? (!missing.length ? <EmptyState icon={ShieldCheck} title="Every shirt has a photo" /> : (
+      {tab === "missing" ? (!missing.length ? (
+        q || cat ? <EmptyState icon={Search} title="No shirts match" text="Try a different name or category." />
+          : <EmptyState icon={ShieldCheck} title="Every shirt has a photo" />
+      ) : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {missing.map((p) => (
             <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5">
@@ -52,6 +112,9 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                   <span>{why(p)}</span>
                   {p.supplier_primary_album ? <a href={`https://jerseyxie.x.yupoo.com/albums/${p.supplier_primary_album}?uid=1`} target="_blank" rel="noreferrer" className="hover:text-ink hover:underline">supplier album</a> : null}
                 </div>
+                <div className="mt-1">
+                  <RenameControl id={p.id} titleEn={p.title_en} titleAr={p.title_ar} />
+                </div>
               </div>
               <div className="ml-[3.25rem] sm:ml-0">
                 <PhotoUploadButton productId={p.id} label="Upload" variant="row" />
@@ -60,7 +123,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
             </div>
           ))}
         </Card>
-      )) : tab === "all" ? (
+      )) : tab === "all" ? (!all.length ? <EmptyState icon={Search} title="No shirts match" text="Try a different name or category." /> : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {all.map((p) => (
             <Card key={p.id} padded={false} className="overflow-hidden">
@@ -74,11 +137,14 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                 <div className="mt-2">
                   <PhotoUploadButton productId={p.id} label="Replace" variant="card" />
                 </div>
+                <div className="mt-1.5">
+                  <RenameControl id={p.id} titleEn={p.title_en} titleAr={p.title_ar} />
+                </div>
               </div>
             </Card>
           ))}
         </div>
-      ) : (
+      )) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {rejected.map((r) => (
             <Card key={r.id} padded={false} className="overflow-hidden">
