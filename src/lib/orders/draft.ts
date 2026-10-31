@@ -12,7 +12,7 @@ const OPEN = ["draft", "quoted", "awaiting_details", "awaiting_confirmation"] as
 export interface OrderRow {
   id: string; number: number; status: string; customer_id: string; conversation_id: string | null;
   zone_id: string | null; address: Record<string, string | null> | null; total: number; quote: Quote | null;
-  payment_method: "cod" | "paypal" | null; payment_status: string; price_list_version_id: string | null; confirmed_at: string | null;
+  payment_method: "cod" | "paypal" | "bit" | null; payment_status: string; price_list_version_id: string | null; confirmed_at: string | null;
   gift_boxes?: number; source?: "instagram" | "website";
 }
 

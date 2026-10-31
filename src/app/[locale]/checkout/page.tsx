@@ -27,8 +27,10 @@ export async function generateMetadata({
 /**
  * Checkout. The page is static: cart lines live in the visitor's browser and the server only
  * contributes the catalogue facts a line needs to render. Placing an order goes to
- * /api/checkout/cash/start, which re-prices everything with the shared pricing engine.
- * Cash on delivery only for now; online payment is added on the backend later.
+ * /api/checkout/cash/start, /api/checkout/paypal/start, or /api/checkout/bit/start, each of
+ * which re-prices everything with the shared pricing engine. Online payment is only offered
+ * once its own credentials are set (owner decision 2026-10-31, Part 7) — until then the
+ * checkout UI simply doesn't show that button, same as cash's own cashEnabled gate below.
  */
 export default async function CheckoutPage({
   params,
@@ -68,6 +70,16 @@ export default async function CheckoutPage({
           accessories={accessories}
           locale={locale}
           cashEnabled={!!process.env.SUPABASE_SERVICE_ROLE_KEY}
+          // Read straight off process.env, same as cashEnabled above, rather
+          // than through isPayPalConfigured()/isPayPlusConfigured() (which go
+          // through src/lib/env.ts's zod schema): that schema requires the
+          // Supabase/Anthropic variables too, so in any environment missing
+          // those (this page's own render has no other use for them) calling
+          // it here would 500 the whole checkout page over unrelated
+          // variables. The API routes that actually move money still go
+          // through the real isPayPalConfigured()/isPayPlusConfigured().
+          paypalEnabled={!!(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_SECRET)}
+          bitEnabled={!!(process.env.PAYPLUS_API_KEY && process.env.PAYPLUS_SECRET_KEY && process.env.PAYPLUS_PAYMENT_PAGE_UID)}
         />
       </Suspense>
     </Wrap>

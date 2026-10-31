@@ -33,7 +33,20 @@ export function splitNameNumber(raw?: string): { name: string | null; number: st
   return { name: name?.toUpperCase() ?? null, number: num };
 }
 
-export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderResult> {
+export type PrepareFailure = Extract<WebOrderResult, { ok: false }>;
+
+/**
+ * Shared by every website checkout rail (cash, PayPal, Bit): validate the
+ * request, resolve the delivery town, match/insert the customer, write the
+ * order + its lines, apply any discount codes, and price it. Stops short of
+ * deciding what happens next — that part differs by rail (see
+ * createWebOrder below for cash, src/lib/orders/online.ts for PayPal/Bit)
+ * and is NOT re-validated a second time, so this is the one place a website
+ * order can be written from.
+ */
+export type PreparedOrder = { ok: true; order: OrderRow; q: Awaited<ReturnType<typeof requote>>; notAtSupplier: string[] };
+
+export async function prepareOrder(req: CreateOrderRequest): Promise<PrepareFailure | PreparedOrder> {
   const c = req.customer;
   const phone = normalizePhone(c.phone);
   if (!phone) return { ok: false, code: "invalid_request", detail: "phone" };
@@ -83,8 +96,13 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
     full_name: c.name, phone, email: c.email, town: resolved.locality.name_ar ?? resolved.locality.name_en, locality_id: resolved.locality.id,
     street: c.street, house_number: c.houseNumber, recipient_name: c.name, notes: c.notes || null,
   };
+  // Starts in "draft" — the vocabulary every unpriced/unpaid order starts
+  // in (supabase/migrations/20260930120000_core_schema.sql). requote()
+  // below bumps it to "quoted" the moment the lines exist; createWebOrder
+  // (cash) and settleOnlinePayment (PayPal/Bit, src/lib/orders/online.ts)
+  // each decide separately what happens after that.
   const order = must(await db().from("orders").insert({
-    customer_id: customerId, status: "awaiting_confirmation", source: "website", zone_id: resolved.locality.zone_id, address,
+    customer_id: customerId, status: "draft", source: "website", zone_id: resolved.locality.zone_id, address,
     gift_boxes: req.giftBoxQty ?? 0, notes: c.notes || null,
   }).select("*").single(), "web order") as OrderRow;
 
@@ -118,18 +136,27 @@ export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderR
       q = await requote(order); // re-price now that every adjustment row exists
     }
 
-    // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —
-    // the owner approves or declines it from /admin/orders (approveWebOrder / declineWebOrder).
-    const row = must(await db().from("orders").update({ payment_method: "cod", total: q.total })
-      .eq("id", order.id).select("number,total").single(), "price web order") as { number: number; total: number };
     const notAtSupplier = lines.filter(({ p }) => p!.flags?.includes("not_at_supplier")).map(({ p }) => p!.title_en);
-    await notify({
-      kind: "order.needs_approval", priority: "urgent", title: `Approve order #${row.number} - ₪${row.total / 100}`,
-      body: `${c.name}, ${address.town} · cash on delivery - waiting for your OK${notAtSupplier.length ? ` · not at supplier, check availability: ${notAtSupplier.join(", ")}` : ""}`, link: `/admin/orders/${order.id}`,
-    });
-    return { ok: true, number: row.number, token: orderToken(order.id), url: orderLink(order.id), total: row.total };
+    return { ok: true, order, q, notAtSupplier };
   } catch (e) {
     await db().from("orders").update({ status: "cancelled", notes: `checkout failed: ${(e as Error).message.slice(0, 200)}` }).eq("id", order.id);
     return { ok: false, code: "server_error", detail: (e as Error).message };
   }
+}
+
+export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderResult> {
+  const prepared = await prepareOrder(req);
+  if (!prepared.ok) return prepared;
+  const { order, q, notAtSupplier } = prepared;
+  const c = req.customer;
+
+  // Owner decision 2026-10-25: never auto-confirm. The order stays "awaiting_confirmation" —
+  // the owner approves or declines it from /admin/orders (approveWebOrder / declineWebOrder).
+  const row = must(await db().from("orders").update({ status: "awaiting_confirmation", payment_method: "cod", total: q.total })
+    .eq("id", order.id).select("number,total").single(), "price web order") as { number: number; total: number };
+  await notify({
+    kind: "order.needs_approval", priority: "urgent", title: `Approve order #${row.number} - ₪${row.total / 100}`,
+    body: `${c.name}, ${(order.address as { town?: string } | null)?.town ?? ""} · cash on delivery - waiting for your OK${notAtSupplier.length ? ` · not at supplier, check availability: ${notAtSupplier.join(", ")}` : ""}`, link: `/admin/orders/${order.id}`,
+  });
+  return { ok: true, number: row.number, token: orderToken(order.id), url: orderLink(order.id), total: row.total };
 }

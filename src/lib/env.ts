@@ -23,6 +23,29 @@ const Env = z.object({
   VAPID_SUBJECT: z.string().optional().default(""),
   // Vercel deploy hook: rebuilds the website so owner-uploaded photos appear (the catalog is static)
   VERCEL_DEPLOY_HOOK_URL: z.string().optional().default(""),
+
+  // PayPal (owner decision 2026-10-31, Part 7): optional, like every other
+  // integration here — checkout simply doesn't offer PayPal until all three
+  // are set. NEXT_PUBLIC_ is not used: nothing PayPal-specific ever reaches
+  // the browser, the client only ever gets a redirect URL this server asked
+  // PayPal to mint. PAYPAL_ENV defaults to sandbox; only the exact string
+  // "live" switches it to the real API. PAYPAL_WEBHOOK_ID is required to
+  // verify webhook callbacks (src/lib/payments/paypal.ts).
+  PAYPAL_CLIENT_ID: z.string().optional().default(""),
+  PAYPAL_SECRET: z.string().optional().default(""),
+  PAYPAL_ENV: z.string().optional().default(""),
+  PAYPAL_WEBHOOK_ID: z.string().optional().default(""),
+
+  // PayPlus — the Israeli PSP that clears Bit (owner decision 2026-10-31,
+  // Part 7). Whichever charge methods are enabled on the real
+  // PAYPLUS_PAYMENT_PAGE_UID is what the hosted page actually offers; this
+  // store only ever asks for "bit" at this layer (see the price-list /
+  // checkout-UI naming) and leaves what PayPlus shows on its own hosted page
+  // to the account's own configuration. PAYPLUS_ENV defaults to sandbox.
+  PAYPLUS_API_KEY: z.string().optional().default(""),
+  PAYPLUS_SECRET_KEY: z.string().optional().default(""),
+  PAYPLUS_PAYMENT_PAGE_UID: z.string().optional().default(""),
+  PAYPLUS_ENV: z.string().optional().default(""),
 });
 
 let cached: z.infer<typeof Env> | null = null;

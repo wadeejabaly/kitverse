@@ -130,11 +130,15 @@ export function CheckoutView({
   accessories,
   locale,
   cashEnabled,
+  paypalEnabled,
+  bitEnabled,
 }: {
   products: CartProductInfo[];
   accessories: CartAccessoryInfo[];
   locale: string;
   cashEnabled: boolean;
+  paypalEnabled: boolean;
+  bitEnabled: boolean;
 }) {
   const t = useTranslations("checkout");
   const tCart = useTranslations("cart");
@@ -448,6 +452,47 @@ export function CheckoutView({
     if (code === "invalid_discount_code") clearDiscountCodes();
     setErrorCode(code);
   }
+
+  /**
+   * PayPal and Bit share this shape: ask our own server to write the
+   * (still-unpaid) order and mint a redirect URL, then send the browser's
+   * top-level navigation there — never clear the cart or touch "done" here,
+   * since nothing has been charged yet and the buyer may still cancel or
+   * fail and come back to this same page (see returnNotice above). The cart
+   * is only cleared once the thank-you page itself has confirmed payment.
+   */
+  async function placeRedirectOrder(path: "paypal" | "bit") {
+    setErrorCode(null);
+    setReturnNotice(null);
+    setPhase("placing");
+
+    type StartResponse = { approveUrl?: unknown; redirectUrl?: unknown; code?: unknown } | null;
+    let payload: StartResponse = null;
+    try {
+      const response = await fetch(`/api/checkout/${path}/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: orderRequestBody(),
+      });
+      payload = (await response.json().catch(() => null)) as StartResponse;
+      const redirectUrl = typeof payload?.approveUrl === "string" ? payload.approveUrl : typeof payload?.redirectUrl === "string" ? payload.redirectUrl : null;
+      if (response.ok && redirectUrl) {
+        setPhase("redirecting");
+        window.location.assign(redirectUrl);
+        return;
+      }
+    } catch {
+      // Network failure — handled exactly like a rejected request below.
+    }
+
+    setPhase("form");
+    const code = isErrorCode(payload?.code) ? payload.code : "server_error";
+    if (code === "invalid_discount_code") clearDiscountCodes();
+    setErrorCode(code);
+  }
+
+  const placePayPalOrder = () => placeRedirectOrder("paypal");
+  const placeBitOrder = () => placeRedirectOrder("bit");
 
   if (!hydrated) return <div className="min-h-[40vh]" aria-hidden />;
 
@@ -814,11 +859,50 @@ export function CheckoutView({
             </p>
           ) : null}
 
-          {!cashEnabled ? (
+          {!cashEnabled && !paypalEnabled && !bitEnabled ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : (
             <div className="flex flex-col gap-6">
               <h3 className="mono-eyebrow text-ink-soft">{t("payTitle")}</h3>
+
+              {/* Three methods, each shown only when it is configured
+                  (owner decision 2026-10-31, Part 7): Bit clears through
+                  PayPlus's hosted page (a redirect, same as PayPal below —
+                  whichever charge methods the real PayPlus account has
+                  enabled is what that page actually offers), PayPal covers
+                  everything else, and cash on delivery (owner decision
+                  2026-10-23: plain, no deposit) stays last. Every button
+                  disables while ANY of the three is mid-flight, not just the
+                  one clicked. */}
+              {bitEnabled ? (
+                <div>
+                  <p className="mb-1.5 text-sm">{t("payCard")}</p>
+                  <p className="mb-1.5 text-xs text-ink-soft">{t("payCardNote")}</p>
+                  <p className="mb-4 text-xs text-ink-soft">{t("payCardLanguage")}</p>
+                  <button
+                    type="button"
+                    className="btn w-full"
+                    disabled={phase !== "form" || !parsed.success || cityCheck.status !== "found"}
+                    onClick={placeBitOrder}
+                  >
+                    {phase === "redirecting" ? t("redirecting") : phase === "placing" ? t("payCodPlacing") : t("payCard")}
+                  </button>
+                </div>
+              ) : null}
+
+              {paypalEnabled ? (
+                <div>
+                  <p className="mb-4 text-xs text-ink-soft">{t("payPalNote")}</p>
+                  <button
+                    type="button"
+                    className="btn-quiet w-full"
+                    disabled={phase !== "form" || !parsed.success || cityCheck.status !== "found"}
+                    onClick={placePayPalOrder}
+                  >
+                    {phase === "redirecting" ? t("redirecting") : phase === "placing" ? t("payCodPlacing") : "PayPal"}
+                  </button>
+                </div>
+              ) : null}
 
               {/* Cash on delivery — last, and plain (owner decision
                   2026-10-23): no deposit, nothing charged here at all. The
@@ -828,6 +912,7 @@ export function CheckoutView({
                   reads as active — never hidden behind a separate message. */}
               {cashEnabled ? (
                 <div>
+                  {bitEnabled || paypalEnabled ? <p className="mb-1.5 text-sm">{t("payCodIntro")}</p> : null}
                   <p className="mb-4 text-xs text-ink-soft">{t("payCashNote")}</p>
                   <button
                     type="button"
@@ -883,6 +968,9 @@ function ErrorMessage({ code }: { code: CheckoutErrorCode }) {
     case "rate_limited":
       return <>{t("errorRateLimited")}</>;
     case "capture_failed":
+    case "paypal_failed":
+    case "payplus_failed":
+    case "order_not_found":
       return <>{t("errorCapture")}</>;
     default:
       return <>{t("errorGeneric")}</>;

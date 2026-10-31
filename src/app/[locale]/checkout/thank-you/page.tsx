@@ -10,6 +10,7 @@ import {
   Wrap,
 } from "@/components/shared/PageLede";
 import { readOrderToken } from "@/lib/orders/link";
+import { orderPublicState } from "@/lib/orders/online";
 import { alternatesFor } from "@/lib/site";
 
 export async function generateMetadata({
@@ -74,11 +75,20 @@ export default async function ThankYouPage({
 
   // the signed token from checkout proves this visitor placed the order; it opens the live order page
   const token = typeof sp.t === "string" ? sp.t : "";
-  const orderUrl = token && readOrderToken(token) ? `/o/${token}` : null;
+  const orderId = token ? readOrderToken(token) : null;
+  const orderUrl = orderId ? `/o/${token}` : null;
 
-  // website orders are cash on delivery for now: confirmed the moment they are placed
-  const isCash = reference !== "";
-  const confirmed = true;
+  // A cash order is confirmed the moment it's placed — there's no payment to
+  // wait for. A PayPal/Bit order only reaches this page via its own
+  // /api/checkout/*/return route AFTER settleOnlinePayment has already run
+  // (owner decision 2026-10-31, Part 7), so `state.paid` is almost always
+  // true by the time this loads; the false branch exists for the rare race
+  // where the redirect outran the write, and simply asks the visitor to wait.
+  // A reference with no resolvable order (a stale or malformed link) gets
+  // the same honest "confirming" copy rather than a guess.
+  const state = orderId ? await orderPublicState(orderId) : null;
+  const isCash = state?.method === "cod";
+  const confirmed = isCash || (state?.paid ?? false);
 
   return (
     <Wrap>
