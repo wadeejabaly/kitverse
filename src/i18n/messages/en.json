@@ -76,7 +76,7 @@
         "body": "We sell replicas, and we say so. Same design, same badge placement, honest photographs of the shirt you receive."
       },
       "two": {
-        "title": "7 to 14 days to your door",
+        "title": "10 to 20 working days to your door",
         "body": "The courier calls you a day before delivery. No dates we cannot keep."
       },
       "three": {
@@ -201,7 +201,7 @@
       },
       "delivery": {
         "title": "Delivery and shipping",
-        "body": "We currently ship within Israel only, at a single flat delivery rate shown at checkout.\n\nExpected delivery is 7 to 14 days from order confirmation, with a tracking number emailed to you once the order ships. Shirts printed with a name and number need two extra days of preparation before dispatch."
+        "body": "We currently ship within Israel only, at a single flat delivery rate shown at checkout.\n\nExpected delivery is 10 to 20 working days from order confirmation, with a tracking number emailed to you once the order ships. Shirts printed with a name and number need two extra days of preparation before dispatch."
       },
       "cancellation": {
         "title": "Cancellation and returns",
@@ -285,9 +285,9 @@
     "viewCart": "View cart",
     "was": "Was",
     "accordionShipping": "Shipping",
-    "accordionShippingBody": "Shirts ship from our supplier and take 7 to 14 days to arrive, tracked door to door. Printed shirts add two days before dispatch.",
+    "accordionShippingBody": "Shirts ship from our supplier and take 10 to 20 working days to arrive, tracked door to door. Printed shirts add two days before dispatch.",
     "accordionReturns": "Returns",
-    "accordionReturnsBody": "Fourteen days from delivery on unworn shirts with tags attached. Printed shirts can only be returned if the print is wrong or the shirt is faulty.",
+    "accordionReturnsBody": "Returns are for defective items only — we don't offer sizing returns, exchanges, or change-of-mind returns. If your shirt arrives with a defect, message us with photos of the problem.",
     "accordionSizing": "Sizing",
     "accordionSizingBody": "Sizing runs about one size smaller than European. Between sizes, take the larger one. Player version is cut slimmer than Fan.",
     "accordionSizingLink": "Full measurements",
@@ -328,7 +328,7 @@
     "shippingTbd": "Calculated by region at checkout",
     "shippingNote": "Israel only for now.",
     "total": "Total",
-    "deliveryNote": "Delivery is 7 to 14 days. Printed shirts add two days.",
+    "deliveryNote": "Delivery takes 10 to 20 working days. Printed shirts add two days.",
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
     "unavailable": "This shirt is no longer available and was removed from your cart.",
@@ -363,17 +363,26 @@
   "shippingPage": {
     "eyebrow": "Shipping and returns",
     "title": "How delivery works",
-    "metaDescription": "KitVerse shipping and returns: 7 to 14 day delivery, 14-day returns, and how customs are handled.",
+    "metaDescription": "KitVerse shipping and returns: 10 to 20 working day delivery, returns for defective items only, and how customs are handled.",
     "timingTitle": "Timing",
-    "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 7 to 14 days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
+    "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 10 to 20 working days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
     "rateTitle": "Rate and area",
     "rateBody": "We deliver within Israel only for now, and the rate depends on your city. Type your city at checkout and the price shows immediately. Prices are in shekels and include VAT.",
     "tierNorth": "North (through Kfar Qara)",
     "tierRest": "Everywhere else (West Bank included)",
     "trackingTitle": "Delivery day",
     "trackingBody": "The courier calls you a day before delivery. Want an update on your order? Message us on Instagram and we will tell you exactly where it is.",
-    "returnsTitle": "Returns",
-    "returnsBody": "Fourteen days from delivery, on unworn shirts with tags still attached. Printed shirts cannot be returned for a change of mind — only if the print is wrong or the shirt is faulty. Refunds are issued within 5 business days of the return reaching us. If an item arrives damaged, send photos within 48 hours.",
+    "returnsTitle": "Returns and exchange policy",
+    "returnsIntro": "We work to deliver the best possible quality, so please make sure you've picked the right size before placing your order.",
+    "returnsSizeLabel": "Returns for sizing",
+    "returnsSizeBody": "We don't accept returns because the wrong size was chosen.",
+    "returnsExchangeLabel": "Size exchanges",
+    "returnsExchangeBody": "We don't offer a size exchange service.",
+    "returnsChangeOfMindLabel": "Change of mind",
+    "returnsChangeOfMindBody": "We don't accept returns simply because you've changed your mind after placing an order.",
+    "returnsDefectiveLabel": "Defective products",
+    "returnsDefectiveBody": "If your order arrives with a defect, please contact us with clear photos showing the problem so we can review it and work out the right fix.",
+    "returnsClosing": "We recommend checking the size guide carefully before ordering, to avoid any sizing issues.",
     "customsTitle": "Customs",
     "customsBody": "Orders delivered outside Israel may attract import duty on arrival. That charge is set by the destination country, not by us, and is not included in the price shown here."
   },
@@ -382,11 +391,12 @@
     "title": "Shirts, described honestly",
     "metaDescription": "What KitVerse sells: replica football shirts for clubs and national teams, in Fan and Player versions, with honest photographs and honest delivery dates.",
     "body1": "KitVerse sells football shirts for clubs from the big five leagues and for national teams, in two versions: Fan and Player. Sizes run from S to 4XL, and any shirt can be printed with a name and number.",
-    "body2": "These are replicas, not licensed merchandise, and we would rather say that on the front page than leave you to work it out. The design, the badge placement and the fabric are made to match the original closely; the shirt is not sold by the club. Every product photograph on this site is of the actual shirt we ship.",
-    "body3": "Prices are in shekels and include VAT. Delivery is 7 to 14 days, inside Israel for now.",
+    "productsTitle": "About the products",
+    "body2": "The shirts on our site are replicas, not official original shirts. We work to keep the design and details as close as possible to the authentic version, and our product photographs closely represent the shirt you'll actually receive.",
+    "body3": "Prices are in shekels and include VAT. Delivery takes 10 to 20 working days, inside Israel for now.",
     "contactTitle": "Contact",
     "contactBody": "Questions about an order, a size, or a return — write to us and we reply within two business days.",
-    "email": "hello@kitverse.co.il"
+    "email": "kitversejerseys@gmail.com"
   },
   "checkout": {
     "eyebrow": "Checkout",
@@ -435,7 +445,7 @@
     "payCodIntro": "Or pay cash on delivery",
     "payCod": "Send order",
     "payCodPlacing": "Placing your order…",
-    "payCashNote": "Pay the courier in cash when your order arrives, in 7 to 14 days. No deposit, nothing charged now.",
+    "payCashNote": "Pay the courier in cash when your order arrives, in 10 to 20 working days. No deposit, nothing charged now.",
     "giftBoxLegend": "Gift box",
     "giftBoxHint": "A gift box for your shirts — one box fits more than one shirt. ₪{price} each.",
     "giftBoxNone": "No gift box",
@@ -455,7 +465,7 @@
     "intro": "Payment received, and we have started getting your order ready.",
     "metaDescription": "Your KitVerse order confirmation.",
     "referenceLabel": "Order reference",
-    "delivery": "Delivery is 7 to 14 days. Shirts printed with a name and number add two days to dispatch.",
+    "delivery": "Delivery takes 10 to 20 working days. Shirts printed with a name and number add two days to dispatch.",
     "emailNote": "The courier calls you a day before delivery. If anything in the address is wrong, message us quickly and we will fix it.",
     "keepShopping": "Keep shopping",
     "confirmingTitle": "We are confirming your payment",

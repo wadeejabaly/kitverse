@@ -66,8 +66,31 @@ export default async function ShippingPage({
         <ProseHeading>{t("trackingTitle")}</ProseHeading>
         <ProseParagraph>{t("trackingBody")}</ProseParagraph>
 
+        {/* Owner policy correction 2026-10-31 (Part 6): the old copy allowed
+            a 14-day no-reason return on unworn shirts. The owner's actual
+            policy is narrower - no returns or exchanges for size or a
+            change of mind, defective items only - laid out here as its own
+            labelled point per the owner's wording rather than one runon
+            paragraph, so each rule reads as a rule. */}
         <ProseHeading>{t("returnsTitle")}</ProseHeading>
-        <ProseParagraph>{t("returnsBody")}</ProseParagraph>
+        <ProseParagraph>{t("returnsIntro")}</ProseParagraph>
+        <ProseParagraph>
+          <strong className="text-ink">{t("returnsSizeLabel")}: </strong>
+          {t("returnsSizeBody")}
+        </ProseParagraph>
+        <ProseParagraph>
+          <strong className="text-ink">{t("returnsExchangeLabel")}: </strong>
+          {t("returnsExchangeBody")}
+        </ProseParagraph>
+        <ProseParagraph>
+          <strong className="text-ink">{t("returnsChangeOfMindLabel")}: </strong>
+          {t("returnsChangeOfMindBody")}
+        </ProseParagraph>
+        <ProseParagraph>
+          <strong className="text-ink">{t("returnsDefectiveLabel")}: </strong>
+          {t("returnsDefectiveBody")}
+        </ProseParagraph>
+        <ProseParagraph>{t("returnsClosing")}</ProseParagraph>
 
         <ProseHeading>{t("customsTitle")}</ProseHeading>
         <ProseParagraph>{t("customsBody")}</ProseParagraph>

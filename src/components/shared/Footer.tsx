@@ -36,7 +36,18 @@ export async function Footer() {
             Decoration, and marked as such: aria-hidden, not selectable, and
             below text contrast on purpose. There is nothing here to read that
             the badge below does not already say. */}
-        <p aria-hidden className="ghost-wordmark -mb-2 select-none">
+        {/* Owner report 2026-10-31 (Part 5.1 - "Help links aren't clickable"):
+            this decorative watermark was aria-hidden and select-none, but not
+            pointer-events-none. At its huge size (up to 13rem) with a tight
+            0.82 line-height, the glyph ink overflows its own CSS line box -
+            the rendering engine's hit-test region follows that painted ink,
+            not getBoundingClientRect(), so a click on the FIRST row of each
+            footer column (closest below the wordmark - Shipping & Returns,
+            Premier League, Privacy Policy) was silently swallowed by this
+            label instead of reaching the link under it, even though nothing
+            was visibly covering it. Decorative text that isn't meant to be
+            interacted with should never be able to intercept a click. */}
+        <p aria-hidden className="ghost-wordmark pointer-events-none -mb-2 select-none">
           KitVerse
         </p>
 

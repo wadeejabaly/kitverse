@@ -43,6 +43,11 @@ export default async function AboutPage({
       <PageLede eyebrow={t("eyebrow")} title={t("title")} />
       <Prose>
         <ProseParagraph>{t("body1")}</ProseParagraph>
+
+        {/* Owner correction 2026-10-31 (Part 4.3): replaces the old
+            "these are 1:1 replicas, not licensed merchandise" paragraph with
+            the owner's own new wording — same transparency, different voice. */}
+        <ProseHeading>{t("productsTitle")}</ProseHeading>
         <ProseParagraph>{t("body2")}</ProseParagraph>
         <ProseParagraph>{t("body3")}</ProseParagraph>
 
