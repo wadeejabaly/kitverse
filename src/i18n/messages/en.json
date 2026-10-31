@@ -152,6 +152,7 @@
     "settingsTitle": "Cookie settings"
   },
   "privacy": {
+    "eyebrow": "Legal",
     "title": "Privacy policy",
     "updated": "Last updated: 1 September 2026",
     "intro": "This page explains, in plain language, what information we collect when you buy from KitVerse, why we collect it, who processes it, and how long we keep it. We collect the minimum: only what the purchase and the delivery actually need.",
@@ -183,6 +184,7 @@
     }
   },
   "terms": {
+    "eyebrow": "Legal",
     "title": "Terms of use",
     "updated": "Last updated: 1 September 2026",
     "intro": "These terms govern the use of the KitVerse website and any purchase made through it. By buying from the site you confirm that you have read and accepted them.",
