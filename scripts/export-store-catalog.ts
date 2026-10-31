@@ -37,15 +37,21 @@ async function main() {
   }
   const byHandle = new Map(rows.map((r) => [r.handle, r]));
   const checked = (r?: Row) => (r && (r.photo_status === "good" || r.photo_status === "owner_upload") && r.primary_image_url) || null;
+  // an owner upload from admin/photos is a deliberate, just-made choice - it always wins, even over a
+  // committed "real" shot below (owner report 2026-11-02: "the pictures in change a photo in admin
+  // doesnt match the pictures in the website" - a real file on disk was silently out-ranking a fresh
+  // admin upload, so replacing a photo there never actually changed what the site showed).
+  const ownerUpload = (r?: Row) => (r && r.photo_status === "owner_upload" && r.primary_image_url) || null;
   // real photos committed in public/products/ (owner/partner shots, e.g. Real Madrid front/back) beat supplier photos
   const real = (p: Product) => !p.image.includes("_placeholder") && existsSync(`public${p.image}`);
 
   const products: Product[] = selection.map(({ productHandle, ...s }) => {
     const r = byHandle.get(productHandle ?? s.handle);
+    const upload = ownerUpload(r);
     return {
       ...s,
       handle: r?.handle ?? s.handle, // the database handle, so checkout finds the product
-      image: real(s) ? s.image : checked(r) ?? "/products/_placeholder.jpg",
+      image: upload ?? (real(s) ? s.image : checked(r) ?? "/products/_placeholder.jpg"),
       ...(real(s) && s.images?.length ? { images: s.images } : {}),
       sourceHash: r?.supplier_cover ?? s.sourceHash,
       visible: true,
