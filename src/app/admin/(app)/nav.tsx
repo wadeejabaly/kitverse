@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell, Layers, Truck, Percent } from "lucide-react";
+import { LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell, Layers, Truck, Percent, BarChart3 } from "lucide-react";
 import { cx } from "../ui";
 
 const GROUPS = [
@@ -11,6 +11,7 @@ const GROUPS = [
     { href: "/admin/approvals", label: "Approvals", icon: ClipboardCheck },
     { href: "/admin/inbox", label: "Inbox", icon: MessagesSquare },
     { href: "/admin/orders", label: "Orders", icon: Package },
+    { href: "/admin/stats", label: "Stats", icon: BarChart3 },
   ],
   [
     { href: "/admin/media", label: "Posts", icon: Images },

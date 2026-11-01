@@ -13,6 +13,7 @@ import { Figure, Price } from "@/components/shared/Money";
 import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
 import { CityCombobox } from "@/components/checkout/CityCombobox";
 import type { TownOption } from "@/data/localities";
+import { trackCheckoutStart } from "@/lib/analytics/track";
 
 /**
  * Checkout.
@@ -166,6 +167,13 @@ export function CheckoutView({
   const [discountInput, setDiscountInput] = useState("");
   const [appliedDiscounts, setAppliedDiscounts] = useState<AppliedDiscount[]>([]);
   const [discountCheck, setDiscountCheck] = useState<DiscountCheck>({ status: "idle" });
+
+  // Admin stats "checkout starts" (owner request 2026-11-03): reaching this page, once per
+  // mount - not once per keystroke/re-render, which is why this is its own effect with an
+  // empty dep array rather than folded into anything above.
+  useEffect(() => {
+    trackCheckoutStart();
+  }, []);
 
   /**
    * Owner decision 2026-10-25: no region picker — the shopper just types

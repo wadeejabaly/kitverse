@@ -9,6 +9,7 @@ import { ConsentProvider } from "@/components/providers/ConsentProvider";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { ConsentBanner } from "@/components/shared/ConsentBanner";
+import { PageViewTracker } from "@/components/providers/PageViewTracker";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
 import "../globals.css";
@@ -100,6 +101,10 @@ export default async function LocaleLayout({
                   and starts smooth scroll on desktop pointer devices only —
                   phones and reduced-motion readers never fetch that chunk. */}
               <MotionProvider />
+              {/* Renders nothing - fires one page_view event per route change for the admin
+                  stats page (owner request 2026-11-03). First-party and session-scoped, see
+                  its own docstring for why this doesn't need the consent banner's gate. */}
+              <PageViewTracker locale={locale} />
               <Header />
               <main className="flex grow flex-col">{children}</main>
               <Footer />
