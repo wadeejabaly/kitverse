@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { RotateCw, Upload, X, ZoomIn } from "lucide-react";
+import type { Sleeve } from "@/data/types";
 import { uploadProductPhoto } from "../../photos-actions";
 import { button, cx } from "../../ui";
 
@@ -89,7 +90,7 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
   );
 }
 
-export function CropEditor({ img, productId, onClose }: { img: HTMLImageElement; productId: string; onClose: () => void }) {
+export function CropEditor({ img, productId, sleeve = "short", onClose }: { img: HTMLImageElement; productId: string; sleeve?: Sleeve; onClose: () => void }) {
   const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0);
   const [zoom, setZoom] = useState(1); // 1 = fills the frame exactly, up to 3 = zoomed/cropped in tighter
   const [off, setOff] = useState({ x: 0, y: 0 });
@@ -138,6 +139,7 @@ export function CropEditor({ img, productId, onClose }: { img: HTMLImageElement;
         out.toBlob((b) => (b ? resolve(b) : reject(new Error("export failed"))), "image/jpeg", 0.92));
       const fd = new FormData();
       fd.set("productId", productId);
+      fd.set("sleeve", sleeve);
       fd.set("photo", new File([blob], "photo.jpg", { type: "image/jpeg" }));
       await uploadProductPhoto(fd);
       onClose();

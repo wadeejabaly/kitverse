@@ -6,6 +6,7 @@ import sharp from "sharp";
 import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { env } from "@/lib/env";
+import type { Sleeve } from "@/data/types";
 
 /** Deploy hook helper shared by every action below that changes what the website shows. */
 async function kickDeploy() {
@@ -25,10 +26,24 @@ function mediaStoragePath(url: string): string | null {
   return i === -1 ? null : url.slice(i + marker.length);
 }
 
+/**
+ * The storefront gallery is two separate sets, not one list (ProductGallery.tsx swaps its whole
+ * thumbnail row to imagesLongSleeve once the shopper picks "Long sleeve") - "front of the group" is
+ * whichever photo in that sleeve has the lowest `sort`, same idea as primary_image_url but scoped to
+ * one sleeve instead of the whole product. Promoting a photo never has to touch every other row's
+ * sort - one row below the current lowest always sorts first.
+ */
+async function frontSort(productId: string, sleeve: Sleeve): Promise<number> {
+  const lowest = (await db().from("product_images").select("sort").eq("product_id", productId).eq("sleeve", sleeve)
+    .order("sort", { ascending: true }).limit(1)).data as { sort: number }[] | null;
+  return (lowest?.[0]?.sort ?? 0) - 1;
+}
+
 /** Owner uploads a clean photo for a shirt (used instead of supplier photos from now on). */
 export async function uploadProductPhoto(form: FormData) {
   const staff = await requireStaff();
   const productId = z.string().uuid().parse(form.get("productId"));
+  const sleeve = z.enum(["short", "long"]).default("short").parse(form.get("sleeve") ?? "short");
   const file = form.get("photo");
   if (!(file instanceof File) || !file.size) return;
   if (file.size > 15 * 1024 * 1024) throw new Error("Photo is larger than 15 MB");
@@ -39,8 +54,11 @@ export async function uploadProductPhoto(form: FormData) {
   const up = await db().storage.from("media").upload(path, buf, { contentType: "image/jpeg" });
   if (up.error) throw new Error(up.error.message);
   const url = db().storage.from("media").getPublicUrl(path).data.publicUrl;
-  must(await db().from("product_images").insert({ product_id: p.id, url, status: "good", source: "owner", role: "front", checked_at: new Date().toISOString() }).select("id"), "image row");
-  must(await db().from("products").update({ primary_image_url: url, photo_status: "owner_upload" }).eq("id", p.id).select("id"), "set photo");
+  const sort = await frontSort(p.id, sleeve);
+  must(await db().from("product_images").insert({ product_id: p.id, url, sleeve, sort, status: "good", source: "owner", role: "front", checked_at: new Date().toISOString() }).select("id"), "image row");
+  // primary_image_url/photo_status are the short-sleeve set's own "front" - a long-sleeve upload has
+  // no counterpart there, it's only ever read from the long-sleeve set's gallery order above.
+  if (sleeve === "short") must(await db().from("products").update({ primary_image_url: url, photo_status: "owner_upload" }).eq("id", p.id).select("id"), "set photo");
   await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_upload", entity: "product", entity_id: p.id });
   // the website catalog is built at deploy time: rebuild so the photo goes live (~2 min)
   const hook = env().VERCEL_DEPLOY_HOOK_URL;
@@ -68,10 +86,10 @@ export async function listProductPhotos(productId: string) {
   const id = z.string().uuid().parse(productId);
   const product = must(await db().from("products").select("primary_image_url").eq("id", id).single(), "product") as { primary_image_url: string | null };
   const rows = must(
-    await db().from("product_images").select("id,url,status,source,role,created_at").eq("product_id", id).order("created_at", { ascending: false }),
+    await db().from("product_images").select("id,url,status,source,role,sleeve,sort,created_at").eq("product_id", id).order("sleeve").order("sort"),
     "product photos",
-  ) as { id: string; url: string; status: string; source: string; role: string; created_at: string }[];
-  return rows.map((r) => ({ ...r, isPrimary: r.url === product.primary_image_url }));
+  ) as { id: string; url: string; status: string; source: string; role: string; sleeve: Sleeve; sort: number; created_at: string }[];
+  return rows.map((r) => ({ ...r, isPrimary: r.sleeve === "short" && r.url === product.primary_image_url }));
 }
 
 /**
@@ -88,9 +106,13 @@ export async function setPrimaryPhoto(form: FormData) {
   const staff = await requireStaff();
   const productId = z.string().uuid().parse(form.get("productId"));
   const imageId = z.string().uuid().parse(form.get("imageId"));
-  const image = must(await db().from("product_images").select("url,product_id").eq("id", imageId).single(), "photo") as { url: string; product_id: string };
+  const image = must(await db().from("product_images").select("url,product_id,sleeve").eq("id", imageId).single(), "photo") as { url: string; product_id: string; sleeve: Sleeve };
   if (image.product_id !== productId) throw new Error("photo does not belong to this product");
-  must(await db().from("products").update({ primary_image_url: image.url, photo_status: "owner_upload" }).eq("id", productId).select("id"), "set primary photo");
+  const sort = await frontSort(productId, image.sleeve);
+  must(await db().from("product_images").update({ sort }).eq("id", imageId).select("id"), "reorder photo");
+  // only the short-sleeve set has a counterpart outside product_images (primary_image_url) - the
+  // long-sleeve set's "front" is purely gallery order, same as every other sleeve-scoped photo above.
+  if (image.sleeve === "short") must(await db().from("products").update({ primary_image_url: image.url, photo_status: "owner_upload" }).eq("id", productId).select("id"), "set primary photo");
   await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_set_primary", entity: "product", entity_id: productId });
   await kickDeploy();
   revalidatePath("/admin/photos");
@@ -118,10 +140,12 @@ export async function deleteProductPhoto(form: FormData) {
   if (del.error) throw new Error(`delete photo: ${del.error.message}`);
 
   const product = must(await db().from("products").select("primary_image_url").eq("id", productId).single(), "product") as { primary_image_url: string | null };
+  // primary_image_url only ever reflects the short-sleeve set - a removed long-sleeve photo has
+  // nothing of the product table's to fix, the gallery just shows one fewer long-sleeve photo.
   if (product.primary_image_url === image.url) {
-    const remaining = (await db().from("product_images").select("url,source").eq("product_id", productId).eq("status", "good")
-      .order("created_at", { ascending: false }).limit(20)).data as { url: string; source: string }[] | null;
-    // prefer another owner-picked photo over a supplier/cleaned one, both newest-first
+    const remaining = (await db().from("product_images").select("url,source").eq("product_id", productId).eq("sleeve", "short").eq("status", "good")
+      .order("sort", { ascending: true }).limit(20)).data as { url: string; source: string }[] | null;
+    // prefer another owner-picked photo over a supplier/cleaned one, both front-of-group-first
     const next = remaining?.find((r) => r.source === "owner") ?? remaining?.[0] ?? null;
     await db().from("products").update(
       next ? { primary_image_url: next.url, photo_status: next.source === "owner" ? "owner_upload" : "good" } : { primary_image_url: null, photo_status: "none_clean" },

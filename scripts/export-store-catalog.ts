@@ -20,6 +20,8 @@ type Row = {
   team: { id: string; name_en: string; name_ar: string | null; type: "club" | "national"; league_id: string | null };
 };
 
+type ImageRow = { product_id: string; url: string; sleeve: "short" | "long"; sort: number; status: string };
+
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) { console.log("store:export skipped (no database settings) - using the committed catalog"); return; }
@@ -37,6 +39,27 @@ async function main() {
     rows.push(...(data as unknown as Row[]));
   }
   const byHandle = new Map(rows.map((r) => [r.handle, r]));
+
+  // Galleries (owner report 2026-11-02: "there are photos in the website that dont appear in the
+  // admin") used to live ONLY as committed public/products/ files + the images/imagesLongSleeve
+  // arrays below, hand-edited in this JSON - invisible to admin's photo manager, which only ever read
+  // product_images. Photos migrated into product_images (scripts/migrate-real-photos.ts) now win here
+  // instead, grouped by the sleeve set the storefront gallery actually swaps between (ProductGallery.tsx);
+  // a product not yet migrated (shortRows empty) keeps the old JSON-sourced gallery untouched below.
+  const imageRows: ImageRow[] = [];
+  const productIds = rows.map((r) => r.id);
+  for (let i = 0; i < productIds.length; i += 200) {
+    const { data, error } = await db.from("product_images").select("product_id,url,sleeve,sort,status")
+      .in("product_id", productIds.slice(i, i + 200)).neq("status", "bad").order("sleeve").order("sort");
+    if (error) throw error;
+    imageRows.push(...(data as unknown as ImageRow[]));
+  }
+  const imagesByProduct = new Map<string, ImageRow[]>();
+  for (const row of imageRows) {
+    const existing = imagesByProduct.get(row.product_id);
+    if (existing) existing.push(row); else imagesByProduct.set(row.product_id, [row]);
+  }
+
   const checked = (r?: Row) => (r && (r.photo_status === "good" || r.photo_status === "owner_upload") && r.primary_image_url) || null;
   // an owner upload from admin/photos is a deliberate, just-made choice - it always wins, even over a
   // committed "real" shot below (owner report 2026-11-02: "the pictures in change a photo in admin
@@ -54,12 +77,24 @@ async function main() {
     // hand-authored name, same as an owner photo upload already wins above. Falls back to the
     // existing hand-authored Arabic/Hebrew name when the owner only corrected the English one.
     const renamed = r?.title_override;
+    const rows = (r && imagesByProduct.get(r.id)) ?? [];
+    const shortRows = rows.filter((row) => row.sleeve === "short");
+    const longRows = rows.filter((row) => row.sleeve === "long");
+    // shortRows[0] is the same photo `image` below already resolves to once migrated (migration sets
+    // primary_image_url + photo_status "owner_upload" to match) - shortRows.length > 0 is simply
+    // "this product's gallery has been migrated into the database", not a fact about this one photo.
+    const migrated = shortRows.length > 0;
     return {
       ...s,
       handle: r?.handle ?? s.handle, // the database handle, so checkout finds the product
       ...(renamed ? { title: r.title_en, titleAr: r.title_ar ?? s.titleAr } : {}),
       image: upload ?? (real(s) ? s.image : checked(r) ?? "/products/_placeholder.jpg"),
-      ...(real(s) && s.images?.length ? { images: s.images } : {}),
+      ...(migrated
+        ? (shortRows.length > 1 ? { images: shortRows.slice(1).map((row) => row.url) } : { images: undefined })
+        : (real(s) && s.images?.length ? { images: s.images } : {})),
+      ...(migrated
+        ? (longRows.length ? { imagesLongSleeve: longRows.map((row) => row.url) } : { imagesLongSleeve: undefined })
+        : (real(s) && s.imagesLongSleeve?.length ? { imagesLongSleeve: s.imagesLongSleeve } : {})),
       sourceHash: r?.supplier_cover ?? s.sourceHash,
       visible: true,
     };

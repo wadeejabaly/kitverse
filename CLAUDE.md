@@ -44,6 +44,19 @@ Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/dec
 - Discount codes (owner feature 2026-10-26): admin Discounts creates/pauses/deletes codes (percent or fixed ₪ off, optional min order / date range / max uses) in the `discount_codes` table. A shopper can type more than one at checkout, but a code only combines with others when its `stackable` column is set (checked in admin as "Can be combined with other codes") - default false, so a code works alone unless the owner opts it in; `codesCanCombine()` in `src/lib/discounts.ts` is the one rule both the checkout UI and the server enforce. `src/app/api/checkout/discount/check` previews a code; `src/lib/orders/web.ts` re-validates every code, the stacking rule, and the minimum order, then applies each as its own `adjustments` row (`kind: 'discount_code'`) when the order is placed - no owner approval needed, a code is its own authority.
 
 ## Photos
+`product_images.sleeve` ('short'/'long', owner decision 2026-11-02, Part 8): the storefront gallery is
+two separate sets, not one list - picking "Long sleeve" on a product page swaps the whole thumbnail
+row to that shirt's long-sleeve photos (`ProductGallery.tsx`/`ProductSleeveContext.tsx`), so every
+photo in product_images belongs to one set or the other. "Front of a sleeve group" = lowest `sort`
+within that (product, sleeve) pair; admin's "All photos" (`src/app/admin/(app)/photos/photo-manager.tsx`)
+shows and manages the two groups separately, and `primary_image_url`/`photo_status` only ever track the
+short-sleeve group's front photo. `scripts/export-store-catalog.ts` builds `images`/`imagesLongSleeve`
+from product_images grouped this way, falling back to the old JSON-only path (below) for any product
+not yet migrated. `scripts/migrate-real-photos.ts` is the one-off, idempotent, re-runnable migration
+that brought the catalog's ~700 committed "real" photos into the database this way (owner report
+2026-11-02: "there are photos in the website that dont appear in the admin" - those photos lived only
+as files + catalog/store-selection.json's `images`/`imagesLongSleeve` fields, invisible to admin).
+
 Customers only ever see photos that passed `src/lib/catalog/photo-qa.ts`:
 - no added text, labels or watermarks;
 - not kids or baby items for adult requests;

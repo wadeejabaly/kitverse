@@ -20,6 +20,7 @@
     "photos:screen": "tsx --conditions=react-server scripts/screen-photos.ts",
     "photos:verify-teams": "tsx --conditions=react-server scripts/verify-photo-teams.ts",
     "store:export": "tsx scripts/export-store-catalog.ts",
+    "migrate:real-photos": "tsx --conditions=react-server scripts/migrate-real-photos.ts",
     "prebuild": "tsx scripts/export-store-catalog.ts"
   },
   "dependencies": {
