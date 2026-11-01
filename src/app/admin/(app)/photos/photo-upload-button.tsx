@@ -48,6 +48,11 @@ function rotated(img: HTMLImageElement, deg: 0 | 90 | 180 | 270) {
 export function PhotoUploadButton({ productId, label, variant }: { productId: string; label: string; variant: "row" | "card" }) {
   const [editing, setEditing] = useState<HTMLImageElement | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  // Owner report 2026-11-03: this quick Upload/Replace button always saved as the short-sleeve photo
+  // with no way to say otherwise - the only place that could target long-sleeve was the full "All
+  // photos" manager. Defaults to short (what this button always did before), but the owner can flip
+  // it to long right here rather than having to go find a shirt in "All photos" just to add one.
+  const [sleeve, setSleeve] = useState<Sleeve>("short");
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,6 +67,7 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
       // A format this browser can't preview (e.g. HEIC off Apple devices) - upload as-is rather than block the owner.
       const fd = new FormData();
       fd.set("productId", productId);
+      fd.set("sleeve", sleeve);
       fd.set("photo", file);
       try {
         await uploadProductPhoto(fd);
@@ -77,15 +83,41 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
     ? "inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-line-2 bg-surface px-3 py-2 text-sm hover:bg-raised"
     : "flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-line-2 bg-surface px-2 py-1.5 text-xs hover:bg-raised";
   const iconClass = variant === "row" ? "h-4 w-4" : "h-3.5 w-3.5";
+  const toggleBtn = (active: boolean) =>
+    cx("flex-1 rounded-md px-2 py-1 text-[11px] font-medium", active ? "bg-ink text-paper" : "text-muted hover:text-ink");
+
+  const sleeveToggle = (
+    <div className="inline-flex rounded-lg border border-line-2 bg-paper p-0.5" role="radiogroup" aria-label="Which sleeve length this photo is for">
+      <button type="button" role="radio" aria-checked={sleeve === "short"} onClick={() => setSleeve("short")} className={toggleBtn(sleeve === "short")}>
+        Short
+      </button>
+      <button type="button" role="radio" aria-checked={sleeve === "long"} onClick={() => setSleeve("long")} className={toggleBtn(sleeve === "long")}>
+        Long
+      </button>
+    </div>
+  );
 
   return (
     <>
-      <label className={triggerClass}>
-        <Upload className={iconClass} /> {label}
-        <input ref={inputRef} type="file" accept="image/*" className="sr-only" onChange={onPick} />
-      </label>
+      {variant === "row" ? (
+        <div className="inline-flex items-center gap-2">
+          {sleeveToggle}
+          <label className={triggerClass}>
+            <Upload className={iconClass} /> {label}
+            <input ref={inputRef} type="file" accept="image/*" className="sr-only" onChange={onPick} />
+          </label>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1.5">
+          {sleeveToggle}
+          <label className={triggerClass}>
+            <Upload className={iconClass} /> {label}
+            <input ref={inputRef} type="file" accept="image/*" className="sr-only" onChange={onPick} />
+          </label>
+        </div>
+      )}
       {err ? <p className="mt-1 text-xs text-red">{err}</p> : null}
-      {editing ? <CropEditor img={editing} productId={productId} onClose={() => setEditing(null)} /> : null}
+      {editing ? <CropEditor img={editing} productId={productId} sleeve={sleeve} onClose={() => setEditing(null)} /> : null}
     </>
   );
 }
