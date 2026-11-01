@@ -98,21 +98,6 @@ export async function upload(path: string, buf: Buffer): Promise<string> {
   return db().storage.from("media").getPublicUrl(path).data.publicUrl;
 }
 
-/** Crop to the shirt (plus a margin) so labels in the corners fall outside, on a clean square canvas. */
-async function cropToShirt(buf: Buffer, box: NonNullable<Assessment["shirt_box"]>): Promise<Buffer> {
-  const img = sharp(buf);
-  const { width = 0, height = 0 } = await img.metadata();
-  const m = 0.04;
-  const left = Math.max(0, Math.floor((box.x - m) * width));
-  const top = Math.max(0, Math.floor((box.y - m) * height));
-  const w = Math.min(width - left, Math.ceil((box.w + 2 * m) * width));
-  const h = Math.min(height - top, Math.ceil((box.h + 2 * m) * height));
-  const side = Math.max(w, h);
-  return sharp(buf).extract({ left, top, width: w, height: h })
-    .resize({ width: side, height: side, fit: "contain", background: { r: 255, g: 255, b: 255 } })
-    .jpeg({ quality: 88 }).toBuffer();
-}
-
 /**
  * Supplier photos often show the shirt next to its shorts. Fallback when an album has no shirt-only
  * photo: crop to the shirt (generous margin); the result is checked again before it is used.
@@ -128,19 +113,6 @@ export async function frameShirt(buf: Buffer, box: NonNullable<Assessment["shirt
   return sharp(buf).extract({ left, top, width: w, height: h })
     .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
     .jpeg({ quality: 88 }).toBuffer();
-}
-
-/** Blur away added labels/watermarks (box + margin), leaving the shirt untouched elsewhere. */
-async function eraseText(buf: Buffer, boxes: Assessment["text_boxes"]): Promise<Buffer> {
-  const { width = 0, height = 0 } = await sharp(buf).metadata();
-  const patches = await Promise.all(boxes.map(async (b) => {
-    const m = 0.035;
-    const left = Math.max(0, Math.floor((b.x - m) * width)), top = Math.max(0, Math.floor((b.y - m) * height));
-    const w = Math.max(4, Math.min(width - left, Math.ceil((b.w + 2 * m) * width))), h = Math.max(4, Math.min(height - top, Math.ceil((b.h + 2 * m) * height)));
-    const input = await sharp(buf).extract({ left, top, width: w, height: h }).resize(Math.max(2, Math.round(w / 40)), Math.max(2, Math.round(h / 40))).resize(w, h).blur(20).toBuffer();
-    return { input, left, top };
-  }));
-  return sharp(buf).composite(patches).jpeg({ quality: 88 }).toBuffer();
 }
 
 type Box = { x: number; y: number; w: number; h: number };
@@ -171,13 +143,6 @@ export function planCut(shirt: Box, labels: Box[]): Box | null {
   return area(intersect(crop, shirt)) / area(shirt) >= 0.92 ? crop : null;
 }
 
-async function applyCut(buf: Buffer, c: Box): Promise<Buffer> {
-  const { width = 0, height = 0 } = await sharp(buf).metadata();
-  const left = Math.round(c.x * width), top = Math.round(c.y * height);
-  return sharp(buf).extract({ left, top, width: Math.min(width - left, Math.round(c.w * width)), height: Math.min(height - top, Math.round(c.h * height)) })
-    .jpeg({ quality: 90 }).toBuffer();
-}
-
 interface ProductRef { id: string; handle: string; primary_image_url: string | null; supplier_cover: string | null; photo_status?: string }
 
 export async function record(productId: string, url: string, status: "good" | "bad" | "cropped", a: Assessment | null, extra: { source: string; hash?: string; album?: string }) {
@@ -188,94 +153,24 @@ export async function record(productId: string, url: string, status: "good" | "b
 }
 
 /**
- * The product photo customers may see: an already-approved one, or the best clean candidate.
- * Adult requests only ever use adult albums (never kids/baby photos); kids photos are only used
- * when the customer asked for kids. Returns null rather than an ugly or wrong photo.
+ * The product photo customers may see: an already-approved one, or a previously-approved candidate
+ * still sitting in product_images. Never fetches anything new from the supplier (owner decision
+ * 2026-11-02, Part 9: "i dont want the pictures to be bas[ed] on supplier link ... i dont want his
+ * catalog or pictures anymore") - a product with nothing already approved simply has no photo until
+ * the owner uploads one in admin, same as any other product with no clean photo today.
  */
-export async function bestProductPhoto(p: ProductRef, opts: { maxCandidates?: number; audience?: PhotoAudience } = {}): Promise<string | null> {
+export async function bestProductPhoto(p: ProductRef, opts: { audience?: PhotoAudience } = {}): Promise<string | null> {
   const audience = opts.audience ?? "adult";
   const adult = audience === "adult";
   // 1) already decided (adult main photo is cached on the product)
   if (adult) {
-    if (p.photo_status === "owner_upload" && p.primary_image_url) return p.primary_image_url;
-    if (p.photo_status === "good" && p.primary_image_url) return p.primary_image_url;
-    if (p.photo_status === "none_clean") return null;
-  }
-
-  const expected = await describe(p.id);
-  const options = must(await db().from("product_options").select("audience,version,sleeve,supplier_album_ids").eq("product_id", p.id), "options") as { audience: string; version: string; sleeve: string; supplier_album_ids: string[] }[];
-  const albums = options
-    .filter((o) => (adult ? o.audience !== "kids" : o.audience === "kids"))
-    .sort((a, b) => (a.audience === "adult" ? 0 : 1) - (b.audience === "adult" ? 0 : 1) || (a.sleeve === "short" ? 0 : 1) - (b.sleeve === "short" ? 0 : 1))
-    .flatMap((o) => o.supplier_album_ids).slice(0, 3);
-
-  // 2) candidates: the old site's cleaned photo (adult only), then supplier photos from allowed albums
-  const candidates: { url?: string; hash?: string; album?: string; source: "cleaned" | "supplier" }[] = [];
-  if (adult && p.primary_image_url?.endsWith("/cleaned.jpg")) candidates.push({ url: p.primary_image_url, source: "cleaned" });
-  for (const album of albums) {
-    const hashes = await albumPhotoHashes(album, 6).catch(() => [] as string[]);
-    for (const h of hashes) if (!candidates.some((c) => c.hash === h)) candidates.push({ hash: h, album, source: "supplier" });
-  }
-  if (!candidates.length) return adult ? markNone(p) : null;
-
-  const seen = must(await db().from("product_images").select("url,status,quality,supplier_hash,album_id").eq("product_id", p.id), "seen") as { url: string; status: string; quality: Assessment | null; supplier_hash: string | null; album_id: string | null }[];
-  // a previously approved photo from an allowed album
-  const reuse = seen.find((s) => (s.status === "good" || s.status === "cropped") && s.quality && s.quality.other_garments !== undefined && isClean(s.quality, audience) && s.quality.front_view !== false
-    && (s.album_id ? albums.includes(s.album_id) : adult));
-  if (reuse) return choose(p, reuse.url, adult);
-
-  let croppable: { buf: Buffer; a: Assessment; hash?: string; album?: string } | null = null;
-  let withShorts: { buf: Buffer; a: Assessment; hash?: string; album?: string } | null = null;
-  let erasable: { buf: Buffer; a: Assessment; hash?: string; album?: string } | null = null;
-  const limit = opts.maxCandidates ?? 8;
-  for (const c of candidates.slice(0, limit)) {
-    const prior = seen.find((s) => (c.url && s.url === c.url) || (c.hash && s.supplier_hash === c.hash));
-    let url = prior?.url ?? c.url ?? null;
-    if (!url) {
-      const buf = await fetchBuffer(`https://photo.yupoo.com/jerseyxie/${c.hash}/big.jpg`, true);
-      if (!buf || buf.length < 5000) continue;
-      url = await upload(`products/${p.handle}/s-${c.hash}.jpg`, buf).catch(() => null);
-    }
-    if (!url) continue;
-    const a = prior?.quality && prior.quality.matches_expected !== null && prior.quality.matches_expected !== undefined && prior.quality.other_garments !== undefined ? prior.quality : await assessPhoto(url, expected);
-    if (!a) continue;
-    const ok = isClean(a, audience) && a.front_view;
-    await record(p.id, url, ok ? "good" : "bad", a, { source: c.source, hash: c.hash, album: c.album });
-    if (ok) return choose(p, url, adult);
-    const usable = a.shows_shirt && a.front_view && !a.blurry_or_dark && a.score >= 3 && !a.baby_bodysuit && (adult ? !a.kids_item : true) && a.matches_expected !== false;
-    if (usable && adult && a.other_garments && !withShorts && a.shirt_box && !a.overlay_text && !a.watermark) {
-      const buf = await fetchBuffer(url, false);
-      if (buf) withShorts = { buf, a, hash: c.hash, album: c.album };
-    }
-    if (usable && (!croppable || !erasable)) {
-      const buf = await fetchBuffer(url, false);
-      if (buf && !croppable && a.shirt_box && a.overlay_outside_shirt && !a.watermark) croppable = { buf, a, hash: c.hash, album: c.album };
-      else if (buf && !erasable && a.text_boxes.length && a.text_boxes.length <= 3) erasable = { buf, a, hash: c.hash, album: c.album };
-    }
-  }
-
-  const finish = async (label: string, src: { a: Assessment; hash?: string; album?: string }, out: Buffer) => {
-    const url = await upload(`products/${p.handle}/${label}-${src.hash ?? "x"}.jpg`, out);
-    const a = await assessPhoto(url, expected);
-    if (a && isClean(a, audience) && a.front_view) {
-      await record(p.id, url, "cropped", a, { source: "supplier", hash: src.hash, album: src.album });
-      return choose(p, url, adult);
-    }
+    if ((p.photo_status === "owner_upload" || p.photo_status === "good") && p.primary_image_url) return p.primary_image_url;
     return null;
-  };
-  // 3) only shirt + shorts photos: crop to the shirt (re-checked, so a cut-off sleeve fails)
-  if (withShorts) { const r = await finish("shirt", withShorts, await frameShirt(withShorts.buf, withShorts.a.shirt_box!)); if (r) return r; }
-  // 4) labels outside the shirt: crop to the shirt
-  if (croppable) { const r = await finish("crop", croppable, await cropToShirt(croppable.buf, croppable.a.shirt_box!)); if (r) return r; }
-  // 5) labels near an edge: cut that strip off
-  if (erasable?.a.shirt_box) {
-    const plan = planCut(erasable.a.shirt_box, erasable.a.text_boxes);
-    if (plan) { const r = await finish("cut", erasable, await applyCut(erasable.buf, plan)); if (r) return r; }
   }
-  // 6) otherwise blur the label away
-  if (erasable) { const r = await finish("clean", erasable, await eraseText(erasable.buf, erasable.a.text_boxes)); if (r) return r; }
-  // 7) nothing clean - no photo rather than an ugly or wrong one
-  return adult ? markNone(p) : null;
+  // 2) kids: whatever was already approved for this product, if anything
+  const seen = must(await db().from("product_images").select("url,status,quality").eq("product_id", p.id).eq("status", "good"), "seen") as { url: string; status: string; quality: Assessment | null }[];
+  const reuse = seen.find((s) => s.quality && isClean(s.quality, audience) && s.quality.front_view !== false);
+  return reuse?.url ?? null;
 }
 
 /** "Barcelona 2026/27 Home shirt" - what the photo must show (used to catch the supplier's mislabelled albums). */
@@ -285,16 +180,6 @@ async function describe(productId: string): Promise<string> {
   const kit = ["Special", "Unstated"].includes(r.kit) ? "" : ` ${r.kit.toLowerCase()} kit`;
   void kit;
   return `a ${r.team?.name_en ?? ""} ${r.team?.type === "national" ? "national team " : ""}football shirt`.replace(/\s+/g, " ");
-}
-
-async function markNone(p: ProductRef) {
-  await db().from("products").update({ photo_status: "none_clean", primary_image_url: null }).eq("id", p.id);
-  return null;
-}
-
-async function choose(p: ProductRef, url: string, cacheOnProduct: boolean) {
-  if (cacheOnProduct) await db().from("products").update({ primary_image_url: url, photo_status: "good" }).eq("id", p.id);
-  return url;
 }
 
 /** Clean extra photos (back, details) of a product for "send me more pictures". */

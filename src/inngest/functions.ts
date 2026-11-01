@@ -5,7 +5,6 @@ import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { notify } from "@/lib/notify";
 import { settings, type SpendLimits } from "@/lib/conversation/limits";
 import { syncInstagramMedia } from "@/lib/channels/media-sync";
-import { syncSupplierNewArrivals } from "@/lib/catalog/supplier-sync";
 
 /**
  * One bot turn per conversation burst: waits for the customer to stop typing (5s, max 20s),
@@ -112,10 +111,10 @@ export const mediaSync = inngest.createFunction(
   async ({ step }) => step.run("sync", () => syncInstagramMedia()),
 );
 
-/** Daily 04:00 Israel: add new supplier shirt albums to the catalog. */
-export const supplierSync = inngest.createFunction(
-  { id: "supplier-sync", triggers: [{ cron: "TZ=Asia/Jerusalem 0 4 * * *" }], concurrency: [{ limit: 1 }] },
-  async ({ step }) => step.run("sync", () => syncSupplierNewArrivals(3)),
-);
+// Daily supplier-catalog sync retired (owner decision 2026-11-02, Part 9: "i dont want his catalog
+// or pictures anymore" - from now on new products are only ever added by hand/on request, never
+// auto-discovered from jerseyxie.x.yupoo.com). src/lib/catalog/supplier-sync.ts is left in place,
+// just no longer scheduled - existing products and their supplier_album_ids (still used to order
+// stock, see src/lib/orders/admin.ts) are untouched.
 
-export const functions = [conversationTurn, quoteFollowup, approvalDecided, approvalReminder, spendWatch, mediaSync, supplierSync];
+export const functions = [conversationTurn, quoteFollowup, approvalDecided, approvalReminder, spendWatch, mediaSync];

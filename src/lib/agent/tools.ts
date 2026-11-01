@@ -3,7 +3,7 @@ import { z } from "zod";
 import type Anthropic from "@anthropic-ai/sdk";
 import { db, must } from "../db";
 import { searchCatalog, getProduct } from "../catalog/search";
-import { bestProductPhoto, cleanAlbumPhotos } from "../catalog/photo-qa";
+import { bestProductPhoto } from "../catalog/photo-qa";
 import { currentPriceList } from "../pricing/load";
 import {
   getOrCreateOpenOrder, openOrder, orderItems, addItem, updateItem, removeItem, setDeliveryTown, requote,
@@ -111,22 +111,6 @@ export const TOOLS = [
         no_clean_photo: noPhoto.length ? noPhoto : undefined,
         note: noPhoto.length ? "we have no good photo of these - describe them briefly instead and, if the customer needs to see it, say you'll send a photo soon (request_owner kind=other: 'needs a clean photo')" : undefined,
       };
-    },
-  }),
-
-  tool({
-    name: "send_more_photos",
-    description: "Queue up to 3 extra clean photos (back, details) of one product from the supplier album. Photos with labels/watermarks are filtered out automatically.",
-    schema: z.object({ product_id: z.string(), version: Version.nullish() }),
-    run: async (ctx, i) => {
-      const p = await getProduct(i.product_id);
-      if (!p) return { error: "unknown product" };
-      const opt = must(await db().from("product_options").select("supplier_album_ids,version").eq("product_id", p.id), "options") as { supplier_album_ids: string[]; version: string }[];
-      const album = (opt.find((o) => !i.version || o.version === i.version) ?? opt[0])?.supplier_album_ids[0];
-      if (!album) return { error: "no supplier album" };
-      const urls = await cleanAlbumPhotos(p, album, 3).catch(() => [] as string[]);
-      urls.forEach((url) => ctx.outbox.push({ type: "image", url, productId: p.id }));
-      return { queued: urls.length };
     },
   }),
 

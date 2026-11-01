@@ -66,14 +66,6 @@ export async function uploadProductPhoto(form: FormData) {
   revalidatePath("/admin/photos");
 }
 
-/** Let the bot try supplier photos again (e.g. after the supplier added new ones). */
-export async function retryProductPhoto(form: FormData) {
-  await requireStaff();
-  const productId = z.string().uuid().parse(form.get("productId"));
-  await db().from("products").update({ photo_status: "unchecked" }).eq("id", productId);
-  revalidatePath("/admin/photos");
-}
-
 /**
  * Every photo this product has on file - not just its current primary - so the owner can pick,
  * re-edit, or throw away any of them (owner report 2026-11-02: "i want the ability to remove more

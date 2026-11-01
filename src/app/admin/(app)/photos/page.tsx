@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { ImageOff, Pencil, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
+import { ImageOff, Pencil, Search, ShieldCheck, X } from "lucide-react";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
-import { retryProductPhoto, renameProduct } from "../../photos-actions";
+import { renameProduct } from "../../photos-actions";
 import { PageHeader, Card, Badge, EmptyState, cx, button } from "../../ui";
 import { PhotoUploadButton } from "./photo-upload-button";
 import { PhotoManagerButton } from "./photo-manager";
@@ -47,13 +47,16 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
   if (cat === "national") teamIds = ((await db().from("teams").select("id").eq("type", "national")).data ?? []).map((t) => t.id);
   else if (cat) teamIds = ((await db().from("teams").select("id").eq("league_id", cat)).data ?? []).map((t) => t.id);
 
-  let missingQuery = db().from("products").select("id,title_en,title_ar,status,photo_status,flags,supplier_primary_album,team_id")
+  let missingQuery = db().from("products").select("id,title_en,title_ar,status,photo_status,flags,team_id")
     .or("photo_status.eq.none_clean,and(status.eq.featured,photo_status.not.in.(good,owner_upload))")
     .order("status", { ascending: false }).order("title_en").limit(400);
   if (q) missingQuery = missingQuery.ilike("search_text", `%${q}%`);
   if (teamIds) missingQuery = missingQuery.in("team_id", teamIds);
-  const missing = ((await missingQuery).data ?? []) as { id: string; title_en: string; title_ar: string | null; status: string; photo_status: string; flags: string[] | null; supplier_primary_album: string | null }[];
-  const why = (p: (typeof missing)[number]) => (p.flags ?? []).includes("not_at_supplier") ? "Not at the supplier" : p.photo_status === "none_clean" ? "Supplier photos not usable" : "No supplier photos";
+  const missing = ((await missingQuery).data ?? []) as { id: string; title_en: string; title_ar: string | null; status: string; photo_status: string; flags: string[] | null }[];
+  // "not_at_supplier" is a stock-availability flag (apply-store-selection.ts), unrelated to photos -
+  // kept as is, since the owner is still sourcing stock from the supplier, just not its photos/catalog
+  // (owner decision 2026-11-02, Part 9).
+  const why = (p: (typeof missing)[number]) => (p.flags ?? []).includes("not_at_supplier") ? "Not at the supplier" : "No photo uploaded yet";
 
   const rejected = tab === "rejected" ? ((await db().from("product_images").select("id,url,quality,product:products(title_en)").eq("status", "bad")
     .order("checked_at", { ascending: false }).limit(48)).data ?? []) as unknown as { id: string; url: string; quality: Record<string, unknown> | null; product: { title_en: string } }[] : [];
@@ -113,7 +116,6 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                 <div className="mt-0.5 flex items-center gap-2 text-xs text-muted">
                   {p.status === "featured" ? <Badge tone="green">On website</Badge> : <Badge>Bot only</Badge>}
                   <span>{why(p)}</span>
-                  {p.supplier_primary_album ? <a href={`https://jerseyxie.x.yupoo.com/albums/${p.supplier_primary_album}?uid=1`} target="_blank" rel="noreferrer" className="hover:text-ink hover:underline">supplier album</a> : null}
                 </div>
                 <div className="mt-1">
                   <RenameControl id={p.id} titleEn={p.title_en} titleAr={p.title_ar} />
@@ -123,7 +125,6 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
                 <PhotoUploadButton productId={p.id} label="Upload" variant="row" />
                 <PhotoManagerButton productId={p.id} label="All photos" variant="row" />
               </div>
-              {p.supplier_primary_album ? <form action={retryProductPhoto}><input type="hidden" name="productId" value={p.id} /><button className="grid h-9 w-9 place-items-center rounded-xl text-muted hover:bg-raised hover:text-ink" aria-label="Check supplier photos again"><RotateCcw className="h-4 w-4" /></button></form> : null}
             </div>
           ))}
         </Card>
