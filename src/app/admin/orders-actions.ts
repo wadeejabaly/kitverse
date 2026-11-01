@@ -7,6 +7,7 @@ import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { STATUS_MESSAGE } from "@/lib/orders/admin";
 import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
+import { sendOrderWhatsAppAlerts } from "@/lib/notify-whatsapp";
 
 const StatusChange = z.object({
   orderId: z.string().uuid(),
@@ -20,10 +21,14 @@ export async function changeOrderStatus(form: FormData) {
   const c = StatusChange.parse({ orderId: form.get("orderId"), status: form.get("status"), notify: form.get("notify") === "on", note: (form.get("note") as string) || undefined });
   const o = must(await db().from("orders").select("id,status,conversation_id,confirmed_at").eq("id", c.orderId).single(), "order") as { id: string; status: string; conversation_id: string | null; confirmed_at: string | null };
   if (o.status === c.status && !c.note) return; // nothing changed
+  const becomingConfirmed = c.status === "confirmed" && o.status !== "confirmed";
   // an order confirmed by hand counts from now (overview "orders today", customer page date)
-  const confirmedAt = c.status === "confirmed" && !o.confirmed_at ? { confirmed_at: new Date().toISOString() } : {};
+  const confirmedAt = becomingConfirmed && !o.confirmed_at ? { confirmed_at: new Date().toISOString() } : {};
   must(await db().from("orders").update({ status: c.status, ...confirmedAt }).eq("id", o.id).select("id"), "update status");
   must(await db().from("order_events").insert({ order_id: o.id, from_status: o.status, to_status: c.status, actor: "owner", actor_user: staff.id, note: c.note ?? null }).select("id"), "event");
+  // owner decision 2026-11-02 (Part 9): one WhatsApp message per shirt, as soon as the order is
+  // approved - no-op until WhatsApp is actually configured (src/lib/notify-whatsapp.ts)
+  if (becomingConfirmed) await sendOrderWhatsAppAlerts(o.id);
   if (c.status === "delivered") {
     await db().from("cash_collections").upsert({ order_id: o.id, amount: 0, status: "with_courier" }, { onConflict: "order_id", ignoreDuplicates: true });
   }
@@ -75,6 +80,7 @@ export async function approveWebOrder(form: FormData) {
     .eq("id", orderId).eq("status", "awaiting_confirmation").eq("source", "website").select("id").maybeSingle(), "approve order");
   if (row) {
     must(await db().from("order_events").insert({ order_id: orderId, from_status: "awaiting_confirmation", to_status: "confirmed", actor: "owner", actor_user: staff.id, note: "approved" }).select("id"), "approve event");
+    await sendOrderWhatsAppAlerts(orderId);
   }
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);

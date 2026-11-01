@@ -43,6 +43,32 @@ Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/dec
 - Owner photo uploads call `VERCEL_DEPLOY_HOOK_URL` (if set) so the static website catalog rebuilds.
 - Discount codes (owner feature 2026-10-26): admin Discounts creates/pauses/deletes codes (percent or fixed ₪ off, optional min order / date range / max uses) in the `discount_codes` table. A shopper can type more than one at checkout, but a code only combines with others when its `stackable` column is set (checked in admin as "Can be combined with other codes") - default false, so a code works alone unless the owner opts it in; `codesCanCombine()` in `src/lib/discounts.ts` is the one rule both the checkout UI and the server enforce. `src/app/api/checkout/discount/check` previews a code; `src/lib/orders/web.ts` re-validates every code, the stacking rule, and the minimum order, then applies each as its own `adjustments` row (`kind: 'discount_code'`) when the order is placed - no owner approval needed, a code is its own authority.
 
+## WhatsApp order alert
+Owner decision 2026-11-02 (Part 9): the instant an order is approved (website "Approve" button, or
+setting any order's status to Confirmed in admin), one WhatsApp message per shirt line goes to the
+owner's own number - photo + team/title, version, size, name & number, patches. Code is in
+`src/lib/notify-whatsapp.ts`, wired into `approveWebOrder`/`changeOrderStatus` in
+`src/app/admin/orders-actions.ts`. It does nothing until all three of `WHATSAPP_PHONE_NUMBER_ID`,
+`WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_TO_NUMBER` are set (same "not configured yet" pattern as
+PayPal/PayPlus) - **not yet set up as of this writing**.
+
+To turn it on, the owner needs to do this in Meta's own tools (none of it can be done from here):
+1. A Meta Business Account + the WhatsApp Business Platform set up on it, with a phone number
+   verified for WhatsApp (can be a new number - it only ever sends to the owner, never to a
+   customer). Meta's WhatsApp Manager gives a **phone number ID** and lets you generate a
+   **permanent access token** - these become `WHATSAPP_PHONE_NUMBER_ID` / `WHATSAPP_ACCESS_TOKEN`.
+   `WHATSAPP_TO_NUMBER` is the owner's own WhatsApp number, E.164 (e.g. `9725XXXXXXXX`).
+2. In WhatsApp Manager, create and submit for approval a message **template** (category: Utility)
+   named to match `WHATSAPP_TEMPLATE_NAME` (defaults to `order_item_alert` if left unset), English,
+   with:
+   - **Header**: Image
+   - **Body**, exactly 6 placeholders in this order: order number, shirt (team + title), version
+     (Fan/Player), size, name & number (or "-"), patches (or "-"). Example body text:
+     `New order #{{1}}\n{{2}}\nVersion: {{3}}\nSize: {{4}}\nName & number: {{5}}\nPatches: {{6}}`
+   A template is required because this is a business-initiated message outside any 24-hour customer
+   window - a plain freeform message would simply fail. Usually approved within minutes to a day.
+3. Set the four env vars in Vercel (I can do this part once given the values) and redeploy.
+
 ## Photos
 `product_images.sleeve` ('short'/'long', owner decision 2026-11-02, Part 8): the storefront gallery is
 two separate sets, not one list - picking "Long sleeve" on a product page swaps the whole thumbnail

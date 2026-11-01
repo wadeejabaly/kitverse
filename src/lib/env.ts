@@ -46,6 +46,18 @@ const Env = z.object({
   PAYPLUS_SECRET_KEY: z.string().optional().default(""),
   PAYPLUS_PAYMENT_PAGE_UID: z.string().optional().default(""),
   PAYPLUS_ENV: z.string().optional().default(""),
+
+  // WhatsApp order alert (owner decision 2026-11-02, Part 9): optional, like every other
+  // integration here - the alert simply does nothing until all three are set. Meta's WhatsApp Cloud
+  // API, same Graph API family as the Instagram vars above. WHATSAPP_TO_NUMBER is the owner's own
+  // number (E.164, e.g. "9725XXXXXXXX") - this only ever sends TO the owner, never to a customer.
+  // See CLAUDE.md "WhatsApp order alert" for the exact message template this needs approved in Meta's
+  // WhatsApp Manager before it can send anything (business-initiated messages require one).
+  WHATSAPP_PHONE_NUMBER_ID: z.string().optional().default(""),
+  WHATSAPP_ACCESS_TOKEN: z.string().optional().default(""),
+  WHATSAPP_TO_NUMBER: z.string().optional().default(""),
+  WHATSAPP_TEMPLATE_NAME: z.string().default("order_item_alert"),
+  WHATSAPP_GRAPH_VERSION: z.string().default("v24.0"),
 });
 
 let cached: z.infer<typeof Env> | null = null;
