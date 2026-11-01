@@ -1,0 +1,1511 @@
+[
+  {
+    "handle": "manchester-united-2026-27-home-shirt",
+    "main": "/products/manchester-united-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/manchester-united-2026-27-home-shirt-2.jpg",
+      "/products/manchester-united-2026-27-home-shirt-3.jpg",
+      "/products/manchester-united-2026-27-home-shirt-4.jpg",
+      "/products/manchester-united-2026-27-home-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/manchester-united-2026-27-home-shirt-long.jpg",
+      "/products/manchester-united-2026-27-home-shirt-long-2.jpg",
+      "/products/manchester-united-2026-27-home-shirt-long-3.jpg",
+      "/products/manchester-united-2026-27-home-shirt-long-4.jpg",
+      "/products/manchester-united-2026-27-home-shirt-long-5.jpg",
+      "/products/manchester-united-2026-27-home-shirt-long-6.jpg"
+    ]
+  },
+  {
+    "handle": "manchester-united-2026-27-away-shirt",
+    "main": "/products/manchester-united-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/manchester-united-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/manchester-united-2026-27-away-shirt-long.jpg",
+      "/products/manchester-united-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "manchester-united-2026-27-third-shirt",
+    "main": "/products/manchester-united-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/manchester-united-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/manchester-united-2026-27-third-shirt-long.jpg",
+      "/products/manchester-united-2026-27-third-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "manchester-city-2026-27-home-shirt",
+    "main": "/products/manchester-city-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/manchester-city-2026-27-home-shirt-2.jpg",
+      "/products/manchester-city-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/manchester-city-2026-27-home-shirt-long.jpg",
+      "/products/manchester-city-2026-27-home-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "manchester-city-2026-27-away-shirt",
+    "main": "/products/manchester-city-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/manchester-city-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/manchester-city-2026-27-away-shirt-long.jpg",
+      "/products/manchester-city-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "manchester-city-2026-27-third-shirt",
+    "main": "/products/manchester-city-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/manchester-city-2026-27-third-shirt-2.jpg",
+      "/products/manchester-city-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/manchester-city-2026-27-third-shirt-long.jpg",
+      "/products/manchester-city-2026-27-third-shirt-long-2.jpg",
+      "/products/manchester-city-2026-27-third-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "liverpool-2026-27-home-shirt",
+    "main": "/products/liverpool-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/liverpool-2026-27-home-shirt-2.jpg",
+      "/products/liverpool-2026-27-home-shirt-3.jpg",
+      "/products/liverpool-2026-27-home-shirt-4.jpg",
+      "/products/liverpool-2026-27-home-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/liverpool-2026-27-home-shirt-long.jpg",
+      "/products/liverpool-2026-27-home-shirt-long-2.jpg",
+      "/products/liverpool-2026-27-home-shirt-long-3.jpg",
+      "/products/liverpool-2026-27-home-shirt-long-4.jpg",
+      "/products/liverpool-2026-27-home-shirt-long-5.jpg"
+    ]
+  },
+  {
+    "handle": "liverpool-2026-27-away-shirt",
+    "main": "/products/liverpool-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/liverpool-2026-27-away-shirt-2.jpg",
+      "/products/liverpool-2026-27-away-shirt-3.jpg",
+      "/products/liverpool-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/liverpool-2026-27-away-shirt-long.jpg",
+      "/products/liverpool-2026-27-away-shirt-long-2.jpg",
+      "/products/liverpool-2026-27-away-shirt-long-3.jpg",
+      "/products/liverpool-2026-27-away-shirt-long-4.jpg"
+    ]
+  },
+  {
+    "handle": "liverpool-2026-27-third-shirt",
+    "main": "/products/liverpool-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/liverpool-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/liverpool-2026-27-third-shirt-long.jpg",
+      "/products/liverpool-2026-27-third-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "arsenal-2026-27-home-shirt",
+    "main": "/products/arsenal-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/arsenal-2026-27-home-shirt-2.jpg",
+      "/products/arsenal-2026-27-home-shirt-3.jpg",
+      "/products/arsenal-2026-27-home-shirt-4.jpg",
+      "/products/arsenal-2026-27-home-shirt-5.jpg",
+      "/products/arsenal-2026-27-home-shirt-6.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/arsenal-2026-27-home-shirt-long.jpg",
+      "/products/arsenal-2026-27-home-shirt-long-2.jpg",
+      "/products/arsenal-2026-27-home-shirt-long-3.jpg",
+      "/products/arsenal-2026-27-home-shirt-long-4.jpg",
+      "/products/arsenal-2026-27-home-shirt-long-5.jpg",
+      "/products/arsenal-2026-27-home-shirt-long-6.jpg"
+    ]
+  },
+  {
+    "handle": "arsenal-2026-27-away-shirt",
+    "main": "/products/arsenal-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/arsenal-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/arsenal-2026-27-away-shirt-long.jpg",
+      "/products/arsenal-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "arsenal-2026-27-third-shirt",
+    "main": "/products/arsenal-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/arsenal-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/arsenal-2026-27-third-shirt-long.jpg",
+      "/products/arsenal-2026-27-third-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "chelsea-2026-27-home-shirt",
+    "main": "/products/chelsea-2026-27-home-shirt.jpg",
+    "images": [],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "chelsea-2026-27-away-shirt",
+    "main": "/products/chelsea-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/chelsea-2026-27-away-shirt-2.jpg",
+      "/products/chelsea-2026-27-away-shirt-3.jpg",
+      "/products/chelsea-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/chelsea-2026-27-away-shirt-long.jpg",
+      "/products/chelsea-2026-27-away-shirt-long-2.jpg",
+      "/products/chelsea-2026-27-away-shirt-long-3.jpg",
+      "/products/chelsea-2026-27-away-shirt-long-4.jpg",
+      "/products/chelsea-2026-27-away-shirt-long-5.jpg"
+    ]
+  },
+  {
+    "handle": "chelsea-2026-27-third-shirt",
+    "main": "/products/chelsea-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/chelsea-2026-27-third-shirt-2.jpg",
+      "/products/chelsea-2026-27-third-shirt-3.jpg",
+      "/products/chelsea-2026-27-third-shirt-4.jpg",
+      "/products/chelsea-2026-27-third-shirt-5.jpg",
+      "/products/chelsea-2026-27-third-shirt-6.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "tottenham-hotspur-2026-27-home-shirt",
+    "main": "/products/tottenham-hotspur-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/tottenham-hotspur-2026-27-home-shirt-2.jpg",
+      "/products/tottenham-hotspur-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/tottenham-hotspur-2026-27-home-shirt-long.jpg",
+      "/products/tottenham-hotspur-2026-27-home-shirt-long-2.jpg",
+      "/products/tottenham-hotspur-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "tottenham-hotspur-2026-27-away-shirt",
+    "main": "/products/tottenham-hotspur-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/tottenham-hotspur-2026-27-away-shirt-2.jpg",
+      "/products/tottenham-hotspur-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "tottenham-hotspur-2026-27-third-shirt",
+    "main": "/products/tottenham-hotspur-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/tottenham-hotspur-2026-27-third-shirt-2.jpg",
+      "/products/tottenham-hotspur-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "newcastle-united-2026-27-home-shirt",
+    "main": "/products/newcastle-united-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/newcastle-united-2026-27-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/newcastle-united-2026-27-home-shirt-long.jpg",
+      "/products/newcastle-united-2026-27-home-shirt-long-2.jpg",
+      "/products/newcastle-united-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "newcastle-united-2026-27-away-shirt",
+    "main": "/products/newcastle-united-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/newcastle-united-2026-27-away-shirt-2.jpg",
+      "/products/newcastle-united-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/newcastle-united-2026-27-away-shirt-long.jpg",
+      "/products/newcastle-united-2026-27-away-shirt-long-2.jpg",
+      "/products/newcastle-united-2026-27-away-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "newcastle-united-2026-27-third-shirt",
+    "main": "/products/newcastle-united-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/newcastle-united-2026-27-third-shirt-2.jpg",
+      "/products/newcastle-united-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/newcastle-united-2026-27-third-shirt-long.jpg"
+    ]
+  },
+  {
+    "handle": "west-ham-united-2026-27-home-shirt",
+    "main": "/products/west-ham-united-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/west-ham-united-2026-27-home-shirt-2.jpg",
+      "/products/west-ham-united-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/west-ham-united-2026-27-home-shirt-long.jpg",
+      "/products/west-ham-united-2026-27-home-shirt-long-2.jpg",
+      "/products/west-ham-united-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "west-ham-united-2026-27-away-shirt",
+    "main": "/products/west-ham-united-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/west-ham-united-2026-27-away-shirt-2.jpg",
+      "/products/west-ham-united-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "west-ham-united-2026-27-third-shirt",
+    "main": "/products/west-ham-united-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/west-ham-united-2026-27-third-shirt-2.jpg",
+      "/products/west-ham-united-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "aston-villa-2026-27-home-shirt",
+    "main": "/products/aston-villa-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/aston-villa-2026-27-home-shirt-2.jpg",
+      "/products/aston-villa-2026-27-home-shirt-3.jpg",
+      "/products/aston-villa-2026-27-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/aston-villa-2026-27-home-shirt-long.jpg",
+      "/products/aston-villa-2026-27-home-shirt-long-2.jpg",
+      "/products/aston-villa-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "aston-villa-2026-27-away-shirt",
+    "main": "/products/aston-villa-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/aston-villa-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/aston-villa-2026-27-away-shirt-long.jpg",
+      "/products/aston-villa-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "aston-villa-2026-27-third-shirt",
+    "main": "/products/aston-villa-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/aston-villa-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/aston-villa-2026-27-third-shirt-long.jpg",
+      "/products/aston-villa-2026-27-third-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "everton-2026-27-home-shirt",
+    "main": "/products/everton-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/everton-2026-27-home-shirt-2.jpg",
+      "/products/everton-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "everton-2026-27-away-shirt",
+    "main": "/products/everton-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/everton-2026-27-away-shirt-2.jpg",
+      "/products/everton-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "everton-2026-27-third-shirt",
+    "main": "/products/everton-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/everton-2026-27-third-shirt-2.jpg",
+      "/products/everton-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "real-madrid-2026-27-home-shirt",
+    "main": "/products/real-madrid-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/real-madrid-2026-27-home-shirt-2.jpg",
+      "/products/real-madrid-2026-27-home-shirt-3.jpg",
+      "/products/real-madrid-2026-27-home-shirt-4.jpg",
+      "/products/real-madrid-2026-27-home-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/real-madrid-2026-27-home-shirt-long.jpg",
+      "/products/real-madrid-2026-27-home-shirt-long-2.jpg",
+      "/products/real-madrid-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "real-madrid-2026-27-away-shirt",
+    "main": "/products/real-madrid-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/real-madrid-2026-27-away-shirt-2.jpg",
+      "/products/real-madrid-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/real-madrid-2026-27-away-shirt-long.jpg",
+      "/products/real-madrid-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "real-madrid-2026-27-third-shirt",
+    "main": "/products/real-madrid-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/real-madrid-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/real-madrid-2026-27-third-shirt-long.jpg",
+      "/products/real-madrid-2026-27-third-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "barcelona-2026-27-home-shirt",
+    "main": "/products/barcelona-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/barcelona-2026-27-home-shirt-2.jpg",
+      "/products/barcelona-2026-27-home-shirt-3.jpg",
+      "/products/barcelona-2026-27-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/barcelona-2026-27-home-shirt-long.jpg",
+      "/products/barcelona-2026-27-home-shirt-long-2.jpg",
+      "/products/barcelona-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "barcelona-2026-27-away-shirt",
+    "main": "/products/barcelona-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/barcelona-2026-27-away-shirt-2.jpg",
+      "/products/barcelona-2026-27-away-shirt-3.jpg",
+      "/products/barcelona-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/barcelona-2026-27-away-shirt-long.jpg",
+      "/products/barcelona-2026-27-away-shirt-long-2.jpg",
+      "/products/barcelona-2026-27-away-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "barcelona-2026-27-third-shirt",
+    "main": "/products/barcelona-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/barcelona-2026-27-third-shirt-2.jpg",
+      "/products/barcelona-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "atletico-madrid-2026-27-home-shirt",
+    "main": "/products/atletico-madrid-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/atletico-madrid-2026-27-home-shirt-2.jpg",
+      "/products/atletico-madrid-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/atletico-madrid-2026-27-home-shirt-long.jpg",
+      "/products/atletico-madrid-2026-27-home-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "atletico-madrid-2026-27-away-shirt",
+    "main": "/products/atletico-madrid-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/atletico-madrid-2026-27-away-shirt-2.jpg",
+      "/products/atletico-madrid-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "atletico-madrid-2026-27-third-shirt",
+    "main": "/products/atletico-madrid-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/atletico-madrid-2026-27-third-shirt-2.jpg",
+      "/products/atletico-madrid-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/atletico-madrid-2026-27-third-shirt-long.jpg",
+      "/products/atletico-madrid-2026-27-third-shirt-long-2.jpg",
+      "/products/atletico-madrid-2026-27-third-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "sevilla-2026-27-home-shirt",
+    "main": "/products/sevilla-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/sevilla-2026-27-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "sevilla-2026-27-away-shirt",
+    "main": "/products/sevilla-2026-27-away-shirt.jpg",
+    "images": [],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "sevilla-2026-27-third-shirt",
+    "main": "/products/sevilla-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/sevilla-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "valencia-2026-27-home-shirt",
+    "main": "/products/valencia-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/valencia-2026-27-home-shirt-2.jpg",
+      "/products/valencia-2026-27-home-shirt-3.jpg",
+      "/products/valencia-2026-27-home-shirt-4.jpg",
+      "/products/valencia-2026-27-home-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "valencia-2026-27-away-shirt",
+    "main": "/products/valencia-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/valencia-2026-27-away-shirt-2.jpg",
+      "/products/valencia-2026-27-away-shirt-3.jpg",
+      "/products/valencia-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "valencia-2026-27-third-shirt",
+    "main": "/products/valencia-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/valencia-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "athletic-bilbao-2026-27-home-shirt",
+    "main": "/products/athletic-bilbao-2026-27-home-shirt.jpg",
+    "images": [],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "real-betis-2026-27-home-shirt",
+    "main": "/products/real-betis-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/real-betis-2026-27-home-shirt-2.jpg",
+      "/products/real-betis-2026-27-home-shirt-3.jpg",
+      "/products/real-betis-2026-27-home-shirt-4.jpg",
+      "/products/real-betis-2026-27-home-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "real-betis-2026-27-away-shirt",
+    "main": "/products/real-betis-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/real-betis-2026-27-away-shirt-2.jpg",
+      "/products/real-betis-2026-27-away-shirt-3.jpg",
+      "/products/real-betis-2026-27-away-shirt-4.jpg",
+      "/products/real-betis-2026-27-away-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/real-betis-2026-27-away-shirt-long.jpg",
+      "/products/real-betis-2026-27-away-shirt-long-2.jpg",
+      "/products/real-betis-2026-27-away-shirt-long-3.jpg",
+      "/products/real-betis-2026-27-away-shirt-long-4.jpg",
+      "/products/real-betis-2026-27-away-shirt-long-5.jpg"
+    ]
+  },
+  {
+    "handle": "real-betis-2026-27-third-shirt",
+    "main": "/products/real-betis-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/real-betis-2026-27-third-shirt-2.jpg",
+      "/products/real-betis-2026-27-third-shirt-3.jpg",
+      "/products/real-betis-2026-27-third-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "villarreal-2026-27-home-shirt",
+    "main": "/products/villarreal-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/villarreal-2026-27-home-shirt-2.jpg",
+      "/products/villarreal-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "villarreal-2026-27-away-shirt",
+    "main": "/products/villarreal-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/villarreal-2026-27-away-shirt-2.jpg",
+      "/products/villarreal-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "villarreal-2026-27-third-shirt",
+    "main": "/products/villarreal-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/villarreal-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "juventus-2026-27-home-shirt",
+    "main": "/products/juventus-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/juventus-2026-27-home-shirt-2.jpg",
+      "/products/juventus-2026-27-home-shirt-3.jpg",
+      "/products/juventus-2026-27-home-shirt-4.jpg",
+      "/products/juventus-2026-27-home-shirt-5.jpg",
+      "/products/juventus-2026-27-home-shirt-6.jpg",
+      "/products/juventus-2026-27-home-shirt-7.jpg",
+      "/products/juventus-2026-27-home-shirt-8.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/juventus-2026-27-home-shirt-long.jpg",
+      "/products/juventus-2026-27-home-shirt-long-2.jpg",
+      "/products/juventus-2026-27-home-shirt-long-3.jpg",
+      "/products/juventus-2026-27-home-shirt-long-4.jpg",
+      "/products/juventus-2026-27-home-shirt-long-5.jpg"
+    ]
+  },
+  {
+    "handle": "juventus-2026-27-away-shirt",
+    "main": "/products/juventus-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/juventus-2026-27-away-shirt-2.jpg",
+      "/products/juventus-2026-27-away-shirt-3.jpg",
+      "/products/juventus-2026-27-away-shirt-4.jpg",
+      "/products/juventus-2026-27-away-shirt-5.jpg",
+      "/products/juventus-2026-27-away-shirt-6.jpg",
+      "/products/juventus-2026-27-away-shirt-7.jpg",
+      "/products/juventus-2026-27-away-shirt-8.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/juventus-2026-27-away-shirt-long.jpg",
+      "/products/juventus-2026-27-away-shirt-long-2.jpg",
+      "/products/juventus-2026-27-away-shirt-long-3.jpg",
+      "/products/juventus-2026-27-away-shirt-long-4.jpg"
+    ]
+  },
+  {
+    "handle": "juventus-2026-27-third-shirt",
+    "main": "/products/juventus-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/juventus-2026-27-third-shirt-2.jpg",
+      "/products/juventus-2026-27-third-shirt-3.jpg",
+      "/products/juventus-2026-27-third-shirt-4.jpg",
+      "/products/juventus-2026-27-third-shirt-5.jpg",
+      "/products/juventus-2026-27-third-shirt-6.jpg",
+      "/products/juventus-2026-27-third-shirt-7.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "inter-milan-2026-27-home-shirt",
+    "main": "/products/inter-milan-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/inter-milan-2026-27-home-shirt-2.jpg",
+      "/products/inter-milan-2026-27-home-shirt-3.jpg",
+      "/products/inter-milan-2026-27-home-shirt-4.jpg",
+      "/products/inter-milan-2026-27-home-shirt-5.jpg",
+      "/products/inter-milan-2026-27-home-shirt-6.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "inter-milan-2026-27-away-shirt",
+    "main": "/products/inter-milan-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/inter-milan-2026-27-away-shirt-2.jpg",
+      "/products/inter-milan-2026-27-away-shirt-3.jpg",
+      "/products/inter-milan-2026-27-away-shirt-4.jpg",
+      "/products/inter-milan-2026-27-away-shirt-5.jpg",
+      "/products/inter-milan-2026-27-away-shirt-6.jpg",
+      "/products/inter-milan-2026-27-away-shirt-7.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "inter-milan-2026-27-third-shirt",
+    "main": "/products/inter-milan-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/inter-milan-2026-27-third-shirt-2.jpg",
+      "/products/inter-milan-2026-27-third-shirt-3.jpg",
+      "/products/inter-milan-2026-27-third-shirt-4.jpg",
+      "/products/inter-milan-2026-27-third-shirt-5.jpg",
+      "/products/inter-milan-2026-27-third-shirt-6.jpg",
+      "/products/inter-milan-2026-27-third-shirt-7.jpg",
+      "/products/inter-milan-2026-27-third-shirt-8.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "ac-milan-2026-27-home-shirt",
+    "main": "/products/ac-milan-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/ac-milan-2026-27-home-shirt-2.jpg",
+      "/products/ac-milan-2026-27-home-shirt-3.jpg",
+      "/products/ac-milan-2026-27-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/ac-milan-2026-27-home-shirt-long.jpg",
+      "/products/ac-milan-2026-27-home-shirt-long-2.jpg",
+      "/products/ac-milan-2026-27-home-shirt-long-3.jpg",
+      "/products/ac-milan-2026-27-home-shirt-long-4.jpg"
+    ]
+  },
+  {
+    "handle": "ac-milan-2026-27-away-shirt",
+    "main": "/products/ac-milan-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/ac-milan-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/ac-milan-2026-27-away-shirt-long.jpg",
+      "/products/ac-milan-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "ac-milan-2026-27-third-shirt",
+    "main": "/products/ac-milan-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/ac-milan-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/ac-milan-2026-27-third-shirt-long.jpg",
+      "/products/ac-milan-2026-27-third-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "napoli-2026-27-home-shirt",
+    "main": "/products/napoli-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/napoli-2026-27-home-shirt-2.jpg",
+      "/products/napoli-2026-27-home-shirt-3.jpg",
+      "/products/napoli-2026-27-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "napoli-2026-27-away-shirt",
+    "main": "/products/napoli-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/napoli-2026-27-away-shirt-2.jpg",
+      "/products/napoli-2026-27-away-shirt-3.jpg",
+      "/products/napoli-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "napoli-2026-27-third-shirt",
+    "main": "/products/napoli-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/napoli-2026-27-third-shirt-2.jpg",
+      "/products/napoli-2026-27-third-shirt-3.jpg",
+      "/products/napoli-2026-27-third-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "roma-2026-27-home-shirt",
+    "main": "/products/as-roma-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/as-roma-2026-27-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "roma-2026-27-away-shirt",
+    "main": "/products/as-roma-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/as-roma-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "roma-2026-27-third-shirt",
+    "main": "/products/as-roma-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/as-roma-2026-27-third-shirt-2.jpg",
+      "/products/as-roma-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "fiorentina-2026-27-home-shirt",
+    "main": "/products/fiorentina-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/fiorentina-2026-27-home-shirt-2.jpg",
+      "/products/fiorentina-2026-27-home-shirt-3.jpg",
+      "/products/fiorentina-2026-27-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "fiorentina-2026-27-away-shirt-256969189",
+    "main": "/products/fiorentina-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/fiorentina-2026-27-away-shirt-2.jpg",
+      "/products/fiorentina-2026-27-away-shirt-3.jpg",
+      "/products/fiorentina-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "atalanta-2026-27-home-shirt",
+    "main": "/products/atalanta-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/atalanta-2026-27-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "atalanta-2026-27-away-shirt",
+    "main": "/products/atalanta-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/atalanta-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "torino-2026-27-home-shirt",
+    "main": "/products/torino-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/torino-2026-27-home-shirt-2.jpg",
+      "/products/torino-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "torino-2026-27-away-shirt",
+    "main": "/products/torino-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/torino-2026-27-away-shirt-2.jpg",
+      "/products/torino-2026-27-away-shirt-3.jpg",
+      "/products/torino-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "torino-2026-27-third-shirt",
+    "main": "/products/torino-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/torino-2026-27-third-shirt-2.jpg",
+      "/products/torino-2026-27-third-shirt-3.jpg",
+      "/products/torino-2026-27-third-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "bologna-2026-27-home-shirt",
+    "main": "/products/bologna-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/bologna-2026-27-home-shirt-2.jpg",
+      "/products/bologna-2026-27-home-shirt-3.jpg",
+      "/products/bologna-2026-27-home-shirt-4.jpg",
+      "/products/bologna-2026-27-home-shirt-5.jpg",
+      "/products/bologna-2026-27-home-shirt-6.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "bologna-2026-27-away-shirt",
+    "main": "/products/bologna-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/bologna-2026-27-away-shirt-2.jpg",
+      "/products/bologna-2026-27-away-shirt-3.jpg",
+      "/products/bologna-2026-27-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "bologna-2026-27-third-shirt",
+    "main": "/products/bologna-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/bologna-2026-27-third-shirt-2.jpg",
+      "/products/bologna-2026-27-third-shirt-3.jpg",
+      "/products/bologna-2026-27-third-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "bayern-munich-2026-27-home-shirt",
+    "main": "/products/bayern-munich-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/bayern-munich-2026-27-home-shirt-2.jpg",
+      "/products/bayern-munich-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/bayern-munich-2026-27-home-shirt-long.jpg",
+      "/products/bayern-munich-2026-27-home-shirt-long-2.jpg",
+      "/products/bayern-munich-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "bayern-munich-2026-27-away-shirt",
+    "main": "/products/bayern-munich-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/bayern-munich-2026-27-away-shirt-2.jpg",
+      "/products/bayern-munich-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/bayern-munich-2026-27-away-shirt-long.jpg",
+      "/products/bayern-munich-2026-27-away-shirt-long-2.jpg",
+      "/products/bayern-munich-2026-27-away-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "bayern-munich-2026-27-third-shirt",
+    "main": "/products/bayern-munich-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/bayern-munich-2026-27-third-shirt-2.jpg",
+      "/products/bayern-munich-2026-27-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/bayern-munich-2026-27-third-shirt-long.jpg",
+      "/products/bayern-munich-2026-27-third-shirt-long-2.jpg",
+      "/products/bayern-munich-2026-27-third-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "borussia-dortmund-2026-27-home-shirt",
+    "main": "/products/borussia-dortmund-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/borussia-dortmund-2026-27-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/borussia-dortmund-2026-27-home-shirt-long.jpg",
+      "/products/borussia-dortmund-2026-27-home-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "borussia-dortmund-2026-27-away-shirt",
+    "main": "/products/borussia-dortmund-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/borussia-dortmund-2026-27-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "borussia-dortmund-2026-27-third-shirt",
+    "main": "/products/borussia-dortmund-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/borussia-dortmund-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "paris-saint-germain-2026-27-home-shirt",
+    "main": "/products/paris-saint-germain-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/paris-saint-germain-2026-27-home-shirt-2.jpg",
+      "/products/paris-saint-germain-2026-27-home-shirt-3.jpg",
+      "/products/paris-saint-germain-2026-27-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "paris-saint-germain-2026-27-away-shirt",
+    "main": "/products/paris-saint-germain-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/paris-saint-germain-2026-27-away-shirt-2.jpg",
+      "/products/paris-saint-germain-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/paris-saint-germain-2026-27-away-shirt-long.jpg",
+      "/products/paris-saint-germain-2026-27-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "paris-saint-germain-2026-27-third-shirt",
+    "main": "/products/paris-saint-germain-2026-27-third-shirt.jpg",
+    "images": [],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "as-monaco-2026-27-home-shirt",
+    "main": "/products/as-monaco-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/as-monaco-2026-27-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "as-monaco-2026-27-away-shirt",
+    "main": "/products/as-monaco-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/as-monaco-2026-27-away-shirt-2.jpg",
+      "/products/as-monaco-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "as-monaco-2026-27-third-shirt",
+    "main": "/products/as-monaco-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/as-monaco-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "nice-2026-27-home-shirt",
+    "main": "/products/nice-2026-27-home-shirt.jpg",
+    "images": [
+      "/products/nice-2026-27-home-shirt-2.jpg",
+      "/products/nice-2026-27-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/nice-2026-27-home-shirt-long.jpg",
+      "/products/nice-2026-27-home-shirt-long-2.jpg",
+      "/products/nice-2026-27-home-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "nice-2026-27-away-shirt",
+    "main": "/products/nice-2026-27-away-shirt.jpg",
+    "images": [
+      "/products/nice-2026-27-away-shirt-2.jpg",
+      "/products/nice-2026-27-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/nice-2026-27-away-shirt-long.jpg",
+      "/products/nice-2026-27-away-shirt-long-2.jpg",
+      "/products/nice-2026-27-away-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "nice-2026-27-third-shirt",
+    "main": "/products/nice-2026-27-third-shirt.jpg",
+    "images": [
+      "/products/nice-2026-27-third-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/nice-2026-27-third-shirt-long.jpg",
+      "/products/nice-2026-27-third-shirt-long-2.jpg",
+      "/products/nice-2026-27-third-shirt-long-3.jpg"
+    ]
+  },
+  {
+    "handle": "england-2026-home-shirt",
+    "main": "/products/england-2026-home-shirt.jpg",
+    "images": [
+      "/products/england-2026-home-shirt-2.jpg",
+      "/products/england-2026-home-shirt-3.jpg",
+      "/products/england-2026-home-shirt-4.jpg",
+      "/products/england-2026-home-shirt-5.jpg",
+      "/products/england-2026-home-shirt-6.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "england-2026-away-shirt",
+    "main": "/products/england-2026-away-shirt.jpg",
+    "images": [
+      "/products/england-2026-away-shirt-2.jpg",
+      "/products/england-2026-away-shirt-3.jpg",
+      "/products/england-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "iran-2026-home-shirt",
+    "main": "/products/iran-2026-home-shirt.jpg",
+    "images": [
+      "/products/iran-2026-home-shirt-2.jpg",
+      "/products/iran-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "iran-2026-away-shirt",
+    "main": "/products/iran-2026-away-shirt.jpg",
+    "images": [
+      "/products/iran-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "iran-2026-third-shirt",
+    "main": "/products/iran-2026-third-shirt.jpg",
+    "images": [],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "usa-2026-home-shirt",
+    "main": "/products/usa-2026-home-shirt.jpg",
+    "images": [
+      "/products/usa-2026-home-shirt-2.jpg",
+      "/products/usa-2026-home-shirt-3.jpg",
+      "/products/usa-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "usa-2026-away-shirt",
+    "main": "/products/usa-2026-away-shirt.jpg",
+    "images": [
+      "/products/usa-2026-away-shirt-2.jpg",
+      "/products/usa-2026-away-shirt-3.jpg",
+      "/products/usa-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "argentina-2026-home-shirt",
+    "main": "/products/argentina-2026-home-shirt.jpg",
+    "images": [
+      "/products/argentina-2026-home-shirt-2.jpg",
+      "/products/argentina-2026-home-shirt-3.jpg",
+      "/products/argentina-2026-home-shirt-4.jpg",
+      "/products/argentina-2026-home-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "argentina-2026-away-shirt",
+    "main": "/products/argentina-2026-away-shirt.jpg",
+    "images": [
+      "/products/argentina-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/argentina-2026-away-shirt-long.jpg",
+      "/products/argentina-2026-away-shirt-long-2.jpg"
+    ]
+  },
+  {
+    "handle": "argentina-2026-third-shirt",
+    "main": "/products/argentina-2026-third-shirt.jpg",
+    "images": [
+      "/products/argentina-2026-third-shirt-detail.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "saudi-arabia-2026-home-shirt",
+    "main": "/products/saudi-arabia-2026-home-shirt.jpg",
+    "images": [
+      "/products/saudi-arabia-2026-home-shirt-2.jpg",
+      "/products/saudi-arabia-2026-home-shirt-3.jpg",
+      "/products/saudi-arabia-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "saudi-arabia-2026-away-shirt",
+    "main": "/products/saudi-arabia-2026-away-shirt.jpg",
+    "images": [
+      "/products/saudi-arabia-2026-away-shirt-2.jpg",
+      "/products/saudi-arabia-2026-away-shirt-3.jpg",
+      "/products/saudi-arabia-2026-away-shirt-4.jpg",
+      "/products/saudi-arabia-2026-away-shirt-5.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "france-2026-home-shirt",
+    "main": "/products/france-2026-home-shirt.jpg",
+    "images": [
+      "/products/france-2026-home-shirt-2.jpg",
+      "/products/france-2026-home-shirt-3.jpg",
+      "/products/france-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "france-2026-away-shirt",
+    "main": "/products/france-2026-away-shirt.jpg",
+    "images": [
+      "/products/france-2026-away-shirt-2.jpg",
+      "/products/france-2026-away-shirt-3.jpg",
+      "/products/france-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "australia-2026-27-home-shirt",
+    "main": "/products/australia-2026-home-shirt.jpg",
+    "images": [
+      "/products/australia-2026-home-shirt-2.jpg",
+      "/products/australia-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "australia-2026-27-away-shirt",
+    "main": "/products/australia-2026-away-shirt.jpg",
+    "images": [
+      "/products/australia-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "tunisia-2026-home-shirt",
+    "main": "/products/tunisia-2026-home-shirt.jpg",
+    "images": [
+      "/products/tunisia-2026-home-shirt-2.jpg",
+      "/products/tunisia-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "tunisia-2026-27-away-shirt",
+    "main": "/products/tunisia-2026-away-shirt.jpg",
+    "images": [
+      "/products/tunisia-2026-away-shirt-2.jpg",
+      "/products/tunisia-2026-away-shirt-3.jpg",
+      "/products/tunisia-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "tunisia-2026-27-third-shirt",
+    "main": "/products/tunisia-2026-third-shirt.jpg",
+    "images": [
+      "/products/tunisia-2026-third-shirt-2.jpg",
+      "/products/tunisia-2026-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "spain-2026-home-shirt",
+    "main": "/products/spain-2026-home-shirt.jpg",
+    "images": [
+      "/products/spain-2026-home-shirt-2.jpg",
+      "/products/spain-2026-home-shirt-3.jpg",
+      "/products/spain-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "spain-2026-away-shirt",
+    "main": "/products/spain-2026-away-shirt.jpg",
+    "images": [
+      "/products/spain-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "germany-2026-home-shirt",
+    "main": "/products/germany-2026-home-shirt.jpg",
+    "images": [
+      "/products/germany-2026-home-shirt-2.jpg",
+      "/products/germany-2026-home-shirt-3.jpg",
+      "/products/germany-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/germany-2026-home-shirt-long.jpg",
+      "/products/germany-2026-home-shirt-long-2.jpg",
+      "/products/germany-2026-home-shirt-long-3.jpg",
+      "/products/germany-2026-home-shirt-long-4.jpg"
+    ]
+  },
+  {
+    "handle": "germany-2026-away-shirt",
+    "main": "/products/germany-2026-away-shirt.jpg",
+    "images": [
+      "/products/germany-2026-away-shirt-2.jpg",
+      "/products/germany-2026-away-shirt-3.jpg",
+      "/products/germany-2026-away-shirt-4.jpg",
+      "/products/germany-2026-away-shirt-5.jpg",
+      "/products/germany-2026-away-shirt-6.jpg"
+    ],
+    "imagesLongSleeve": [
+      "/products/germany-2026-away-shirt-long.jpg",
+      "/products/germany-2026-away-shirt-long-2.jpg",
+      "/products/germany-2026-away-shirt-long-3.jpg",
+      "/products/germany-2026-away-shirt-long-4.jpg",
+      "/products/germany-2026-away-shirt-long-5.jpg",
+      "/products/germany-2026-away-shirt-long-6.jpg"
+    ]
+  },
+  {
+    "handle": "belgium-2026-home-shirt",
+    "main": "/products/belgium-2026-home-shirt.jpg",
+    "images": [
+      "/products/belgium-2026-home-shirt-2.jpg",
+      "/products/belgium-2026-home-shirt-3.jpg",
+      "/products/belgium-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "belgium-2026-away-shirt",
+    "main": "/products/belgium-2026-away-shirt.jpg",
+    "images": [
+      "/products/belgium-2026-away-shirt-2.jpg",
+      "/products/belgium-2026-away-shirt-3.jpg",
+      "/products/belgium-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "morocco-2026-home-shirt",
+    "main": "/products/morocco-2026-home-shirt.jpg",
+    "images": [
+      "/products/morocco-2026-home-shirt-2.jpg",
+      "/products/morocco-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "morocco-2026-away-shirt",
+    "main": "/products/morocco-2026-away-shirt.jpg",
+    "images": [
+      "/products/morocco-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "croatia-2026-home-shirt",
+    "main": "/products/croatia-2026-home-shirt.jpg",
+    "images": [
+      "/products/croatia-2026-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "croatia-2026-away-shirt",
+    "main": "/products/croatia-2026-away-shirt.jpg",
+    "images": [
+      "/products/croatia-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "brazil-2026-home-shirt",
+    "main": "/products/brazil-2026-home-shirt.jpg",
+    "images": [
+      "/products/brazil-2026-home-shirt-2.jpg",
+      "/products/brazil-2026-home-shirt-3.jpg",
+      "/products/brazil-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "brazil-2026-away-shirt",
+    "main": "/products/brazil-2026-away-shirt.jpg",
+    "images": [
+      "/products/brazil-2026-away-shirt-2.jpg",
+      "/products/brazil-2026-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "portugal-2026-home-shirt",
+    "main": "/products/portugal-2026-home-shirt.jpg",
+    "images": [
+      "/products/portugal-2026-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "portugal-2026-away-shirt",
+    "main": "/products/portugal-2026-away-shirt.jpg",
+    "images": [
+      "/products/portugal-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "uruguay-2026-home-shirt",
+    "main": "/products/uruguay-2026-home-shirt.jpg",
+    "images": [
+      "/products/uruguay-2026-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "uruguay-2026-away-shirt",
+    "main": "/products/uruguay-2026-away-shirt.jpg",
+    "images": [
+      "/products/uruguay-2026-away-shirt-2.jpg",
+      "/products/uruguay-2026-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "turkey-2026-home-shirt",
+    "main": "/products/turkey-2026-home-shirt.jpg",
+    "images": [
+      "/products/turkey-2026-home-shirt-2.jpg",
+      "/products/turkey-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "turkey-2026-away-shirt",
+    "main": "/products/turkey-2026-away-shirt.jpg",
+    "images": [
+      "/products/turkey-2026-away-shirt-2.jpg",
+      "/products/turkey-2026-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "norway-2026-home-shirt",
+    "main": "/products/norway-2026-home-shirt.jpg",
+    "images": [
+      "/products/norway-2026-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "norway-2026-away-shirt",
+    "main": "/products/norway-2026-away-shirt.jpg",
+    "images": [
+      "/products/norway-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "norway-2026-27-third-shirt",
+    "main": "/products/norway-2026-third-shirt.jpg",
+    "images": [
+      "/products/norway-2026-third-shirt-2.jpg",
+      "/products/norway-2026-third-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "austria-2026-home-shirt",
+    "main": "/products/austria-2026-home-shirt.jpg",
+    "images": [
+      "/products/austria-2026-home-shirt-2.jpg",
+      "/products/austria-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "austria-2026-27-away-shirt",
+    "main": "/products/austria-2026-away-shirt.jpg",
+    "images": [
+      "/products/austria-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "ivory-coast-2026-home-shirt",
+    "main": "/products/ivory-coast-2026-home-shirt.jpg",
+    "images": [
+      "/products/ivory-coast-2026-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "ivory-coast-2026-away-shirt",
+    "main": "/products/ivory-coast-2026-away-shirt.jpg",
+    "images": [
+      "/products/ivory-coast-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "egypt-2026-27-home-shirt",
+    "main": "/products/egypt-2026-home-shirt.jpg",
+    "images": [
+      "/products/egypt-2026-home-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "egypt-2026-away-shirt",
+    "main": "/products/egypt-2026-away-shirt.jpg",
+    "images": [
+      "/products/egypt-2026-away-shirt-2.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "algeria-2026-home-shirt",
+    "main": "/products/algeria-2026-home-shirt.jpg",
+    "images": [
+      "/products/algeria-2026-home-shirt-2.jpg",
+      "/products/algeria-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "algeria-2026-away-shirt",
+    "main": "/products/algeria-2026-away-shirt.jpg",
+    "images": [
+      "/products/algeria-2026-away-shirt-2.jpg",
+      "/products/algeria-2026-away-shirt-3.jpg",
+      "/products/algeria-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "colombia-2026-home-shirt",
+    "main": "/products/colombia-2026-home-shirt.jpg",
+    "images": [
+      "/products/colombia-2026-home-shirt-2.jpg",
+      "/products/colombia-2026-home-shirt-3.jpg",
+      "/products/colombia-2026-home-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "colombia-2026-away-shirt",
+    "main": "/products/colombia-2026-away-shirt.jpg",
+    "images": [
+      "/products/colombia-2026-away-shirt-2.jpg",
+      "/products/colombia-2026-away-shirt-3.jpg",
+      "/products/colombia-2026-away-shirt-4.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "iraq-2026-home-shirt",
+    "main": "/products/iraq-2026-home-shirt.jpg",
+    "images": [
+      "/products/iraq-2026-home-shirt-2.jpg",
+      "/products/iraq-2026-home-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  },
+  {
+    "handle": "iraq-2026-away-shirt",
+    "main": "/products/iraq-2026-away-shirt.jpg",
+    "images": [
+      "/products/iraq-2026-away-shirt-2.jpg",
+      "/products/iraq-2026-away-shirt-3.jpg"
+    ],
+    "imagesLongSleeve": []
+  }
+]
