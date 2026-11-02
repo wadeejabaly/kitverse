@@ -1,9 +1,11 @@
-import { Bot, Cpu, Gauge, Wallet, FlaskConical, Sparkles } from "lucide-react";
+import { Bot, Cpu, Gauge, Wallet, FlaskConical, Sparkles, Smartphone } from "lucide-react";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { BOT_MODELS, isBotModel } from "@/lib/agent/models";
+import { isWhatsAppConfigured } from "@/lib/notify-whatsapp";
 import { saveSetting } from "../../actions";
 import { PageHeader, Card, Badge, button, input, cx } from "../../ui";
+import { RegisterWhatsAppButton } from "./register-whatsapp-button";
 
 export const dynamic = "force-dynamic";
 
@@ -123,6 +125,12 @@ export default async function Settings() {
             <button className={button.ghost}>Save</button>
           </form>
         </Section>
+
+        {isWhatsAppConfigured() ? (
+          <Section icon={Smartphone} title="WhatsApp order alerts" text={'If alerts aren\'t arriving with error "Account not registered", the number needs this one-time Cloud API step - WhatsApp Manager has no button for it.'}>
+            <RegisterWhatsAppButton defaultPin="284719" />
+          </Section>
+        ) : null}
       </div>
     </>
   );
