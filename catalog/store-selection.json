@@ -922,7 +922,10 @@
       "visible": true,
       "productHandle": "barcelona-2026-27-third-shirt",
       "teamHe": "ברצלונה",
-      "titleHe": "חולצת שלישית ברצלונה 2026/27"
+      "titleHe": "חולצת שלישית ברצלונה 2026/27",
+      "imagesLongSleeve": [
+        "/products/barcelona-2026-27-third-shirt-long.jpg"
+      ]
     },
     {
       "handle": "atletico-madrid-2026-27-home-shirt",
@@ -2139,7 +2142,11 @@
       "visible": true,
       "productHandle": "paris-saint-germain-2026-27-home-shirt",
       "teamHe": "פריז סן ז'רמן",
-      "titleHe": "חולצת בית פריז סן ז'רמן 2026/27"
+      "titleHe": "חולצת בית פריז סן ז'רמן 2026/27",
+      "imagesLongSleeve": [
+        "/products/paris-saint-germain-2026-27-home-shirt-long.jpg",
+        "/products/paris-saint-germain-2026-27-home-shirt-long-2.jpg"
+      ]
     },
     {
       "handle": "paris-saint-germain-2026-27-away-shirt",
@@ -2183,7 +2190,10 @@
       "visible": true,
       "productHandle": "paris-saint-germain-2026-27-third-shirt",
       "teamHe": "פריז סן ז'רמן",
-      "titleHe": "חולצת שלישית פריז סן ז'רמן 2026/27"
+      "titleHe": "חולצת שלישית פריז סן ז'רמן 2026/27",
+      "images": [
+        "/products/paris-saint-germain-2026-27-third-shirt-2.jpg"
+      ]
     },
     {
       "handle": "as-monaco-2026-27-home-shirt",
@@ -3835,6 +3845,24 @@
         "/products/iraq-2026-away-shirt-2.jpg",
         "/products/iraq-2026-away-shirt-3.jpg"
       ]
+    },
+    {
+      "handle": "iraq-2026-third-shirt",
+      "title": "Iraq 2026 Third Shirt",
+      "titleAr": "قميص العراق 2026 الثالث",
+      "team": "Iraq",
+      "teamAr": "العراق",
+      "kind": "national",
+      "season": "2026",
+      "kit": "Third",
+      "league": null,
+      "edition": "standard",
+      "image": "/products/iraq-2026-third-shirt.jpg",
+      "sourceHash": "03682a24",
+      "visible": true,
+      "productHandle": "iraq-2026-third-shirt",
+      "teamHe": "עיראק",
+      "titleHe": "חולצת שלישית עיראק 2026"
     }
   ]
 }
