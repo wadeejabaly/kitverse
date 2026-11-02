@@ -212,7 +212,9 @@ export async function saveSetting(form: FormData) {
     // keep remembered ids only while their usernames stay listed: simplest is to re-resolve after any edit
     const code = String(form.get("code") ?? "").trim().toLowerCase().slice(0, 30) || "kvtest";
     // keep accounts that joined with the code word; usernames are re-checked on their next message
-    row = { key, value: { ...cur, enabled: form.get("mode") !== "everyone", usernames, code } };
+    const kept = { ...cur };
+    delete kept.denied_ids; delete kept.denied_ids_for; // old denial cache, now its own "tester_denials" row
+    row = { key, value: { ...kept, enabled: form.get("mode") !== "everyone", usernames, code } };
   } else if (key === "deposit") {
     const cur = await get("deposit");
     // the Settings page promises 35-50₪ by Bit: keep those amounts even if the row was never seeded

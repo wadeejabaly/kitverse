@@ -12,12 +12,17 @@ export interface TesterSetting {
   usernames: string[];
   allowed_ids?: string[];
   code?: string;
-  /** IGSIDs already looked up and rejected under `denied_ids_for` (a snapshot
-   *  of `usernames` at the time) — see `botMayHandle`'s own note. */
-  denied_ids?: string[];
-  denied_ids_for?: string;
 }
 
+/**
+ * Senders already looked up and rejected, kept in their OWN bot_settings row ("tester_denials") so
+ * writing it can never overwrite the owner's tester list or a fresh join (it used to live inside
+ * "testers" and was written from a stale copy on every message). `for` = the tester list it was
+ * built under: editing the list makes every cached denial stale. Per id: 0 = "not on the list"
+ * (kept until the list changes), otherwise an expiry time in ms - a failed username lookup
+ * (message request not accepted yet, Graph API hiccup) is only trusted briefly.
+ */
+export interface TesterDenials { for: string; ids: Record<string, number> }
 /** Default join word for testers (Instagram won't reveal usernames of people whose DM is still a request). */
 export const DEFAULT_TEST_CODE = "kvtest";
 
@@ -29,57 +34,51 @@ export function parseUsernames(text: string): string[] {
   return [...new Set(text.split(/[\s,]+/).map(normalizeUsername).filter((u) => /^[a-z0-9._]{1,30}$/.test(u)))];
 }
 
-/** A snapshot of the tester list a denial cache was keyed to — join() is all
- *  `isCachedDenial`/`rememberDenied` need, pulled out so both agree. */
+/** A snapshot of the tester list a denial cache was keyed to - both helpers below agree on it. */
 export function deniedIdsFingerprint(usernames: string[]): string {
   return usernames.join(",");
 }
 
-/**
- * Pure yes/no on whether this igsid was already looked up and rejected
- * under the CURRENT tester list — pulled out of `botMayHandle` so the
- * fingerprint-invalidation rule (a denial cached under an old list never
- * blocks silently once the owner edits that list) is unit-testable without
- * touching the database or Instagram's API, same as this file's other pure
- * helpers above.
- */
-export function isCachedDenial(s: Pick<TesterSetting, "usernames" | "denied_ids" | "denied_ids_for">, igsid: string): boolean {
-  return s.denied_ids_for === deniedIdsFingerprint(s.usernames) && !!s.denied_ids?.includes(igsid);
+/** How long a failed username lookup is trusted before Instagram is asked again. */
+export const LOOKUP_FAILURE_TTL_MS = 15 * 60_000;
+const MAX_DENIALS = 2000;
+
+/** Was this sender already rejected under the CURRENT tester list (and is that verdict still fresh)? Pure. */
+export function isCachedDenial(usernames: string[], d: TesterDenials | null, igsid: string, now = Date.now()): boolean {
+  if (!d || d.for !== deniedIdsFingerprint(usernames)) return false;
+  const until = d.ids[igsid];
+  return until !== undefined && (until === 0 || until > now);
+}
+
+/** The cache after rejecting one more sender (pure): drops expired and over-cap entries. */
+export function withDenial(usernames: string[], d: TesterDenials | null, igsid: string, lookupFailed: boolean, now = Date.now()): TesterDenials {
+  const fp = deniedIdsFingerprint(usernames);
+  const kept = Object.entries(d && d.for === fp ? d.ids : {}).filter(([id, until]) => id !== igsid && (until === 0 || until > now));
+  const ids = Object.fromEntries([...kept.slice(-(MAX_DENIALS - 1)), [igsid, lookupFailed ? now + LOOKUP_FAILURE_TTL_MS : 0]]);
+  return { for: fp, ids };
 }
 
 export async function testerSetting(): Promise<TesterSetting> {
   const v = (await db().from("bot_settings").select("value").eq("key", "testers").maybeSingle()).data?.value as Partial<TesterSetting> | undefined;
-  return {
-    enabled: v?.enabled ?? true,
-    usernames: v?.usernames ?? [],
-    allowed_ids: v?.allowed_ids ?? [],
-    code: v?.code || DEFAULT_TEST_CODE,
-    denied_ids: v?.denied_ids ?? [],
-    denied_ids_for: v?.denied_ids_for,
-  };
+  return { enabled: v?.enabled ?? true, usernames: v?.usernames ?? [], allowed_ids: v?.allowed_ids ?? [], code: v?.code || DEFAULT_TEST_CODE };
 }
 
-async function remember(s: TesterSetting, igsid: string) {
-  await db().from("bot_settings").upsert({ key: "testers", value: { ...s, allowed_ids: [...new Set([...(s.allowed_ids ?? []), igsid])] }, updated_at: new Date().toISOString() }, { onConflict: "key" });
+const readDenials = async () => ((await db().from("bot_settings").select("value").eq("key", "tester_denials").maybeSingle()).data?.value as TesterDenials | undefined) ?? null;
+
+/** Adds a tester id. Re-reads the row right before writing and only merges allowed_ids, so it never undoes an edit saved in Settings meanwhile. */
+async function remember(igsid: string) {
+  const fresh = (await db().from("bot_settings").select("value").eq("key", "testers").maybeSingle()).data?.value as Partial<TesterSetting> | undefined;
+  const value = { ...(fresh ?? {}), allowed_ids: [...new Set([...(fresh?.allowed_ids ?? []), igsid])] };
+  await db().from("bot_settings").upsert({ key: "testers", value, updated_at: new Date().toISOString() }, { onConflict: "key" });
 }
 
 /**
- * Remembers a rejected sender so their NEXT message skips straight to "deny"
- * instead of re-querying Instagram's profile API (owner report 2026-11-02:
- * one repeat non-tester hammering the account was burning a DB read + a live
- * Graph API call on every single message, round the clock — most of a
- * Hobby-plan usage spike traced back to exactly this).
- *
- * Keyed to a fingerprint of the current `usernames` list so the cache goes
- * stale the moment the owner edits that list — a sender denied today still
- * gets a fresh real check (and a chance to match) the first time they
- * message after being added, rather than staying blocked forever on an old
- * verdict.
+ * Remembers a rejected sender so their next message skips the Instagram profile lookup (owner
+ * report 2026-11-02: one repeat non-tester was costing a DB read + a Graph API call per message).
  */
-async function rememberDenied(s: TesterSetting, igsid: string, fingerprint: string) {
-  const stillFresh = s.denied_ids_for === fingerprint;
-  const denied_ids = [...new Set([...(stillFresh ? (s.denied_ids ?? []) : []), igsid])];
-  await db().from("bot_settings").upsert({ key: "testers", value: { ...s, denied_ids, denied_ids_for: fingerprint }, updated_at: new Date().toISOString() }, { onConflict: "key" });
+async function rememberDenied(usernames: string[], igsid: string, lookupFailed: boolean) {
+  const value = withDenial(usernames, await readDenials(), igsid, lookupFailed);
+  await db().from("bot_settings").upsert({ key: "tester_denials", value, updated_at: new Date().toISOString() }, { onConflict: "key" });
 }
 
 /**
@@ -94,27 +93,25 @@ export async function botMayHandle(igsid: string, text?: string): Promise<"allow
   if (!s.enabled) return "allow";
   if (s.allowed_ids?.includes(igsid)) return "allow";
   if (text && s.code && text.trim().toLowerCase() === s.code.toLowerCase()) {
-    await remember(s, igsid);
+    await remember(igsid);
     console.log(`[testers] ${igsid} joined with the test code`);
     return "joined";
   }
-  // Repeat sender we already looked up and rejected under today's list -
-  // skip the Graph API round trip entirely (see rememberDenied's own note).
-  const fingerprint = deniedIdsFingerprint(s.usernames);
-  if (isCachedDenial(s, igsid)) return "deny";
+  // Repeat sender we already rejected under today's list - skip the Graph API round trip.
+  if (isCachedDenial(s.usernames, await readDenials(), igsid)) return "deny";
 
   if (!s.usernames.length) {
     console.log(`[testers] dropped ${igsid}: no testers listed`);
-    await rememberDenied(s, igsid, fingerprint);
+    await rememberDenied(s.usernames, igsid, false);
     return "deny";
   }
   const profile = await userProfile(igsid).catch((e) => ({ error: (e as Error).message } as { username?: string; error?: string }));
   const username = normalizeUsername(profile.username ?? "");
   if (!username || !s.usernames.includes(username)) {
     console.log(`[testers] dropped ${igsid}: ${username ? `@${username} is not on the list` : `username unavailable (${profile.error ?? "no username"}) - testers can send "${s.code}" once`}`);
-    await rememberDenied(s, igsid, fingerprint);
+    await rememberDenied(s.usernames, igsid, !username); // a failed lookup is only trusted for a short while
     return "deny";
   }
-  await remember(s, igsid);
+  await remember(igsid);
   return "allow";
 }

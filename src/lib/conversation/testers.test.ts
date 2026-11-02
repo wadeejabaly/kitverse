@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { deniedIdsFingerprint, isCachedDenial, normalizeUsername, parseUsernames } from "./testers";
+import { LOOKUP_FAILURE_TTL_MS, isCachedDenial, normalizeUsername, parseUsernames, withDenial } from "./testers";
 
 describe("tester usernames", () => {
   it("normalizes handles, links and case", () => {
@@ -12,20 +12,30 @@ describe("tester usernames", () => {
 });
 
 describe("denied-sender cache", () => {
-  const usernames = ["kit.verse_1", "someone"];
+  const usernames = ["omarhawari2", "wadijabaly"];
+  const now = 1_000_000;
 
-  it("skips a repeat sender denied under the same tester list", () => {
-    const s = { usernames, denied_ids: ["igsid1"], denied_ids_for: deniedIdsFingerprint(usernames) };
-    expect(isCachedDenial(s, "igsid1")).toBe(true);
-    expect(isCachedDenial(s, "someone-else")).toBe(false); // never denied
+  it("skips a repeat sender who is not on the list", () => {
+    const d = withDenial(usernames, null, "igsid1", false, now);
+    expect(isCachedDenial(usernames, d, "igsid1", now + 86400_000)).toBe(true);
+    expect(isCachedDenial(usernames, d, "someone-else", now)).toBe(false);
   });
 
-  it("goes stale the moment the owner edits the tester list (owner report 2026-11-02)", () => {
-    const s = { usernames, denied_ids: ["igsid1"], denied_ids_for: deniedIdsFingerprint(["old", "list"]) };
-    expect(isCachedDenial(s, "igsid1")).toBe(false); // re-check, don't trust yesterday's list
+  it("only trusts a failed username lookup for a short while", () => {
+    const d = withDenial(usernames, null, "igsid1", true, now);
+    expect(isCachedDenial(usernames, d, "igsid1", now + LOOKUP_FAILURE_TTL_MS - 1)).toBe(true);
+    expect(isCachedDenial(usernames, d, "igsid1", now + LOOKUP_FAILURE_TTL_MS + 1)).toBe(false); // asked again
   });
 
-  it("has nothing cached yet is never a false allow", () => {
-    expect(isCachedDenial({ usernames, denied_ids: undefined, denied_ids_for: undefined }, "igsid1")).toBe(false);
+  it("forgets every denial when the tester list changes", () => {
+    const d = withDenial(["old", "list"], null, "igsid1", false, now);
+    expect(isCachedDenial(usernames, d, "igsid1", now)).toBe(false);
+    expect(Object.keys(withDenial(usernames, d, "igsid2", false, now).ids)).toEqual(["igsid2"]);
+  });
+
+  it("drops expired entries and treats an empty cache as no denials", () => {
+    const d = withDenial(usernames, withDenial(usernames, null, "a", true, now), "b", false, now + LOOKUP_FAILURE_TTL_MS + 1);
+    expect(Object.keys(d.ids)).toEqual(["b"]);
+    expect(isCachedDenial(usernames, null, "a", now)).toBe(false);
   });
 });
