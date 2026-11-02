@@ -7,6 +7,7 @@ import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { env } from "@/lib/env";
 import type { Sleeve } from "@/data/types";
+import storeSelection from "../../../catalog/store-selection.json";
 
 /** Deploy hook helper shared by every action below that changes what the website shows. */
 async function kickDeploy() {
@@ -318,10 +319,23 @@ export async function bulkDeleteProducts(productIds: string[]): Promise<{ delete
  * lets the owner set it, instead of only ever reading it. A website ("featured") shirt is allowed too:
  * scripts/export-store-catalog.ts now skips any catalog/store-selection.json entry whose row is
  * hidden, so hiding one takes it off the website on the next deploy (kickDeploy() below), and showing
- * it again (status back to "available") brings it right back - the JSON file still lists its handle
+ * it again (back to the status it had before) brings it right back - the JSON file still lists its handle
  * either way, store-selection.json stays the record of WHICH shirts are hand-picked, this is only
  * whether a picked one is actually live right now.
  */
+/** What each hidden shirt was before it was hidden (recorded on hide); older hides fall back to "on the website if it's in Wadeea's list, else bot-only". */
+async function statusesBeforeHiding(ids: string[]): Promise<Map<string, string>> {
+  const rows = ((await db().from("audit_log").select("entity_id,before,created_at").eq("action", "product.hide").in("entity_id", ids).order("created_at", { ascending: false })).data ?? []) as { entity_id: string; before: { status?: string } | null }[];
+  const handles = new Map(((await db().from("products").select("id,handle").in("id", ids)).data ?? []).map((p) => [p.id as string, p.handle as string]));
+  const picked = new Set((storeSelection as { products: { handle: string; productHandle?: string }[] }).products.map((x) => x.productHandle ?? x.handle));
+  const out = new Map<string, string>();
+  for (const id of ids) {
+    const before = rows.find((r) => r.entity_id === id && r.before?.status && r.before.status !== "hidden")?.before?.status;
+    out.set(id, before ?? (picked.has(handles.get(id) ?? "") ? "featured" : "available"));
+  }
+  return out;
+}
+
 export async function bulkSetProductsHidden(productIds: string[], hidden: boolean): Promise<{ updated: string[]; skipped: { id: string; title: string; reason: string }[] }> {
   const staff = await requireStaff();
   const ids = [...new Set(z.array(z.string().uuid()).min(1).max(500).parse(productIds))];
@@ -331,12 +345,19 @@ export async function bulkSetProductsHidden(productIds: string[], hidden: boolea
   const skipped: { id: string; title: string; reason: string }[] = [];
   for (const id of ids) if (!byId.has(id)) skipped.push({ id, title: id, reason: "not found" });
 
-  const target = hidden ? "hidden" : "available";
-  const changeableIds = products.filter((p) => p.status !== target).map((p) => p.id);
+  // hide: anything not hidden yet; show: only hidden ones, back to the status each had before
+  const changeableIds = products.filter((p) => (hidden ? p.status !== "hidden" : p.status === "hidden")).map((p) => p.id);
   if (changeableIds.length) {
-    const upd = await db().from("products").update({ status: target }).in("id", changeableIds);
-    if (upd.error) throw new Error(`bulk ${hidden ? "hide" : "unhide"}: ${upd.error.message}`);
-    await db().from("audit_log").insert(changeableIds.map((id) => ({ actor: staff.id, action: hidden ? "product.hide" : "product.unhide", entity: "product", entity_id: id })));
+    if (hidden) {
+      const upd = await db().from("products").update({ status: "hidden" }).in("id", changeableIds);
+      if (upd.error) throw new Error(`bulk hide: ${upd.error.message}`);
+    } else {
+      for (const [id, status] of await statusesBeforeHiding(changeableIds)) {
+        const upd = await db().from("products").update({ status }).eq("id", id);
+        if (upd.error) throw new Error(`unhide: ${upd.error.message}`);
+      }
+    }
+    await db().from("audit_log").insert(changeableIds.map((id) => ({ actor: staff.id, action: hidden ? "product.hide" : "product.unhide", entity: "product", entity_id: id, ...(hidden ? { before: { status: byId.get(id)!.status } } : {}) })));
     // unhiding could bring any of them back as a website shirt (export only checks "not hidden", not
     // "featured") - always rebuild for that; hiding only needs it when a website shirt was in the batch
     if (!hidden || changeableIds.some((id) => byId.get(id)!.status === "featured")) await kickDeploy();
