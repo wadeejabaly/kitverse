@@ -14,14 +14,18 @@ import type { PatchId } from "./orders/rules";
  * same as PayPal/PayPlus before their own env vars are set. Never throws: a failed WhatsApp send must
  * never block the order approval it's reporting on, so every error here is caught and logged instead.
  *
- * WHY A TEMPLATE, NOT A PLAIN MESSAGE: WhatsApp's Cloud API only allows a business to freely message
- * a number that messaged IT first within the last 24 hours. The owner's own number has no reason to
- * ever message the business number, so every alert here is business-initiated and MUST go through a
- * pre-approved message template (Meta's WhatsApp Manager - takes a few minutes to set up, then is
- * usually approved within minutes to about a day). See CLAUDE.md "WhatsApp order alert" for the exact
- * template to create: an IMAGE header plus a body with 6 placeholders, in this order:
- *   {{1}} order number   {{2}} shirt (team + title)   {{3}} version (Fan/Player)
- *   {{4}} size   {{5}} name & number (or "-")          {{6}} patches (or "-")
+ * FREE-FORM, NOT A TEMPLATE (owner decision 2026-11-02, revised): a business-initiated template
+ * message requires Meta Business Verification on the WABA, which in turn requires a registered legal
+ * business entity - not yet true for Kitverse (owner report 2026-11-02: "i dont have my buisness
+ * registred yert"), and WhatsApp Manager refused to even create a template ("WABA not allowed to
+ * manage templates") until that's done. So this sends a plain image+caption (or plain text) message
+ * instead - no template, no approval, no business verification needed. The one constraint: WhatsApp
+ * only allows a business to message a number *freely* that messaged *it* first within the last 24
+ * hours (the "customer service window"). Since the "customer" here is the owner's own phone, the
+ * owner must message the connected WhatsApp number once (any text, e.g. "hi") to open that window -
+ * alerts sent outside it will fail silently (logged, not surfaced) until he messages it again. If the
+ * business later gets registered and verified, an approved template is the sturdier long-term option
+ * (works any time, no daily re-opt-in) - revisit then.
  */
 
 const PATCH_LABEL_EN: Record<PatchId, string> = {
@@ -60,30 +64,26 @@ async function orderLines(orderId: string): Promise<OrderLine[]> {
   });
 }
 
-async function sendTemplate(orderNumber: number, line: OrderLine): Promise<void> {
+async function sendFreeForm(orderNumber: number, line: OrderLine): Promise<void> {
   const e = env();
   const shirt = [line.team, line.title].filter(Boolean).join(" - ") || "Shirt";
   const nameNumber = line.printName || line.printNumber ? `${line.printName ?? ""} ${line.printNumber ?? ""}`.trim() : "-";
   const patches = line.patches.length ? line.patches.map(patchLabel).join(" + ") : "-";
-  const body = {
-    messaging_product: "whatsapp",
-    to: e.WHATSAPP_TO_NUMBER,
-    type: "template",
-    template: {
-      name: e.WHATSAPP_TEMPLATE_NAME,
-      language: { code: "en" },
-      components: [
-        ...(line.photoUrl ? [{ type: "header", parameters: [{ type: "image", image: { link: line.photoUrl } }] }] : []),
-        {
-          type: "body",
-          parameters: [
-            { type: "text", text: String(orderNumber) }, { type: "text", text: shirt }, { type: "text", text: line.version },
-            { type: "text", text: line.size || "-" }, { type: "text", text: nameNumber }, { type: "text", text: patches },
-          ],
-        },
-      ],
-    },
-  };
+  const text = [
+    `New order #${orderNumber}`,
+    shirt,
+    `Version: ${line.version}`,
+    `Size: ${line.size || "-"}`,
+    `Name & number: ${nameNumber}`,
+    `Patches: ${patches}`,
+  ].join("\n");
+
+  // A photo rides as the image message's own caption - one message, not two, and no template
+  // "header" component to format at all.
+  const body = line.photoUrl
+    ? { messaging_product: "whatsapp", to: e.WHATSAPP_TO_NUMBER, type: "image", image: { link: line.photoUrl, caption: text } }
+    : { messaging_product: "whatsapp", to: e.WHATSAPP_TO_NUMBER, type: "text", text: { body: text } };
+
   const res = await fetch(`https://graph.facebook.com/${e.WHATSAPP_GRAPH_VERSION}/${e.WHATSAPP_PHONE_NUMBER_ID}/messages`, {
     method: "POST", headers: { Authorization: `Bearer ${e.WHATSAPP_ACCESS_TOKEN}`, "Content-Type": "application/json" }, body: JSON.stringify(body),
   });
@@ -96,7 +96,7 @@ export async function sendOrderWhatsAppAlerts(orderId: string): Promise<void> {
   try {
     const order = must(await db().from("orders").select("number").eq("id", orderId).single(), "order") as { number: number };
     const lines = await orderLines(orderId);
-    for (const line of lines) await sendTemplate(order.number, line).catch((e) => console.error("whatsapp order alert failed", (e as Error).message));
+    for (const line of lines) await sendFreeForm(order.number, line).catch((e) => console.error("whatsapp order alert failed", (e as Error).message));
   } catch (e) {
     console.error("whatsapp order alert failed", (e as Error).message);
   }

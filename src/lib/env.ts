@@ -51,8 +51,10 @@ const Env = z.object({
   // integration here - the alert simply does nothing until all three are set. Meta's WhatsApp Cloud
   // API, same Graph API family as the Instagram vars above. WHATSAPP_TO_NUMBER is the owner's own
   // number (E.164, e.g. "9725XXXXXXXX") - this only ever sends TO the owner, never to a customer.
-  // See CLAUDE.md "WhatsApp order alert" for the exact message template this needs approved in Meta's
-  // WhatsApp Manager before it can send anything (business-initiated messages require one).
+  // Sends free-form (no template), see notify-whatsapp.ts - the owner must message the connected
+  // WhatsApp number once to open WhatsApp's 24h window before alerts can reach him.
+  // WHATSAPP_TEMPLATE_NAME is unused while free-form is active; kept for if an approved template
+  // becomes an option later (needs Meta Business Verification first - see CLAUDE.md).
   WHATSAPP_PHONE_NUMBER_ID: z.string().optional().default(""),
   WHATSAPP_ACCESS_TOKEN: z.string().optional().default(""),
   WHATSAPP_TO_NUMBER: z.string().optional().default(""),
