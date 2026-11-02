@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { RotateCw, Upload, X, ZoomIn } from "lucide-react";
+import { RotateCw, Upload, X, ZoomIn, ZoomOut } from "lucide-react";
 import type { Sleeve } from "@/data/types";
 import { uploadProductPhoto } from "../../photos-actions";
 import { button, cx } from "../../ui";
@@ -133,11 +133,19 @@ export function CropEditor({ img, productId, sleeve = "short", onClose }: { img:
   const work = useMemo(() => rotated(img, rotation), [img, rotation]);
   const workUrl = useMemo(() => work.canvas.toDataURL("image/jpeg", 0.85), [work]);
   const base = VIEWPORT / Math.min(work.w, work.h); // cover-fit scale at zoom = 1, never leaves empty edges
+  // Owner request 2026-11-03: a zoom-OUT option, not just in - so the whole shirt can be shown instead
+  // of always cropping to fill the square. Below zoom 1 the frame no longer fits edge-to-edge, so the
+  // floor is the "contain" scale (the longer side exactly fits, the shorter side gets padding) - any
+  // further out would just add more empty padding for no benefit.
+  const minZoom = Math.min(work.w, work.h) / Math.max(work.w, work.h);
   const scale = base * zoom;
   const dispW = work.w * scale, dispH = work.h * scale;
-  const minX = Math.min(0, VIEWPORT - dispW), minY = Math.min(0, VIEWPORT - dispH);
   const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
-  const posX = clamp(off.x, minX, 0), posY = clamp(off.y, minY, 0);
+  // Covering an axis (disp >= frame): drag within the usual negative range. Smaller than the frame
+  // (zoomed out past cover on that axis): center it instead of pinning it to the top-left corner.
+  const posX = dispW >= VIEWPORT ? clamp(off.x, VIEWPORT - dispW, 0) : (VIEWPORT - dispW) / 2;
+  const posY = dispH >= VIEWPORT ? clamp(off.y, VIEWPORT - dispH, 0) : (VIEWPORT - dispH) / 2;
+  const minX = Math.min(0, VIEWPORT - dispW), minY = Math.min(0, VIEWPORT - dispH);
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -165,6 +173,10 @@ export function CropEditor({ img, productId, sleeve = "short", onClose }: { img:
       out.width = OUT;
       out.height = OUT;
       const ctx = out.getContext("2d")!;
+      // Zoomed out past cover-fit, the crop window is bigger than the photo on at least one side -
+      // fill white first so that padding comes out white, not JPEG's default black for empty pixels.
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, OUT, OUT);
       const cropSize = VIEWPORT / scale; // back in work-canvas px
       ctx.drawImage(work.canvas, -posX / scale, -posY / scale, cropSize, cropSize, 0, 0, OUT, OUT);
       const blob = await new Promise<Blob>((resolve, reject) =>
@@ -204,14 +216,21 @@ export function CropEditor({ img, productId, sleeve = "short", onClose }: { img:
             style={{ width: dispW, height: dispH, transform: `translate(${posX}px, ${posY}px)` }} />
         </div>
         <div className="mt-3 flex items-center gap-2">
-          <ZoomIn className="h-4 w-4 shrink-0 text-muted" />
-          <input type="range" min={1} max={3} step={0.01} value={zoom} onChange={(e) => setZoom(Number(e.target.value))}
+          <button type="button" onClick={() => setZoom((z) => Math.max(minZoom, Number((z - 0.1).toFixed(2))))} disabled={saving}
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink" aria-label="Zoom out">
+            <ZoomOut className="h-4 w-4" />
+          </button>
+          <input type="range" min={minZoom} max={3} step={0.01} value={zoom} onChange={(e) => setZoom(Number(e.target.value))}
             className="flex-1 accent-[var(--pitch)]" aria-label="Zoom" />
+          <button type="button" onClick={() => setZoom((z) => Math.min(3, Number((z + 0.1).toFixed(2))))} disabled={saving}
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink" aria-label="Zoom in">
+            <ZoomIn className="h-4 w-4" />
+          </button>
           <button onClick={rotate} disabled={saving} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink" aria-label="Rotate 90 degrees">
             <RotateCw className="h-4 w-4" />
           </button>
         </div>
-        <p className="mt-2 text-xs text-muted">Drag the photo to move it, slide to size it up or down.</p>
+        <p className="mt-2 text-xs text-muted">Drag the photo to move it, slide (or tap +/-) to zoom in or out - zoom out past the edges to fit the whole shirt.</p>
         {error ? <p className="mt-2 text-xs text-red">{error}</p> : null}
         <div className="mt-3 flex gap-2">
           <button onClick={onClose} disabled={saving} className={cx(button.ghost, "flex-1")}>Cancel</button>
