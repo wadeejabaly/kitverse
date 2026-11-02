@@ -50,7 +50,10 @@ export interface NewItem {
 async function prepareItem(it: NewItem): Promise<Result<Omit<ItemRow, "id">>> {
   const p = await getProduct(it.product_id);
   if (!p || p.status === "hidden") return { ok: false, error: "unknown product id - search the catalog first" };
-  const opt = p.options.find((o) => o.audience === it.audience && o.version === it.version && o.sleeve === it.sleeve);
+  // Owner decision 2026-10-26: every adult shirt also comes in long sleeve (the website sells it for all
+  // of them) - a shirt listed only as short sleeve takes its long-sleeve order from that same listing.
+  const opt = p.options.find((o) => o.audience === it.audience && o.version === it.version && o.sleeve === it.sleeve)
+    ?? (it.sleeve === "long" && it.audience !== "kids" ? p.options.find((o) => o.audience === it.audience && o.version === it.version && o.sleeve === "short") : undefined);
   if (!opt) {
     const have = p.options.map((o) => `${o.audience}/${o.version}/${o.sleeve}`).join(", ");
     return { ok: false, error: `this shirt is not listed as ${it.audience}/${it.version}/${it.sleeve}. Listed: ${have}`, needsOwner: "variant not in supplier catalog" };
