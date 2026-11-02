@@ -8,7 +8,7 @@ import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
-import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, type DiscountCode } from "../discounts";
+import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, normalizeCode, type DiscountCode } from "../discounts";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
@@ -46,7 +46,7 @@ export type PrepareFailure = Extract<WebOrderResult, { ok: false }>;
  */
 export type PreparedOrder = { ok: true; order: OrderRow; q: Awaited<ReturnType<typeof requote>>; notAtSupplier: string[] };
 
-export async function prepareOrder(req: CreateOrderRequest): Promise<PrepareFailure | PreparedOrder> {
+export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: boolean }): Promise<PrepareFailure | PreparedOrder> {
   const c = req.customer;
   const phone = normalizePhone(c.phone);
   if (!phone) return { ok: false, code: "invalid_request", detail: "phone" };
@@ -59,7 +59,8 @@ export async function prepareOrder(req: CreateOrderRequest): Promise<PrepareFail
   // the server's own quote and each code's own `stackable` flag, never from
   // anything the checkout page showed.
   const discounts: DiscountCode[] = [];
-  for (const raw of new Set((req.discountCodes ?? []).map((c) => c.trim()).filter(Boolean))) {
+  // compared in capitals, the way they're looked up - "CODE" and "code" are one code, applied once
+  for (const raw of new Set((req.discountCodes ?? []).map(normalizeCode).filter(Boolean))) {
     const lookup = await findActiveDiscountCode(raw);
     if (!lookup.ok) return { ok: false, code: "invalid_discount_code", detail: lookup.reason };
     discounts.push(lookup.row);
@@ -128,10 +129,13 @@ export async function prepareOrder(req: CreateOrderRequest): Promise<PrepareFail
       }
       for (const d of discounts) {
         const amount = discountAmount(d, q.itemsTotal);
-        if (amount > 0) {
-          must(await db().from("adjustments").insert({ order_id: order.id, kind: "discount_code", amount, reason: d.code, discount_code: d.code }).select("id"), "discount code");
-          await recordDiscountCodeUse(d.code);
+        if (amount <= 0) continue;
+        // cash orders claim the use now; online ones only when the payment settles (settleOnlinePayment)
+        if (opts.claimCodes && !(await recordDiscountCodeUse(d.code))) {
+          await db().from("orders").update({ status: "cancelled", notes: "checkout cancelled: discount code used up" }).eq("id", order.id);
+          return { ok: false, code: "invalid_discount_code", detail: "used_up" };
         }
+        must(await db().from("adjustments").insert({ order_id: order.id, kind: "discount_code", amount, reason: d.code, discount_code: d.code }).select("id"), "discount code");
       }
       q = await requote(order); // re-price now that every adjustment row exists
     }
@@ -145,7 +149,7 @@ export async function prepareOrder(req: CreateOrderRequest): Promise<PrepareFail
 }
 
 export async function createWebOrder(req: CreateOrderRequest): Promise<WebOrderResult> {
-  const prepared = await prepareOrder(req);
+  const prepared = await prepareOrder(req, { claimCodes: true });
   if (!prepared.ok) return prepared;
   const { order, q, notAtSupplier } = prepared;
   const c = req.customer;

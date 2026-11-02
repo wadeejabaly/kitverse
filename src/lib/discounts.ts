@@ -37,7 +37,7 @@ export type DiscountLookup =
   | { ok: true; row: DiscountCode }
   | { ok: false; reason: "not_found" | "inactive" | "not_started" | "expired" | "used_up" };
 
-const normalizeCode = (raw: string) => raw.trim().toUpperCase();
+export const normalizeCode = (raw: string) => raw.trim().toUpperCase();
 
 /** Looks up a code and checks every eligibility rule EXCEPT minimum order (which needs the actual cart total — see discountAmount). */
 export async function findActiveDiscountCode(raw: string): Promise<DiscountLookup> {
@@ -71,15 +71,18 @@ export function discountAmount(row: Pick<DiscountCode, "kind" | "value" | "min_o
 }
 
 /**
- * Marks one use of a code — call only once an order has actually been placed
- * with it (src/lib/orders/web.ts). Read-then-write: this store's traffic is
- * small enough that a lost increment from two simultaneous orders on the
- * exact same code is an acceptable risk, same tradeoff the rest of this
- * codebase makes rather than adding transactions (see requote() in
- * src/lib/orders/draft.ts).
+ * Claims one use of a code. Compare-and-set on used_count (retried a few times), so two orders at the
+ * same moment can't both take the last use or push past max_uses. Returns false when the code is
+ * used up (or gone). Cash orders claim when placed; PayPal/Bit only once the payment has settled.
  */
-export async function recordDiscountCodeUse(code: string): Promise<void> {
-  const row = (await db().from("discount_codes").select("used_count").eq("code", normalizeCode(code)).maybeSingle()).data as { used_count: number } | null;
-  if (!row) return;
-  await db().from("discount_codes").update({ used_count: row.used_count + 1 }).eq("code", normalizeCode(code));
+export async function recordDiscountCodeUse(code: string): Promise<boolean> {
+  const c = normalizeCode(code);
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const row = (await db().from("discount_codes").select("used_count,max_uses").eq("code", c).maybeSingle()).data as { used_count: number; max_uses: number | null } | null;
+    if (!row) return false;
+    if (row.max_uses != null && row.used_count >= row.max_uses) return false;
+    const won = await db().from("discount_codes").update({ used_count: row.used_count + 1 }).eq("code", c).eq("used_count", row.used_count).select("code");
+    if ((won.data ?? []).length) return true;
+  }
+  return false;
 }

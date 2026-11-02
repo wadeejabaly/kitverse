@@ -1,6 +1,7 @@
 import "server-only";
 import { db, must } from "../db";
 import { notify } from "../notify";
+import { recordDiscountCodeUse } from "../discounts";
 import { orderReference } from "../checkout";
 import { orderLink, orderToken } from "./link";
 import { prepareOrder, type PrepareFailure } from "./web";
@@ -47,7 +48,7 @@ export async function createPendingOnlineOrder(
   req: CreateOrderRequest,
   provider: OnlineProvider,
 ): Promise<CreatePendingResult> {
-  const prepared = await prepareOrder(req);
+  const prepared = await prepareOrder(req, { claimCodes: false }); // a code's use is claimed once the payment settles
   if (!prepared.ok) return prepared;
   const { order, q } = prepared;
 
@@ -161,6 +162,12 @@ export async function settleOnlinePayment(opts: {
   } catch (e) {
     // payments_one_capture (provider, capture_id) - this exact settlement was already recorded by the other caller in the race.
     if (!/duplicate key|payments_one_capture/i.test((e as Error).message)) throw e;
+  }
+
+  if (row) {
+    // the order is paid: now its discount codes count as used (never for an abandoned online checkout)
+    const codes = ((await db().from("adjustments").select("discount_code").eq("order_id", row.id).eq("kind", "discount_code")).data ?? []) as { discount_code: string | null }[];
+    for (const c of codes) if (c.discount_code && !(await recordDiscountCodeUse(c.discount_code))) console.error("discount code used up by the time payment settled", c.discount_code, row.id);
   }
 
   if (!row) {
