@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { notFound } from "next/navigation";
-import { Banknote, CreditCard, MessageCircle, Truck, ShieldCheck, Check } from "lucide-react";
+import { Banknote, CreditCard, MessageCircle, Truck, ShieldCheck, Check, Smartphone } from "lucide-react";
 import { db } from "@/lib/db";
 import { readOrderToken } from "@/lib/orders/link";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
@@ -156,8 +156,10 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
 
       <section className="flex flex-col gap-2.5">
         <h2 className="text-sm font-semibold text-ink-2">طريقة الدفع</h2>
-        <PayOption icon={Banknote} title="كاش عند الاستلام" text="بتدفع للشليح لما توصلك الطلبية" selected={o.payment_method !== "paypal"} />
-        <PayOption icon={CreditCard} title="PayPal أو بطاقة" text={paypalReady ? "ادفع هلأ بأمان عن طريق PayPal" : "قريبًا"} selected={o.payment_method === "paypal"} disabled={!paypalReady} />
+        {o.payment_method === "bit"
+          ? <PayOption icon={Smartphone} title="Bit" text={o.payment_status === "paid" ? "دفعت عن طريق Bit - ما في إشي تدفعه للشليح" : "الدفع عن طريق Bit"} selected />
+          : <PayOption icon={Banknote} title="كاش عند الاستلام" text="بتدفع للشليح لما توصلك الطلبية" selected={o.payment_method !== "paypal"} />}
+        <PayOption icon={CreditCard} title="PayPal أو بطاقة" text={o.payment_method === "paypal" && o.payment_status === "paid" ? "دفعت عن طريق PayPal - ما في إشي تدفعه للشليح" : paypalReady ? "ادفع هلأ بأمان عن طريق PayPal" : "قريبًا"} selected={o.payment_method === "paypal"} disabled={!paypalReady && o.payment_method !== "paypal"} />
         {o.payment_status === "paid" ? <p className="flex items-center gap-1.5 text-sm font-medium text-pitch"><Check className="h-4 w-4" /> مدفوعة، شكرًا الك</p> : null}
       </section>
 

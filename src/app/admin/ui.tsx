@@ -110,6 +110,12 @@ export function timeAgo(iso: string | null | undefined) {
   return `${Math.round(h / 24)}d`;
 }
 
+/** How an order is paid, as the owner reads it (Bit was shown as "Cash" - a courier could collect twice). */
+export const payLabel = (method: string | null | undefined, paymentStatus?: string | null, long = false) => {
+  const base = method === "paypal" ? "PayPal" : method === "bit" ? "Bit" : long ? "Cash on delivery" : "Cash";
+  return method && method !== "cod" ? `${base}${paymentStatus === "paid" ? " · paid" : paymentStatus === "refunded" ? " · refunded" : " · not paid yet"}` : base;
+};
+
 export const ilTime = (iso: string) => new Date(iso).toLocaleString("en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 export const KIND: Record<string, { label: string; tone: Tone }> = {

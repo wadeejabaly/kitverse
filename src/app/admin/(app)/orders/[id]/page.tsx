@@ -6,7 +6,7 @@ import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
 import { orderToken } from "@/lib/orders/link";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
-import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime } from "../../../ui";
+import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime, payLabel } from "../../../ui";
 import { CancelOrderButton } from "./cancel-order-button";
 import { CancelInventoryPrompt } from "./cancel-inventory-prompt";
 
@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function OrderPage({ params }: PageProps<"/admin/orders/[id]">) {
   const { id } = await params;
   const o = (await db().from("orders").select("*").eq("id", id).maybeSingle()).data as
-    { id: string; number: number; status: string; source: string; total: number; conversation_id: string | null; payment_method: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null; returned_to_inventory_at: string | null } | null;
+    { id: string; number: number; status: string; source: string; total: number; conversation_id: string | null; payment_method: string | null; payment_status: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null; returned_to_inventory_at: string | null } | null;
   if (!o) notFound();
   const lines = await batchLines([o.id]);
   const pids = [...new Set(lines.map((l) => l.product_id).filter(Boolean))] as string[];
@@ -47,7 +47,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
   return (
     <>
       <Link href="/admin/orders" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Orders</Link>
-      <PageHeader title={`Order #${o.number}`} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={st.tone}>{st.label}</Badge><span>₪{o.total / 100} · {o.payment_method === "paypal" ? "PayPal" : "Cash on delivery"}</span></span>}
+      <PageHeader title={`Order #${o.number}`} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={st.tone}>{st.label}</Badge><span>₪{o.total / 100} · {payLabel(o.payment_method, o.payment_status, true)}</span></span>}
         actions={<>
           <a href={`/o/${orderToken(o.id)}`} target="_blank" rel="noreferrer" className={button.ghost}><ExternalLink className="h-4 w-4" /> Customer page</a>
           {o.conversation_id ? <Link href={`/admin/inbox/${o.conversation_id}`} className={button.ghost}><MessagesSquare className="h-4 w-4" /> Chat</Link> : null}
