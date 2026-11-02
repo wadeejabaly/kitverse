@@ -54,6 +54,12 @@ export async function Header() {
           <HeaderLink href="/accessories">{t("accessories")}</HeaderLink>
           <HeaderLink href="/size-guide">{t("sizeGuide")}</HeaderLink>
           <HeaderLink href="/about">{t("about")}</HeaderLink>
+          {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain <a>,
+              not <Link>, so it never gets a locale prefix it can't resolve. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
+          <a href="/o/track" className="border-b border-transparent pb-1 text-ink transition-colors hover:border-gold">
+            {t("trackOrder")}
+          </a>
         </nav>
 
         {/* Utility row. Ink, not ink-soft: see the note above — over a

@@ -106,6 +106,12 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
               <MenuLink href="/size-guide">{t("sizeGuide")}</MenuLink>
               <MenuLink href="/shipping">{t("shipping")}</MenuLink>
               <MenuLink href="/about">{t("about")}</MenuLink>
+              {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain
+                  <a>, not <MenuLink>/<Link>, so it never gets a locale prefix it can't resolve. */}
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
+              <a href="/o/track" className="text-xl transition-colors hover:text-ink-soft">
+                {t("trackOrder")}
+              </a>
             </MenuGroup>
 
             <div className="flex items-center justify-between gap-6 border-t border-rule pt-6 text-sm text-ink-soft">
