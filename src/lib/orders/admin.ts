@@ -24,6 +24,14 @@ export interface BatchLine {
   patches: string; box: string; supplier_album: string;
 }
 
+/** The orders in a supplier batch that should still be made - an order cancelled after batching is left out. */
+export async function batchOrderIds(batchId: string): Promise<string[]> {
+  const itemIds = ((await db().from("supplier_batch_items").select("order_item_id").eq("batch_id", batchId)).data ?? []).map((r) => r.order_item_id as string);
+  if (!itemIds.length) return [];
+  const ids = [...new Set(((await db().from("order_items").select("order_id").in("id", itemIds)).data ?? []).map((r) => r.order_id as string))];
+  return ((await db().from("orders").select("id").in("id", ids).neq("status", "cancelled")).data ?? []).map((r) => r.id as string);
+}
+
 /** Rows for the supplier spreadsheet (one row per shirt line). */
 export async function batchLines(orderIds: string[]): Promise<BatchLine[]> {
   if (!orderIds.length) return [];

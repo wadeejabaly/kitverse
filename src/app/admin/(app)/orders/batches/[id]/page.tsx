@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Download, Check } from "lucide-react";
 import { db } from "@/lib/db";
-import { batchLines } from "@/lib/orders/admin";
+import { batchOrderIds, batchLines } from "@/lib/orders/admin";
 import { markBatchSent } from "../../../../orders-actions";
 import { PageHeader, Card, Badge, button } from "../../../../ui";
 
@@ -12,8 +12,7 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
   const { id } = await params;
   const b = (await db().from("supplier_batches").select("id,status,sent_at").eq("id", id).maybeSingle()).data;
   if (!b) notFound();
-  const itemIds = ((await db().from("supplier_batch_items").select("order_item_id").eq("batch_id", id)).data ?? []).map((r) => r.order_item_id);
-  const orderIds = itemIds.length ? [...new Set(((await db().from("order_items").select("order_id").in("id", itemIds)).data ?? []).map((r) => r.order_id))] : [];
+  const orderIds = await batchOrderIds(id); // cancelled orders are left out
   const lines = await batchLines(orderIds);
   return (
     <>
