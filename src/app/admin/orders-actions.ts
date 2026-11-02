@@ -24,11 +24,13 @@ export async function changeOrderStatus(form: FormData) {
   const becomingConfirmed = c.status === "confirmed" && o.status !== "confirmed";
   // an order confirmed by hand counts from now (overview "orders today", customer page date)
   const confirmedAt = becomingConfirmed && !o.confirmed_at ? { confirmed_at: new Date().toISOString() } : {};
-  must(await db().from("orders").update({ status: c.status, ...confirmedAt }).eq("id", o.id).select("id"), "update status");
+  // only from the status this page showed: a double submit (or a second admin) can't apply it twice
+  const changed = must(await db().from("orders").update({ status: c.status, ...confirmedAt }).eq("id", o.id).eq("status", o.status).select("id"), "update status") as { id: string }[];
+  if (!changed.length && o.status !== c.status) return;
   must(await db().from("order_events").insert({ order_id: o.id, from_status: o.status, to_status: c.status, actor: "owner", actor_user: staff.id, note: c.note ?? null }).select("id"), "event");
   // owner decision 2026-11-02 (Part 9): one WhatsApp message per shirt, as soon as the order is
   // approved - no-op until WhatsApp is actually configured (src/lib/notify-whatsapp.ts)
-  if (becomingConfirmed) await sendOrderWhatsAppAlerts(o.id);
+  if (becomingConfirmed && !o.confirmed_at) await sendOrderWhatsAppAlerts(o.id); // first confirmation only, not every re-confirm
   if (c.status === "delivered") {
     await db().from("cash_collections").upsert({ order_id: o.id, amount: 0, status: "with_courier" }, { onConflict: "order_id", ignoreDuplicates: true });
   }

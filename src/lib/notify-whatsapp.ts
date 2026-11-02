@@ -42,25 +42,30 @@ export function isWhatsAppConfigured(): boolean {
 }
 
 interface OrderLine {
-  team: string; title: string; version: string; size: string; printName: string | null; printNumber: string | null;
+  team: string; title: string; version: string; sleeve: string; size: string; qty: number; printName: string | null; printNumber: string | null;
   patches: string[]; photoUrl: string | null;
 }
 
 async function orderLines(orderId: string): Promise<OrderLine[]> {
   const items = must(
-    await db().from("order_items").select("product_id,version,size,print_name,print_number,patches").eq("order_id", orderId),
+    await db().from("order_items").select("product_id,version,sleeve,size,qty,print_name,print_number,patches").eq("order_id", orderId),
     "order items",
-  ) as { product_id: string | null; version: string; size: string; print_name: string | null; print_number: string | null; patches: string[] }[];
+  ) as { product_id: string | null; version: string; sleeve: string; size: string; qty: number; print_name: string | null; print_number: string | null; patches: string[] }[];
   const pids = [...new Set(items.map((i) => i.product_id).filter(Boolean))] as string[];
   const products = pids.length
     ? must(await db().from("products").select("id,title_en,primary_image_url,team:teams(name_en)").in("id", pids), "products") as unknown as
       { id: string; title_en: string; primary_image_url: string | null; team: { name_en: string } | null }[]
     : [];
+  // a long-sleeve line shows that shirt's long-sleeve front photo when it has one
+  const longPhotos = pids.length && items.some((i) => i.sleeve === "long")
+    ? ((await db().from("product_images").select("product_id,url,sort").in("product_id", pids).eq("sleeve", "long").neq("status", "bad").order("sort")).data ?? []) as { product_id: string; url: string }[]
+    : [];
   return items.map((i) => {
     const p = products.find((x) => x.id === i.product_id);
+    const longPhoto = i.sleeve === "long" ? longPhotos.find((x) => x.product_id === i.product_id)?.url : undefined;
     return {
-      team: p?.team?.name_en ?? "", title: p?.title_en ?? "", version: i.version === "player" ? "Player" : "Fan",
-      size: i.size, printName: i.print_name, printNumber: i.print_number, patches: i.patches, photoUrl: p?.primary_image_url ?? null,
+      team: p?.team?.name_en ?? "", title: p?.title_en ?? "", version: i.version === "player" ? "Player" : "Fan", sleeve: i.sleeve === "long" ? "Long sleeve" : "Short sleeve",
+      size: i.size, qty: i.qty ?? 1, printName: i.print_name, printNumber: i.print_number, patches: i.patches, photoUrl: longPhoto ?? p?.primary_image_url ?? null,
     };
   });
 }
@@ -73,8 +78,8 @@ async function sendFreeForm(orderNumber: number, line: OrderLine): Promise<void>
   const text = [
     `New order #${orderNumber}`,
     shirt,
-    `Version: ${line.version}`,
-    `Size: ${line.size || "-"}`,
+    `Version: ${line.version}, ${line.sleeve}`,
+    `Size: ${line.size || "-"}${line.qty > 1 ? `  x${line.qty}` : ""}`,
     `Name & number: ${nameNumber}`,
     `Patches: ${patches}`,
   ].join("\n");
@@ -89,12 +94,10 @@ async function sendFreeForm(orderNumber: number, line: OrderLine): Promise<void>
     method: "POST", headers: { Authorization: `Bearer ${e.WHATSAPP_ACCESS_TOKEN}`, "Content-Type": "application/json" }, body: JSON.stringify(body),
   });
   const resBody = await res.text().catch(() => "");
-  // Temporary (owner is actively debugging why no message arrived, 2026-11-02): log every attempt,
-  // not just failures - a 200 with a message id proves Meta accepted it (so a no-show is a delivery/
-  // number issue, not this code), while a non-200 body carries Meta's actual error code/reason.
-  // Remove once a real alert has been confirmed received.
-  console.log("whatsapp order alert sent", res.status, resBody);
-  if (!res.ok) console.error("whatsapp order alert failed", res.status, resBody);
+  // log Meta's verdict without the response body (it echoes the owner's phone number)
+  const messageId = (() => { try { return (JSON.parse(resBody) as { messages?: { id?: string }[] }).messages?.[0]?.id ?? null; } catch { return null; } })();
+  if (res.ok) console.log("whatsapp order alert sent", res.status, messageId);
+  else console.error("whatsapp order alert failed", res.status, resBody.replaceAll(e.WHATSAPP_TO_NUMBER, "<owner>"));
 }
 
 /** One WhatsApp message per shirt in the order, each with that shirt's own photo. Never throws. */
@@ -106,7 +109,8 @@ export async function sendOrderWhatsAppAlerts(orderId: string): Promise<void> {
     return;
   }
   try {
-    const order = must(await db().from("orders").select("number").eq("id", orderId).single(), "order") as { number: number };
+    const order = must(await db().from("orders").select("number,customer:customers(ig_user_id)").eq("id", orderId).single(), "order") as unknown as { number: number; customer: { ig_user_id: string | null } | null };
+    if (order.customer?.ig_user_id?.startsWith("sim:")) return; // admin Test bot order, not a real one
     const lines = await orderLines(orderId);
     for (const line of lines) await sendFreeForm(order.number, line).catch((e) => console.error("whatsapp order alert failed", (e as Error).message));
   } catch (e) {
