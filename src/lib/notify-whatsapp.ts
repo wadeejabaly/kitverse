@@ -87,12 +87,23 @@ async function sendFreeForm(orderNumber: number, line: OrderLine): Promise<void>
   const res = await fetch(`https://graph.facebook.com/${e.WHATSAPP_GRAPH_VERSION}/${e.WHATSAPP_PHONE_NUMBER_ID}/messages`, {
     method: "POST", headers: { Authorization: `Bearer ${e.WHATSAPP_ACCESS_TOKEN}`, "Content-Type": "application/json" }, body: JSON.stringify(body),
   });
-  if (!res.ok) console.error("whatsapp order alert failed", res.status, await res.text().catch(() => ""));
+  const resBody = await res.text().catch(() => "");
+  // Temporary (owner is actively debugging why no message arrived, 2026-11-02): log every attempt,
+  // not just failures - a 200 with a message id proves Meta accepted it (so a no-show is a delivery/
+  // number issue, not this code), while a non-200 body carries Meta's actual error code/reason.
+  // Remove once a real alert has been confirmed received.
+  console.log("whatsapp order alert sent", res.status, resBody);
+  if (!res.ok) console.error("whatsapp order alert failed", res.status, resBody);
 }
 
 /** One WhatsApp message per shirt in the order, each with that shirt's own photo. Never throws. */
 export async function sendOrderWhatsAppAlerts(orderId: string): Promise<void> {
-  if (!isWhatsAppConfigured()) return;
+  if (!isWhatsAppConfigured()) {
+    console.log("whatsapp order alert skipped: not configured", {
+      hasPhoneId: !!env().WHATSAPP_PHONE_NUMBER_ID, hasToken: !!env().WHATSAPP_ACCESS_TOKEN, hasToNumber: !!env().WHATSAPP_TO_NUMBER,
+    });
+    return;
+  }
   try {
     const order = must(await db().from("orders").select("number").eq("id", orderId).single(), "order") as { number: number };
     const lines = await orderLines(orderId);
