@@ -150,6 +150,47 @@ export async function deleteProductPhoto(form: FormData) {
 }
 
 /**
+ * Permanently remove a shirt added by mistake (duplicate, wrong supplier listing, wrong team...).
+ * Refuses two cases rather than silently doing the wrong thing:
+ *  - a website shirt (status "featured") - the website list is catalog/store-selection.json, a code
+ *    file, not this table (see CLAUDE.md "Catalog page is read-only"); deleting the database row
+ *    wouldn't remove it from the site, it would just make the site quietly fall back to the
+ *    hand-authored JSON data for it (stale name/photo) while still selling it - worse than refusing;
+ *  - a shirt with any order history - order_items.product_id has no cascade on purpose, so a past
+ *    order never loses its line items just because the shirt it was for got deleted later.
+ * Everything else about the shirt (its photos' storage files + product_images/product_options/
+ * ig_media_products rows) is removed with it.
+ */
+export async function deleteProduct(form: FormData): Promise<{ ok: boolean; message: string }> {
+  const staff = await requireStaff();
+  const productId = z.string().uuid().parse(form.get("productId"));
+
+  const product = must(await db().from("products").select("id,title_en,status").eq("id", productId).single(), "product") as { id: string; title_en: string; status: string };
+  if (product.status === "featured") {
+    return { ok: false, message: "This shirt is on the website - remove it from catalog/store-selection.json first (a code change), not from here." };
+  }
+
+  const orders = await db().from("order_items").select("id", { count: "exact", head: true }).eq("product_id", productId);
+  if ((orders.count ?? 0) > 0) {
+    return { ok: false, message: `Can't delete - ${orders.count} past order${orders.count === 1 ? "" : "s"} still reference this shirt.` };
+  }
+
+  const images = (await db().from("product_images").select("url").eq("product_id", productId)).data as { url: string }[] | null;
+  const paths = (images ?? []).map((i) => mediaStoragePath(i.url)).filter((p): p is string => !!p);
+  if (paths.length) await db().storage.from("media").remove(paths);
+
+  // no rows exist today (checked 2026-11-02), but don't let a future one silently block the delete
+  await db().from("availability_answers").delete().eq("product_id", productId);
+
+  const del = await db().from("products").delete().eq("id", productId);
+  if (del.error) return { ok: false, message: `Couldn't delete: ${del.error.message}` };
+
+  await db().from("audit_log").insert({ actor: staff.id, action: "product.delete", entity: "product", entity_id: productId });
+  revalidatePath("/admin/photos");
+  return { ok: true, message: `Deleted "${product.title_en}".` };
+}
+
+/**
  * Owner corrects a shirt's name (owner report 2026-11-02: "like real madrid 25/26 you labeled some
  * wrong i just want to be able to fix them"). Sets title_override so the website export prefers this
  * over its own hand-authored catalog/store-selection.json entry for this shirt, the same way an

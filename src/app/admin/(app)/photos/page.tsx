@@ -8,6 +8,7 @@ import { PageHeader, Card, Badge, EmptyState, cx, button } from "../../ui";
 import { PhotoUploadButton } from "./photo-upload-button";
 import { PhotoManagerButton } from "./photo-manager";
 import { MigrateRealPhotosButton } from "./migrate-real-photos-button";
+import { DeleteProductButton } from "./delete-product-button";
 
 export const dynamic = "force-dynamic";
 
@@ -124,6 +125,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
               <div className="ml-[3.25rem] flex gap-2 sm:ml-0">
                 <PhotoUploadButton productId={p.id} label="Upload" variant="row" />
                 <PhotoManagerButton productId={p.id} label="All photos" variant="row" />
+                <DeleteProductButton productId={p.id} title={p.title_en} variant="row" />
               </div>
             </div>
           ))}
