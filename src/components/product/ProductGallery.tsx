@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useProductSleeve } from "@/components/product/ProductSleeveContext";
 import { hasPhoto } from "@/lib/product";
@@ -37,18 +37,19 @@ export function ProductGallery({
 }) {
   const t = useTranslations("product");
   const [sleeve] = useProductSleeve();
-  const activeSet = sleeve === "long" && imagesLongSleeve?.length ? imagesLongSleeve : images;
+  const setKey = sleeve === "long" && imagesLongSleeve?.length ? "long" : "short";
+  const activeSet = setKey === "long" ? imagesLongSleeve! : images;
   const [active, setActive] = useState(0);
   // Switching sleeve can swap to a shorter or differently-ordered set — jump
   // back to its first (front) photo rather than keep whatever index the
   // reader had picked in the other set, which could now point at the wrong
   // photo. Adjusted during render (React's documented pattern for resetting
-  // state when a prop/derived value changes), not in an effect, so the wrong
-  // photo never paints even for one frame.
-  const previousSet = useRef(activeSet);
-  if (previousSet.current !== activeSet) {
-    previousSet.current = activeSet;
-    if (active !== 0) setActive(0);
+  // state when a value changes: previous value kept in state), not in an
+  // effect, so the wrong photo never paints even for one frame.
+  const [shownKey, setShownKey] = useState(setKey);
+  if (shownKey !== setKey) {
+    setShownKey(setKey);
+    setActive(0);
   }
   const shown = activeSet[active] ?? activeSet[0];
 
