@@ -151,13 +151,14 @@ export async function deleteProductPhoto(form: FormData) {
 
 /**
  * Permanently remove a shirt added by mistake (duplicate, wrong supplier listing, wrong team...).
- * Refuses two cases rather than silently doing the wrong thing:
- *  - a website shirt (status "featured") - the website list is catalog/store-selection.json, a code
- *    file, not this table (see CLAUDE.md "Catalog page is read-only"); deleting the database row
- *    wouldn't remove it from the site, it would just make the site quietly fall back to the
- *    hand-authored JSON data for it (stale name/photo) while still selling it - worse than refusing;
- *  - a shirt with any order history - order_items.product_id has no cascade on purpose, so a past
- *    order never loses its line items just because the shirt it was for got deleted later.
+ * Refuses only one case: a shirt with any order history - order_items.product_id has no cascade on
+ * purpose, so a past order never loses its line items just because the shirt it was for got deleted
+ * later. A website shirt (status "featured") is allowed - scripts/export-store-catalog.ts skips any
+ * catalog/store-selection.json entry whose row is gone (or hidden) when it builds the site, so this
+ * also takes it off the website, on the next deploy (kickDeploy() below fires that rebuild, same as a
+ * photo upload). The hand-picked JSON file itself still lists the handle after this - a future re-run
+ * of apply-store-selection.ts would recreate it from there, so remove it from that file too if it
+ * should stay gone for good.
  * Everything else about the shirt (its photos' storage files + product_images/product_options/
  * ig_media_products rows) is removed with it.
  */
@@ -166,9 +167,6 @@ export async function deleteProduct(form: FormData): Promise<{ ok: boolean; mess
   const productId = z.string().uuid().parse(form.get("productId"));
 
   const product = must(await db().from("products").select("id,title_en,status").eq("id", productId).single(), "product") as { id: string; title_en: string; status: string };
-  if (product.status === "featured") {
-    return { ok: false, message: "This shirt is on the website - remove it from catalog/store-selection.json first (a code change), not from here." };
-  }
 
   const orders = await db().from("order_items").select("id", { count: "exact", head: true }).eq("product_id", productId);
   if ((orders.count ?? 0) > 0) {
@@ -186,15 +184,17 @@ export async function deleteProduct(form: FormData): Promise<{ ok: boolean; mess
   if (del.error) return { ok: false, message: `Couldn't delete: ${del.error.message}` };
 
   await db().from("audit_log").insert({ actor: staff.id, action: "product.delete", entity: "product", entity_id: productId });
+  if (product.status === "featured") await kickDeploy();
   revalidatePath("/admin/photos");
-  return { ok: true, message: `Deleted "${product.title_en}".` };
+  return { ok: true, message: `Deleted "${product.title_en}".${product.status === "featured" ? " It'll come off the website in about 2 minutes." : ""}` };
 }
 
 /**
- * Same refusals as deleteProduct (website shirt / has order history), checked in bulk instead of one
- * row at a time: one query to find which of the picked ids are actually deletable, then one storage
- * removal, one availability_answers cleanup and one products delete for all of them together - a
- * 400-shirt selection should still be a handful of queries, not 400x5.
+ * Same refusal as deleteProduct (order history only - a website shirt is allowed, see its comment),
+ * checked in bulk instead of one row at a time: one query to find which of the picked ids are
+ * actually deletable, then one storage removal, one availability_answers cleanup and one products
+ * delete for all of them together - a 400-shirt selection should still be a handful of queries, not
+ * 400x5.
  */
 export async function bulkDeleteProducts(productIds: string[]): Promise<{ deleted: string[]; skipped: { id: string; title: string; reason: string }[] }> {
   const staff = await requireStaff();
@@ -204,9 +204,8 @@ export async function bulkDeleteProducts(productIds: string[]): Promise<{ delete
   const byId = new Map(products.map((p) => [p.id, p]));
   const skipped: { id: string; title: string; reason: string }[] = [];
   for (const id of ids) if (!byId.has(id)) skipped.push({ id, title: id, reason: "not found" });
-  for (const p of products) if (p.status === "featured") skipped.push({ id: p.id, title: p.title_en, reason: "it's on the website" });
 
-  const candidateIds = products.filter((p) => p.status !== "featured").map((p) => p.id);
+  const candidateIds = products.map((p) => p.id);
   const orderRows = candidateIds.length
     ? (must(await db().from("order_items").select("product_id").in("product_id", candidateIds), "order items") as { product_id: string }[])
     : [];
@@ -225,6 +224,8 @@ export async function bulkDeleteProducts(productIds: string[]): Promise<{ delete
   if (del.error) throw new Error(`bulk delete: ${del.error.message}`);
 
   await db().from("audit_log").insert(deletableIds.map((id) => ({ actor: staff.id, action: "product.delete", entity: "product", entity_id: id })));
+  // a deploy hook call is cheap - fire it whenever a featured shirt was in the batch, same as a single delete
+  if (deletableIds.some((id) => byId.get(id)!.status === "featured")) await kickDeploy();
   revalidatePath("/admin/photos");
   return { deleted: deletableIds, skipped };
 }
@@ -234,10 +235,12 @@ export async function bulkDeleteProducts(productIds: string[]): Promise<{ delete
  * "hidden" is already a real status the whole bot/checkout stack respects - search_catalog never
  * returns it (src/lib/catalog/search.ts), a draft order refuses to add it (src/lib/orders/draft.ts),
  * a web checkout line for it gets dropped (src/lib/orders/web.ts) - this is just the first thing that
- * lets the owner set it, instead of only ever reading it. Refuses a website ("featured") shirt for
- * the same reason as delete: catalog/store-selection.json still lists it by handle no matter what
- * this column says, so hiding it wouldn't take it off the site - it would just make the website keep
- * showing it while checkout silently drops that line, which is worse than refusing.
+ * lets the owner set it, instead of only ever reading it. A website ("featured") shirt is allowed too:
+ * scripts/export-store-catalog.ts now skips any catalog/store-selection.json entry whose row is
+ * hidden, so hiding one takes it off the website on the next deploy (kickDeploy() below), and showing
+ * it again (status back to "available") brings it right back - the JSON file still lists its handle
+ * either way, store-selection.json stays the record of WHICH shirts are hand-picked, this is only
+ * whether a picked one is actually live right now.
  */
 export async function bulkSetProductsHidden(productIds: string[], hidden: boolean): Promise<{ updated: string[]; skipped: { id: string; title: string; reason: string }[] }> {
   const staff = await requireStaff();
@@ -247,14 +250,16 @@ export async function bulkSetProductsHidden(productIds: string[], hidden: boolea
   const byId = new Map(products.map((p) => [p.id, p]));
   const skipped: { id: string; title: string; reason: string }[] = [];
   for (const id of ids) if (!byId.has(id)) skipped.push({ id, title: id, reason: "not found" });
-  for (const p of products) if (p.status === "featured") skipped.push({ id: p.id, title: p.title_en, reason: "it's on the website" });
 
   const target = hidden ? "hidden" : "available";
-  const changeableIds = products.filter((p) => p.status !== "featured" && p.status !== target).map((p) => p.id);
+  const changeableIds = products.filter((p) => p.status !== target).map((p) => p.id);
   if (changeableIds.length) {
     const upd = await db().from("products").update({ status: target }).in("id", changeableIds);
     if (upd.error) throw new Error(`bulk ${hidden ? "hide" : "unhide"}: ${upd.error.message}`);
     await db().from("audit_log").insert(changeableIds.map((id) => ({ actor: staff.id, action: hidden ? "product.hide" : "product.unhide", entity: "product", entity_id: id })));
+    // unhiding could bring any of them back as a website shirt (export only checks "not hidden", not
+    // "featured") - always rebuild for that; hiding only needs it when a website shirt was in the batch
+    if (!hidden || changeableIds.some((id) => byId.get(id)!.status === "featured")) await kickDeploy();
   }
   revalidatePath("/admin/photos");
   return { updated: changeableIds, skipped };

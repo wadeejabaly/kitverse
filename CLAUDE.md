@@ -37,7 +37,7 @@ Approvals: `src/lib/approvals.ts` → admin `/admin/approvals` → `approval/dec
 
 ## Admin
 - Overview numbers use Israel days (`src/lib/time.ts`); sales skip cancelled and test-bot (`sim:`) orders. "AI cost today" / the spend cap = `agent_runs` (bot turns) + `ai_usage` (photo checks, post matching; `src/lib/ai-cost.ts`).
-- Catalog page is read-only: the website list is Wadeea's `catalog/store-selection.json` (changing it is a code change + `scripts/apply-store-selection.ts`).
+- Catalog page is read-only: the website list is Wadeea's `catalog/store-selection.json` (adding a shirt to it, or changing which ones are hand-picked, is still a code change + `scripts/apply-store-selection.ts`). Removing a picked shirt from being live is different (see "Deleting / hiding products" below) - that part doesn't need a code change.
 - Pricing page: the owner edits every price there (shirts, extras, offers, delivery fees/days/area names) + "Approve & publish". Saving updates the live price list (bot + checkout at once) and calls the deploy hook so the website's shown prices follow.
 - **Prices live only in the database price list, changed in admin Pricing.** Never hardcode a price in code, prompts or translations: website copy uses placeholders filled from `src/data/pricing.ts`; `src/data/price-list.json` is re-exported from the database on every build (editing it by hand changes nothing); `pricing/price-list.draft.json` is only the first-time seed.
 - Owner photo uploads call `VERCEL_DEPLOY_HOOK_URL` (if set) so the static website catalog rebuilds.
@@ -96,6 +96,27 @@ Customers only ever see photos that passed `src/lib/catalog/photo-qa.ts`:
 - the crest has been confirmed as the right team. Supplier albums are sometimes mislabelled.
 
 Never send supplier images directly. Kids items are shown only when the customer asks for kids. Commands: `npm run photos:screen`, `npm run photos:verify-teams`.
+
+## Deleting / hiding products
+Owner decision 2026-11-02: admin Photos -> "Manage shirts" (`src/app/admin/photos-actions.ts`:
+`deleteProduct`/`bulkDeleteProducts`/`bulkSetProductsHidden`) lets the owner delete a shirt (`products`
+row + its images/options/post-matches, blocked only when it has order history - `order_items.product_id`
+has no cascade on purpose) or set its status to `hidden` (never returned by `search_catalog`, refused
+in a draft order, dropped from a web checkout line - `src/lib/catalog/search.ts`/`orders/draft.ts`/
+`orders/web.ts`), and both now work on a *website* ("featured") shirt too, not just bot-only ones.
+
+That works without editing `catalog/store-selection.json` because `scripts/export-store-catalog.ts`
+skips any selection entry whose row is gone or `hidden` when it builds `src/data/catalog.json` -
+deleting/hiding a website shirt fires the deploy hook (same ~2 min as a photo upload) and it drops off
+the site on the next build, even though the JSON file still lists its handle. That file stays the
+record of WHICH shirts are hand-picked; the DB row now just controls whether a picked one is actually
+live. Un-hiding (status back to `available`) brings it right back, same way.
+
+Caveat: `scripts/apply-store-selection.ts` (used when Wadeea changes the hand-picked list) still
+matches purely by handle - if it's ever re-run, it will recreate a *deleted* shirt as a new row from
+its still-there `catalog/store-selection.json` entry (a *hidden* one isn't affected, re-running that
+script doesn't touch `status`). If a deleted shirt should stay gone for good even through a future
+re-sync, its entry needs removing from that file too - a code change, same as adding one.
 
 ## Rules
 - Money is stored in agorot as integers.

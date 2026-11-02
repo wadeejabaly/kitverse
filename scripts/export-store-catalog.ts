@@ -15,7 +15,7 @@ config({ path: ".env.local", quiet: true });
 
 
 type Row = {
-  id: string; handle: string; title_en: string; title_ar: string | null; title_override: boolean; season: string | null; kit: string;
+  id: string; handle: string; title_en: string; title_ar: string | null; title_override: boolean; season: string | null; kit: string; status: string;
   primary_image_url: string | null; photo_status: string | null; supplier_cover: string | null;
   team: { id: string; name_en: string; name_ar: string | null; type: "club" | "national"; league_id: string | null };
 };
@@ -33,7 +33,7 @@ async function main() {
   const rows: Row[] = [];
   for (let i = 0; i < handles.length; i += 200) {
     const { data, error } = await db.from("products")
-      .select("id,handle,title_en,title_ar,title_override,season,kit,primary_image_url,photo_status,supplier_cover,team:teams(id,name_en,name_ar,type,league_id)")
+      .select("id,handle,title_en,title_ar,title_override,season,kit,status,primary_image_url,photo_status,supplier_cover,team:teams(id,name_en,name_ar,type,league_id)")
       .in("handle", handles.slice(i, i + 200));
     if (error) throw error;
     rows.push(...(data as unknown as Row[]));
@@ -69,7 +69,20 @@ async function main() {
   // real photos committed in public/products/ (owner/partner shots, e.g. Real Madrid front/back) beat supplier photos
   const real = (p: Product) => !p.image.includes("_placeholder") && existsSync(`public${p.image}`);
 
-  const products: Product[] = selection.map(({ productHandle, ...s }) => {
+  // Owner decision 2026-11-02 (admin bulk delete/hide for products): a shirt the admin deleted or
+  // hid no longer belongs on the website either, even though catalog/store-selection.json is a hand-
+  // edited file that still lists its handle - that file stays the source of truth for WHICH shirts are
+  // hand-picked, but a deleted/hidden row overrides it for whether one actually shows right now. This
+  // is what lets admin's Delete/Hide buttons take a website shirt off the site on the next deploy
+  // without needing a code change for every single one. (A re-run of apply-store-selection.ts would
+  // still recreate a deleted handle from this file, same as it always has for any handle here with no
+  // matching row - if a deleted shirt should stay gone for good, remove its entry from this file too.)
+  const liveSelection = selection.filter(({ productHandle, handle }) => {
+    const r = byHandle.get(productHandle ?? handle);
+    return r && r.status !== "hidden";
+  });
+
+  const products: Product[] = liveSelection.map(({ productHandle, ...s }) => {
     const r = byHandle.get(productHandle ?? s.handle);
     const upload = ownerUpload(r);
     // owner report 2026-11-02: "like real madrid 25/26 you labeled some wrong i just want to be able
