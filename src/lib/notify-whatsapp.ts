@@ -1,6 +1,7 @@
 import "server-only";
 import { db, must } from "./db";
 import { env } from "./env";
+import { absoluteUrl } from "./site";
 import type { PatchId } from "./orders/rules";
 
 /**
@@ -81,7 +82,7 @@ async function sendFreeForm(orderNumber: number, line: OrderLine): Promise<void>
   // A photo rides as the image message's own caption - one message, not two, and no template
   // "header" component to format at all.
   const body = line.photoUrl
-    ? { messaging_product: "whatsapp", to: e.WHATSAPP_TO_NUMBER, type: "image", image: { link: line.photoUrl, caption: text } }
+    ? { messaging_product: "whatsapp", to: e.WHATSAPP_TO_NUMBER, type: "image", image: { link: absoluteUrl(line.photoUrl), caption: text } }
     : { messaging_product: "whatsapp", to: e.WHATSAPP_TO_NUMBER, type: "text", text: { body: text } };
 
   const res = await fetch(`https://graph.facebook.com/${e.WHATSAPP_GRAPH_VERSION}/${e.WHATSAPP_PHONE_NUMBER_ID}/messages`, {

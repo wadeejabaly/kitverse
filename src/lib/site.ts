@@ -19,6 +19,11 @@ export function getSiteUrl(): string {
   return "http://localhost:3000";
 }
 
+/** A full https URL for a stored photo: some are saved site-relative ("/products/..."), and Instagram/WhatsApp can only fetch absolute ones. */
+export function absoluteUrl(url: string): string {
+  return url.startsWith("/") ? `${getSiteUrl()}${url}` : url;
+}
+
 /**
  * The social share card: the KitVerse crest centred on the site ground, no
  * text — the platforms render the title and description themselves, and a

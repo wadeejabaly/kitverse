@@ -1,6 +1,7 @@
 import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "../env";
+import { absoluteUrl } from "../site";
 
 /**
  * Instagram Messaging (Instagram API with Instagram Login).
@@ -35,7 +36,7 @@ export async function sendText(recipientId: string, text: string, humanAgent = f
 
 export async function sendImage(recipientId: string, url: string, humanAgent = false) {
   return post(`${env().INSTAGRAM_ACCOUNT_ID}/messages`, {
-    recipient: { id: recipientId }, message: { attachment: { type: "image", payload: { url } } },
+    recipient: { id: recipientId }, message: { attachment: { type: "image", payload: { url: absoluteUrl(url) } } },
     ...(humanAgent ? { messaging_type: "MESSAGE_TAG", tag: "HUMAN_AGENT" } : {}),
   });
 }
