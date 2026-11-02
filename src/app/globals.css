@@ -1445,66 +1445,17 @@ h2 {
     radial-gradient(ellipse 120% 100% at 50% 100%, rgb(0 0 0 / 0.35), transparent 60%);
 }
 
-/* ---- The podium (same reference, redrawn 2026-10-27 — "its not looking
-   the same as the picture") ----
-   The first pass was ONLY a gold glow — no solid body, so there was no
-   actual pedestal to see, just a halo where one should be. This is now a
-   true two-layer disc: .kv-flood-podium itself is the solid dark-marble
-   top tier (a radial gradient standing in for an overhead highlight on a
-   glossy surface, plus a real drop shadow so it grounds the shirt), with
-   the original gold glow demoted to ::before — now a WIDER, LOWER halo
-   behind it, reading as the light spilling off the rim onto the stage
-   rather than the pedestal's only visible feature — and ::after still the
-   crisp gold rim line on the top tier's own edge. Three CSS layers, still
-   no image. Sits in its own stacking layer behind the shirt in
-   FloodStage.tsx. */
-.kv-flood-podium {
-  position: absolute;
-  bottom: 6%;
-  left: 50%;
-  translate: -50% 0;
-  width: 70%;
-  height: 8%;
-  border-radius: 50%;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse at 50% 30%,
-    color-mix(in srgb, var(--flood-tile) 88%, white 12%) 0%,
-    color-mix(in srgb, var(--flood-tile) 92%, black 8%) 45%,
-    black 100%
-  );
-  box-shadow: 0 16px 30px 6px rgb(0 0 0 / 0.6);
-}
-
-.kv-flood-podium::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  top: 60%;
-  translate: -50% 0;
-  width: 132%;
-  height: 230%;
-  border-radius: 50%;
-  pointer-events: none;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--flood-gold) 40%, transparent) 0%,
-    color-mix(in srgb, var(--flood-gold) 14%, transparent) 45%,
-    transparent 72%
-  );
-  filter: blur(1px);
-}
-
-.kv-flood-podium::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1.5px solid color-mix(in srgb, var(--flood-gold) 80%, transparent);
-  box-shadow: 0 0 12px 1px color-mix(in srgb, var(--flood-gold) 55%, transparent);
-  opacity: 0.9;
-}
+/* ---- The podium — removed 2026-11-03 ----
+   Lived here as .kv-flood-podium (+ ::before/::after) since 2026-10-27: a
+   two-layer gold-rimmed dark-marble disc the cutout shirt was meant to
+   stand on. Owner kept reporting "the jersey floating above the pedestal"
+   because the actual bug was never fixable in CSS — each supplier cutout
+   has a different amount of transparent padding below its own hem, so a
+   shared bottom-anchor line could only ever match a photo by coincidence.
+   Owner decision 2026-11-03: drop the podium and centre the shirt in the
+   glow instead (see FloodStage.tsx) — removes the whole class of bug
+   rather than chasing it per photo. See git history for the removed rules
+   if the podium look is ever revisited with pre-trimmed cutouts. */
 
 /* ---- The gold rule beside the eyebrow (same reference) ----
    A thin line growing out from the eyebrow label, standing in for the

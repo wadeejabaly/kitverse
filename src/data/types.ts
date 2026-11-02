@@ -142,7 +142,7 @@ export interface Accessory {
   team: string; // EN
   teamAr: string;
   teamHe: string;
-  price: number; // ILS, flat — e.g. 14.99. No size/version pricing.
+  price: number; // ILS, flat — e.g. 18. No size/version pricing.
   image: string;
   visible: boolean;
 }

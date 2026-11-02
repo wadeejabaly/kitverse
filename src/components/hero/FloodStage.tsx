@@ -108,9 +108,6 @@ export function FloodStage({
         <Image src="/brand/badge-glow.png" alt="" width={480} height={480} />
       </div>
       <div aria-hidden className="kv-flood-shirt-glow" />
-      {/* The podium the cutout shirt appears to stand on (owner reference
-          2026-10-27) — sits behind every shirt layer, see .kv-flood-podium. */}
-      <div aria-hidden className="kv-flood-podium" />
       {shirts.map((shirt, index) => {
         const shown = index === active;
         return (
@@ -129,24 +126,25 @@ export function FloodStage({
             // Owner report 2026-10-31: "the jersey floating above the
             // pedestal" — the three cutouts (hero-cutouts.ts) aren't the same
             // shape: each is cropped tight to its own garment, so a shirt
-            // photographed/laid out more compactly (AC Milan's cutout file
-            // is ~18% shorter relative to its width than Arsenal's or Real
-            // Madrid's) renders shorter at the same width-bound scale. With
-            // `place-items-center` this element was a single-item CSS grid,
-            // and a lone auto-sized grid row has an INDEFINITE height for
-            // percentage resolution — which is why the image's own
-            // `max-h-[84%]` below was silently never actually applied (it
-            // was rendering taller than that cap): every cutout centered
-            // inside a row sized to ITS OWN content height, so a shorter
-            // cutout's hem landed higher up, nowhere near the fixed-position
-            // .kv-flood-podium beneath it. Dropping the grid and anchoring
-            // the Image directly (`absolute bottom-0`, centered manually)
-            // gives it this element's own DEFINITE box to measure against
-            // instead, so `max-h-[84%]` finally constrains it as written,
-            // and every shirt's hem — whatever its own cutout's height —
-            // meets the podium at the same line, the way a real shirt resting
-            // on a pedestal would, rather than floating by an amount that
-            // depends on how each supplier photo happened to be cropped.
+            // photographed/laid out more compactly (AC Milan's cutout file is
+            // ~18% shorter relative to its width than Arsenal's or Real
+            // Madrid's) rendered shorter at the same width-bound scale. The
+            // 2026-10-25 fix below (anchoring the Image to this element's own
+            // definite box) made `max-h-[84%]` apply correctly, but it could
+            // only ever line up a shirt's rendered BOUNDING BOX against a
+            // fixed line — not its actual hem, which sits at a different
+            // depth inside each cutout's own transparent padding. Still
+            // floating 2026-11-03, because that's a per-photo property no
+            // amount of CSS can see or correct: a podium needs every cutout's
+            // hem at the same pixel inset from its frame's bottom edge, and
+            // the supplier photos were never shot to that spec. Owner
+            // decision 2026-11-03: drop the podium rather than keep chasing
+            // per-photo accuracy — the shirt is simply centred in the glow
+            // (see `inset-0 m-auto` below), the same place-items-center
+            // approach Variant A's <ShirtStage/> already uses without any of
+            // this. A centred cutout has nothing external to misalign
+            // against, so every shirt — whatever its own crop — looks
+            // equally "right," and the class of bug is gone, not patched.
             className="kv-crossfade group absolute inset-0 overflow-hidden"
           >
             {/* Fixed 2026-10-25, final shape — this element is now ABSOLUTELY
@@ -182,7 +180,14 @@ export function FloodStage({
                 whatever its native proportions, now renders inside the
                 square the stage actually shows, so the chip — bottom-2 off
                 THIS element — never rides past the edge and gets clipped,
-                which is the "cut off" name/price chip the owner saw. */}
+                which is the "cut off" name/price chip the owner saw. Still
+                exactly what makes `max-h-[78%]`/`max-w-[78%]` below resolve
+                correctly — only the anchor changed (2026-11-03): `inset-0
+                m-auto` centers the image on BOTH axes within this definite
+                box (auto margins on an absolutely positioned, size-capped
+                element is the standard centering trick) instead of pinning
+                it to the bottom edge, so there's no shared "floor" line left
+                for different cutout crops to miss. */}
             <Image
               src={shirt.image}
               alt={shirt.title}
@@ -190,7 +195,7 @@ export function FloodStage({
               height={1200}
               priority={priority && index === 0}
               sizes="(max-width: 900px) 86vw, 560px"
-              className="kv-flood-shirt-shadow absolute bottom-0 left-1/2 h-auto max-h-[84%] w-auto max-w-[84%] -translate-x-1/2 object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+              className="kv-flood-shirt-shadow absolute inset-0 m-auto h-auto max-h-[78%] w-auto max-w-[78%] object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
             />
           </Link>
         );

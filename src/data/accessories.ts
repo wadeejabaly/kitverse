@@ -20,8 +20,8 @@ import type { Accessory } from "./types";
  * decision 2026-10-26: cut the list down to only the teams with a real
  * product photo (19, including Al Nassr — not a jersey-catalog team, added
  * for this category only) rather than ship 96 placeholder tiles; the rest
- * can be added back once photographed. ₪14.99 flat (owner decision
- * 2026-10-25).
+ * can be added back once photographed. ₪18 flat (owner decision 2026-10-25,
+ * raised from the original ₪14.99 on 2026-11-02).
  */
 
 const accessories: Accessory[] = accessoriesData.accessories as Accessory[];

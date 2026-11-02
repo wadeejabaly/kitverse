@@ -5,7 +5,7 @@
       "category": "keychain",
       "team": "AC Milan",
       "teamAr": "ميلان",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-ac-milan.jpg",
       "visible": true,
       "teamHe": "מילאן"
@@ -15,7 +15,7 @@
       "category": "keychain",
       "team": "Argentina",
       "teamAr": "الأرجنتين",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-argentina.jpg",
       "visible": true,
       "teamHe": "ארגנטינה"
@@ -25,7 +25,7 @@
       "category": "keychain",
       "team": "Arsenal",
       "teamAr": "أرسنال",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-arsenal.jpg",
       "visible": true,
       "teamHe": "ארסנל"
@@ -35,7 +35,7 @@
       "category": "keychain",
       "team": "Barcelona",
       "teamAr": "برشلونة",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-barcelona.jpg",
       "visible": true,
       "teamHe": "ברצלונה"
@@ -45,7 +45,7 @@
       "category": "keychain",
       "team": "Bayern Munich",
       "teamAr": "بايرن ميونخ",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-bayern-munich.jpg",
       "visible": true,
       "teamHe": "באיירן מינכן"
@@ -55,7 +55,7 @@
       "category": "keychain",
       "team": "Brazil",
       "teamAr": "البرازيل",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-brazil.jpg",
       "visible": true,
       "teamHe": "ברזיל"
@@ -65,7 +65,7 @@
       "category": "keychain",
       "team": "Chelsea",
       "teamAr": "تشيلسي",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-chelsea.jpg",
       "visible": true,
       "teamHe": "צ'לסי"
@@ -75,7 +75,7 @@
       "category": "keychain",
       "team": "France",
       "teamAr": "فرنسا",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-france.jpg",
       "visible": true,
       "teamHe": "צרפת"
@@ -85,7 +85,7 @@
       "category": "keychain",
       "team": "Germany",
       "teamAr": "ألمانيا",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-germany.jpg",
       "visible": true,
       "teamHe": "גרמניה"
@@ -95,7 +95,7 @@
       "category": "keychain",
       "team": "Inter Milan",
       "teamAr": "إنتر ميلان",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-inter-milan.jpg",
       "visible": true,
       "teamHe": "אינטר מילאן"
@@ -105,7 +105,7 @@
       "category": "keychain",
       "team": "Juventus",
       "teamAr": "يوفنتوس",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-juventus.jpg",
       "visible": true,
       "teamHe": "יובנטוס"
@@ -115,7 +115,7 @@
       "category": "keychain",
       "team": "Liverpool",
       "teamAr": "ليفربول",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-liverpool.jpg",
       "visible": true,
       "teamHe": "ליברפול"
@@ -125,7 +125,7 @@
       "category": "keychain",
       "team": "Manchester City",
       "teamAr": "مانشستر سيتي",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-manchester-city.jpg",
       "visible": true,
       "teamHe": "מנצ'סטר סיטי"
@@ -135,7 +135,7 @@
       "category": "keychain",
       "team": "Manchester United",
       "teamAr": "مانشستر يونايتد",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-manchester-united.jpg",
       "visible": true,
       "teamHe": "מנצ'סטר יונייטד"
@@ -145,7 +145,7 @@
       "category": "keychain",
       "team": "Paris Saint-Germain",
       "teamAr": "باريس سان جيرمان",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-paris-saint-germain.jpg",
       "visible": true,
       "teamHe": "פריז סן ז'רמן"
@@ -155,7 +155,7 @@
       "category": "keychain",
       "team": "Portugal",
       "teamAr": "البرتغال",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-portugal.jpg",
       "visible": true,
       "teamHe": "פורטוגל"
@@ -165,7 +165,7 @@
       "category": "keychain",
       "team": "Real Madrid",
       "teamAr": "ريال مدريد",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-real-madrid.jpg",
       "visible": true,
       "teamHe": "ריאל מדריד"
@@ -175,7 +175,7 @@
       "category": "keychain",
       "team": "Spain",
       "teamAr": "إسبانيا",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-spain.jpg",
       "visible": true,
       "teamHe": "ספרד"
@@ -185,7 +185,7 @@
       "category": "keychain",
       "team": "Al Nassr",
       "teamAr": "النصر",
-      "price": 14.99,
+      "price": 18,
       "image": "/products/keychain-al-nassr.jpg",
       "visible": true,
       "teamHe": "אל-נאסר"
