@@ -6,6 +6,7 @@ import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
 import { orderToken } from "@/lib/orders/link";
 import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime } from "../../../ui";
+import { CancelOrderButton } from "./cancel-order-button";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
         actions={<>
           <a href={`/o/${orderToken(o.id)}`} target="_blank" rel="noreferrer" className={button.ghost}><ExternalLink className="h-4 w-4" /> Customer page</a>
           {o.conversation_id ? <Link href={`/admin/inbox/${o.conversation_id}`} className={button.ghost}><MessagesSquare className="h-4 w-4" /> Chat</Link> : null}
+          {o.status !== "cancelled" && !awaitingOk ? <CancelOrderButton orderId={o.id} number={o.number} /> : null}
         </>} />
 
       <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
