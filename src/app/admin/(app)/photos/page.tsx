@@ -9,6 +9,7 @@ import { PhotoUploadButton } from "./photo-upload-button";
 import { PhotoManagerButton } from "./photo-manager";
 import { MigrateRealPhotosButton } from "./migrate-real-photos-button";
 import { DeleteProductButton } from "./delete-product-button";
+import { ProductManager } from "./product-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -34,9 +35,10 @@ function RenameControl({ id, titleEn, titleAr }: { id: string; titleEn: string; 
 /** Shirts without a usable photo: website shirts showing the blank placeholder, and bot-only shirts whose supplier photos all failed the check. */
 export default async function Photos({ searchParams }: PageProps<"/admin/photos">) {
   const sp = await searchParams;
-  const tab = sp.tab === "rejected" ? "rejected" : sp.tab === "all" ? "all" : "missing";
+  const tab = sp.tab === "rejected" ? "rejected" : sp.tab === "all" ? "all" : sp.tab === "manage" ? "manage" : "missing";
   const q = typeof sp.q === "string" ? sp.q.trim() : "";
   const cat = typeof sp.cat === "string" ? sp.cat : "";
+  const st = typeof sp.st === "string" ? sp.st : "";
   const qs = (t: string) => `/admin/photos?tab=${t}${q ? `&q=${encodeURIComponent(q)}` : ""}${cat ? `&cat=${encodeURIComponent(cat)}` : ""}`;
 
   // Filtering by "category" (owner request 2026-11-02: "a way to search for the shirt by writing the
@@ -76,6 +78,17 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
   if (teamIds) allQuery = allQuery.in("team_id", teamIds);
   const all = tab === "all" ? ((await allQuery).data ?? []) as { id: string; title_en: string; title_ar: string | null; primary_image_url: string | null }[] : [];
 
+  // Owner request 2026-11-02: "i want to be able to delete in bulk and maybe turn the products on
+  // and off in bulk too" - unlike the two tabs above, this one isn't scoped to a photo problem or to
+  // website shirts: a prune/hide pass needs to see every shirt, so it's filtered only by the same
+  // search/category the other tabs use, plus an optional status filter to find what's already hidden.
+  let manageQuery = db().from("products").select("id,title_en,title_ar,status,primary_image_url")
+    .order("status").order("title_en").limit(400);
+  if (q) manageQuery = manageQuery.ilike("search_text", `%${q}%`);
+  if (teamIds) manageQuery = manageQuery.in("team_id", teamIds);
+  if (st) manageQuery = manageQuery.eq("status", st);
+  const manage = tab === "manage" ? ((await manageQuery).data ?? []) as { id: string; title_en: string; title_ar: string | null; status: string; primary_image_url: string | null }[] : [];
+
   return (
     <>
       <PageHeader title="Photos" subtitle={`Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots. ${env().VERCEL_DEPLOY_HOOK_URL ? "Photos you upload show on the website about 2 minutes later." : "Photos you upload reach the bot right away and the website after the next site update."}`} />
@@ -84,6 +97,7 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
         <div className="inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
           <Link href={qs("missing")} className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-ink text-paper" : "text-ink-2")}>Needs a photo ({missing.length})</Link>
           <Link href={qs("all")} className={cx("rounded-lg px-3 py-1.5", tab === "all" ? "bg-ink text-paper" : "text-ink-2")}>Change a photo</Link>
+          <Link href={qs("manage")} className={cx("rounded-lg px-3 py-1.5", tab === "manage" ? "bg-ink text-paper" : "text-ink-2")}>Manage shirts</Link>
           <Link href={qs("rejected")} className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-ink text-paper" : "text-ink-2")}>Rejected photos</Link>
         </div>
         {tab !== "rejected" ? (
@@ -98,8 +112,16 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
               <option value="national">National teams</option>
               {leagues.map((l) => <option key={l.id} value={l.id}>{l.name_en}</option>)}
             </select>
+            {tab === "manage" ? (
+              <select name="st" defaultValue={st} className={ctrl}>
+                <option value="">Any status</option>
+                <option value="available">Bot only</option>
+                <option value="featured">On website</option>
+                <option value="hidden">Hidden</option>
+              </select>
+            ) : null}
             <button className={cx(button.ghost, "px-3")}>Filter</button>
-            {q || cat ? <Link href={`/admin/photos?tab=${tab}`} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink" aria-label="Clear filters"><X className="h-4 w-4" /></Link> : null}
+            {q || cat || st ? <Link href={`/admin/photos?tab=${tab}`} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-raised hover:text-ink" aria-label="Clear filters"><X className="h-4 w-4" /></Link> : null}
           </form>
         ) : null}
       </div>
@@ -152,7 +174,9 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
             </Card>
           ))}
         </div>
-      )) : (
+      )) : tab === "manage" ? (
+        <ProductManager products={manage} />
+      ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {rejected.map((r) => (
             <Card key={r.id} padded={false} className="overflow-hidden">

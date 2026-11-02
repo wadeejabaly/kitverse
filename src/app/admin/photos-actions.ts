@@ -191,6 +191,76 @@ export async function deleteProduct(form: FormData): Promise<{ ok: boolean; mess
 }
 
 /**
+ * Same refusals as deleteProduct (website shirt / has order history), checked in bulk instead of one
+ * row at a time: one query to find which of the picked ids are actually deletable, then one storage
+ * removal, one availability_answers cleanup and one products delete for all of them together - a
+ * 400-shirt selection should still be a handful of queries, not 400x5.
+ */
+export async function bulkDeleteProducts(productIds: string[]): Promise<{ deleted: string[]; skipped: { id: string; title: string; reason: string }[] }> {
+  const staff = await requireStaff();
+  const ids = [...new Set(z.array(z.string().uuid()).min(1).max(500).parse(productIds))];
+
+  const products = must(await db().from("products").select("id,title_en,status").in("id", ids), "products") as { id: string; title_en: string; status: string }[];
+  const byId = new Map(products.map((p) => [p.id, p]));
+  const skipped: { id: string; title: string; reason: string }[] = [];
+  for (const id of ids) if (!byId.has(id)) skipped.push({ id, title: id, reason: "not found" });
+  for (const p of products) if (p.status === "featured") skipped.push({ id: p.id, title: p.title_en, reason: "it's on the website" });
+
+  const candidateIds = products.filter((p) => p.status !== "featured").map((p) => p.id);
+  const orderRows = candidateIds.length
+    ? (must(await db().from("order_items").select("product_id").in("product_id", candidateIds), "order items") as { product_id: string }[])
+    : [];
+  const orderedIds = new Set(orderRows.map((r) => r.product_id));
+  for (const id of orderedIds) skipped.push({ id, title: byId.get(id)!.title_en, reason: "has order history" });
+
+  const deletableIds = candidateIds.filter((id) => !orderedIds.has(id));
+  if (!deletableIds.length) return { deleted: [], skipped };
+
+  const images = (await db().from("product_images").select("url").in("product_id", deletableIds)).data as { url: string }[] | null;
+  const paths = (images ?? []).map((i) => mediaStoragePath(i.url)).filter((p): p is string => !!p);
+  if (paths.length) await db().storage.from("media").remove(paths);
+
+  await db().from("availability_answers").delete().in("product_id", deletableIds);
+  const del = await db().from("products").delete().in("id", deletableIds);
+  if (del.error) throw new Error(`bulk delete: ${del.error.message}`);
+
+  await db().from("audit_log").insert(deletableIds.map((id) => ({ actor: staff.id, action: "product.delete", entity: "product", entity_id: id })));
+  revalidatePath("/admin/photos");
+  return { deleted: deletableIds, skipped };
+}
+
+/**
+ * Owner request 2026-11-02: "turn the products on and off... the ones i dont want to show for now".
+ * "hidden" is already a real status the whole bot/checkout stack respects - search_catalog never
+ * returns it (src/lib/catalog/search.ts), a draft order refuses to add it (src/lib/orders/draft.ts),
+ * a web checkout line for it gets dropped (src/lib/orders/web.ts) - this is just the first thing that
+ * lets the owner set it, instead of only ever reading it. Refuses a website ("featured") shirt for
+ * the same reason as delete: catalog/store-selection.json still lists it by handle no matter what
+ * this column says, so hiding it wouldn't take it off the site - it would just make the website keep
+ * showing it while checkout silently drops that line, which is worse than refusing.
+ */
+export async function bulkSetProductsHidden(productIds: string[], hidden: boolean): Promise<{ updated: string[]; skipped: { id: string; title: string; reason: string }[] }> {
+  const staff = await requireStaff();
+  const ids = [...new Set(z.array(z.string().uuid()).min(1).max(500).parse(productIds))];
+
+  const products = must(await db().from("products").select("id,title_en,status").in("id", ids), "products") as { id: string; title_en: string; status: string }[];
+  const byId = new Map(products.map((p) => [p.id, p]));
+  const skipped: { id: string; title: string; reason: string }[] = [];
+  for (const id of ids) if (!byId.has(id)) skipped.push({ id, title: id, reason: "not found" });
+  for (const p of products) if (p.status === "featured") skipped.push({ id: p.id, title: p.title_en, reason: "it's on the website" });
+
+  const target = hidden ? "hidden" : "available";
+  const changeableIds = products.filter((p) => p.status !== "featured" && p.status !== target).map((p) => p.id);
+  if (changeableIds.length) {
+    const upd = await db().from("products").update({ status: target }).in("id", changeableIds);
+    if (upd.error) throw new Error(`bulk ${hidden ? "hide" : "unhide"}: ${upd.error.message}`);
+    await db().from("audit_log").insert(changeableIds.map((id) => ({ actor: staff.id, action: hidden ? "product.hide" : "product.unhide", entity: "product", entity_id: id })));
+  }
+  revalidatePath("/admin/photos");
+  return { updated: changeableIds, skipped };
+}
+
+/**
  * Owner corrects a shirt's name (owner report 2026-11-02: "like real madrid 25/26 you labeled some
  * wrong i just want to be able to fix them"). Sets title_override so the website export prefers this
  * over its own hand-authored catalog/store-selection.json entry for this shirt, the same way an
