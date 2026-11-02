@@ -89,18 +89,29 @@ function FunnelRow({ label, value, of, icon: Icon }: { label: string; value: num
  * already is the real source of truth for the funnel's last step - see that table's own
  * `israelDayStart` convention, reused here for "today" so this page agrees with Overview.
  */
+/** Every event in the window, read 1000 at a time (the database returns at most 1000 rows per request). */
+async function eventsSince(since: string): Promise<EventRow[]> {
+  const out: EventRow[] = [];
+  for (let from = 0; from < 100_000; from += 1000) {
+    const { data } = await db().from("site_events").select("type,session_id,path,product_handle,referrer_host,created_at")
+      .gte("created_at", since).order("created_at", { ascending: true }).order("id").range(from, from + 999);
+    out.push(...((data ?? []) as EventRow[]));
+    if (!data || data.length < 1000) break;
+  }
+  return out;
+}
+
 export default async function Stats() {
   const now = new Date();
   const since = new Date(now.getTime() - WINDOW_DAYS * 86400_000).toISOString();
   const todayStart = israelDayStart();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 86400_000).toISOString();
 
-  const [eventsRes, ordersRes] = await Promise.all([
-    db().from("site_events").select("type,session_id,path,product_handle,referrer_host,created_at").gte("created_at", since).order("created_at", { ascending: true }).limit(20000),
+  const [events, ordersRes] = await Promise.all([
+    eventsSince(since),
     db().from("orders").select("total,confirmed_at,customer:customers(ig_user_id)").gte("confirmed_at", since).not("confirmed_at", "is", null).neq("status", "cancelled"),
   ]);
 
-  const events = (eventsRes.data ?? []) as EventRow[];
   // real sales only - test-bot orders (sim: customers) don't count, same filter Overview uses
   const orders = ((ordersRes.data ?? []) as unknown as OrderRow[]).filter((o) => !o.customer?.ig_user_id?.startsWith("sim:"));
 

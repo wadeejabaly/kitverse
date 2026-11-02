@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env";
 
 /**
  * Public, unauthenticated event sink for the storefront's own first-party traffic log
@@ -18,7 +19,18 @@ const Body = z.object({
   referrerHost: z.string().trim().max(200).optional(),
 });
 
+/** Only count events sent by our own pages (stops anyone else filling the table) and skip known bots. */
+function fromOurSite(req: NextRequest): boolean {
+  const source = req.headers.get("origin") ?? req.headers.get("referer");
+  if (!source) return false;
+  let host: string;
+  try { host = new URL(source).host; } catch { return false; }
+  const ours = [req.headers.get("host"), (() => { try { return new URL(env().NEXT_PUBLIC_SITE_URL).host; } catch { return null; } })()];
+  return ours.includes(host) && !/bot|crawl|spider|preview|headless/i.test(req.headers.get("user-agent") ?? "");
+}
+
 export async function POST(req: NextRequest) {
+  if (!fromOurSite(req)) return NextResponse.json({ ok: true }); // quietly ignored
   const raw = await req.text();
   if (raw.length > 2000) return NextResponse.json({ ok: false }, { status: 413 });
   let body: unknown;
