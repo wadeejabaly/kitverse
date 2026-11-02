@@ -65,6 +65,13 @@ export default async function ShippingPage({
 
         <ProseHeading>{t("trackingTitle")}</ProseHeading>
         <ProseParagraph>{t("trackingBody")}</ProseParagraph>
+        {/* /o/track lives outside the [locale] route tree (a single Arabic page, same as /o/[token]),
+            so this is a plain anchor rather than the i18n Link - matching the thank-you page's order
+            link for the same reason. */}
+        <ProseParagraph>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
+          <a href="/o/track" className="font-medium text-ink underline underline-offset-2 hover:no-underline">{t("trackingCta")}</a>
+        </ProseParagraph>
 
         {/* Owner policy correction 2026-10-31 (Part 6): the old copy allowed
             a 14-day no-reason return on unworn shirts. The owner's actual

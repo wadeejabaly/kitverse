@@ -66,6 +66,13 @@ export async function Footer() {
             <FooterLink href="/shipping">{tNav("shipping")}</FooterLink>
             <FooterLink href="/size-guide">{tNav("sizeGuide")}</FooterLink>
             <FooterLink href="/about">{tNav("about")}</FooterLink>
+            {/* /o/track lives outside the [locale] route tree (same reason the thank-you page's
+                order link uses a plain <a>, not the i18n Link) - it's a single Arabic page regardless
+                of the storefront's current locale, same as /o/[token] already is. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
+            <a href="/o/track" className="text-start text-[13px] text-ink-soft transition-colors hover:text-ink">
+              {tNav("trackOrder")}
+            </a>
           </FooterColumn>
 
           <FooterColumn label={t("legalGroup")}>
