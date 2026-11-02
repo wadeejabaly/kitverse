@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { verifyWebhookSignature } from "@/lib/payments/paypal";
-import { getOrderForSettlement, settleOnlinePayment } from "@/lib/orders/online";
+import { captureFacts, captureMatchesOrder, verifyWebhookSignature } from "@/lib/payments/paypal";
+import { flagReversedPayment, getOrderForSettlement, settleOnlinePayment } from "@/lib/orders/online";
 
 /**
  * PayPal's own notification — the second, independent path to settlement
@@ -27,27 +27,33 @@ export async function POST(req: NextRequest) {
   try { event = JSON.parse(rawBody); } catch { return NextResponse.json({ ok: false }, { status: 400 }); }
   const e = event as { event_type?: unknown; resource?: Record<string, unknown> };
 
-  // Only a completed capture means money moved. Everything else (order
-  // approved, order created, …) is acknowledged and ignored — the capture
-  // step is what actually charges the buyer in this store's flow.
-  if (e.event_type !== "PAYMENT.CAPTURE.COMPLETED") return NextResponse.json({ ok: true, ignored: true });
-
   const resource = e.resource ?? {};
-  const captureId = typeof resource.id === "string" ? resource.id : null;
-  const orderId =
-    (typeof resource.custom_id === "string" && resource.custom_id) ||
-    (typeof resource.invoice_id === "string" && resource.invoice_id) ||
-    null;
-  if (!captureId || !orderId) return NextResponse.json({ ok: false }, { status: 400 });
+  const facts = captureFacts(resource);
+  const orderId = facts.customId || (typeof resource.invoice_id === "string" && resource.invoice_id) || null;
+
+  // Money taken back after the fact: flag the order and tell the owner before it ships.
+  if (e.event_type === "PAYMENT.CAPTURE.REFUNDED" || e.event_type === "PAYMENT.CAPTURE.REVERSED" || e.event_type === "PAYMENT.CAPTURE.DENIED") {
+    if (orderId) await flagReversedPayment(orderId, String(e.event_type).replace("PAYMENT.CAPTURE.", "").toLowerCase(), facts.id);
+    return NextResponse.json({ ok: true });
+  }
+
+  // Only a completed capture means money moved. Everything else (order approved, order created, ...)
+  // is acknowledged and ignored.
+  if (e.event_type !== "PAYMENT.CAPTURE.COMPLETED") return NextResponse.json({ ok: true, ignored: true });
+  if (!facts.id || !orderId) return NextResponse.json({ ok: false }, { status: 400 });
 
   const existing = await getOrderForSettlement(orderId);
   if (!existing) return NextResponse.json({ ok: false }, { status: 404 });
+  if (!captureMatchesOrder(facts, orderId, existing.totalAgorot)) {
+    console.error("paypal webhook: capture doesn't match the order", orderId, facts.status, facts.currency, facts.amountAgorot, existing.totalAgorot);
+    return NextResponse.json({ ok: true, ignored: "mismatch" }); // acknowledged, never settled
+  }
 
   await settleOnlinePayment({
     orderId,
     provider: "paypal",
     providerOrderId: null,
-    captureId,
+    captureId: facts.id,
     amountAgorot: existing.totalAgorot,
     raw: resource,
   });

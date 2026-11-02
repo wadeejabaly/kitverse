@@ -136,6 +136,7 @@ export async function settleOnlinePayment(opts: {
     .update({ payment_status: "paid", status: "awaiting_confirmation" })
     .eq("id", opts.orderId)
     .eq("payment_status", "unpaid")
+    .neq("status", "cancelled") // a late payment must not bring back an order the owner cancelled
     .select("*");
   if (updated.error) throw new Error(`settle online payment: ${updated.error.message}`);
   const row = ((updated.data as OrderRow[] | null) ?? [])[0] ?? null;
@@ -162,7 +163,12 @@ export async function settleOnlinePayment(opts: {
     if (!/duplicate key|payments_one_capture/i.test((e as Error).message)) throw e;
   }
 
-  if (!row) return { ok: true, alreadySettled: true, order: null };
+  if (!row) {
+    // money arrived for an order that was cancelled meanwhile: record it as paid and tell the owner to refund
+    const cancelled = (await db().from("orders").update({ payment_status: "paid" }).eq("id", opts.orderId).eq("payment_status", "unpaid").eq("status", "cancelled").select("id,number").maybeSingle()).data as { id: string; number: number } | null;
+    if (cancelled) await notify({ kind: "order.paid_after_cancel", priority: "urgent", title: `Refund needed: order #${cancelled.number} was paid after it was cancelled`, body: `${opts.provider === "paypal" ? "PayPal" : "Bit"} payment received - refund it with the provider.`, link: `/admin/orders/${cancelled.id}` });
+    return { ok: true, alreadySettled: true, order: null };
+  }
 
   const address = row.address as { full_name?: string; town?: string } | null;
   await notify({
@@ -173,6 +179,15 @@ export async function settleOnlinePayment(opts: {
     link: `/admin/orders/${row.id}`,
   });
   return { ok: true, alreadySettled: false, order: row };
+}
+
+/** A provider refunded / reversed / denied a payment: mark it and alert the owner (don't ship unpaid). */
+export async function flagReversedPayment(orderId: string, what: string, captureId: string | null) {
+  const o = (await db().from("orders").select("id,number,payment_status").eq("id", orderId).maybeSingle()).data as { id: string; number: number; payment_status: string } | null;
+  if (!o) return;
+  if (o.payment_status === "paid") await db().from("orders").update({ payment_status: "refunded" }).eq("id", o.id);
+  if (captureId) await db().from("payments").update({ status: what === "denied" ? "failed" : "refunded" }).eq("capture_id", captureId);
+  await notify({ kind: `order.payment_${what}`, priority: "urgent", title: `PayPal payment ${what}: order #${o.number}`, body: "The money is no longer with you - don't send this order until it's paid again.", link: `/admin/orders/${o.id}` });
 }
 
 export type OrderPublicState = { number: number; method: "cod" | "paypal" | "bit" | null; paid: boolean; status: string };

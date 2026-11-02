@@ -120,10 +120,10 @@ function isErrorCode(value: unknown): value is CheckoutErrorCode {
 }
 
 /** What the hosted card page sent us back with, if anything. */
-type ReturnState = "failed" | "cancelled";
+type ReturnState = "failed" | "cancelled" | "pending";
 
 function isReturnState(value: unknown): value is ReturnState {
-  return value === "failed" || value === "cancelled";
+  return value === "failed" || value === "cancelled" || value === "pending";
 }
 
 export function CheckoutView({
@@ -863,7 +863,7 @@ export function CheckoutView({
               role="status"
               className="mb-5 border border-rule px-4 py-3.5 text-sm text-ink-soft"
             >
-              {returnNotice === "failed" ? t("returnFailed") : t("returnCancelled")}
+              {returnNotice === "failed" ? t("returnFailed") : returnNotice === "pending" ? t("returnPending") : t("returnCancelled")}
             </p>
           ) : null}
 

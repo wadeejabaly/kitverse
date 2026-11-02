@@ -450,6 +450,7 @@
     "redirecting": "Taking you to the payment page…",
     "returnFailed": "The card payment did not go through, and nothing was charged. You can try again, or pay with PayPal.",
     "returnCancelled": "You stopped the payment, and nothing was charged. Your cart is still here whenever you are ready.",
+    "returnPending": "PayPal is still reviewing your payment. Nothing more to do - we'll confirm your order as soon as it clears.",
     "payCodIntro": "Or pay cash on delivery",
     "payCod": "Send order",
     "payCodPlacing": "Placing your order…",

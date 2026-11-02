@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { captureOrder } from "@/lib/payments/paypal";
-import { getOrderForSettlement, settleOnlinePayment } from "@/lib/orders/online";
+import { captureMatchesOrder, captureOrder } from "@/lib/payments/paypal";
+import { getOrderForSettlement, getPendingProviderOrderId, settleOnlinePayment } from "@/lib/orders/online";
 import { readOrderToken } from "@/lib/orders/link";
 import { orderReference } from "@/lib/checkout";
 import { env } from "@/lib/env";
@@ -31,21 +31,30 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${site}/checkout?pay=failed`, { status: 303 });
   }
 
+  const existing = await getOrderForSettlement(orderId);
+  if (!existing) return NextResponse.redirect(`${site}/checkout?pay=failed`, { status: 303 });
+  const thanks = `${site}/checkout/thank-you?ref=${orderReference(orderId)}&t=${encodeURIComponent(token)}`;
+  if (existing.paymentStatus === "paid") return NextResponse.redirect(thanks, { status: 303 }); // webhook got there first
+
+  // The PayPal order must be the one /api/checkout/paypal/start minted for THIS order - otherwise a
+  // cheap order's approved payment could be replayed against an expensive order's return link.
+  if ((await getPendingProviderOrderId(orderId, "paypal")) !== paypalOrderId) {
+    console.error("paypal return: PayPal order does not belong to this order", orderId);
+    return NextResponse.redirect(`${site}/checkout?pay=failed`, { status: 303 });
+  }
+
   const captured = await captureOrder(paypalOrderId);
   if (!captured.ok || captured.value.status !== "COMPLETED" || !captured.value.captureId) {
     if (!captured.ok) console.error("paypal capture failed", captured.code, captured.detail);
     return NextResponse.redirect(`${site}/checkout?pay=failed`, { status: 303 });
   }
+  // Only completed money for exactly this order's total counts. A PENDING capture (held for review)
+  // is settled later by the PAYMENT.CAPTURE.COMPLETED webhook.
+  if (!captureMatchesOrder({ ...captured.value, status: captured.value.captureStatus ?? "" }, orderId, existing.totalAgorot)) {
+    console.error("paypal return: capture not settled", orderId, captured.value.captureStatus, captured.value.currency, captured.value.amountAgorot);
+    return NextResponse.redirect(`${site}/checkout?pay=${captured.value.captureStatus === "PENDING" ? "pending" : "failed"}`, { status: 303 });
+  }
 
-  const existing = await getOrderForSettlement(orderId);
-  if (!existing) return NextResponse.redirect(`${site}/checkout?pay=failed`, { status: 303 });
-
-  // amount isn't re-checked against PayPal's own response here: this capture
-  // is of the exact PayPal order /api/checkout/paypal/start minted for OUR
-  // total — nothing in the approval step lets the buyer change what they're
-  // paying. The order's own stored total is what the payments row records.
-  // Whether THIS call settles it or it was already settled by the webhook
-  // arriving first, the order exists and is paid either way.
   await settleOnlinePayment({
     orderId,
     provider: "paypal",
@@ -55,5 +64,5 @@ export async function GET(req: NextRequest) {
     raw: captured.value,
   });
 
-  return NextResponse.redirect(`${site}/checkout/thank-you?ref=${orderReference(orderId)}&t=${encodeURIComponent(token)}`, { status: 303 });
+  return NextResponse.redirect(thanks, { status: 303 });
 }

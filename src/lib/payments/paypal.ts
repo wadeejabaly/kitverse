@@ -210,9 +210,15 @@ export async function createOrder(
 /* --------------------------------------------------------- capture order -- */
 
 export interface CaptureOutcome {
-  /** PayPal's order status — only "COMPLETED" means money moved. */
+  /** PayPal's order status - only "COMPLETED" means the order was captured. */
   status: string;
   captureId: string | null;
+  /** The capture's own status - "PENDING" (e.g. under review) means no money yet. */
+  captureStatus: string | null;
+  amountAgorot: number | null;
+  currency: string | null;
+  /** Our order id, set as custom_id when the PayPal order was created. */
+  customId: string | null;
 }
 
 export async function captureOrder(paypalOrderId: string): Promise<PayPalResult<CaptureOutcome>> {
@@ -221,18 +227,38 @@ export async function captureOrder(paypalOrderId: string): Promise<PayPalResult<
 
   const status = result.value.status;
   if (typeof status !== "string") return fail("invalid_response", "capture response had no status");
-  return { ok: true, value: { status, captureId: readCaptureId(result.value) } };
+  const capture = readCapture(result.value);
+  return { ok: true, value: { status, captureId: capture?.id ?? null, captureStatus: capture?.status ?? null, amountAgorot: capture?.amountAgorot ?? null, currency: capture?.currency ?? null, customId: capture?.customId ?? null } };
 }
 
-/** Dig `purchase_units[0].payments.captures[0].id` out of an unknown shape. */
-function readCaptureId(payload: Record<string, unknown>): string | null {
+type CaptureFacts = { id: string | null; status: string | null; amountAgorot: number | null; currency: string | null; customId: string | null };
+
+/** The money facts of one capture object (from a capture response or a PAYMENT.CAPTURE.* webhook resource). */
+export function captureFacts(c: Record<string, unknown> | null | undefined): CaptureFacts {
+  const amount = (c?.amount ?? null) as { value?: unknown; currency_code?: unknown } | null;
+  const value = typeof amount?.value === "string" ? Number(amount.value) : NaN;
+  return {
+    id: typeof c?.id === "string" ? c.id : null,
+    status: typeof c?.status === "string" ? c.status : null,
+    amountAgorot: Number.isFinite(value) ? Math.round(value * 100) : null,
+    currency: typeof amount?.currency_code === "string" ? amount.currency_code : null,
+    customId: typeof c?.custom_id === "string" ? c.custom_id : null,
+  };
+}
+
+/** True only when this capture is completed money for exactly this order and total, in ILS. */
+export function captureMatchesOrder(f: Pick<CaptureFacts, "status" | "amountAgorot" | "currency" | "customId">, orderId: string, totalAgorot: number): boolean {
+  return f.status === "COMPLETED" && f.currency === "ILS" && f.amountAgorot === totalAgorot && f.customId === orderId;
+}
+
+/** `purchase_units[0].payments.captures[0]` out of an unknown shape. */
+function readCapture(payload: Record<string, unknown>): CaptureFacts | null {
   const units = payload.purchase_units;
   if (!Array.isArray(units) || units.length === 0) return null;
   const unit = units[0] as { payments?: { captures?: unknown } } | null;
   const captures = unit?.payments?.captures;
   if (!Array.isArray(captures) || captures.length === 0) return null;
-  const capture = captures[0] as { id?: unknown } | null;
-  return typeof capture?.id === "string" ? capture.id : null;
+  return captureFacts(captures[0] as Record<string, unknown>);
 }
 
 /* ------------------------------------------------------ webhook signature -- */
