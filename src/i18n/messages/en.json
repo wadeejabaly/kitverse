@@ -3,6 +3,10 @@
     "title": "KitVerse",
     "description": "Club and national team football shirts in Fan and Player versions. Clear prices, delivery nationwide."
   },
+  "promo": {
+    "bundle3": "3 player shirts for ₪300 — code 3FOR299, applied automatically at checkout",
+    "cta": "Shop now"
+  },
   "nav": {
     "home": "Home",
     "shop": "Shop",

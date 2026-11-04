@@ -12,6 +12,7 @@ import { ConsentBanner } from "@/components/shared/ConsentBanner";
 import { PageViewTracker } from "@/components/providers/PageViewTracker";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
+import { PromoBanner } from "@/components/shared/PromoBanner";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -105,6 +106,7 @@ export default async function LocaleLayout({
                   stats page (owner request 2026-11-03). First-party and session-scoped, see
                   its own docstring for why this doesn't need the consent banner's gate. */}
               <PageViewTracker locale={locale} />
+              <PromoBanner />
               <Header />
               <main className="flex grow flex-col">{children}</main>
               <Footer />
