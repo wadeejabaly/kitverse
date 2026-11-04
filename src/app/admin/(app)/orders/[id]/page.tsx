@@ -7,15 +7,25 @@ import { orderToken } from "@/lib/orders/link";
 import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime } from "../../../ui";
 import { CancelOrderButton } from "./cancel-order-button";
+import { CancelInventoryPrompt } from "./cancel-inventory-prompt";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrderPage({ params }: PageProps<"/admin/orders/[id]">) {
   const { id } = await params;
   const o = (await db().from("orders").select("*").eq("id", id).maybeSingle()).data as
-    { id: string; number: number; status: string; source: string; total: number; conversation_id: string | null; payment_method: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null } | null;
+    { id: string; number: number; status: string; source: string; total: number; conversation_id: string | null; payment_method: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null; returned_to_inventory_at: string | null } | null;
   if (!o) notFound();
   const lines = await batchLines([o.id]);
+  const pids = [...new Set(lines.map((l) => l.product_id).filter(Boolean))] as string[];
+  const stock = pids.length
+    ? ((await db().from("inventory_items").select("product_id,audience,version,sleeve,size,qty").in("product_id", pids)).data ?? []) as { product_id: string; audience: string; version: string; sleeve: string; size: string; qty: number }[]
+    : [];
+  // l.version/l.sleeve are already the display-cased strings batchLines() maps to ("Player"/"Fan",
+  // "Long"/"Short") - undo that here rather than adding raw fields to BatchLine just for this lookup.
+  const stockQty = (l: (typeof lines)[number]) => l.product_id
+    ? stock.find((s) => s.product_id === l.product_id && s.audience === l.audience && s.version === (l.version === "Player" ? "player" : "fan") && s.sleeve === (l.sleeve === "Long" ? "long" : "short") && s.size === l.size)?.qty ?? 0
+    : null;
   const events = (await db().from("order_events").select("from_status,to_status,actor,note,created_at").eq("order_id", o.id).order("created_at")).data ?? [];
   const a = o.address ?? {};
   const st = ORDER_STATUS[o.status] ?? ORDER_STATUS.draft;
@@ -40,7 +50,9 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
           <Card>
             <SectionTitle>Shirts</SectionTitle>
             <div className="divide-y divide-line">
-              {lines.map((l, i) => (
+              {lines.map((l, i) => {
+                const qty = stockQty(l);
+                return (
                 <div key={i} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium">{l.title}</div>
@@ -48,11 +60,13 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
                       <Badge>{l.version}</Badge><Badge>{l.sleeve} sleeve</Badge><Badge tone="ink">{l.size}</Badge>{l.qty > 1 ? <Badge>×{l.qty}</Badge> : null}
                       {l.print_name || l.print_number ? <Badge tone="green">{[l.print_name, l.print_number].filter(Boolean).join(" ")}</Badge> : null}
                       {l.patches ? <Badge>{l.patches}</Badge> : null}{l.box ? <Badge>gift box</Badge> : null}
+                      {qty !== null ? (qty > 0 ? <Badge tone="green">In stock ({qty})</Badge> : <Badge tone="amber">Order from supplier</Badge>) : null}
                     </div>
                   </div>
                   {l.supplier_album ? <a href={l.supplier_album} target="_blank" rel="noreferrer" className={button.subtle} aria-label="Supplier album"><ExternalLink className="h-4 w-4" /></a> : null}
                 </div>
-              ))}
+                );
+              })}
             </div>
             {o.quote?.summaryAr ? <p className="mt-4 rounded-xl bg-paper px-3 py-2 text-sm text-ink-2" dir="auto">{o.quote.summaryAr}</p> : null}
           </Card>
@@ -67,6 +81,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
         </div>
 
         <div className="flex flex-col gap-4">
+          {o.status === "cancelled" && !o.returned_to_inventory_at ? <CancelInventoryPrompt orderId={o.id} lines={lines} /> : null}
           <Card>
             <SectionTitle>Delivery</SectionTitle>
             <div className="flex flex-col gap-2 text-sm">

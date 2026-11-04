@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell, Layers, Truck, Percent, BarChart3 } from "lucide-react";
+import { LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell, Layers, Truck, Percent, BarChart3, Warehouse } from "lucide-react";
 import { cx } from "../ui";
 
 const GROUPS = [
@@ -11,6 +11,7 @@ const GROUPS = [
     { href: "/admin/approvals", label: "Approvals", icon: ClipboardCheck },
     { href: "/admin/inbox", label: "Inbox", icon: MessagesSquare },
     { href: "/admin/orders", label: "Orders", icon: Package },
+    { href: "/admin/inventory", label: "Inventory", icon: Warehouse },
     { href: "/admin/stats", label: "Stats", icon: BarChart3 },
   ],
   [
@@ -32,22 +33,38 @@ function active(path: string, href: string, exact?: boolean) {
   return exact ? path === href : path === href || path.startsWith(href + "/");
 }
 
-/** Icon rail with hover labels, grouped by dividers. */
+/** Icon rail that expands into a full labelled menu on hover (owner request
+ * 2026-11-04: the old per-icon tooltip only ever named the one icon under
+ * the pointer, so reading the rail meant hovering each icon in turn. `group`
+ * now lives on the <nav> itself — CSS :hover propagates up through the DOM
+ * tree to every ancestor of whatever's under the pointer, so hovering ANY
+ * item (a descendant of <nav>) keeps <nav> itself :hover, which is what lets
+ * one `hover:w-60` on <nav> widen the whole rail no matter which row the
+ * mouse is actually over, while `group-hover:opacity-100` reveals every
+ * label at once. Collapsed, the labels are both clipped by nav's own
+ * `overflow-hidden` and opacity-0, so there's no stray sliver of text —
+ * belt and braces. Rows are `w-full` (not the old centered icon-only
+ * squares) so every row's icon sits at the same fixed offset whether the
+ * rail is 84px or 240px wide, and the group divider is a full-width border
+ * on the row instead of the old fixed-width `w-10` line sized for icons
+ * only. */
 export function Rail({ badges }: { badges: Badges }) {
   const path = usePathname();
   return (
-    <nav className="hidden w-[84px] shrink-0 flex-col items-center gap-0 border-r border-line py-5 md:flex">
+    <nav className="group hidden w-[84px] shrink-0 flex-col gap-0 overflow-hidden border-r border-line py-5 transition-[width] duration-200 ease-out hover:w-60 md:flex">
       {GROUPS.map((group, gi) => (
-        <div key={gi} className={cx("flex flex-col items-center gap-2", gi > 0 && "mt-4 border-t border-line-2 pt-4 w-10")}>
+        <div key={gi} className={cx("flex w-full flex-col gap-1", gi > 0 && "mt-4 border-t border-line-2 pt-4")}>
           {(group as typeof ITEMS).map((it) => {
             const on = active(path, it.href, it.exact);
             const Icon = it.icon;
             return (
               <Link key={it.href} href={it.href} aria-label={it.label}
-                className={cx("group relative grid h-11 w-11 place-items-center rounded-lg transition-colors", on ? "bg-raised text-ink ring-1 ring-line-2" : "text-muted hover:bg-raised hover:text-ink")}>
-                <Icon className="h-5 w-5" strokeWidth={1.6} />
-                {badges[it.href] ? <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-pitch ring-2 ring-paper" /> : null}
-                <span className="pointer-events-none absolute left-full z-30 ml-3 whitespace-nowrap rounded-md border border-line-2 bg-raised px-2 py-1 text-xs text-ink opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                className={cx("flex h-11 w-full shrink-0 items-center gap-3 rounded-lg pl-5 pr-3 transition-colors", on ? "bg-raised text-ink ring-1 ring-line-2" : "text-muted hover:bg-raised hover:text-ink")}>
+                <span className="relative grid h-5 w-5 shrink-0 place-items-center">
+                  <Icon className="h-5 w-5" strokeWidth={1.6} />
+                  {badges[it.href] ? <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-pitch ring-2 ring-paper" /> : null}
+                </span>
+                <span className="whitespace-nowrap text-sm font-medium opacity-0 transition-opacity duration-150 group-hover:opacity-100">
                   {it.label}{badges[it.href] ? <span className="ml-1.5 text-pitch">{badges[it.href]}</span> : null}
                 </span>
               </Link>
