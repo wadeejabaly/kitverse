@@ -67,6 +67,86 @@ export async function uploadProductPhoto(form: FormData) {
 }
 
 /**
+ * Owner request 2026-11-04: "upload more than 1 photo att once per shirt and then i can decide once i
+ * upload which one is long sleeve and which one is short sleeve" - picking several files at once goes
+ * straight to storage (no crop editor per file, unlike the single-photo path above - cropping every
+ * photo in a batch one at a time would defeat the point of uploading them together) under one shared
+ * starting sleeve, which the owner can then flip per photo with setPhotoSleeve below. One deploy-hook
+ * call and one audit row for the whole batch, not one each.
+ */
+export async function uploadProductPhotos(form: FormData) {
+  const staff = await requireStaff();
+  const productId = z.string().uuid().parse(form.get("productId"));
+  const sleeve = z.enum(["short", "long"]).default("short").parse(form.get("sleeve") ?? "short");
+  const files = form.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
+  if (!files.length) return;
+  for (const f of files) {
+    if (f.size > 15 * 1024 * 1024) throw new Error(`"${f.name}" is larger than 15 MB`);
+  }
+  const p = must(await db().from("products").select("id,handle").eq("id", productId).single(), "product") as { id: string; handle: string };
+  let lastUrl: string | null = null;
+  // sequential, not parallel: frontSort reads the current lowest sort from the DB each time, so each
+  // upload needs the previous one's insert already committed to correctly end up in front of it.
+  for (const file of files) {
+    const buf = await sharp(Buffer.from(await file.arrayBuffer())).rotate().resize({ width: 2048, height: 2048, fit: "inside", withoutEnlargement: true }).jpeg({ quality: 88 }).toBuffer();
+    const path = `products/${p.handle}/owner-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.jpg`;
+    const up = await db().storage.from("media").upload(path, buf, { contentType: "image/jpeg" });
+    if (up.error) throw new Error(up.error.message);
+    const url = db().storage.from("media").getPublicUrl(path).data.publicUrl;
+    const sort = await frontSort(p.id, sleeve);
+    must(await db().from("product_images").insert({ product_id: p.id, url, sleeve, sort, status: "good", source: "owner", role: "front", checked_at: new Date().toISOString() }).select("id"), "image row");
+    lastUrl = url;
+  }
+  // Same "a deliberate pick wins" rule as the single-photo upload above: the batch's last short-sleeve
+  // photo becomes the new main photo. The owner can click "Set as main" on a different one afterwards,
+  // or move any of these to the other sleeve from here - see setPhotoSleeve below.
+  if (sleeve === "short" && lastUrl) must(await db().from("products").update({ primary_image_url: lastUrl, photo_status: "owner_upload" }).eq("id", p.id).select("id"), "set photo");
+  await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_upload", entity: "product", entity_id: p.id, after: { count: files.length } });
+  await kickDeploy();
+  revalidatePath("/admin/photos");
+}
+
+/**
+ * Owner request 2026-11-04 (same ask as uploadProductPhotos above): decide a photo's sleeve AFTER it's
+ * already uploaded, by moving it into the other set. Sorts it to the front of its new set - the thing
+ * just decided on - and follows the same primary_image_url rules as setPrimaryPhoto/deleteProductPhoto:
+ * a photo moved INTO short becomes the new main photo (a deliberate pick wins); a photo moved OUT of
+ * short that happened to be the current main photo re-derives the next-best one, same fallback as
+ * deleting a photo.
+ */
+export async function setPhotoSleeve(form: FormData) {
+  const staff = await requireStaff();
+  const productId = z.string().uuid().parse(form.get("productId"));
+  const imageId = z.string().uuid().parse(form.get("imageId"));
+  const sleeve = z.enum(["short", "long"]).parse(form.get("sleeve"));
+
+  const image = must(await db().from("product_images").select("url,product_id,sleeve").eq("id", imageId).single(), "photo") as { url: string; product_id: string; sleeve: Sleeve };
+  if (image.product_id !== productId) throw new Error("photo does not belong to this product");
+  if (image.sleeve === sleeve) return;
+
+  const sort = await frontSort(productId, sleeve);
+  must(await db().from("product_images").update({ sleeve, sort }).eq("id", imageId).select("id"), "move photo");
+
+  if (sleeve === "short") {
+    must(await db().from("products").update({ primary_image_url: image.url, photo_status: "owner_upload" }).eq("id", productId).select("id"), "set primary photo");
+  } else {
+    const product = must(await db().from("products").select("primary_image_url").eq("id", productId).single(), "product") as { primary_image_url: string | null };
+    if (product.primary_image_url === image.url) {
+      const remaining = (await db().from("product_images").select("url,source").eq("product_id", productId).eq("sleeve", "short").eq("status", "good")
+        .order("sort", { ascending: true }).limit(20)).data as { url: string; source: string }[] | null;
+      const next = remaining?.find((r) => r.source === "owner") ?? remaining?.[0] ?? null;
+      await db().from("products").update(
+        next ? { primary_image_url: next.url, photo_status: next.source === "owner" ? "owner_upload" : "good" } : { primary_image_url: null, photo_status: "none_clean" },
+      ).eq("id", productId);
+    }
+  }
+
+  await db().from("audit_log").insert({ actor: staff.id, action: "product.photo_move_sleeve", entity: "product", entity_id: productId });
+  await kickDeploy();
+  revalidatePath("/admin/photos");
+}
+
+/**
  * Every photo this product has on file - not just its current primary - so the owner can pick,
  * re-edit, or throw away any of them (owner report 2026-11-02: "i want the ability to remove more
  * than just the main picture i want to remove and edit all of them and choose the key picture" -
