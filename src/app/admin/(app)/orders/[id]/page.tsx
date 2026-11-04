@@ -4,6 +4,7 @@ import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink, Check, X } from
 import { db } from "@/lib/db";
 import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
 import { orderToken } from "@/lib/orders/link";
+import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime } from "../../../ui";
 import { CancelOrderButton } from "./cancel-order-button";
@@ -19,13 +20,21 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
   const lines = await batchLines([o.id]);
   const pids = [...new Set(lines.map((l) => l.product_id).filter(Boolean))] as string[];
   const stock = pids.length
-    ? ((await db().from("inventory_items").select("product_id,audience,version,sleeve,size,qty").in("product_id", pids)).data ?? []) as { product_id: string; audience: string; version: string; sleeve: string; size: string; qty: number }[]
+    ? ((await db().from("inventory_items").select("product_id,audience,version,sleeve,size,qty,print_name,print_number,patches").in("product_id", pids)).data ?? []) as
+      { product_id: string; audience: string; version: string; sleeve: string; size: string; qty: number; print_name: string; print_number: string; patches: string[] }[]
     : [];
   // l.version/l.sleeve are already the display-cased strings batchLines() maps to ("Player"/"Fan",
   // "Long"/"Short") - undo that here rather than adding raw fields to BatchLine just for this lookup.
-  const stockQty = (l: (typeof lines)[number]) => l.product_id
-    ? stock.find((s) => s.product_id === l.product_id && s.audience === l.audience && s.version === (l.version === "Player" ? "player" : "fan") && s.sleeve === (l.sleeve === "Long" ? "long" : "short") && s.size === l.size)?.qty ?? 0
+  // Matching stays variant-only (any batch of the right size counts) even though each batch now
+  // carries its own print detail - a blank shirt in stock still satisfies a blank order either way.
+  const stockRows = (l: (typeof lines)[number]) => l.product_id
+    ? stock.filter((s) => s.product_id === l.product_id && s.audience === l.audience && s.version === (l.version === "Player" ? "player" : "fan") && s.sleeve === (l.sleeve === "Long" ? "long" : "short") && s.size === l.size)
     : null;
+  const describeStock = (rows: ReturnType<typeof stockRows>) => (rows ?? []).map((r) => {
+    const print = [r.print_name, r.print_number].filter(Boolean).join(" ") || "blank";
+    const badges = r.patches.length ? ` + ${r.patches.map((p) => PATCHES[p as PatchId]?.label_ar ?? p).join(" + ")}` : "";
+    return `${r.qty}× ${print}${badges}`;
+  }).join(", ");
   const events = (await db().from("order_events").select("from_status,to_status,actor,note,created_at").eq("order_id", o.id).order("created_at")).data ?? [];
   const a = o.address ?? {};
   const st = ORDER_STATUS[o.status] ?? ORDER_STATUS.draft;
@@ -51,7 +60,8 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
             <SectionTitle>Shirts</SectionTitle>
             <div className="divide-y divide-line">
               {lines.map((l, i) => {
-                const qty = stockQty(l);
+                const rows = stockRows(l);
+                const total = rows?.reduce((n, r) => n + r.qty, 0) ?? null;
                 return (
                 <div key={i} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
                   <div className="min-w-0 flex-1">
@@ -60,8 +70,9 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
                       <Badge>{l.version}</Badge><Badge>{l.sleeve} sleeve</Badge><Badge tone="ink">{l.size}</Badge>{l.qty > 1 ? <Badge>×{l.qty}</Badge> : null}
                       {l.print_name || l.print_number ? <Badge tone="green">{[l.print_name, l.print_number].filter(Boolean).join(" ")}</Badge> : null}
                       {l.patches ? <Badge>{l.patches}</Badge> : null}{l.box ? <Badge>gift box</Badge> : null}
-                      {qty !== null ? (qty > 0 ? <Badge tone="green">In stock ({qty})</Badge> : <Badge tone="amber">Order from supplier</Badge>) : null}
+                      {total !== null ? (total > 0 ? <Badge tone="green">In stock ({total})</Badge> : <Badge tone="amber">Order from supplier</Badge>) : null}
                     </div>
+                    {total ? <div className="mt-1 text-xs text-muted">On hand: {describeStock(rows)}</div> : null}
                   </div>
                   {l.supplier_album ? <a href={l.supplier_album} target="_blank" rel="noreferrer" className={button.subtle} aria-label="Supplier album"><ExternalLink className="h-4 w-4" /></a> : null}
                 </div>
