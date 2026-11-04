@@ -109,7 +109,7 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
               {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain
                   <a>, not <MenuLink>/<Link>, so it never gets a locale prefix it can't resolve. */}
               {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
-              <a href="/o/track" className="text-xl transition-colors hover:text-ink-soft">
+              <a href="/o/track" className="text-xl font-bold transition-colors hover:text-ink-soft">
                 {t("trackOrder")}
               </a>
             </MenuGroup>
@@ -145,7 +145,7 @@ function MenuGroup({
 
 function MenuLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="text-xl transition-colors hover:text-ink-soft">
+    <Link href={href} className="text-xl font-bold transition-colors hover:text-ink-soft">
       {children}
     </Link>
   );

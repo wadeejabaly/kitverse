@@ -57,7 +57,7 @@ export async function Header() {
           {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain <a>,
               not <Link>, so it never gets a locale prefix it can't resolve. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
-          <a href="/o/track" className="border-b border-transparent pb-1 text-ink transition-colors hover:border-gold">
+          <a href="/o/track" className="border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold">
             {t("trackOrder")}
           </a>
         </nav>
@@ -91,7 +91,7 @@ function HeaderLink({ href, children }: { href: string; children: React.ReactNod
       href={href}
       // The hover underline is the crest gold — the one place a nav item
       // signals itself. The label stays ink; only the hairline changes.
-      className="border-b border-transparent pb-1 text-ink transition-colors hover:border-gold"
+      className="border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold"
     >
       {children}
     </Link>
@@ -150,7 +150,7 @@ function LeaguesMenu({
     <div className="group relative">
       <Link
         href="/shop#league"
-        className="flex items-center gap-1 border-b border-transparent pb-1 text-ink transition-colors hover:border-gold group-focus-within:border-gold"
+        className="flex items-center gap-1 border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold group-focus-within:border-gold"
       >
         {label}
         <ChevronIcon className="transition-transform duration-200 ease-out group-hover:-rotate-180 group-focus-within:-rotate-180" />
