@@ -11,8 +11,8 @@ import { heavyMotionAllowed } from "./env";
  * you feel and depth you notice, and the second one always reads as a
  * gimmick.
  *
- * `scrub: true` — never a number. A numeric scrub adds GSAP's own smoothing
- * on top of Lenis's, and the two easings fight each other into a float.
+ * `scrub: true` — never a number. A numeric scrub adds GSAP's own easing, so
+ * the layer trails the scroll and reads as a float.
  *
  * Desktop pointer + motion allowed only; everywhere else this renders a plain
  * wrapper and never loads GSAP.

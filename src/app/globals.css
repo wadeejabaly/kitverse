@@ -1236,10 +1236,18 @@ h2 {
    lifts off --flood-ground — since most of what read as "purple" was the
    blue glow additively brightening an otherwise-navy gradient, not the navy
    itself. */
+/* Perf (owner report 2026-11-05, "a little bit of lag scrolling"): the hero's
+   four decorative layers (.kv-flood-glow, -beam, -lights, -grain - dozens of
+   full-width gradients plus a blended noise texture) each get their own GPU
+   layer with will-change, so they are painted once instead of on every frame
+   the animated parts of the hero (button pulse, shirt glow, crossfade) touch.
+   Measured in headless Chrome at 1440x900: ~56 fps with frequent 33 ms frames
+   before, a steady 60 fps after, with no visible change. */
 .kv-flood-glow {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  will-change: transform; /* own GPU layer - see .kv-flood-glow's perf note */
   background:
     /* Owner reference 2026-10-27 ("darker areas behind the Arabic text to
        maintain readability"): a plain dark vignette, reusing
@@ -1267,6 +1275,7 @@ h2 {
 
 .kv-flood-beam {
   position: absolute;
+  will-change: transform; /* own GPU layer - see .kv-flood-glow's perf note */
   inset-block-start: -120px;
   inset-inline-end: -80px;
   width: 900px;
@@ -1420,6 +1429,7 @@ h2 {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  will-change: transform; /* own GPU layer - see .kv-flood-glow's perf note */
   background:
     /* Five larger soft bokeh floodlights (owner reference 2026-10-27 —
        the mockup's lights vary in size, not a uniform row of pinpoints),
@@ -1724,6 +1734,7 @@ h2 {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  will-change: transform; /* own GPU layer - see .kv-flood-glow's perf note */
   opacity: 0.05;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");

@@ -14,10 +14,11 @@ export function motionAllowed() {
 
 /**
  * Desktop-with-a-real-pointer. This is the gate on the heavy motion stack:
- * smooth scroll and scroll-scrubbed parallax load ONLY here.
+ * scroll-scrubbed parallax loads ONLY here (smooth scrolling was removed
+ * 2026-11-05 - see MotionProvider).
  *
  * It is a performance decision before it is a taste one. GSAP + ScrollTrigger
- * + Lenis is well over 100KB of JavaScript, the Lighthouse budget on this
+ * is a lot of JavaScript, the Lighthouse budget on this
  * build is the MOBILE score, and a phone gets nothing out of hijacked
  * scrolling — native momentum scrolling is already better than anything we
  * would ship. So the dynamic imports sit behind this check and a phone never
