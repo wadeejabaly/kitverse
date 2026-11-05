@@ -1,5 +1,4 @@
 import { requireStaff } from "@/lib/auth";
-import { db } from "@/lib/db";
 import { batchOrderIds, batchLines, toCsv } from "@/lib/orders/admin";
 
 export async function GET(_req: Request, ctx: RouteContext<"/admin/orders/batches/[id]/csv">) {
