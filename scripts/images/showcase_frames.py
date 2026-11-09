@@ -113,6 +113,13 @@ def photo_cutout(path: str) -> tuple[np.ndarray, np.ndarray, dict]:
     rgb = np.asarray(img)
     bg = std.border_colour(rgb)
     alpha, diag = std.foreground_mask(img, rgb, bg)
+    # Pull the edge in by ~2px and soften it: the outermost ring of a photo
+    # cut-out is where the old (usually white) background shows through as a
+    # light outline on the dark stadium.
+    import cv2
+
+    inner = ndimage.binary_erosion(alpha > 0.5, iterations=2).astype(np.float32)
+    alpha = np.minimum(alpha, cv2.GaussianBlur(inner, (0, 0), 1.0))
     fg = std.defringe(rgb, alpha, bg)
     return fg, alpha, diag
 
@@ -134,10 +141,42 @@ def normalise(fg: np.ndarray, alpha: np.ndarray) -> Image.Image:
     return canvas
 
 
+def place_sequence(frames: list[Image.Image]) -> list[Image.Image]:
+    """A turntable sequence (fixed camera): ONE transform for every frame, taken
+    from the front frame, so the rotation axis and scale never wobble."""
+    a0 = np.asarray(frames[0].split()[3]).astype(np.float32) / 255
+    ys, xs = np.nonzero(a0 > 0.1)
+    y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+    scale = (SHIRT_BOX["bottom"] - SHIRT_BOX["top"]) / (y1 - y0)
+    cw, chh = CROP[2] - CROP[0], CROP[3] - CROP[1]
+    left = round(SHIRT_BOX["cx"] - CROP[0] - ((x0 + x1) / 2) * scale)
+    top = round(SHIRT_BOX["bottom"] - CROP[1] - y1 * scale)
+    out = []
+    for frame in frames:
+        w, h = frame.size
+        resized = frame.resize((round(w * scale), round(h * scale)), Image.LANCZOS)
+        canvas = Image.new("RGBA", (cw, chh), (0, 0, 0, 0))
+        canvas.paste(resized, (left, top), resized)
+        out.append(canvas)
+    return out
+
+
 def build(config: str, session) -> list[dict]:
     report = []
     for jersey in json.load(open(config)):
         os.makedirs(f"{OUT}/{jersey['id']}", exist_ok=True)
+        if "sequence" in jersey:
+            # Already-transparent turntable frames (a render, or cut-outs of a
+            # fixed-camera video), in rotation order.
+            import glob
+
+            files = sorted(glob.glob(jersey["sequence"]))
+            for i, frame in enumerate(place_sequence([Image.open(f).convert("RGBA") for f in files])):
+                dst = f"{OUT}/{jersey['id']}/{i:02d}.webp"
+                frame.save(dst, "WEBP", quality=86, method=6)
+                report.append({"jersey": jersey["id"], "view": i, "source": files[i], "output": dst, "flags": []})
+            print(f"{jersey['id']:>32} {len(files)} sequence frames")
+            continue
         for view in jersey["views"]:
             entry = {"jersey": jersey["id"], "view": view["name"], "source": view["file"], "flags": []}
             if view["source"] == "composite":

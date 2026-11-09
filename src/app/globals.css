@@ -1592,21 +1592,50 @@ h2 {
    .kv-stadium-shirt's feathered edges; the arrows and the counter live outside
    that mask so they are never faded. Arrow positions are set inline from the
    shirt's own box, then nudged just outside the sleeves here. */
-.kv-showcase-stage {
-  touch-action: pan-y; /* vertical scroll stays native; sideways swipes turn the shirt */
+.kv-showcase-surface {
+  touch-action: pan-y; /* vertical scroll stays native; sideways drags turn the shirt */
   -webkit-user-select: none;
   user-select: none;
+  -webkit-touch-callout: none;
   outline: none;
 }
-.kv-showcase-stage:focus-visible {
-  box-shadow: 0 0 0 2px rgb(110 160 255 / 0.7);
-  border-radius: 14px;
+.kv-showcase-surface:focus-visible {
+  box-shadow: inset 0 0 0 2px rgb(110 160 255 / 0.55);
+  border-radius: 18px;
 }
-.kv-showcase-frame img {
-  /* The rim light the stadium puts on every shirt, so each frame sits in the scene. */
-  filter: drop-shadow(0 0 3px rgb(200 220 255 / 0.35)) drop-shadow(0 0 26px rgb(110 160 255 / 0.4));
-  transform-origin: 50% 50%;
-  will-change: transform;
+.kv-showcase-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  /* The stadium's rim light on every shirt (the original composite's glow). */
+  filter: drop-shadow(0 0 2px rgb(200 220 255 / 0.3)) drop-shadow(0 0 24px rgb(110 160 255 / 0.38));
+}
+/* Scene light clipped to the visible shirt: a little top light, a little
+   shade towards the hem, and the floodlight's cool kiss from the top right.
+   Subtle on purpose: colours, crests and sponsors stay as photographed. */
+.kv-showcase-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background:
+    radial-gradient(70% 45% at 78% 6%, rgb(170 200 255 / 0.16), transparent 70%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.05) 0%, transparent 30%, transparent 62%, rgb(4 10 32 / 0.2) 100%);
+}
+/* Soft contact shadow where the hem meets the pedestal top. */
+.kv-showcase-contact {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(2 6 20 / 0.5), rgb(2 6 20 / 0.22) 55%, transparent);
+  filter: blur(2px);
 }
 .kv-showcase-enter {
   animation: kv-showcase-in 0.38s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -1626,12 +1655,12 @@ h2 {
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.375rem;
+  height: 2.375rem;
   border-radius: 999px;
-  color: #fff;
-  background: rgb(8 14 36 / 0.55);
-  border: 1px solid rgb(201 162 74 / 0.55);
+  color: #f3dfae;
+  background: rgb(8 14 36 / 0.5);
+  border: 1px solid rgb(201 162 74 / 0.5);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
@@ -1660,9 +1689,9 @@ h2 {
   align-items: center;
   gap: 0.9rem;
   pointer-events: none;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: rgb(255 255 255 / 0.72);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgb(255 255 255 / 0.55);
 }
 .kv-showcase-count strong {
   color: #e8c470;
@@ -1705,8 +1734,10 @@ h2 {
 }
 
 @media (width >= 80rem) {
+  /* Room to step clear of the shirt: beside it, below the arrow. */
   .kv-stadium-badge {
-    inset-inline-end: -12%;
+    inset-inline-end: -20%;
+    top: 54%;
   }
 }
 

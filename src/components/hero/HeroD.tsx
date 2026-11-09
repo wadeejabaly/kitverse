@@ -55,7 +55,8 @@ export async function HeroD({
 
   // The interactive showcase (src/data/showcase.ts): each shirt's name and
   // link come from the catalogue; a shirt that is off the site links to /shop.
-  const showcase: ShowcaseItem[] = SHOWCASE_JERSEYS.map((jersey) => {
+  // Demo items (the unbranded 360° test shirt) never reach production.
+  const showcase: ShowcaseItem[] = SHOWCASE_JERSEYS.filter((jersey) => !jersey.demo || process.env.VERCEL_ENV !== "production").map((jersey) => {
     const product = jersey.handle ? getProduct(jersey.handle) : undefined;
     return {
       id: jersey.id,

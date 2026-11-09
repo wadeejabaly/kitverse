@@ -1,14 +1,51 @@
 [
-  {"id": "real-madrid-2026-27-home", "views": [
-    {"name": "front", "file": "public/home/hero-real-madrid.webp", "source": "composite"},
-    {"name": "back", "file": "catalog/showcase-sources/real-madrid-2026-27-home-back.jpg", "source": "photo"}
-  ]},
-  {"id": "manchester-united-2007-08-home", "views": [
-    {"name": "front", "file": "catalog/showcase-sources/manchester-united-2007-08-home-front.webp", "source": "photo"},
-    {"name": "back", "file": "catalog/showcase-sources/manchester-united-2007-08-home-back.webp", "source": "photo"}
-  ]},
-  {"id": "arsenal-2026-27-home", "views": [
-    {"name": "front", "file": "public/home/hero-arsenal.webp", "source": "composite"},
-    {"name": "back", "file": "catalog/showcase-sources/arsenal-2026-27-home-back.jpg", "source": "photo"}
-  ]}
+  {
+    "id": "real-madrid-2026-27-home",
+    "views": [
+      {
+        "name": "front",
+        "file": "public/home/hero-real-madrid.webp",
+        "source": "composite"
+      },
+      {
+        "name": "back",
+        "file": "catalog/showcase-sources/real-madrid-2026-27-home-back.jpg",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "manchester-united-2007-08-home",
+    "views": [
+      {
+        "name": "front",
+        "file": "catalog/showcase-sources/manchester-united-2007-08-home-front.webp",
+        "source": "photo"
+      },
+      {
+        "name": "back",
+        "file": "catalog/showcase-sources/manchester-united-2007-08-home-back.webp",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "arsenal-2026-27-home",
+    "views": [
+      {
+        "name": "front",
+        "file": "public/home/hero-arsenal.webp",
+        "source": "composite"
+      },
+      {
+        "name": "back",
+        "file": "catalog/showcase-sources/arsenal-2026-27-home-back.jpg",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "test-360",
+    "sequence": "catalog/showcase-sources/test-360/*.png"
+  }
 ]
