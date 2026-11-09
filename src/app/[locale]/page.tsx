@@ -27,13 +27,12 @@ export async function generateMetadata({
 /**
  * Home — the statement page.
  *
- * It opens on <HeroD/>: the Floodlight stage, a stadium-at-night navy surface
- * scoped to the hero alone, with the crest's electric blue lighting a single
- * shirt from behind (see "THE FLOODLIGHT HERO" in globals.css). That stage is
- * the ONE navy moment on the page — it replaced HeroB's plaque rather than
- * joining it — which is why the Fan/Player explainer below it stays on the
- * page ground instead of painting itself as a band. Two navy slabs in one
- * scroll and neither is an event.
+ * It opens on <HeroD/>: the stadium hero (rebuilt 2026-11-09 against the
+ * owner's reference screenshots — a real stadium plate and the shirt on its
+ * pedestal, see "THE STADIUM HERO" in globals.css), with the four category
+ * cards sitting on the same night directly under it. That is the ONE navy
+ * moment at the top of the page, which is why the Fan/Player explainer below
+ * stays on the page ground instead of painting itself as a band.
  *
  * After the hero it is a rhythm of one-idea sections separated by a lot of
  * air, and the leagues are a magazine index rather than a grid of boxes.
@@ -65,10 +64,9 @@ export default async function HomePage({
   return (
     <>
       {/* ─────────── HERO ───────────
-          The Floodlight stage. It is a complete component so that the hero
-          can be swapped, compared or reverted without this page knowing
-          anything about how it is built. See HeroD for the surface, the
-          RTL/LTR mirroring and the contrast reasoning. */}
+          The stadium hero. A complete component so that the hero can be
+          swapped or reverted without this page knowing how it is built.
+          See HeroD for the layers and the RTL mirroring. */}
       <HeroD locale={locale} priority />
 
       {/* ─────────── THE CATEGORY GRID ───────────

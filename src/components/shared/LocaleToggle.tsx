@@ -84,8 +84,9 @@ export function LocaleToggle({ className }: { className?: string }) {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`${t("language")}: ${currentLabel}`}
-        className={cn("flex items-center gap-1", className)}
+        className={cn("flex items-center gap-1.5", className)}
       >
+        <GlobeIcon />
         {currentLabel}
         <ChevronIcon
           className={cn("transition-transform duration-200 ease-out", open && "-rotate-180")}
@@ -133,6 +134,17 @@ function ChevronIcon({ className }: { className?: string }) {
       className={className}
     >
       <path d="M3.5 6 8 10.5 12.5 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/** A globe beside the language name (redesign 2026-11-09, reference
+    screenshots). Symmetric, so it needs no RTL mirroring. */
+function GlobeIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden className="block">
+      <circle cx="8" cy="8" r="6.2" />
+      <path d="M1.8 8h12.4M8 1.8c1.7 1.8 2.6 3.9 2.6 6.2S9.7 12.4 8 14.2C6.3 12.4 5.4 10.3 5.4 8S6.3 3.6 8 1.8Z" strokeLinejoin="round" />
     </svg>
   );
 }

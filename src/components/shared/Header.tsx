@@ -69,11 +69,23 @@ export async function Header() {
             fails); they take the nav's gold hairline instead, which is
             decoration and costs no text contrast. */}
         <div className="flex items-center gap-5 text-[13px] text-ink ms-auto wide:ms-0">
-          <Link href="/search" aria-label={t("search")} className={utilityHover}>
+          {/* Redesign 2026-11-09 (reference screenshots): on desktop the
+              search reads as a field — glyph plus a placeholder — but it is
+              still the same link to the /search page, which owns the real
+              input. Phones keep the bare glyph for room. */}
+          <Link
+            href="/search"
+            aria-label={t("search")}
+            className={`${utilityHover} flex items-center gap-2.5`}
+          >
             <SearchIcon />
+            <span aria-hidden className="hidden text-ink-soft wide:inline">
+              {t("searchProducts")}
+            </span>
           </Link>
+          <span aria-hidden className="hidden h-5 w-px bg-rule wide:block" />
           <CartLink className={utilityHover} />
-          <span aria-hidden className="hidden h-3.5 w-px bg-rule wide:block" />
+          <span aria-hidden className="hidden h-5 w-px bg-rule wide:block" />
           <LocaleToggle className={utilityHover} />
         </div>
       </div>
@@ -103,11 +115,11 @@ function SearchIcon() {
   return (
     <svg
       viewBox="0 0 16 16"
-      width="16"
-      height="16"
+      width="18"
+      height="18"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.2"
+      strokeWidth="1.3"
       aria-hidden
       className="block"
     >

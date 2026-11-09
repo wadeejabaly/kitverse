@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Reveal } from "@/components/motion/Reveal";
@@ -63,7 +64,7 @@ export async function CategoryGrid() {
     <Reveal
       as="section"
       stagger={80}
-      className="kv-cat-strip grid grid-cols-2 gap-3 p-3 wide:grid-cols-4 wide:gap-4 wide:p-4"
+      className="kv-cat-strip grid grid-cols-2 gap-2.5 px-2.5 pb-2.5 wide:grid-cols-4 wide:gap-3 wide:px-3 wide:pb-3"
     >
       {CARDS.map((card) => {
         const image = CATEGORY_IMAGES[card];
@@ -71,31 +72,32 @@ export async function CategoryGrid() {
           <Link
             key={card}
             href={CARD_HREF[card]}
-            className="kv-cat-card group relative block aspect-[3/2] overflow-hidden"
+            className="kv-cat-card group relative block aspect-[4/3] overflow-hidden wide:aspect-[19/10]"
           >
-            {/* Plain CSS background-image, not next/image — these are
-                placeholder studio shots standing in for photography the
-                owner is about to supply (see category-images.ts); a fixed
-                `fill` Image here would just be swapped for another fixed
-                Image later, so a background-image keeps the swap to one
-                line in that file with nothing in this component to touch. */}
+            {/* next/image (rebuilt 2026-11-09): the photos are real assets
+                now, not stand-ins, so they get responsive sizes like every
+                other product photo on the site. Decorative — the title is
+                the link's accessible name. */}
             <span
               aria-hidden
-              className="kv-cat-card-media transition-transform duration-500 ease-out group-hover:scale-[1.06]"
-              style={{
-                backgroundImage: `url(${image.src})`,
-                backgroundPosition: image.focus,
-                backgroundSize: image.zoom,
-              }}
-            />
-            <span aria-hidden className="kv-cat-card-tint" />
+              className="kv-cat-card-media transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+            >
+              <Image
+                src={image.src}
+                alt=""
+                fill
+                sizes="(max-width: 900px) 50vw, 25vw"
+                className="object-cover"
+                style={{ objectPosition: image.focus }}
+              />
+            </span>
             <span aria-hidden className="kv-cat-card-shade" />
             <span className="kv-cat-card-content">
               <span className="kv-cat-card-title">{t(`${card}.title`)}</span>
               <span className="kv-cat-card-sub">{t(`${card}.body`)}</span>
             </span>
             <span aria-hidden className="kv-cat-card-arrow">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>

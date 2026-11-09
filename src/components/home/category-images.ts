@@ -1,45 +1,32 @@
 /**
- * Background photo for each home-page category card (owner reference
- * 2026-10-27, the four-up "Clubs / National Teams / Retro Classics /
- * Accessories" grid immediately under the hero). Placeholder stand-ins for
- * now — the owner is supplying real category photography to replace these,
- * one file swap each, no code change needed.
+ * Background photo for each home-page category card (owner redesign
+ * 2026-11-09, the reference screenshots' four-up Clubs / National Teams /
+ * Retro Classics / Accessories grid under the hero).
  *
- * These are plain studio product shots (white background, centred shirt),
- * not the reference's cropped, angled fabric photography, so each entry
- * also carries a `focus` (CSS background-position) and `zoom` (CSS
- * background-size, a percentage) tuned to crop IN past the white margin and
- * read as a close, textured shot rather than a whole garment on a blank
- * tile — see CategoryGrid.tsx for how these combine with the navy/electric
- * duotone tint. Retune or drop `zoom`/`focus` per card once its real photo
- * is in (a lifestyle shot usually wants `zoom: "100%"` and `focus: "center"`,
- * the tile's own natural crop).
+ * All four were generated with Higgsfield for this grid, and three of them
+ * are built from the shop's own catalog/artwork as the image reference, so no
+ * badge, sponsor or manufacturer mark was invented:
+ *   - clubs:       public/products/real-madrid-2026-27-home-shirt(-crest).jpg
+ *   - national:    public/products/argentina-2026-home-shirt-crest.jpg
+ *   - accessories: public/patches/champions-league-general.jpg (the real
+ *                  patch artwork the patch picker sells) + a "10" print
+ *   - retro:       the catalog has no retro photography yet, so this one is a
+ *                  deliberately UNBRANDED vintage striped shirt — no crest, no
+ *                  logo, no sponsor — rather than a made-up club shirt. Swap it
+ *                  for a real retro product photo once one is in the catalog.
+ *
+ * Each photo keeps its subject in the right half with a calm, dark left half
+ * for the title (see .kv-cat-card-shade). `focus` is the
+ * image's object-position inside the card.
  */
 export interface CategoryImage {
   src: string;
   focus: string;
-  zoom: string;
 }
 
 export const CATEGORY_IMAGES: Record<string, CategoryImage> = {
-  clubs: {
-    src: "/products/real-madrid-2026-27-home-shirt.jpg",
-    focus: "center 30%",
-    zoom: "230%",
-  },
-  national: {
-    src: "/products/argentina-2026-27-home-shirt.jpg",
-    focus: "center 25%",
-    zoom: "230%",
-  },
-  retro: {
-    src: "/products/barcelona-2026-27-home-shirt.jpg",
-    focus: "center 30%",
-    zoom: "230%",
-  },
-  accessories: {
-    src: "/products/keychain-arsenal.jpg",
-    focus: "center",
-    zoom: "160%",
-  },
+  clubs: { src: "/home/cat-clubs.webp", focus: "70% 35%" },
+  national: { src: "/home/cat-national.webp", focus: "75% 40%" },
+  retro: { src: "/home/cat-retro.webp", focus: "65% 30%" },
+  accessories: { src: "/home/cat-accessories.webp", focus: "70% 50%" },
 };

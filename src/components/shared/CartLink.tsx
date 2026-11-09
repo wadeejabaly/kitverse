@@ -31,13 +31,18 @@ export function CartLink({ className }: { className?: string }) {
         showCount ? t("cartWithCount", { count: String(count) }) : t("cart")
       }
       className={cn(
-        "flex items-center gap-1.5 transition-colors hover:text-ink",
+        "relative flex items-center transition-colors hover:text-ink",
         className,
       )}
     >
       <CartIcon />
+      {/* The count as a small electric-blue disc on the bag's corner
+          (redesign 2026-11-09, reference screenshots). Still withheld until
+          hydrated — see above. */}
       {showCount ? (
-        <Figure className="text-[11px] leading-none">{count}</Figure>
+        <Figure className="absolute -end-2 -top-1.5 grid min-w-4 place-items-center rounded-full bg-electric px-1 text-[10px] leading-4 font-bold text-accent-ink">
+          {count}
+        </Figure>
       ) : null}
     </Link>
   );
@@ -55,8 +60,8 @@ function CartIcon() {
   return (
     <svg
       viewBox="0 0 16 16"
-      width="16"
-      height="16"
+      width="18"
+      height="18"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.2"

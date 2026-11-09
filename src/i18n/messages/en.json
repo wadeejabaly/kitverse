@@ -11,6 +11,7 @@
     "home": "Home",
     "shop": "Shop",
     "search": "Search",
+    "searchProducts": "Search products…",
     "cart": "Cart",
     "sizeGuide": "Size guide",
     "shipping": "Shipping & returns",
@@ -151,7 +152,7 @@
     "emailUs": "Email us"
   },
   "consent": {
-    "message": "We use essential cookies to run the site and your cart. Non-essential analytics or marketing tools only run after you accept, and you can change your choice at any time from \"Cookie settings\" at the bottom of the page.",
+    "message": "We use cookies to enhance your experience, analyze site traffic and show relevant products. You can change your preferences at any time from “Cookie settings” at the bottom of the page.",
     "accept": "Accept all",
     "decline": "Decline",
     "settingsTitle": "Cookie settings"
