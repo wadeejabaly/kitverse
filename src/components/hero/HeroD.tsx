@@ -7,30 +7,19 @@ import { Parallax } from "@/components/motion/Parallax";
 import { Wrap } from "@/components/shared/PageLede";
 import { Price } from "@/components/shared/Money";
 import { titleFor } from "@/lib/product";
+import { SHOWCASE_JERSEYS } from "@/data/showcase";
+import { JerseyShowcase, type ShowcaseItem } from "./JerseyShowcase";
 
 /**
- * The hero's product composite, per locale (owner redesign 2026-11-09, the
- * two reference screenshots: Arsenal on the English page, Real Madrid on the
- * Arabic one).
- *
- * Each image is the shop's OWN catalog photo of that shirt
- * (public/products/<handle>.jpg) composited onto the marble pedestal inside
- * the stadium scene with Higgsfield (nano_banana_pro, product-photoshoot
- * workflow, the real photo passed as the image reference) — crest, sponsor
- * and manufacturer marks come from the photo, nothing was invented. The shirt
- * is baked onto the pedestal in the image itself, which is what finally
- * retires the "jersey floating above the pedestal" bug the CSS podium had
- * (removed 2026-11-03): there is no second layer left to misalign.
- *
- * `handle` is the product the composite links to. If that shirt is ever taken
- * off the site (hidden/deleted), the link falls back to /shop rather than a
- * 404 — the picture is still a real KitVerse shirt either way.
+ * The shirt on the pedestal is the interactive showcase (owner spec
+ * 2026-11-09): JerseyShowcase draws public/home/showcase/plate.webp — the
+ * former Real Madrid composite (public/home/hero-real-madrid.webp, the shop's
+ * own catalogue photo placed on the marble pedestal with Higgsfield) with the
+ * shirt taken out — and lays the selected shirt's frames on it in the exact
+ * box the original shirt filled, so the scene, the pedestal and the shirt's
+ * size and position are unchanged. Which shirts, in what order:
+ * src/data/showcase.ts (Real Madrid first, for every locale).
  */
-const HERO_SHIRTS: Record<string, { src: string; handle: string }> = {
-  en: { src: "/home/hero-arsenal.webp", handle: "arsenal-2026-27-home-shirt" },
-  ar: { src: "/home/hero-real-madrid.webp", handle: "real-madrid-2026-27-home-shirt" },
-  he: { src: "/home/hero-arsenal.webp", handle: "arsenal-2026-27-home-shirt" },
-};
 
 /**
  * HERO D — THE STADIUM. THE HOME PAGE HERO.
@@ -64,10 +53,17 @@ export async function HeroD({
 }) {
   const t = await getTranslations("home.hero");
 
-  const shirt = HERO_SHIRTS[locale] ?? HERO_SHIRTS.en;
-  const product = getProduct(shirt.handle);
-  const shirtHref = product?.visible ? `/product/${product.handle}` : "/shop";
-  const shirtAlt = product ? titleFor(product, locale) : t("cta");
+  // The interactive showcase (src/data/showcase.ts): each shirt's name and
+  // link come from the catalogue; a shirt that is off the site links to /shop.
+  const showcase: ShowcaseItem[] = SHOWCASE_JERSEYS.map((jersey) => {
+    const product = jersey.handle ? getProduct(jersey.handle) : undefined;
+    return {
+      id: jersey.id,
+      views: jersey.views,
+      title: product ? titleFor(product, locale) : jersey.name,
+      href: product?.visible ? `/product/${product.handle}` : "/shop",
+    };
+  });
 
   // "From" prices exactly as the cards state them: smallest size, non-retro.
   const fanFrom = priceFor("2026/27", "S", "fan");
@@ -183,17 +179,11 @@ export async function HeroD({
               the headline close to the fold. */}
           <div className="relative order-1 mx-auto w-full max-w-[min(64vw,300px)] wide:order-none wide:max-w-[560px]">
             <Parallax speed={0.14}>
-              <Link href={shirtHref} className="kv-stadium-shirt group block">
-                <Image
-                  src={shirt.src}
-                  alt={shirtAlt}
-                  width={1856}
-                  height={2304}
-                  priority={priority}
-                  sizes="(max-width: 900px) 64vw, 560px"
-                  className="h-auto w-full transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                />
-              </Link>
+              <JerseyShowcase
+                items={showcase}
+                priority={priority}
+                labels={{ prev: t("showcasePrev"), next: t("showcaseNext"), rotate: t("showcaseRotate"), open: t("showcaseOpen") }}
+              />
             </Parallax>
 
             <Link href="/shop" className="kv-flood-badge kv-stadium-badge">

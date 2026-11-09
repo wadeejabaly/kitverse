@@ -1588,18 +1588,126 @@ h2 {
   mask-composite: intersect;
 }
 
+/* The 360° showcase on the pedestal (JerseyShowcase.tsx). The stage keeps
+   .kv-stadium-shirt's feathered edges; the arrows and the counter live outside
+   that mask so they are never faded. Arrow positions are set inline from the
+   shirt's own box, then nudged just outside the sleeves here. */
+.kv-showcase-stage {
+  touch-action: pan-y; /* vertical scroll stays native; sideways swipes turn the shirt */
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+.kv-showcase-stage:focus-visible {
+  box-shadow: 0 0 0 2px rgb(110 160 255 / 0.7);
+  border-radius: 14px;
+}
+.kv-showcase-frame img {
+  /* The rim light the stadium puts on every shirt, so each frame sits in the scene. */
+  filter: drop-shadow(0 0 3px rgb(200 220 255 / 0.35)) drop-shadow(0 0 26px rgb(110 160 255 / 0.4));
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.kv-showcase-enter {
+  animation: kv-showcase-in 0.38s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes kv-showcase-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.kv-showcase-arrow {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  color: #fff;
+  background: rgb(8 14 36 / 0.55);
+  border: 1px solid rgb(201 162 74 / 0.55);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.kv-showcase-arrow--prev {
+  transform: translate(calc(-100% - 0.4rem), -50%);
+}
+.kv-showcase-arrow--next {
+  transform: translate(calc(100% + 0.4rem), -50%);
+}
+.kv-showcase-arrow:hover,
+.kv-showcase-arrow:focus-visible {
+  background: rgb(18 32 78 / 0.8);
+  border-color: rgb(232 196 112 / 0.95);
+  color: #ffe2a3;
+  box-shadow: 0 0 0 4px rgb(201 162 74 / 0.15), 0 8px 22px rgb(0 0 0 / 0.4);
+  outline: none;
+}
+.kv-showcase-meta {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  pointer-events: none;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgb(255 255 255 / 0.72);
+}
+.kv-showcase-count strong {
+  color: #e8c470;
+  font-weight: 700;
+}
+.kv-showcase-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-transform: uppercase;
+}
+@media (width < 56.25rem) {
+  .kv-showcase-arrow {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+  .kv-showcase-arrow--prev {
+    transform: translate(calc(-100% - 0.15rem), -50%);
+  }
+  .kv-showcase-arrow--next {
+    transform: translate(calc(100% + 0.15rem), -50%);
+  }
+}
+
 /* The new-season card, overlapping the composite's outer edge. Desktop
    only — on a phone there is no room beside the shirt. */
 .kv-stadium-badge {
   position: absolute;
+  /* Below and a little further out than before the showcase: the arrow on
+     this side sits at the shirt's vertical middle (~47%), and the card now
+     clears both the arrow and most of the shirt. */
   inset-inline-end: -6%;
-  top: 42%;
+  top: 58%;
   display: none;
   flex-direction: column;
   width: 196px;
   padding: 1.35rem 1.4rem 1.25rem;
   border-radius: 12px;
   border-color: rgb(255 255 255 / 0.14);
+}
+
+@media (width >= 80rem) {
+  .kv-stadium-badge {
+    inset-inline-end: -12%;
+  }
 }
 
 @media (width >= 56.25rem) {

@@ -49,7 +49,11 @@
       "fanLabel": "Fan",
       "playerLabel": "Player",
       "badgeEyebrow": "New season",
-      "badgeFrom": "From"
+      "badgeFrom": "From",
+      "showcasePrev": "Previous shirt",
+      "showcaseNext": "Next shirt",
+      "showcaseRotate": "Drag to rotate",
+      "showcaseOpen": "tap to open the shirt"
     },
     "browseEyebrow": "Browse",
     "kinds": {

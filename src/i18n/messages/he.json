@@ -49,7 +49,11 @@
       "fanLabel": "אוהד",
       "playerLabel": "שחקן",
       "badgeEyebrow": "העונה החדשה",
-      "badgeFrom": "מ-"
+      "badgeFrom": "מ-",
+      "showcasePrev": "החולצה הקודמת",
+      "showcaseNext": "החולצה הבאה",
+      "showcaseRotate": "גררו לסיבוב",
+      "showcaseOpen": "הקישו לפתיחת החולצה"
     },
     "browseEyebrow": "עיון",
     "kinds": {
