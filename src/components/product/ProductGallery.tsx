@@ -81,7 +81,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="kv-panel relative overflow-hidden" style={{ background: "linear-gradient(180deg,#f6f7fb,#e9edf5)" }}>
+      <div className="kv-panel relative overflow-hidden" style={{ background: "#f1f3f7" }}>
         {hasPhoto(shown) ? (
           <button
             type="button"
@@ -105,7 +105,7 @@ export function ProductGallery({
               height={2048}
               priority
               sizes="(max-width: 900px) 100vw, 600px"
-              className="h-auto w-[90%] mix-blend-multiply transition-transform duration-200 ease-out"
+              className="aspect-square h-auto w-full object-contain transition-transform duration-200 ease-out"
               style={
                 zoom
                   ? { transform: "scale(2)", transformOrigin: `${zoom.x}% ${zoom.y}%` }

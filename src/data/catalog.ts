@@ -68,7 +68,10 @@ export function byTeam(slug: string): Product[] {
 
 /** Visible products of a given kind (national | current | previous). */
 export function byKind(kind: Kind): Product[] {
-  return getVisibleProducts().filter((p) => p.kind === kind);
+  // A retro club shirt (e.g. Manchester United 2007/08) is filed as "previous" but is not last
+  // season's kit: the New season / Last season pages skip retro ages; they live under Retro (and
+  // their league/team pages). Retro national shirts stay under National teams as well.
+  return getVisibleProducts().filter((p) => p.kind === kind && (kind === "national" || !isRetroSeason(p.season)));
 }
 
 /**

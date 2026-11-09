@@ -46,8 +46,9 @@ export function ProductCard({
 
   // Redesign phase 2 (2026-11-09): a white card with a soft studio tile,
   // team eyebrow, bold title, a badge for the line (Retro / National team)
-  // and a "View shirt" bar that rises on hover. The photo is never cropped:
-  // object-contain inside a square at 86%, as before.
+  // and a "View shirt" bar that rises on hover. The photo is never cropped.
+  // Catalogue photos are standardized squares (1200x1200, shirt centred on
+  // #F1F3F7, scripts/images/standardize.py), so the photo fills the tile.
   const badge = retro ? t("badgeRetro") : product.kind === "national" ? t("badgeNational") : null;
 
   return (
@@ -61,7 +62,7 @@ export function ProductCard({
             height={900}
             priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
-            className="h-auto w-[86%] mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+            className="aspect-square h-auto w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           />
         ) : (
           <span className="mono-eyebrow text-ink-soft">{t("outOfStock")}</span>

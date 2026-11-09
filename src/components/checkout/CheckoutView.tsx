@@ -660,14 +660,14 @@ export function CheckoutView({
               key={key}
               className="grid grid-cols-[64px_1fr_auto] items-start gap-4 border-b border-rule py-4"
             >
-              <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]">
+              <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[#f1f3f7]">
                 <Image
                   src={product.image}
                   alt={locale === "ar" ? product.titleAr : product.title}
                   width={128}
                   height={128}
                   sizes="64px"
-                  className="h-auto w-[86%] mix-blend-multiply"
+                  className="aspect-square h-auto w-full object-contain"
                 />
               </span>
               <span className="text-[13px]">
@@ -712,7 +712,7 @@ export function CheckoutView({
               key={key}
               className="grid grid-cols-[64px_1fr_auto] items-start gap-4 border-b border-rule py-4"
             >
-              <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]">
+              <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[#f1f3f7]">
                 <Image
                   src={accessory.image}
                   alt={locale === "ar" ? accessory.teamAr : accessory.team}

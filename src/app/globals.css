@@ -2018,7 +2018,9 @@ h2 {
   display: grid;
   place-items: center;
   aspect-ratio: 1;
-  background: linear-gradient(180deg, #f3f5fa 0%, #e9edf5 100%);
+  /* Product photos are standardized to 1200x1200 on this exact colour
+     (scripts/images/standardize.py), so the photo fills the tile seamlessly. */
+  background: #f1f3f7;
   overflow: hidden;
 }
 

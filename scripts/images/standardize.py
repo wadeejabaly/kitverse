@@ -47,7 +47,7 @@ HEIGHT_FRACTION = 0.80  # shirt height / canvas height
 WIDTH_CAP = 0.86  # shirt width never exceeds this share of the canvas
 SHADOW = dict(offset=16, blur=22, opacity=0.16, color=(14, 22, 48))
 LOW_RES_PX = 700
-UNSAFE_MISSED = 0.5  # AI matte missed more than half the garment -> manual  # a source shirt shorter than this is flagged as low-res
+UNSAFE_MISSED = 0.5
 _session = None
 
 
@@ -144,6 +144,11 @@ def foreground_mask(img: Image.Image, rgb: np.ndarray, bg: np.ndarray) -> tuple[
     ys, xs = np.where(alpha > 0.5)
     h, w = alpha.shape
     touches = bool(len(xs)) and bool(xs.min() <= 1 or ys.min() <= 1 or xs.max() >= w - 2 or ys.max() >= h - 2)
+    # How much of the photo's frame the garment covers: a sleeve tip grazing
+    # the edge is a few percent; a crest or fabric close-up fills the frame.
+    solid_a = alpha > 0.5
+    frame = np.concatenate([solid_a[:2].ravel(), solid_a[-2:].ravel(), solid_a[:, :2].ravel(), solid_a[:, -2:].ravel()])
+    edge_share = float(frame.mean())
     return alpha, {
         "components": pieces,
         "uniform_background": uniform,
@@ -151,6 +156,7 @@ def foreground_mask(img: Image.Image, rgb: np.ndarray, bg: np.ndarray) -> tuple[
         "ai_missed_share": round(ai_missed, 3),
         "colour_missed_share": round(flood_missed, 3),
         "touches_border": touches,
+        "edge_share": round(edge_share, 3),
     }
 
 
@@ -165,7 +171,7 @@ def defringe(rgb: np.ndarray, alpha: np.ndarray, bg: np.ndarray) -> np.ndarray:
     return out
 
 
-def standardize(path: str, out_path: str) -> dict:
+def standardize(path: str, out_path: str, allow_edge: bool = False) -> dict:
     img = Image.open(path)
     img = img.convert("RGB")
     rgb = np.asarray(img)
@@ -183,6 +189,16 @@ def standardize(path: str, out_path: str) -> dict:
             "reason": "shirt edge not reliably visible against its background; original kept",
             "source_size": [rgb.shape[1], rgb.shape[0]],
             "old_background": [int(v) for v in bg],
+            **diag,
+        }
+    if diag["touches_border"] and not allow_edge:
+        # A close-up (crest, fabric detail) or a shirt cut off by the frame:
+        # there is no whole garment to centre, so the original stays.
+        return {
+            "source": path,
+            "status": "kept",
+            "reason": "close-up or shirt cut off by the photo edge; original kept",
+            "source_size": [rgb.shape[1], rgb.shape[0]],
             **diag,
         }
     fg = defringe(rgb, alpha, bg)
@@ -221,16 +237,18 @@ def standardize(path: str, out_path: str) -> dict:
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     if out_path.lower().endswith(".webp"):
         canvas.save(out_path, "WEBP", quality=90, method=6)
+    elif out_path.lower().endswith(".png"):
+        canvas.save(out_path, "PNG", optimize=True)
     else:
         canvas.save(out_path, "JPEG", quality=90, optimize=True, progressive=True)
 
     flags = []
     if ch < LOW_RES_PX:
         flags.append("low_resolution_source")
-    if diag["touches_border"]:
-        flags.append("garment_touches_photo_edge")
     if diag["components"] > 1:
         flags.append("multiple_garments_in_photo")
+    if diag["touches_border"]:
+        flags.append("garment_touches_photo_edge")
     if not diag["uniform_background"]:
         flags.append("non_uniform_background")
     # The detectors disagree a lot: the AI matte dropped a big part of the
@@ -260,16 +278,20 @@ def main() -> int:
     ap.add_argument("--out", required=True, help="output directory")
     ap.add_argument("--report", help="write a JSON report here")
     ap.add_argument("--ext", default=".jpg")
+    ap.add_argument("--allow-edge", action="store_true", help="process a shirt that touches the photo edge (checked by eye) instead of keeping the original")
     args = ap.parse_args()
     results = []
     for src in args.inputs:
         name = os.path.splitext(os.path.basename(src))[0] + args.ext
         try:
-            res = standardize(src, os.path.join(args.out, name))
+            res = standardize(src, os.path.join(args.out, name), allow_edge=args.allow_edge)
         except Exception as error:  # keep going; report the failure
             res = {"source": src, "status": "failed", "reason": repr(error)}
         results.append(res)
         print(f"{res['status']:7} {src} {res.get('flags', res.get('reason', ''))}", flush=True)
+        if args.report:  # keep the report current so a long batch can be followed
+            with open(args.report, "w") as fh:
+                json.dump(results, fh, indent=2)
     if args.report:
         with open(args.report, "w") as fh:
             json.dump(results, fh, indent=2)

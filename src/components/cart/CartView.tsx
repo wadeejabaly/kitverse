@@ -143,7 +143,7 @@ export function CartView({
           >
             <Link
               href={`/product/${product.handle}`}
-              className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]"
+              className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[#f1f3f7]"
             >
               <Image
                 src={product.image}
@@ -151,7 +151,7 @@ export function CartView({
                 width={220}
                 height={220}
                 sizes="110px"
-                className="h-auto w-[86%] mix-blend-multiply"
+                className="aspect-square h-auto w-full object-contain"
               />
             </Link>
 
@@ -242,7 +242,7 @@ export function CartView({
             >
               <Link
                 href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`}
-                className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]"
+                className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[#f1f3f7]"
               >
                 <Image
                   src={accessory.image}

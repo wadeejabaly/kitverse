@@ -3863,6 +3863,124 @@
       "productHandle": "iraq-2026-third-shirt",
       "teamHe": "עיראק",
       "titleHe": "חולצת שלישית עיראק 2026"
+    },
+    {
+      "handle": "barcelona-2005-06-retro-home-shirt",
+      "title": "Barcelona 2005/06 Retro Home Shirt",
+      "titleAr": "قميص برشلونة 2005/06 الأساسي ريترو",
+      "team": "Barcelona",
+      "teamAr": "برشلونة",
+      "kind": "previous",
+      "season": "2005/06",
+      "kit": "Home",
+      "league": "la-liga",
+      "edition": "standard",
+      "image": "/products/barcelona-2005-06-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "barcelona-2005-retro-home-shirt",
+      "images": [
+        "/products/barcelona-2005-06-retro-home-shirt-2.jpg"
+      ],
+      "teamHe": "ברצלונה",
+      "titleHe": "חולצת בית רטרו ברצלונה 2005/06",
+      "imagesLongSleeve": [
+        "/products/barcelona-2005-06-retro-home-shirt-long.jpg",
+        "/products/barcelona-2005-06-retro-home-shirt-long-2.jpg"
+      ]
+    },
+    {
+      "handle": "manchester-united-2007-08-retro-home-shirt",
+      "title": "Manchester United 2007/08 Retro Home Shirt",
+      "titleAr": "قميص مانشستر يونايتد 2007/08 الأساسي ريترو",
+      "team": "Manchester United",
+      "teamAr": "مانشستر يونايتد",
+      "kind": "previous",
+      "season": "2007/08",
+      "kit": "Home",
+      "league": "premier-league",
+      "edition": "standard",
+      "image": "/products/manchester-united-2007-08-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "manchester-united-2007-08-retro-home-shirt",
+      "images": [
+        "/products/manchester-united-2007-08-retro-home-shirt-2.jpg"
+      ],
+      "teamHe": "מנצ'סטר יונייטד",
+      "titleHe": "חולצת בית רטרו מנצ'סטר יונייטד 2007/08",
+      "imagesLongSleeve": [
+        "/products/manchester-united-2007-08-retro-home-shirt-long.jpg",
+        "/products/manchester-united-2007-08-retro-home-shirt-long-2.jpg"
+      ]
+    },
+    {
+      "handle": "manchester-united-2007-08-retro-away-shirt",
+      "title": "Manchester United 2007/08 Retro Away Shirt",
+      "titleAr": "قميص مانشستر يونايتد 2007/08 الاحتياطي ريترو",
+      "team": "Manchester United",
+      "teamAr": "مانشستر يونايتد",
+      "kind": "previous",
+      "season": "2007/08",
+      "kit": "Away",
+      "league": "premier-league",
+      "edition": "standard",
+      "image": "/products/manchester-united-2007-08-retro-away-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "manchester-united-2007-08-retro-away-shirt",
+      "images": [
+        "/products/manchester-united-2007-08-retro-away-shirt-2.jpg"
+      ],
+      "teamHe": "מנצ'סטר יונייטד",
+      "titleHe": "חולצת חוץ רטרו מנצ'סטר יונייטד 2007/08",
+      "imagesLongSleeve": [
+        "/products/manchester-united-2007-08-retro-away-shirt-long.jpg",
+        "/products/manchester-united-2007-08-retro-away-shirt-long-2.jpg"
+      ]
+    },
+    {
+      "handle": "brazil-2002-retro-home-shirt",
+      "title": "Brazil 2002 Retro Home Shirt",
+      "titleAr": "قميص البرازيل 2002 الأساسي ريترو",
+      "team": "Brazil",
+      "teamAr": "البرازيل",
+      "kind": "national",
+      "season": "2002",
+      "kit": "Home",
+      "league": null,
+      "edition": "standard",
+      "image": "/products/brazil-2002-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "brazil-2002-retro-home-shirt",
+      "teamHe": "ברזיל",
+      "titleHe": "חולצת בית רטרו ברזיל 2002",
+      "imagesLongSleeve": [
+        "/products/brazil-2002-retro-home-shirt-long.jpg",
+        "/products/brazil-2002-retro-home-shirt-long-2.jpg"
+      ]
+    },
+    {
+      "handle": "france-1998-retro-home-shirt",
+      "title": "France 1998 Retro Home Shirt",
+      "titleAr": "قميص فرنسا 1998 الأساسي ريترو",
+      "team": "France",
+      "teamAr": "فرنسا",
+      "kind": "national",
+      "season": "1998",
+      "kit": "Home",
+      "league": null,
+      "edition": "standard",
+      "image": "/products/france-1998-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "france-1998-retro-home-shirt",
+      "images": [
+        "/products/france-1998-retro-home-shirt-2.jpg"
+      ],
+      "teamHe": "צרפת",
+      "titleHe": "חולצת בית רטרו צרפת 1998"
     }
   ]
 }

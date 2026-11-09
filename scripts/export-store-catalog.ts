@@ -22,6 +22,23 @@ type Row = {
 
 type ImageRow = { product_id: string; url: string; sleeve: "short" | "long"; sort: number; status: string };
 
+/**
+ * Standardized copies of photos that live in Supabase Storage (owner spec 2026-11-09, "Complete
+ * product image standardization"): catalog/image-overrides.json maps an original storage URL to the
+ * committed 1200x1200 version under public/products/std/. The database row and the original upload
+ * are left untouched (the original stays the backup, and admin still shows it); only the website
+ * build swaps in the standardized file - and only when that file is really in this checkout, so a
+ * build of older code can never point at a missing image. A photo uploaded later has a new URL, so it
+ * simply shows as uploaded until it is standardized too (scripts/images/standardize.py).
+ */
+const overrides: Record<string, string> = existsSync("catalog/image-overrides.json")
+  ? (JSON.parse(readFileSync("catalog/image-overrides.json", "utf8")) as { map: Record<string, string> }).map
+  : {};
+const std = (u: string): string => {
+  const local = overrides[u];
+  return local && existsSync(`public${local}`) ? local : u;
+};
+
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) { console.log("store:export skipped (no database settings) - using the committed catalog"); return; }
@@ -52,7 +69,7 @@ async function main() {
     const { data, error } = await db.from("product_images").select("product_id,url,sleeve,sort,status")
       .in("product_id", productIds.slice(i, i + 200)).neq("status", "bad").order("sleeve").order("sort");
     if (error) throw error;
-    imageRows.push(...(data as unknown as ImageRow[]));
+    imageRows.push(...(data as unknown as ImageRow[]).map((row) => ({ ...row, url: std(row.url) })));
   }
   const imagesByProduct = new Map<string, ImageRow[]>();
   for (const row of imageRows) {
@@ -60,12 +77,12 @@ async function main() {
     if (existing) existing.push(row); else imagesByProduct.set(row.product_id, [row]);
   }
 
-  const checked = (r?: Row) => (r && (r.photo_status === "good" || r.photo_status === "owner_upload") && r.primary_image_url) || null;
+  const checked = (r?: Row) => (r && (r.photo_status === "good" || r.photo_status === "owner_upload") && r.primary_image_url && std(r.primary_image_url)) || null;
   // an owner upload from admin/photos is a deliberate, just-made choice - it always wins, even over a
   // committed "real" shot below (owner report 2026-11-02: "the pictures in change a photo in admin
   // doesnt match the pictures in the website" - a real file on disk was silently out-ranking a fresh
   // admin upload, so replacing a photo there never actually changed what the site showed).
-  const ownerUpload = (r?: Row) => (r && r.photo_status === "owner_upload" && r.primary_image_url) || null;
+  const ownerUpload = (r?: Row) => (r && r.photo_status === "owner_upload" && r.primary_image_url && std(r.primary_image_url)) || null;
   // real photos committed in public/products/ (owner/partner shots, e.g. Real Madrid front/back) beat supplier photos
   const real = (p: Product) => !p.image.includes("_placeholder") && existsSync(`public${p.image}`);
 
