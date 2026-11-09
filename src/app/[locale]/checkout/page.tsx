@@ -45,6 +45,7 @@ export default async function CheckoutPage({
     handle: product.handle,
     title: product.title,
     titleAr: product.titleAr,
+    titleHe: product.titleHe,
     season: product.season,
     image: product.image,
   }));
@@ -53,6 +54,7 @@ export default async function CheckoutPage({
     handle: accessory.handle,
     team: accessory.team,
     teamAr: accessory.teamAr,
+    teamHe: accessory.teamHe,
     price: accessory.price,
     image: accessory.image,
   }));

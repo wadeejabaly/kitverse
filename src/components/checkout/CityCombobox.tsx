@@ -83,11 +83,11 @@ export function CityCombobox({
     }
   }
 
-  const className = `w-full border bg-field px-3.5 py-3 text-sm text-ink ${invalid ? "border-ink" : "border-rule"}`;
+  const className = `kv-input ${invalid ? "!border-[#c0392b]" : ""}`;
 
   return (
     <div ref={rootRef} className="relative">
-      <label htmlFor={id} className="mono-eyebrow mb-2 block text-ink-soft">
+      <label htmlFor={id} className="mb-1.5 block text-[13.5px] font-semibold text-ink">
         {label}
       </label>
       <input
@@ -118,7 +118,7 @@ export function CityCombobox({
         <ul
           id={`${id}-listbox`}
           role="listbox"
-          className="absolute z-10 mt-1 max-h-72 w-full overflow-auto border border-rule bg-tile shadow-lg"
+          className="absolute z-10 mt-1 max-h-72 w-full overflow-auto rounded-[10px] border border-rule bg-tile shadow-lg"
         >
           {matches.map((town, index) => (
             <li key={town.en} role="option" aria-selected={index === activeIndex}>
@@ -144,7 +144,7 @@ export function CityCombobox({
         </ul>
       ) : null}
       {invalid ? (
-        <p id={`${id}-error`} className="mt-1.5 text-xs text-ink-soft">
+        <p id={`${id}-error`} className="mt-1.5 text-[12.5px] font-medium text-[#c0392b]">
           {error}
         </p>
       ) : null}

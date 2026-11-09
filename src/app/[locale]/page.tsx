@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getLeagues, getVisibleProducts } from "@/data/catalog";
+import { getLeagues, getVisibleProducts, localName } from "@/data/catalog";
 import { ADDONS, priceFor } from "@/data/pricing";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { HeroD } from "@/components/hero/HeroD";
@@ -183,7 +183,7 @@ export default async function HomePage({
                     <Figure>{String(index + 1).padStart(2, "0")}</Figure>
                   </span>
                   <span className="index-row-name text-[clamp(1.25rem,3.2vw,2.15rem)] leading-tight font-medium">
-                    {locale === "ar" ? league.nameAr : league.name}
+                    {localName(league, locale)}
                   </span>
                   <span className="index-figure text-[13px] text-ink-soft">
                     <Figure>{league.count}</Figure>

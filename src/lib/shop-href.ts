@@ -19,6 +19,9 @@ export interface ShopFilters {
   league?: string[];
   team?: string[];
   season?: string[];
+  /** Retro / non-retro line (redesign phase 2). */
+  line?: string[];
+  sort?: string;
 }
 
 function appendAll(query: URLSearchParams, key: string, values: string[] | undefined) {
@@ -33,6 +36,8 @@ export function shopHref(filters: ShopFilters): string {
   appendAll(query, "league", filters.league);
   appendAll(query, "team", filters.team);
   appendAll(query, "season", filters.season);
+  appendAll(query, "line", filters.line);
+  if (filters.sort && filters.sort !== "featured") query.set("sort", filters.sort);
   const search = query.toString();
   return search ? `/shop?${search}` : "/shop";
 }
@@ -51,12 +56,14 @@ export function shopHref(filters: ShopFilters): string {
 export interface CollectionFilters {
   team?: string[];
   season?: string[];
+  sort?: string;
 }
 
 export function collectionHref(slug: string, filters: CollectionFilters): string {
   const query = new URLSearchParams();
   appendAll(query, "team", filters.team);
   appendAll(query, "season", filters.season);
+  if (filters.sort && filters.sort !== "featured") query.set("sort", filters.sort);
   const search = query.toString();
   return search ? `/shop/${slug}?${search}` : `/shop/${slug}`;
 }
@@ -82,4 +89,17 @@ export function toggled(current: string[], value: string): string[] {
   return current.includes(value)
     ? current.filter((entry) => entry !== value)
     : [...current, value];
+}
+
+/**
+ * Listing sort orders (redesign phase 2, owner spec 2026-11-09). "featured"
+ * is the catalog's own hand-picked order. Prices compare each shirt's "from"
+ * price (size S, Fan) from the price list, so they follow admin Pricing.
+ */
+export const SORTS = ["featured", "newest", "price-asc", "price-desc"] as const;
+export type SortKey = (typeof SORTS)[number];
+
+export function parseSort(value: string | string[] | undefined): SortKey {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return (SORTS as readonly string[]).includes(raw ?? "") ? (raw as SortKey) : "featured";
 }

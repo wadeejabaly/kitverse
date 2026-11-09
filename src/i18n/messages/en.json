@@ -28,7 +28,12 @@
     "toArabic": "العربية",
     "toEnglish": "English",
     "toHebrew": "עברית",
-    "cartWithCount": "Cart ({count})"
+    "cartWithCount": "Cart ({count})",
+    "breadcrumbs": "Breadcrumb",
+    "help": "Help Center",
+    "contact": "Contact",
+    "returns": "Returns & refunds",
+    "shippingOnly": "Shipping"
   },
   "home": {
     "hero": {
@@ -127,7 +132,11 @@
     "menu": "Menu",
     "from": "From",
     "viewShirt": "View shirt",
-    "outOfStock": "Out of stock"
+    "outOfStock": "Out of stock",
+    "badgeRetro": "Retro",
+    "badgeNational": "National team",
+    "retroLine": "Retro",
+    "fanPlayer": "Fan & Player"
   },
   "notFound": {
     "title": "Page not found",
@@ -149,7 +158,14 @@
     "helpGroup": "Help",
     "legalGroup": "Legal",
     "contactGroup": "Contact",
-    "emailUs": "Email us"
+    "emailUs": "Email us",
+    "description": "Football shirts for clubs and national teams — Fan and Player versions, sizes S to 4XL, with names, numbers and patches.",
+    "allShirts": "All shirts",
+    "retro": "Retro classics",
+    "shippingPolicy": "Shipping policy",
+    "returnsPolicy": "Returns & refunds",
+    "weAccept": "Payment:",
+    "cashOnDelivery": "Cash on delivery"
   },
   "consent": {
     "message": "We use cookies to enhance your experience, analyze site traffic and show relevant products. You can change your preferences at any time from “Cookie settings” at the bottom of the page.",
@@ -252,7 +268,23 @@
     "showing": "Showing {count} of {total}",
     "count": "{count, plural, =0 {No shirts} one {{countText} shirt} other {{countText} shirts}}",
     "emptyTitle": "Nothing here yet",
-    "emptyBody": "No shirts match this filter right now. Clear it, or try another league."
+    "emptyBody": "No shirts match this filter right now. Clear it, or try another league.",
+    "shirtsLabel": "shirts",
+    "sortLabel": "Sort by",
+    "sort": {
+      "featured": "Featured",
+      "newest": "Newest",
+      "price-asc": "Price: low to high",
+      "price-desc": "Price: high to low"
+    },
+    "line": "Type",
+    "lines": {
+      "modern": "Current kits",
+      "retro": "Retro"
+    },
+    "comingSoonTitle": "Coming soon",
+    "comingSoonBody": "There are no shirts in this collection yet — new ones are added as they arrive.",
+    "browseAll": "Browse all shirts"
   },
   "accessories": {
     "eyebrow": "Accessories",
@@ -316,7 +348,33 @@
     "sizeHelperHint": "Enter your height and weight for a recommendation.",
     "sizeHelperResult": "We'd recommend size {size}.",
     "sizeHelperLoose": "Prefer it loose? Go {size}.",
-    "sizeHelperUse": "Use size {size}"
+    "sizeHelperUse": "Use size {size}",
+    "priceNote": "for your selection, in shekels incl. VAT",
+    "sizeGuideLink": "Size guide",
+    "qtyLess": "Decrease quantity",
+    "qtyMore": "Increase quantity",
+    "retroBadge": "Retro",
+    "kit": {
+      "Home": "Home",
+      "Away": "Away",
+      "Third": "Third"
+    },
+    "serviceDelivery": "Delivery in 10–20 working days",
+    "servicePayment": "Pay with {methods}",
+    "servicePaymentGeneric": "Payment options at checkout",
+    "payCash": "cash on delivery",
+    "accordionDetails": "Product details",
+    "detailTeam": "Team",
+    "detailLeague": "League",
+    "detailSeason": "Season",
+    "detailKit": "Kit",
+    "detailVersions": "Versions",
+    "readMore": "Read more",
+    "zoomPhoto": "Open photo full screen",
+    "zoomHint": "Hover to zoom · click to enlarge",
+    "galleryPrev": "Previous photo",
+    "galleryNext": "Next photo",
+    "closeViewer": "Close"
   },
   "cart": {
     "eyebrow": "Cart",
@@ -344,7 +402,8 @@
     "propPatchEuropaLeague": "Europa League patch",
     "propPatchCoppaItalia": "Coppa Italia patch",
     "propPatchWorldCupChampions": "World Cup Champions patch",
-    "propPatchWorldCupPeace": "FIFA Peace patch"
+    "propPatchWorldCupPeace": "FIFA Peace patch",
+    "summaryTitle": "Order summary"
   },
   "search": {
     "eyebrow": "Search",
@@ -366,7 +425,18 @@
     "colLength": "Length (cm)",
     "colFits": "Fits (EU)",
     "note": "Chest is measured flat across the shirt under the arms and doubled. Length runs from the highest point of the shoulder to the hem. The Player version is cut slimmer than the Fan version — take one size up if you prefer a looser fit.",
-    "surcharge": "3XL adds {xl3} to the shirt price and 4XL adds {xl4}."
+    "surcharge": "3XL adds {xl3} to the shirt price and 4XL adds {xl4}.",
+    "adultTitle": "Adult sizes",
+    "unit": "cm",
+    "measureTitle": "How to measure",
+    "chestLabel": "Chest",
+    "chestHow": "Lay the shirt flat, measure straight across under the arms, and double it.",
+    "lengthLabel": "Length",
+    "lengthHow": "From the highest point of the shoulder down to the hem.",
+    "finderTitle": "Find your size",
+    "youthTitle": "Youth & kids sizes",
+    "youthBody": "Youth and kids sizes aren't sold through the website, and we don't publish a youth size chart. Message us on Instagram and we'll check what's available for the shirt you want.",
+    "shopCta": "Shop shirts"
   },
   "shippingPage": {
     "eyebrow": "Shipping and returns",
@@ -393,7 +463,31 @@
     "returnsDefectiveBody": "If your order arrives with a defect, please contact us with clear photos showing the problem so we can review it and work out the right fix.",
     "returnsClosing": "We recommend checking the size guide carefully before ordering, to avoid any sizing issues.",
     "customsTitle": "Customs",
-    "customsBody": "Orders delivered outside Israel may attract import duty on arrival. That charge is set by the destination country, not by us, and is not included in the price shown here."
+    "customsBody": "Orders delivered outside Israel may attract import duty on arrival. That charge is set by the destination country, not by us, and is not included in the price shown here.",
+    "intro": "Delivery within Israel, priced by your city, with a call from the courier the day before.",
+    "journeyEyebrow": "From order to door",
+    "journeyTitle": "How your order travels",
+    "journey": {
+      "placed": {
+        "title": "You order",
+        "body": "Check out on the site or message us on Instagram. Delivery is priced by your city."
+      },
+      "confirmed": {
+        "title": "We confirm",
+        "body": "We confirm your order and send it to our supplier."
+      },
+      "shipped": {
+        "title": "Your shirt ships",
+        "body": "Delivery takes 10 to 20 working days; printed shirts add two days before dispatch."
+      },
+      "courier": {
+        "title": "The courier calls",
+        "body": "A day before delivery, the courier calls you to arrange it."
+      }
+    },
+    "returnsCta": "Read the full returns policy",
+    "questionsTitle": "Questions about a delivery?",
+    "questionsBody": "Message us on Instagram or email us and we'll tell you exactly where your order is."
   },
   "about": {
     "eyebrow": "About",
@@ -405,7 +499,55 @@
     "body3": "Prices are in shekels and include VAT. Delivery takes 10 to 20 working days, inside Israel for now.",
     "contactTitle": "Contact",
     "contactBody": "Questions about an order, a size, or a return — write to us and we reply within two business days.",
-    "email": "kitversejerseys@gmail.com"
+    "email": "kitversejerseys@gmail.com",
+    "statShirts": "shirts in the shop",
+    "statSizes": "sizes",
+    "stories": {
+      "passion": {
+        "eyebrow": "Our passion",
+        "title": "Football first",
+        "body": "KitVerse is built around one idea: the shirt is how fans wear their club. So the shop is about the shirts — clear photos, honest descriptions, and simple ways to make one yours with a name, a number and patches.",
+        "cta": "Shop all shirts"
+      },
+      "collection": {
+        "eyebrow": "The collection",
+        "title": "Clubs from the big five leagues",
+        "body": "Home, away and third shirts from the Premier League, La Liga, Serie A, the Bundesliga and Ligue 1 — every shirt in Fan and Player versions, sizes S to 4XL.",
+        "cta": "Browse the clubs"
+      },
+      "national": {
+        "eyebrow": "National teams",
+        "title": "Wear your country",
+        "body": "National-team home, away and third shirts, with the World Cup, Peace and Champions badges available as patches.",
+        "cta": "Shop national teams"
+      },
+      "retro": {
+        "eyebrow": "Retro classics",
+        "title": "Iconic shirts, timeless stories",
+        "body": "Classic shirts from past eras have their own section of the shop, added as they arrive.",
+        "cta": "See retro classics"
+      }
+    },
+    "promiseEyebrow": "Our commitment",
+    "promiseTitle": "What you can count on",
+    "promises": {
+      "photos": {
+        "title": "Honest photos",
+        "body": "Our product photographs closely represent the shirt you'll actually receive."
+      },
+      "versions": {
+        "title": "Fan or Player, S–4XL",
+        "body": "Every shirt in two versions and seven sizes, with a name, number and patches if you want them."
+      },
+      "support": {
+        "title": "Real answers",
+        "body": "Questions about an order, a size or a return — we reply within two business days."
+      },
+      "delivery": {
+        "title": "Clear delivery",
+        "body": "10 to 20 working days, priced by your city and shown before you pay."
+      }
+    }
   },
   "checkout": {
     "eyebrow": "Checkout",
@@ -520,5 +662,170 @@
       "cta": "Shop all shirts",
       "ctaSecondary": "National teams"
     }
+  },
+  "help": {
+    "eyebrow": "Help Center",
+    "title": "How can we help?",
+    "metaDescription": "KitVerse Help Center: answers about orders, payments, delivery, sizing, name and number printing, patches and returns.",
+    "intro": "Answers about orders, payments, delivery, sizing, customization and returns.",
+    "categoriesLabel": "Help topics",
+    "categories": {
+      "orders": "Orders",
+      "payments": "Payments",
+      "shipping": "Shipping",
+      "sizing": "Sizing",
+      "customization": "Customization",
+      "returns": "Returns & refunds"
+    },
+    "q": {
+      "orders": {
+        "howOrder": {
+          "q": "How do I place an order?",
+          "a": "Pick your shirt, size and version, add a name, number or patches if you like, then go to checkout. Enter your delivery details and choose how to pay — your order comes straight to us for confirmation. You can also order by sending us a message on Instagram."
+        },
+        "track": {
+          "q": "How can I follow my order?",
+          "a": "Use the order tracker linked at the bottom of every page, or message us on Instagram and we'll tell you exactly where it is. The courier calls you a day before delivery."
+        },
+        "change": {
+          "q": "Can I change or cancel my order?",
+          "a": "Message us as soon as possible on Instagram or by email. Your cancellation rights as a buyer are set out in our Terms of use."
+        },
+        "authentic": {
+          "q": "Are the shirts original?",
+          "a": "No — the shirts we sell are replicas, not official original shirts. We work to keep the design and details as close as possible to the authentic version, and our photos closely represent the shirt you'll receive."
+        }
+      },
+      "payments": {
+        "methods": {
+          "q": "Which payment methods can I use?",
+          "a": "At checkout you can currently pay with: {methods}. Only the methods shown at checkout are available for your order."
+        },
+        "currency": {
+          "q": "What currency are the prices in?",
+          "a": "All prices are in Israeli shekels (₪) and include VAT. The total you see at checkout — shirts, extras and delivery — is the total you pay."
+        },
+        "codes": {
+          "q": "Can I use a discount code?",
+          "a": "Yes — enter it at checkout and it's checked straight away. Some codes can't be combined with others; checkout will tell you."
+        }
+      },
+      "shipping": {
+        "howLong": {
+          "q": "How long does delivery take?",
+          "a": "Delivery takes 10 to 20 working days from confirmation. Shirts printed with a name and number add two days before dispatch."
+        },
+        "cost": {
+          "q": "How much does delivery cost?",
+          "a": "One fee per order, however many shirts: {north} in the north (through Kfar Qara) and {rest} everywhere else, the West Bank included. Type your city at checkout to see your exact fee."
+        },
+        "where": {
+          "q": "Where do you deliver?",
+          "a": "Within Israel only for now, the West Bank included."
+        },
+        "deliveryDay": {
+          "q": "What happens on delivery day?",
+          "a": "The courier calls you a day before delivery to arrange it."
+        }
+      },
+      "sizing": {
+        "fit": {
+          "q": "How do the shirts fit?",
+          "a": "Shirts are cut to Asian sizing and run about one size smaller than European. Measure a shirt you already own flat and compare the chest with the size guide; between two sizes, take the larger one."
+        },
+        "playerFan": {
+          "q": "What's the difference between Fan and Player?",
+          "a": "The Player version is cut slimmer than the Fan version — take one size up if you prefer a looser fit. Every product page shows the price of both."
+        },
+        "bigSizes": {
+          "q": "Do you have big sizes?",
+          "a": "Yes, from S up to 4XL. 3XL adds {xl3} to the shirt price and 4XL adds {xl4}."
+        },
+        "kids": {
+          "q": "Do you sell kids' sizes?",
+          "a": "Kids' and youth sizes aren't sold through the website. Message us on Instagram and we'll check what's available for the shirt you want."
+        }
+      },
+      "customization": {
+        "nameNumber": {
+          "q": "Can I add a name and number?",
+          "a": "Yes — choose the name-and-number option on the product page and type it in Latin letters and numbers, up to {max} characters. It adds {nameNumber} to the shirt."
+        },
+        "patches": {
+          "q": "Can I add official patches?",
+          "a": "On eligible shirts you can pick patches on the product page — up to 2 on a club shirt and up to 3 on a national-team shirt. The first costs {p1}, the second {p2} and the third {p3}."
+        },
+        "printedReturns": {
+          "q": "Can I return a printed shirt?",
+          "a": "Like every order, a printed shirt can only be returned if it arrives defective. The print is made to order, so please double-check the spelling before you order."
+        }
+      },
+      "returns": {
+        "policy": {
+          "q": "What is your returns policy?",
+          "a": "We don't accept returns because the wrong size was chosen or because you changed your mind, and we don't offer size exchanges. Defective items are the exception."
+        },
+        "defective": {
+          "q": "My shirt arrived with a defect — what do I do?",
+          "a": "Contact us with clear photos showing the problem so we can review it and work out the right fix. The Returns page walks you through it."
+        },
+        "exchange": {
+          "q": "Can I exchange for another size?",
+          "a": "We don't offer a size exchange service, so please check the size guide carefully before ordering."
+        }
+      }
+    },
+    "seeAlso": "Full details: <shipping>Shipping policy</shipping> · <returns>Returns & refunds</returns> · <sizes>Size guide</sizes>",
+    "stillTitle": "Still have a question?",
+    "stillBody": "Message us on Instagram or send us an email — we reply within two business days.",
+    "emailUs": "Email us",
+    "dmUs": "Message on Instagram",
+    "methodBit": "Bit",
+    "methodCash": "cash on delivery",
+    "methodsCheckout": "the options shown at checkout"
+  },
+  "returnsPage": {
+    "eyebrow": "Returns and refunds",
+    "title": "Returns & refunds",
+    "metaDescription": "KitVerse returns policy: no returns or exchanges for size or a change of mind; defective items are reviewed from photos you send us.",
+    "rulesEyebrow": "Our policy",
+    "rulesTitle": "What we can and can't accept",
+    "stepsEyebrow": "Defective item?",
+    "stepsTitle": "How to report a defect",
+    "steps": {
+      "one": {
+        "title": "Take clear photos",
+        "body": "Photograph the problem clearly — the whole shirt, and a close-up of the defect."
+      },
+      "two": {
+        "title": "Send them to us",
+        "body": "Email {email} or message us on Instagram with your order details and the photos."
+      },
+      "three": {
+        "title": "We review and reply",
+        "body": "We review the photos and get back to you within two business days with the right fix."
+      }
+    },
+    "sizeTitle": "Choose your size with confidence",
+    "sizeCta": "Open the size guide",
+    "legal": "This page summarises our policy; the binding legal text is in our <terms>Terms of use</terms>.",
+    "contactTitle": "Need to report a problem?",
+    "contactBody": "Send us your photos by email or on Instagram and we'll review them."
+  },
+  "contactPage": {
+    "eyebrow": "Contact",
+    "title": "Get in touch",
+    "metaDescription": "Contact KitVerse by email or on Instagram, or track your order online.",
+    "intro": "Questions about an order, a size or a return — we're here to help.",
+    "emailTitle": "Email us",
+    "emailBody": "Write to us any time and we'll reply within two business days.",
+    "instagramTitle": "Message us on Instagram",
+    "instagramBody": "Send us a DM about a shirt, a size or an order.",
+    "trackTitle": "Track your order",
+    "trackBody": "Already ordered? Look up your order's status yourself.",
+    "trackCta": "Open the order tracker",
+    "replyTitle": "When we reply",
+    "replyBody": "We reply to every message within two business days.",
+    "helpCta": "Visit the Help Center"
   }
 }

@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { priceFor } from "@/data/pricing";
+import { isRetroSeason, priceFor } from "@/data/pricing";
 import type { Product } from "@/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Price, Season } from "@/components/shared/Money";
-import { hasPhoto, shortSeason, titleFor } from "@/lib/product";
+import { hasPhoto, shortSeason, teamFor, titleFor } from "@/lib/product";
 
 /**
  * The product card from the mockup: a square photo on a white tile, the title,
@@ -37,15 +37,22 @@ export function ProductCard({
 }) {
   const t = useTranslations("common");
   const title = titleFor(product, locale);
-  // The "from" price: smallest size, Fan version — or the single Retro price
-  // for a 2023-and-earlier season, since priceFor ignores "fan" there.
-  // Selections on the PDP move it.
+  const team = teamFor(product, locale);
+  const retro = isRetroSeason(product.season);
+  // The "from" price exactly as before: smallest size, Fan (Retro has one
+  // price whatever the version). From the price list, never hardcoded.
   const price = priceFor(product.season, "S", "fan");
   const inStock = hasPhoto(product.image);
 
+  // Redesign phase 2 (2026-11-09): a white card with a soft studio tile,
+  // team eyebrow, bold title, a badge for the line (Retro / National team)
+  // and a "View shirt" bar that rises on hover. The photo is never cropped:
+  // object-contain inside a square at 86%, as before.
+  const badge = retro ? t("badgeRetro") : product.kind === "national" ? t("badgeNational") : null;
+
   return (
-    <Link href={`/product/${product.handle}`} className="group block text-start">
-      <div className="mb-3.5 grid aspect-square place-items-center overflow-hidden bg-tile ring-1 ring-inset ring-transparent transition-colors duration-300 ease-out group-hover:ring-electric">
+    <Link href={`/product/${product.handle}`} className="kv-pcard group text-start">
+      <div className="kv-pcard-media">
         {inStock ? (
           <Image
             src={product.image}
@@ -54,49 +61,37 @@ export function ProductCard({
             height={900}
             priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
-            className="h-auto w-[86%] transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+            className="h-auto w-[86%] mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           />
         ) : (
           <span className="mono-eyebrow text-ink-soft">{t("outOfStock")}</span>
         )}
+        {badge ? (
+          <span className={`kv-pcard-badge${retro ? " kv-pcard-badge--gold" : ""}`}>{badge}</span>
+        ) : null}
+        <span aria-hidden className="kv-pcard-cta">
+          {t("viewShirt")}
+        </span>
       </div>
-      <h3 className="mb-1 text-sm font-normal">{title}</h3>
-      <div className="flex items-baseline justify-between gap-2.5">
-        {/* The season label and the invitation occupy the same cell and cross-
-            fade on hover: the card gains a second state without gaining a
-            line, so no row in the grid shifts. Both are laid out (grid-area
-            stacking, not absolute positioning), so the cell is always as wide
-            as the longer of the two and nothing reflows mid-transition.
-            aria-hidden on the invitation — the whole card is already a link
-            and "View shirt" would be a second, redundant announcement. */}
-        <span className="grid text-ink-soft">
-          <span className="mono-eyebrow latin col-start-1 row-start-1 text-ink-soft transition-opacity duration-300 ease-out group-hover:opacity-0">
+      <div className="kv-pcard-body">
+        <span className="kv-pcard-team">{team}</span>
+        <h3 className="kv-pcard-title">{title}</h3>
+        <div className="kv-pcard-foot">
+          <span>
+            <span className="kv-pcard-from">{t("from")}</span>
+            <Price value={price} className="kv-pcard-price" />
+          </span>
+          <span className="kv-pcard-meta">
             <Season value={shortSeason(product.season)} />
+            <br />
+            {retro ? t("retroLine") : t("fanPlayer")}
           </span>
-          <span
-            aria-hidden
-            className="mono-eyebrow col-start-1 row-start-1 text-ink-soft opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
-          >
-            {t("viewShirt")}
-          </span>
-        </span>
-        <span className="flex items-baseline gap-2 text-sm text-accent transition-colors duration-300 ease-out group-hover:text-electric">
-          <Price value={price} />
-        </span>
+        </div>
       </div>
     </Link>
   );
 }
 
-/**
- * The 4-up / 3-up / 2-up grid every listing on the site uses.
- *
- * With `reveal`, the grid element itself becomes the reveal host so the
- * stagger lands on the CARDS rather than on the grid as one block — which is
- * the whole point of a staggered entrance. Wrapping a <Reveal> around this
- * component from outside would stagger a single child and look like no
- * stagger at all.
- */
 export function ProductGrid({
   products,
   locale,
@@ -112,8 +107,8 @@ export function ProductGrid({
 }) {
   const className =
     columns === 3
-      ? "grid grid-cols-2 gap-5 sm:grid-cols-3"
-      : "grid grid-cols-2 gap-5 sm:grid-cols-3 wide:grid-cols-4";
+      ? "grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5"
+      : "grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 wide:grid-cols-4";
 
   const cards = products.map((product, index) => (
     <ProductCard

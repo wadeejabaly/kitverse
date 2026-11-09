@@ -110,3 +110,5 @@ export function getTeams(): Team[] {
 export function getAllProducts(): Product[] {
   return products;
 }
+
+export { localName } from "@/lib/local-name";

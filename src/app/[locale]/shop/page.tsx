@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getLeagues, getTeams, getVisibleProducts } from "@/data/catalog";
-import { seasonYear } from "@/data/pricing";
+import { getLeagues, getTeams, getVisibleProducts, localName } from "@/data/catalog";
+import { isRetroSeason, seasonYear } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import type { Kind, Product } from "@/data/types";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { TeamFilterList } from "@/components/shop/TeamFilterList";
 import { FilterGroup, FilterCheckbox } from "@/components/shop/FilterRail";
+import { MobileFilters } from "@/components/shop/MobileFilters";
+import { SortSelect } from "@/components/shop/SortSelect";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { Season } from "@/components/shared/Money";
-import { allParams, shopHref, toggled } from "@/lib/shop-href";
+import { allParams, parseSort, shopHref, toggled } from "@/lib/shop-href";
+import { sortProducts } from "@/lib/sort-products";
 import { alternatesFor } from "@/lib/site";
 
 const KINDS: Kind[] = ["national", "current", "previous"];
@@ -81,26 +84,47 @@ export default async function ShopPage({
   const validSeasons = new Set(all.map((p) => p.season));
   const seasons = allParams(query.season).filter((value) => validSeasons.has(value));
 
+  // The Retro / current-kit line (redesign phase 2 "Type: Fan, Player,
+  // Retro" ask). Every non-retro shirt is sold in BOTH Fan and Player — it is
+  // a choice on the product page, not a property of the shirt — so the only
+  // real split in the catalogue is Retro vs not. The facet only shows when
+  // both kinds are actually in stock.
+  const lines = allParams(query.line).filter((value) => value === "retro" || value === "modern");
+  const sort = parseSort(query.sort);
+
   const matchesKind = (product: Product) => kinds.length === 0 || kinds.includes(product.kind);
   const matchesLeague = (product: Product) =>
     leagues.length === 0 || (product.league !== null && leagues.includes(product.league));
   const matchesTeam = (product: Product) =>
     teams.length === 0 || teams.includes(slugify(product.team));
   const matchesSeason = (product: Product) => seasons.length === 0 || seasons.includes(product.season);
+  const lineOf = (product: Product) => (isRetroSeason(product.season) ? "retro" : "modern");
+  const matchesLine = (product: Product) => lines.length === 0 || lines.includes(lineOf(product));
 
-  const results = all.filter(
-    (product) =>
-      matchesKind(product) &&
-      matchesLeague(product) &&
-      matchesTeam(product) &&
-      matchesSeason(product),
+  const results = sortProducts(
+    all.filter(
+      (product) =>
+        matchesKind(product) &&
+        matchesLeague(product) &&
+        matchesTeam(product) &&
+        matchesSeason(product) &&
+        matchesLine(product),
+    ),
+    sort,
   );
 
   // Cross-filtered facet sets: everything except the facet being counted.
-  const forKindFacet = all.filter((p) => matchesLeague(p) && matchesTeam(p) && matchesSeason(p));
-  const forLeagueFacet = all.filter((p) => matchesKind(p) && matchesTeam(p) && matchesSeason(p));
-  const forTeamFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesSeason(p));
-  const forSeasonFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesTeam(p));
+  const forKindFacet = all.filter((p) => matchesLeague(p) && matchesTeam(p) && matchesSeason(p) && matchesLine(p));
+  const forLeagueFacet = all.filter((p) => matchesKind(p) && matchesTeam(p) && matchesSeason(p) && matchesLine(p));
+  const forTeamFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesSeason(p) && matchesLine(p));
+  const forSeasonFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesTeam(p) && matchesLine(p));
+  const forLineFacet = all.filter((p) => matchesKind(p) && matchesLeague(p) && matchesTeam(p) && matchesSeason(p));
+  const lineOptions = (["modern", "retro"] as const)
+    .map((value) => ({ value, count: forLineFacet.filter((p) => lineOf(p) === value).length }))
+    .filter((option) => option.count > 0 || lines.includes(option.value));
+  const showLines = new Set(all.map(lineOf)).size > 1 || lines.length > 0;
+  // Every filter link carries the current state, including the sort.
+  const state = { kind: kinds, league: leagues, team: teams, season: seasons, line: lines, sort };
 
   const kindOptions = KINDS.map((value) => ({
     value,
@@ -117,7 +141,7 @@ export default async function ShopPage({
   const teamOptions = getTeams()
     .map((entry) => ({
       slug: entry.slug,
-      name: locale === "ar" ? entry.nameAr : entry.name,
+      name: localName(entry, locale),
       count: forTeamFacet.filter((p) => slugify(p.team) === entry.slug).length,
     }))
     .filter((option) => option.count > 0 || teams.includes(option.slug))
@@ -133,24 +157,30 @@ export default async function ShopPage({
     // recent-to-old, and the direction `seasonYear()` already sorts for.
     .sort((a, b) => seasonYear(b.value) - seasonYear(a.value));
 
-  const hasFilter = kinds.length > 0 || leagues.length > 0 || teams.length > 0 || seasons.length > 0;
+  const activeCount = kinds.length + leagues.length + teams.length + seasons.length + lines.length;
+  const hasFilter = activeCount > 0;
 
   return (
     <Wrap>
-      <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")} />
+      <PageLede
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        intro={t("intro")}
+        crumbs={[{ label: t("eyebrow") }]}
+        art="/home/cat-clubs.webp"
+      >
+        <span className="kv-pagehero-stat">
+          <strong className="latin">{all.length}</strong> {t("shirtsLabel")}
+        </span>
+      </PageLede>
 
-      <section className="grid gap-7 pt-10 pb-[clamp(72px,10vw,120px)] wide:grid-cols-[220px_1fr] wide:gap-14">
-        <aside className="flex flex-col gap-9 self-start wide:sticky wide:top-28">
+      <section className="grid gap-6 pt-8 pb-[clamp(72px,10vw,120px)] wide:grid-cols-[250px_1fr] wide:gap-10 wide:pt-10">
+        <MobileFilters active={activeCount}>
           <FilterGroup label={t("kind")}>
             {kindOptions.map((option) => (
               <FilterCheckbox
                 key={option.value}
-                href={shopHref({
-                  kind: toggled(kinds, option.value),
-                  league: leagues,
-                  team: teams,
-                  season: seasons,
-                })}
+                href={shopHref({ ...state, kind: toggled(kinds, option.value) })}
                 checked={kinds.includes(option.value)}
                 label={t(`kinds.${option.value}`)}
                 count={option.count}
@@ -158,18 +188,27 @@ export default async function ShopPage({
             ))}
           </FilterGroup>
 
+          {showLines ? (
+            <FilterGroup label={t("line")}>
+              {lineOptions.map((option) => (
+                <FilterCheckbox
+                  key={option.value}
+                  href={shopHref({ ...state, line: toggled(lines, option.value) })}
+                  checked={lines.includes(option.value)}
+                  label={t(`lines.${option.value}`)}
+                  count={option.count}
+                />
+              ))}
+            </FilterGroup>
+          ) : null}
+
           <FilterGroup label={t("league")} id="league">
             {leagueOptions.map((option) => (
               <FilterCheckbox
                 key={option.slug}
-                href={shopHref({
-                  kind: kinds,
-                  league: toggled(leagues, option.slug),
-                  team: teams,
-                  season: seasons,
-                })}
+                href={shopHref({ ...state, league: toggled(leagues, option.slug) })}
                 checked={leagues.includes(option.slug)}
-                label={locale === "ar" ? option.nameAr : option.name}
+                label={localName(option, locale)}
                 count={option.count}
               />
             ))}
@@ -179,12 +218,7 @@ export default async function ShopPage({
             {seasonOptions.map((option) => (
               <FilterCheckbox
                 key={option.value}
-                href={shopHref({
-                  kind: kinds,
-                  league: leagues,
-                  team: teams,
-                  season: toggled(seasons, option.value),
-                })}
+                href={shopHref({ ...state, season: toggled(seasons, option.value) })}
                 checked={seasons.includes(option.value)}
                 label={<Season value={option.value} />}
                 count={option.count}
@@ -197,32 +231,29 @@ export default async function ShopPage({
               teams={teamOptions}
               selected={teams}
               basePath="/shop"
-              otherParams={{ kind: kinds, league: leagues, season: seasons }}
+              otherParams={{ kind: kinds, league: leagues, season: seasons, line: lines, sort: sort === "featured" ? [] : [sort] }}
             />
           </FilterGroup>
 
           {hasFilter ? (
-            <Link
-              href={shopHref({})}
-              className="text-start text-sm text-ink-soft underline-offset-4 transition-colors hover:text-ink hover:underline"
-            >
+            <Link href={shopHref({ sort })} className="btn btn-quiet w-full">
               {t("clear")}
             </Link>
           ) : null}
-        </aside>
+        </MobileFilters>
 
-        <div>
-          <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-rule pb-4">
+        <div className="min-w-0">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             {/* Strings, not numbers: next-intl would format a number with the
                 locale's own digits and render ٣ من ١٧ in Arabic. Latin
-                numerals always. Bare integers need no bidi isolation — they
-                are weak-LTR and sit correctly inside Arabic text. */}
-            <span className="mono-eyebrow text-ink-soft">
+                numerals always. */}
+            <span className="text-[14px] font-semibold text-ink">
               {t("showing", {
                 count: String(results.length),
                 total: String(all.length),
               })}
             </span>
+            <SortSelect value={sort} />
           </div>
 
           {results.length > 0 ? (
@@ -234,10 +265,10 @@ export default async function ShopPage({
               reveal
             />
           ) : (
-            <div className="py-14">
-              <h2 className="mb-2.5 text-xl">{t("emptyTitle")}</h2>
-              <p className="mb-6 max-w-[46ch] text-ink-soft">{t("emptyBody")}</p>
-              <Link href={shopHref({})} className="btn btn-quiet">
+            <div className="kv-panel px-6 py-14 text-center">
+              <h2 className="kv-section-title mb-2.5">{t("emptyTitle")}</h2>
+              <p className="mx-auto mb-6 max-w-[46ch] text-ink-soft">{t("emptyBody")}</p>
+              <Link href={shopHref({})} className="btn">
                 {t("clear")}
               </Link>
             </div>

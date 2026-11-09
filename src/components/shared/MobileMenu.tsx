@@ -7,6 +7,7 @@ import { BrandBadge } from "@/components/shared/BrandBadge";
 import { CartLink } from "@/components/shared/CartLink";
 import { LocaleToggle } from "@/components/shared/LocaleToggle";
 import type { League } from "@/data/catalog";
+import { localName } from "@/lib/local-name";
 
 /**
  * Below 900px the nav collapses to a hamburger that opens a full-screen menu.
@@ -96,16 +97,19 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
               <MenuGroup label={t("leagues")}>
                 {leagues.map((league) => (
                   <MenuLink key={league.slug} href={`/shop/${league.slug}`}>
-                    {locale === "ar" ? league.nameAr : league.name}
+                    {localName(league, locale)}
                   </MenuLink>
                 ))}
               </MenuGroup>
             ) : null}
 
             <MenuGroup label={t("menuHelp")}>
+              <MenuLink href="/help">{t("help")}</MenuLink>
               <MenuLink href="/size-guide">{t("sizeGuide")}</MenuLink>
-              <MenuLink href="/shipping">{t("shipping")}</MenuLink>
+              <MenuLink href="/shipping">{t("shippingOnly")}</MenuLink>
+              <MenuLink href="/returns">{t("returns")}</MenuLink>
               <MenuLink href="/about">{t("about")}</MenuLink>
+              <MenuLink href="/contact">{t("contact")}</MenuLink>
               {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain
                   <a>, not <MenuLink>/<Link>, so it never gets a locale prefix it can't resolve. */}
               {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}

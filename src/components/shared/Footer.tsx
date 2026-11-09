@@ -1,6 +1,8 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getLeagues } from "@/data/catalog";
+import { getLeagues, localName } from "@/data/catalog";
+import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "./Info";
+import { enabledPaymentMethods } from "@/lib/payment-methods";
 import { BrandBadge } from "./BrandBadge";
 import { CookieSettingsButton } from "./CookieSettingsButton";
 
@@ -13,96 +15,99 @@ import { CookieSettingsButton } from "./CookieSettingsButton";
 export async function Footer() {
   const t = await getTranslations("footer");
   const tNav = await getTranslations("nav");
-  const tAbout = await getTranslations("about");
   const locale = await getLocale();
   const leagues = getLeagues();
-  // String, not number: next-intl would render ٢٠٢٦ for ar — Latin numerals
-  // always, in every locale.
   const year = String(new Date().getFullYear());
+  const pay = enabledPaymentMethods();
+  const anyPay = pay.cash || pay.paypal || pay.bit;
 
+  // Redesign phase 2 (2026-11-09): the footer moved onto the homepage's night
+  // (--flood-ground) with the hero's blue→gold top rule: the real crest and a
+  // short brand line, four link columns, contact (email + Instagram), and the
+  // payment methods the checkout supports. The old giant ghost wordmark is
+  // retired — the crest says the name.
   return (
-    // The footer's top edge, owner decision 2026-10-25: the same
-    // accent→electric→gold bar the header closes on (see .footer-accent in
-    // globals.css), replacing the plain gold hairline — still the boundary
-    // where the page ends and the footer begins, just louder about it now.
-    <footer className="footer-accent">
-      <div className="mx-auto w-full max-w-page overflow-hidden px-6 pt-10 pb-14">
-        {/* The editorial close: the logotype at watermark contrast, set to the
-            page width and clipped by it, so the footer ends on the brand
-            without anyone having to read it again. Latin logotype in both
-            locales — the long-standing exception, and the only place the
-            wordmark still appears anywhere on the site.
+    <footer className="kv-footer">
+      <div className="mx-auto w-full max-w-page px-6 pt-14 pb-10">
+        <div className="grid gap-10 wide:grid-cols-[1.3fr_repeat(4,1fr)] wide:gap-8">
+          <div className="flex flex-col items-start gap-4">
+            <Link href="/" aria-label="KitVerse" className="flex items-center gap-3">
+              <BrandBadge size={56} className="shrink-0" />
+            </Link>
+            <p className="max-w-[34ch] text-[14px] leading-relaxed">{t("description")}</p>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-2 text-[13px] font-semibold text-white"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              <bdi dir="ltr">{INSTAGRAM_HANDLE}</bdi>
+            </a>
+          </div>
 
-            Decoration, and marked as such: aria-hidden, not selectable, and
-            below text contrast on purpose. There is nothing here to read that
-            the badge below does not already say. */}
-        {/* Owner report 2026-10-31 (Part 5.1 - "Help links aren't clickable"):
-            this decorative watermark was aria-hidden and select-none, but not
-            pointer-events-none. At its huge size (up to 13rem) with a tight
-            0.82 line-height, the glyph ink overflows its own CSS line box -
-            the rendering engine's hit-test region follows that painted ink,
-            not getBoundingClientRect(), so a click on the FIRST row of each
-            footer column (closest below the wordmark - Shipping & Returns,
-            Premier League, Privacy Policy) was silently swallowed by this
-            label instead of reaching the link under it, even though nothing
-            was visibly covering it. Decorative text that isn't meant to be
-            interacted with should never be able to intercept a click. */}
-        <p aria-hidden className="ghost-wordmark pointer-events-none -mb-2 select-none">
-          KitVerse
-        </p>
-
-        <div className="flex flex-wrap justify-between gap-x-8 gap-y-10 pt-12">
           <FooterColumn label={t("shopGroup")}>
-            {leagues.map((league) => (
-              <FooterLink key={league.slug} href={`/shop/${league.slug}`}>
-                {locale === "ar" ? league.nameAr : league.name}
-              </FooterLink>
-            ))}
+            <FooterLink href="/shop">{t("allShirts")}</FooterLink>
             <FooterLink href="/shop/national-teams">{tNav("nationalTeams")}</FooterLink>
+            <FooterLink href="/shop/retro">{t("retro")}</FooterLink>
             <FooterLink href="/accessories">{tNav("accessories")}</FooterLink>
           </FooterColumn>
 
+          <FooterColumn label={tNav("leagues")}>
+            {leagues.map((league) => (
+              <FooterLink key={league.slug} href={`/shop/${league.slug}`}>
+                {localName(league, locale)}
+              </FooterLink>
+            ))}
+          </FooterColumn>
+
           <FooterColumn label={t("helpGroup")}>
-            <FooterLink href="/shipping">{tNav("shipping")}</FooterLink>
+            <FooterLink href="/help">{tNav("help")}</FooterLink>
             <FooterLink href="/size-guide">{tNav("sizeGuide")}</FooterLink>
-            <FooterLink href="/about">{tNav("about")}</FooterLink>
+            <FooterLink href="/shipping">{t("shippingPolicy")}</FooterLink>
+            <FooterLink href="/returns">{t("returnsPolicy")}</FooterLink>
             {/* /o/track lives outside the [locale] route tree (same reason the thank-you page's
-                order link uses a plain <a>, not the i18n Link) - it's a single Arabic page regardless
-                of the storefront's current locale, same as /o/[token] already is. */}
+                order link uses a plain <a>, not the i18n Link). */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
-            <a href="/o/track" className="text-start text-[13px] text-ink-soft transition-colors hover:text-ink">
+            <a href="/o/track" className="text-start text-[14px]">
               {tNav("trackOrder")}
             </a>
           </FooterColumn>
 
-          <FooterColumn label={t("legalGroup")}>
-            <FooterLink href="/privacy">{t("privacy")}</FooterLink>
-            <FooterLink href="/terms">{t("terms")}</FooterLink>
-            <CookieSettingsButton />
-          </FooterColumn>
-
           <FooterColumn label={t("contactGroup")}>
+            <FooterLink href="/about">{tNav("about")}</FooterLink>
+            <FooterLink href="/contact">{tNav("contact")}</FooterLink>
             {/* mailto is not an http(s) URL, so it stays out of the
-                getSiteUrl() rule — the address itself lives in messages. */}
-            <a
-              href={`mailto:${tAbout("email")}`}
-              className="text-start text-[13px] text-ink-soft transition-colors hover:text-ink"
-            >
-              <bdi dir="ltr">{tAbout("email")}</bdi>
+                getSiteUrl() rule. */}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-start text-[14px]">
+              <bdi dir="ltr">{CONTACT_EMAIL}</bdi>
             </a>
           </FooterColumn>
         </div>
 
-        {/* Brand line: the crest beside the tagline and the rights notice.
-            A flex gap again — the badge takes the inline start in both
-            directions with no direction-specific rule. */}
-        <div className="flex items-center gap-4 pt-9 text-[13px] text-ink-soft">
-          <BrandBadge size={40} className="shrink-0" />
-          <div className="flex flex-col gap-1">
-            <p>{t("tagline")}</p>
-            <p className="tabular">
+        <div className="mt-12 flex flex-col gap-5 border-t border-white/10 pt-6 wide:flex-row wide:items-center wide:justify-between">
+          {/* Only the methods checkout really offers — see payment-methods.ts. */}
+          {anyPay ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="me-1 text-[12.5px]">{t("weAccept")}</span>
+              {pay.bit ? <span className="kv-pay latin">Bit</span> : null}
+              {pay.paypal ? <span className="kv-pay latin">PayPal</span> : null}
+              {pay.cash ? <span className="kv-pay">{t("cashOnDelivery")}</span> : null}
+            </div>
+          ) : (
+            <span />
+          )}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12.5px]">
+            <Link href="/privacy">{t("privacy")}</Link>
+            <Link href="/terms">{t("terms")}</Link>
+            <CookieSettingsButton />
+            <span className="tabular">
               <bdi>{t("rights", { year })}</bdi>
-            </p>
+            </span>
           </div>
         </div>
       </div>
@@ -119,7 +124,7 @@ function FooterColumn({
 }) {
   return (
     <div className="flex flex-col items-start gap-2.5">
-      <span className="mono-eyebrow mb-1 text-ink-soft">{label}</span>
+      <span className="kv-footer-head">{label}</span>
       {children}
     </div>
   );
@@ -127,10 +132,7 @@ function FooterColumn({
 
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      className="text-start text-[13px] text-ink-soft transition-colors hover:text-ink"
-    >
+    <Link href={href} className="text-start text-[14px]">
       {children}
     </Link>
   );

@@ -514,9 +514,9 @@ export function CheckoutView({
 
   if (lines.length === 0 && accessoryLines.length === 0) {
     return (
-      <div className="py-16">
-        <h2 className="mb-2.5 text-xl">{tCart("emptyTitle")}</h2>
-        <p className="mb-7 max-w-[46ch] text-ink-soft">{tCart("emptyBody")}</p>
+      <div className="kv-panel mx-auto my-12 max-w-xl px-6 py-12 text-center">
+        <h2 className="kv-section-title mb-2.5">{tCart("emptyTitle")}</h2>
+        <p className="mx-auto mb-7 max-w-[46ch] text-ink-soft">{tCart("emptyBody")}</p>
         <Link href="/shop" className="btn">
           {tCommon("continueShopping")}
         </Link>
@@ -527,9 +527,9 @@ export function CheckoutView({
   // A cart that is only keychains has nothing checkout can submit yet.
   if (lines.length === 0) {
     return (
-      <div className="py-16">
-        <h2 className="mb-2.5 text-xl">{tAccessories("checkoutExcluded")}</h2>
-        <p className="mb-7 max-w-[46ch] text-ink-soft">{tAccessories("checkoutNotice")}</p>
+      <div className="kv-panel mx-auto my-12 max-w-xl px-6 py-12 text-center">
+        <h2 className="kv-section-title mb-2.5">{tAccessories("checkoutExcluded")}</h2>
+        <p className="mx-auto mb-7 max-w-[46ch] text-ink-soft">{tAccessories("checkoutNotice")}</p>
         <Link href="/cart" className="btn">
           {tAccessories("viewCart")}
         </Link>
@@ -538,10 +538,13 @@ export function CheckoutView({
   }
 
   return (
-    <div className="grid gap-12 pt-8 pb-16 wide:grid-cols-[1fr_380px] wide:gap-16">
+    <div className="grid items-start gap-6 py-8 wide:grid-cols-[1fr_400px] wide:gap-10 wide:py-12">
       {/* ---------- delivery details ---------- */}
-      <section>
-        <h2 className="mono-eyebrow mb-5 text-ink-soft">{t("detailsTitle")}</h2>
+      <section className="kv-panel p-5 sm:p-7">
+        <h2 className="kv-filter-head mb-5 flex items-center !justify-start gap-3">
+          <span className="grid size-7 place-items-center rounded-full bg-[#1f5cff] text-[13px] text-white">1</span>
+          {t("detailsTitle")}
+        </h2>
 
         <div className="flex flex-col gap-5">
           <Field
@@ -645,8 +648,11 @@ export function CheckoutView({
       </section>
 
       {/* ---------- summary + payment ---------- */}
-      <section className="wide:sticky wide:top-8 wide:self-start">
-        <h2 className="mono-eyebrow mb-5 text-ink-soft">{t("summaryTitle")}</h2>
+      <section className="kv-panel p-5 sm:p-7 wide:sticky wide:top-28 wide:self-start">
+        <h2 className="kv-filter-head mb-4 flex items-center !justify-start gap-3">
+          <span className="grid size-7 place-items-center rounded-full bg-[#1f5cff] text-[13px] text-white">2</span>
+          {t("summaryTitle")}
+        </h2>
 
         <ul className="border-t border-rule">
           {lines.map(({ item, product, priced, key }) => (
@@ -654,19 +660,19 @@ export function CheckoutView({
               key={key}
               className="grid grid-cols-[64px_1fr_auto] items-start gap-4 border-b border-rule py-4"
             >
-              <span className="grid aspect-square place-items-center bg-tile">
+              <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]">
                 <Image
                   src={product.image}
                   alt={locale === "ar" ? product.titleAr : product.title}
                   width={128}
                   height={128}
                   sizes="64px"
-                  className="h-auto w-[86%]"
+                  className="h-auto w-[86%] mix-blend-multiply"
                 />
               </span>
               <span className="text-[13px]">
-                <span className="block">
-                  {locale === "ar" ? product.titleAr : product.title}
+                <span className="block font-semibold">
+                  {locale === "ar" ? product.titleAr : locale === "he" && product.titleHe ? product.titleHe : product.title}
                 </span>
                 <span className="block text-ink-soft">
                   <span className="latin tabular">{item.size}</span>
@@ -696,7 +702,7 @@ export function CheckoutView({
                   </span>
                 ) : null}
               </span>
-              <span className="text-accent text-[13px]">
+              <span className="text-[13.5px] font-bold text-ink">
                 <Price value={priced.lineTotal} />
               </span>
             </li>
@@ -706,14 +712,14 @@ export function CheckoutView({
               key={key}
               className="grid grid-cols-[64px_1fr_auto] items-start gap-4 border-b border-rule py-4"
             >
-              <span className="grid aspect-square place-items-center bg-tile">
+              <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]">
                 <Image
                   src={accessory.image}
                   alt={locale === "ar" ? accessory.teamAr : accessory.team}
                   width={128}
                   height={128}
                   sizes="64px"
-                  className="h-auto w-[86%]"
+                  className="h-auto w-[86%] mix-blend-multiply"
                 />
               </span>
               <span className="text-[13px]">
@@ -724,7 +730,7 @@ export function CheckoutView({
                 </span>
                 <span className="block text-ink-soft">{tAccessories("checkoutExcluded")}</span>
               </span>
-              <span className="text-accent text-[13px]">
+              <span className="text-[13.5px] font-bold text-ink">
                 <Price value={priced.lineTotal} />
               </span>
             </li>
@@ -743,7 +749,7 @@ export function CheckoutView({
         <div className="border-b border-rule py-5">
           <label
             htmlFor="checkout-gift-box"
-            className="mono-eyebrow mb-2.5 block text-ink-soft"
+            className="kv-legend"
           >
             {t("giftBoxLegend")}
           </label>
@@ -755,7 +761,7 @@ export function CheckoutView({
             dir="ltr"
             value={giftBoxQty}
             onChange={(event) => setGiftBoxQty(Number(event.target.value))}
-            className="tabular w-32 border border-rule bg-field px-3 py-2.5 text-sm text-ink"
+            className="kv-select tabular w-36"
           >
             <option value={0}>{t("giftBoxNone")}</option>
             {Array.from({ length: GIFT_BOX_MAX_QTY }, (_, index) => index + 1).map(
@@ -774,7 +780,7 @@ export function CheckoutView({
             only when every one of them is marked combinable in admin
             Discounts — see applyDiscountCode. */}
         <div className="border-b border-rule py-5">
-          <label htmlFor="checkout-discount" className="mono-eyebrow mb-2.5 block text-ink-soft">
+          <label htmlFor="checkout-discount" className="kv-legend">
             {t("discountLabel")}
           </label>
           {appliedDiscounts.length > 0 ? (
@@ -796,11 +802,11 @@ export function CheckoutView({
                 dir="ltr"
                 value={discountInput}
                 onChange={(event) => { setDiscountInput(event.target.value); setDiscountCheck({ status: "idle" }); }}
-                className="latin w-full border border-rule bg-field px-3.5 py-2.5 text-sm text-ink"
+                className="kv-input latin"
               />
               <button
                 type="button"
-                className="btn-quiet shrink-0"
+                className="btn btn-quiet shrink-0 !px-5"
                 disabled={!discountInput.trim() || discountCheck.status === "checking"}
                 onClick={applyDiscountCode}
               >
@@ -846,9 +852,9 @@ export function CheckoutView({
               </span>
             </Row>
           ))}
-          <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
-            <span>{tCart("total")}</span>
-            <Price value={grandTotal} />
+          <div className="flex items-baseline justify-between border-t border-rule pt-4">
+            <span className="font-bold">{tCart("total")}</span>
+            <Price value={grandTotal} className="text-[1.6rem] leading-none font-extrabold" />
           </div>
           <p className="text-xs text-ink-soft">{tCart("deliveryNote")}</p>
         </div>
@@ -861,7 +867,7 @@ export function CheckoutView({
           {returnNotice ? (
             <p
               role="status"
-              className="mb-5 border border-rule px-4 py-3.5 text-sm text-ink-soft"
+              className="mb-5 rounded-[10px] border border-[#f0c36d] bg-[#fff8e6] px-4 py-3.5 text-sm text-[#5c4100]"
             >
               {returnNotice === "failed" ? t("returnFailed") : returnNotice === "pending" ? t("returnPending") : t("returnCancelled")}
             </p>
@@ -871,7 +877,10 @@ export function CheckoutView({
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : (
             <div className="flex flex-col gap-6">
-              <h3 className="mono-eyebrow text-ink-soft">{t("payTitle")}</h3>
+              <h3 className="kv-filter-head mb-0 flex items-center !justify-start gap-3">
+                <span className="grid size-7 place-items-center rounded-full bg-[#1f5cff] text-[13px] text-white">3</span>
+                {t("payTitle")}
+              </h3>
 
               {/* Three methods, each shown only when it is configured
                   (owner decision 2026-10-31, Part 7): Bit clears through
@@ -883,8 +892,8 @@ export function CheckoutView({
                   disables while ANY of the three is mid-flight, not just the
                   one clicked. */}
               {bitEnabled ? (
-                <div>
-                  <p className="mb-1.5 text-sm">{t("payCard")}</p>
+                <div className="rounded-[12px] border border-rule p-4">
+                  <p className="mb-1.5 text-sm font-bold">{t("payCard")}</p>
                   <p className="mb-1.5 text-xs text-ink-soft">{t("payCardNote")}</p>
                   <p className="mb-4 text-xs text-ink-soft">{t("payCardLanguage")}</p>
                   <button
@@ -899,11 +908,11 @@ export function CheckoutView({
               ) : null}
 
               {paypalEnabled ? (
-                <div>
+                <div className="rounded-[12px] border border-rule p-4">
                   <p className="mb-4 text-xs text-ink-soft">{t("payPalNote")}</p>
                   <button
                     type="button"
-                    className="btn-quiet w-full"
+                    className="btn btn-quiet w-full"
                     disabled={phase !== "form" || !parsed.success || cityCheck.status !== "found"}
                     onClick={placePayPalOrder}
                   >
@@ -919,8 +928,8 @@ export function CheckoutView({
                   grey and disabled until the delivery form validates, then
                   reads as active — never hidden behind a separate message. */}
               {cashEnabled ? (
-                <div>
-                  {bitEnabled || paypalEnabled ? <p className="mb-1.5 text-sm">{t("payCodIntro")}</p> : null}
+                <div className="rounded-[12px] border border-rule p-4">
+                  {bitEnabled || paypalEnabled ? <p className="mb-1.5 text-sm font-bold">{t("payCodIntro")}</p> : null}
                   <p className="mb-4 text-xs text-ink-soft">{t("payCashNote")}</p>
                   <button
                     type="button"
@@ -941,7 +950,7 @@ export function CheckoutView({
             </div>
           )}
 
-          <p aria-live="polite" className="mt-3 min-h-6 text-sm text-ink-soft">
+          <p aria-live="polite" className="mt-3 min-h-6 text-sm font-semibold text-[#c0392b]">
             {errorCode ? <ErrorMessage code={errorCode} /> : null}
           </p>
 
@@ -950,7 +959,7 @@ export function CheckoutView({
           <p className="mt-2 text-xs text-ink-soft">
             {t.rich("termsLine", {
               terms: (chunks) => (
-                <Link href="/terms" className="text-ink underline underline-offset-4">
+                <Link href="/terms" className="font-semibold text-[#1f5cff] underline-offset-4 hover:underline">
                   {chunks}
                 </Link>
               ),
@@ -987,7 +996,7 @@ function ErrorMessage({ code }: { code: CheckoutErrorCode }) {
 
 function DemoPanel({ title, body }: { title: string; body: string }) {
   return (
-    <div className="border border-rule bg-chip px-4 py-4">
+    <div className="rounded-[12px] border border-rule bg-chip px-4 py-4">
       <p className="mb-1.5 text-sm">{title}</p>
       <p className="text-sm text-ink-soft">{body}</p>
     </div>
@@ -1032,15 +1041,13 @@ function Field({
   "onChange" | "onBlur" | "name" | "value" | "id"
 >) {
   const id = `checkout-${name}`;
-  const className = `w-full border bg-field px-3.5 py-3 text-sm text-ink ${
-    invalid ? "border-ink" : "border-rule"
-  }`;
+  const className = `kv-input ${invalid ? "!border-[#c0392b]" : ""}`;
 
   return (
     <div>
-      <label htmlFor={id} className="mono-eyebrow mb-2 block text-ink-soft">
+      <label htmlFor={id} className="mb-1.5 block text-[13.5px] font-semibold text-ink">
         {label}
-        {optionalLabel ? <span className="ms-2">({optionalLabel})</span> : null}
+        {optionalLabel ? <span className="ms-2 font-normal text-ink-soft">({optionalLabel})</span> : null}
       </label>
       {multiline ? (
         <textarea
@@ -1069,7 +1076,7 @@ function Field({
         />
       )}
       {invalid ? (
-        <p id={`${id}-error`} className="mt-1.5 text-xs text-ink-soft">
+        <p id={`${id}-error`} className="mt-1.5 flex items-center gap-1.5 text-[12.5px] font-medium text-[#c0392b]">
           {error}
         </p>
       ) : null}

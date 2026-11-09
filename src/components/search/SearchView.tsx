@@ -49,7 +49,7 @@ export function SearchView({
 
   return (
     <>
-      <div className="border-b border-rule pb-8">
+      <div className="pt-8">
         <input
           type="search"
           value={query}
@@ -57,12 +57,12 @@ export function SearchView({
           placeholder={t("placeholder")}
           aria-label={t("label")}
           autoComplete="off"
-          className="mt-4 w-full max-w-[460px] border border-rule bg-field px-3.5 py-3 text-sm text-ink"
+          className="kv-input max-w-[560px] !min-h-[54px] !text-[16px] shadow-[0_16px_30px_-26px_rgb(14_22_48/0.5)]"
         />
       </div>
 
-      <div className="mt-7 mb-6 flex items-baseline justify-between gap-4 border-b border-rule pb-4">
-        <span className="mono-eyebrow text-ink-soft" aria-live="polite">
+      <div className="mt-7 mb-6 flex items-baseline justify-between gap-4">
+        <span className="text-[14px] font-semibold text-ink" aria-live="polite">
           {normalized === ""
             ? t("prompt")
             : t("results", {

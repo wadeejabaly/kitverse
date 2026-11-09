@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SHIPPING_ILS_BY_TIER } from "@/data/pricing";
+import { Link } from "@/i18n/navigation";
 import { Price } from "@/components/shared/Money";
-import {
-  PageLede,
-  Prose,
-  ProseHeading,
-  ProseParagraph,
-  Wrap,
-} from "@/components/shared/PageLede";
+import { PageLede, Wrap } from "@/components/shared/PageLede";
+import { ContactPanel, Icon, InfoCard, InfoHeading } from "@/components/shared/Info";
 import { alternatesFor } from "@/lib/site";
 
 export async function generateMetadata({
@@ -39,69 +35,98 @@ export default async function ShippingPage({
   setRequestLocale(locale);
   const t = await getTranslations("shippingPage");
 
+  const tHelp = await getTranslations("help");
+  const steps = ["placed", "confirmed", "shipped", "courier"] as const;
+
+  // Redesign phase 2 (2026-11-09): the same facts as before, laid out as the
+  // homepage's language — three icon cards (timing, rates, delivery day), the
+  // order journey as four numbered steps, then updates, the returns summary
+  // (its full page is /returns now) and customs. Every sentence is the same
+  // message key it was; only the steps are new copy, and they describe the
+  // flow the shop already runs (order → owner confirmation → supplier →
+  // courier call the day before).
   return (
     <Wrap>
-      <PageLede eyebrow={t("eyebrow")} title={t("title")} />
-      <Prose>
-        <ProseHeading>{t("timingTitle")}</ProseHeading>
-        <ProseParagraph>{t("timingBody")}</ProseParagraph>
+      <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")} />
 
-        <ProseHeading>{t("rateTitle")}</ProseHeading>
-        <ProseParagraph>{t("rateBody")}</ProseParagraph>
-        {/* The two tiers come straight from pricing.ts, so this page can never
-            quote a figure checkout disagrees with. Shown separately on purpose
-            (owner decision 2026-10-25) so a northern customer never thinks
-            everyone pays the higher fee. */}
-        <ul className="mb-3.5 flex max-w-[36ch] flex-col gap-1.5 text-ink">
-          <li className="flex items-baseline justify-between gap-4">
-            <span className="text-ink-soft">{t("tierNorth")}</span>
-            <Price value={SHIPPING_ILS_BY_TIER.north} />
-          </li>
-          <li className="flex items-baseline justify-between gap-4">
-            <span className="text-ink-soft">{t("tierRest")}</span>
-            <Price value={SHIPPING_ILS_BY_TIER.rest} />
-          </li>
-        </ul>
+      <div className="flex flex-col gap-10 py-10 wide:gap-14 wide:py-14">
+        <div className="grid gap-4 wide:grid-cols-3">
+          <InfoCard icon="clock" title={t("timingTitle")}>
+            {t("timingBody")}
+          </InfoCard>
+          <InfoCard icon="map" title={t("rateTitle")}>
+            <p>{t("rateBody")}</p>
+            {/* The two tiers come straight from pricing.ts, so this page can
+                never quote a figure checkout disagrees with. Shown separately
+                on purpose (owner decision 2026-10-25) so a northern customer
+                never thinks everyone pays the higher fee. */}
+            <ul className="mt-4 flex flex-col gap-2 text-ink">
+              <li className="flex items-baseline justify-between gap-4 rounded-[10px] bg-chip px-3.5 py-2.5">
+                <span className="text-[13.5px]">{t("tierNorth")}</span>
+                <Price value={SHIPPING_ILS_BY_TIER.north} className="font-extrabold" />
+              </li>
+              <li className="flex items-baseline justify-between gap-4 rounded-[10px] bg-chip px-3.5 py-2.5">
+                <span className="text-[13.5px]">{t("tierRest")}</span>
+                <Price value={SHIPPING_ILS_BY_TIER.rest} className="font-extrabold" />
+              </li>
+            </ul>
+          </InfoCard>
+          <InfoCard icon="phone" title={t("trackingTitle")}>
+            <p>{t("trackingBody")}</p>
+            {/* /o/track lives outside the [locale] route tree (a single Arabic
+                page, same as /o/[token]), so this is a plain anchor rather
+                than the i18n Link. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
+            <a href="/o/track" className="mt-3 inline-block font-bold text-[#1f5cff] hover:underline">
+              {t("trackingCta")}
+            </a>
+          </InfoCard>
+        </div>
 
-        <ProseHeading>{t("trackingTitle")}</ProseHeading>
-        <ProseParagraph>{t("trackingBody")}</ProseParagraph>
-        {/* /o/track lives outside the [locale] route tree (a single Arabic page, same as /o/[token]),
-            so this is a plain anchor rather than the i18n Link - matching the thank-you page's order
-            link for the same reason. */}
-        <ProseParagraph>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
-          <a href="/o/track" className="font-medium text-ink underline underline-offset-2 hover:no-underline">{t("trackingCta")}</a>
-        </ProseParagraph>
+        <section>
+          <InfoHeading eyebrow={t("journeyEyebrow")} title={t("journeyTitle")} />
+          <ol className="grid gap-4 sm:grid-cols-2 wide:grid-cols-4">
+            {steps.map((step, index) => (
+              <li key={step} className="kv-panel relative flex flex-col gap-2.5 p-6">
+                <span className="grid size-9 place-items-center rounded-full bg-[#1f5cff] font-extrabold text-white">
+                  <span className="latin">{index + 1}</span>
+                </span>
+                <h3 className="text-[16px] font-extrabold">{t(`journey.${step}.title`)}</h3>
+                <p className="text-[14px] leading-relaxed text-ink-soft">{t(`journey.${step}.body`)}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
 
-        {/* Owner policy correction 2026-10-31 (Part 6): the old copy allowed
-            a 14-day no-reason return on unworn shirts. The owner's actual
-            policy is narrower - no returns or exchanges for size or a
-            change of mind, defective items only - laid out here as its own
-            labelled point per the owner's wording rather than one runon
-            paragraph, so each rule reads as a rule. */}
-        <ProseHeading>{t("returnsTitle")}</ProseHeading>
-        <ProseParagraph>{t("returnsIntro")}</ProseParagraph>
-        <ProseParagraph>
-          <strong className="text-ink">{t("returnsSizeLabel")}: </strong>
-          {t("returnsSizeBody")}
-        </ProseParagraph>
-        <ProseParagraph>
-          <strong className="text-ink">{t("returnsExchangeLabel")}: </strong>
-          {t("returnsExchangeBody")}
-        </ProseParagraph>
-        <ProseParagraph>
-          <strong className="text-ink">{t("returnsChangeOfMindLabel")}: </strong>
-          {t("returnsChangeOfMindBody")}
-        </ProseParagraph>
-        <ProseParagraph>
-          <strong className="text-ink">{t("returnsDefectiveLabel")}: </strong>
-          {t("returnsDefectiveBody")}
-        </ProseParagraph>
-        <ProseParagraph>{t("returnsClosing")}</ProseParagraph>
+        <div className="grid gap-4 wide:grid-cols-2">
+          <div className="kv-panel flex flex-col gap-3 p-6 wide:p-8">
+            <span className="kv-icon-tile">
+              <Icon name="return" />
+            </span>
+            <h2 className="text-[18px] font-extrabold">{t("returnsTitle")}</h2>
+            <p className="text-[14.5px] leading-relaxed text-ink-soft">
+              {t("returnsSizeBody")} {t("returnsDefectiveBody")}
+            </p>
+            <Link href="/returns" className="mt-1 self-start font-bold text-[#1f5cff] hover:underline">
+              {t("returnsCta")}
+            </Link>
+          </div>
+          <div className="kv-panel flex flex-col gap-3 p-6 wide:p-8">
+            <span className="kv-icon-tile">
+              <Icon name="shield" />
+            </span>
+            <h2 className="text-[18px] font-extrabold">{t("customsTitle")}</h2>
+            <p className="text-[14.5px] leading-relaxed text-ink-soft">{t("customsBody")}</p>
+          </div>
+        </div>
 
-        <ProseHeading>{t("customsTitle")}</ProseHeading>
-        <ProseParagraph>{t("customsBody")}</ProseParagraph>
-      </Prose>
+        <ContactPanel
+          title={t("questionsTitle")}
+          body={t("questionsBody")}
+          emailLabel={tHelp("emailUs")}
+          instagramLabel={tHelp("dmUs")}
+        />
+      </div>
     </Wrap>
   );
 }

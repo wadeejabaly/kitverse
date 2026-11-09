@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getLeagues, type League } from "@/data/catalog";
+import { localName } from "@/lib/local-name";
 import { BrandBadge } from "@/components/shared/BrandBadge";
 import { CartLink } from "@/components/shared/CartLink";
 import { LocaleToggle } from "@/components/shared/LocaleToggle";
@@ -186,7 +187,7 @@ function LeaguesMenu({
             role="menuitem"
             className="px-4 py-2 text-[13px] whitespace-nowrap text-ink-soft transition-colors hover:bg-tile hover:text-ink"
           >
-            {locale === "ar" ? league.nameAr : league.name}
+            {localName(league, locale)}
           </Link>
         ))}
       </div>

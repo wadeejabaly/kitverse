@@ -41,6 +41,7 @@ export default async function CartPage({
     handle: product.handle,
     title: product.title,
     titleAr: product.titleAr,
+    titleHe: product.titleHe,
     season: product.season,
     image: product.image,
   }));
@@ -49,6 +50,7 @@ export default async function CartPage({
     handle: accessory.handle,
     team: accessory.team,
     teamAr: accessory.teamAr,
+    teamHe: accessory.teamHe,
     price: accessory.price,
     image: accessory.image,
   }));

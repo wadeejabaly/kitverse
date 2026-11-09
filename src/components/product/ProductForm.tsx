@@ -44,6 +44,8 @@ export function ProductForm({
   team,
   kind,
   leagueName,
+  image,
+  title,
 }: {
   handle: string;
   season: string;
@@ -54,10 +56,13 @@ export function ProductForm({
   kind: Kind;
   /** The shopper's-locale league name, or null for a national-team product. */
   leagueName: string | null;
+  /** Photo + title for the add-to-cart confirmation (redesign phase 2). */
+  image?: string;
+  title?: string;
 }) {
   const t = useTranslations("product");
   const tCommon = useTranslations("common");
-  const { add } = useCart();
+  const { add, count: cartCount } = useCart();
   const retro = isRetroSeason(season);
 
   const patchOptions = patchOptionsFor({ league, kind, team });
@@ -115,14 +120,23 @@ export function ProductForm({
 
   return (
     <div>
-      <p className="mb-7 flex items-baseline gap-3 text-xl text-accent">
-        <Price value={unitPrice} />
-      </p>
+      <div className="mb-7 flex flex-wrap items-end gap-x-4 gap-y-1 border-b border-rule pb-6">
+        <Price value={unitPrice} className="text-[2rem] leading-none font-extrabold text-ink" />
+        <span className="pb-1 text-[13px] text-ink-soft">{t("priceNote")}</span>
+      </div>
 
       {/* Size */}
-      <fieldset className="mb-6 border-0 p-0">
-        <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("size")}</legend>
-        <div className="flex flex-wrap gap-2">
+      <fieldset className="mb-7 border-0 p-0">
+        <legend className="kv-legend">
+          <span>{t("size")}</span>
+          <Link
+            href="/size-guide"
+            className="text-[13px] font-semibold tracking-normal normal-case text-[#1f5cff] underline-offset-4 hover:underline"
+          >
+            {t("sizeGuideLink")}
+          </Link>
+        </legend>
+        <div className="flex flex-wrap gap-2.5">
           {SIZES.map((option) => {
             // 3XL and 4XL no longer add the same figure, so the delta is
             // printed from pricing.ts per size rather than being one string.
@@ -149,9 +163,9 @@ export function ProductForm({
       {/* Version — Retro has none: one product, one price, so offering the
           choice would be a lie about what changes. */}
       {retro ? null : (
-        <fieldset className="mb-6 border-0 p-0">
-          <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("version")}</legend>
-          <div className="flex flex-wrap gap-2">
+        <fieldset className="mb-7 border-0 p-0">
+          <legend className="kv-legend">{t("version")}</legend>
+          <div className="flex flex-wrap gap-2.5">
             {VERSIONS.map((option) => (
               <OptionButton
                 key={option}
@@ -171,9 +185,9 @@ export function ProductForm({
       {/* Sleeve (owner decision 2026-10-26): offered on every shirt, retro
           included — unlike Version, there is no era this hides for, since
           the price list has a long-sleeve group for retro too. */}
-      <fieldset className="mb-6 border-0 p-0">
-        <legend className="mono-eyebrow mb-2.5 block text-ink-soft">{t("sleeve")}</legend>
-        <div className="flex flex-wrap gap-2">
+      <fieldset className="mb-7 border-0 p-0">
+        <legend className="kv-legend">{t("sleeve")}</legend>
+        <div className="flex flex-wrap gap-2.5">
           {SLEEVES.map((option) => (
             <OptionButton
               key={option}
@@ -190,16 +204,14 @@ export function ProductForm({
       </fieldset>
 
       {/* Name and number */}
-      <fieldset className="mb-6 border-0 p-0">
-        <legend className="mono-eyebrow mb-2.5 block text-ink-soft">
-          {t("nameNumber")}
-        </legend>
-        <label className="flex items-start gap-2.5 text-sm">
+      <fieldset className="mb-7 border-0 p-0">
+        <legend className="kv-legend">{t("nameNumber")}</legend>
+        <label className="kv-opt w-full cursor-pointer items-start" data-pressed={personalise}>
           <input
             type="checkbox"
             checked={personalise}
             onChange={(event) => setPersonalise(event.target.checked)}
-            className="mt-1 accent-accent"
+            className="mt-1 size-4 accent-[#1f5cff]"
           />
           <span>
             {t("nameNumberToggle")}
@@ -225,7 +237,7 @@ export function ProductForm({
               onChange={(event) => setNameNumber(sanitizeNameNumber(event.target.value))}
               placeholder="HAALAND 9"
               aria-label={t("nameNumberLabel")}
-              className="latin w-full border border-rule bg-field px-3.5 py-3 text-sm text-ink"
+              className="kv-input latin tracking-[0.08em]"
             />
             <p className="mt-2 text-xs text-ink-soft">{t("nameNumberHint", { price: `₪${ADDONS.nameNumber}` })}</p>
           </div>
@@ -238,10 +250,8 @@ export function ProductForm({
           empty for a product that is neither, and the whole fieldset is
           skipped. */}
       {patchOptions.length > 0 ? (
-        <fieldset className="mb-6 border-0 p-0">
-          <legend className="mono-eyebrow mb-2.5 block text-ink-soft">
-            {t("patchLegend")}
-          </legend>
+        <fieldset className="mb-7 border-0 p-0">
+          <legend className="kv-legend">{t("patchLegend")}</legend>
           <p className="mb-3 text-xs text-ink-soft">{t("patchHint", { p1: `₪${patchPrice(1)}`, p2: `₪${patchPrice(2)}`, p3: `₪${patchPrice(3)}` })}</p>
           <div className="flex flex-wrap gap-2.5">
             {patchOptions.map((option) => {
@@ -254,9 +264,9 @@ export function ProductForm({
                   aria-pressed={selected}
                   disabled={disabled}
                   onClick={() => togglePatch(option.id)}
-                  className={`relative flex w-[86px] flex-col items-center gap-1.5 border px-2 py-2.5 text-center transition-colors ${
+                  className={`relative flex w-[92px] flex-col items-center gap-1.5 rounded-[12px] border-[1.5px] bg-tile px-2 py-2.5 text-center transition-colors ${
                     selected
-                      ? "border-ink bg-chip"
+                      ? "border-[#1f5cff] shadow-[0_0_0_1px_#1f5cff]"
                       : disabled
                         ? "border-rule opacity-40"
                         : "border-rule hover:border-ink"
@@ -277,7 +287,7 @@ export function ProductForm({
                   {selected ? (
                     <span
                       aria-hidden
-                      className="absolute end-1 top-1 grid size-4 place-items-center rounded-full bg-ink text-ground"
+                      className="absolute end-1 top-1 grid size-5 place-items-center rounded-full bg-[#1f5cff] text-white"
                     >
                       <svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M3 8.3 6.3 11.5 13 4.5" />
@@ -305,49 +315,95 @@ export function ProductForm({
         </fieldset>
       ) : null}
 
-      {/* Quantity */}
-      <div className="mb-7">
-        <label
-          htmlFor="qty"
-          className="mono-eyebrow mb-2.5 block text-ink-soft"
-        >
-          {t("quantity")}
-        </label>
-        <select
-          id="qty"
-          dir="ltr"
-          value={qty}
-          onChange={(event) => setQty(Number(event.target.value))}
-          className="tabular w-24 border border-rule bg-field px-3 py-2.5 text-sm text-ink"
-        >
-          {Array.from({ length: MAX_QTY }, (_, index) => index + 1).map((value) => (
-            <option key={value} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
+      {/* Quantity + add to cart (redesign phase 2): a −/+ stepper instead of
+          a select, and the button full width beside it. */}
+      <div className="flex items-stretch gap-3">
+        <div className="flex shrink-0 items-center rounded-[10px] border-[1.5px] border-rule bg-tile" dir="ltr">
+          <button
+            type="button"
+            aria-label={t("qtyLess")}
+            disabled={qty <= 1}
+            onClick={() => setQty((value) => Math.max(1, value - 1))}
+            className="grid size-12 place-items-center text-lg text-ink disabled:opacity-30"
+          >
+            −
+          </button>
+          <span aria-live="polite" aria-label={t("quantity")} className="tabular w-7 text-center font-bold">
+            {qty}
+          </span>
+          <button
+            type="button"
+            aria-label={t("qtyMore")}
+            disabled={qty >= MAX_QTY}
+            onClick={() => setQty((value) => Math.min(MAX_QTY, value + 1))}
+            className="grid size-12 place-items-center text-lg text-ink disabled:opacity-30"
+          >
+            +
+          </button>
+        </div>
+        <button type="button" onClick={onAdd} className="btn grow">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+            <path d="M3.2 5.5h9.6l-.8 8.3H4z" strokeLinejoin="round" />
+            <path d="M6 7.2V4.8a2 2 0 0 1 4 0v2.4" strokeLinecap="round" />
+          </svg>
+          {tCommon("addToCart")}
+        </button>
       </div>
 
-      <button type="button" onClick={onAdd} className="btn w-full wide:w-auto">
-        {tCommon("addToCart")}
-      </button>
-
-      {/* aria-live so the confirmation is announced, not only seen. */}
-      <p aria-live="polite" className="mt-3 min-h-6 text-sm text-ink-soft">
+      {/* The confirmation: a toast with the shirt, what was chosen and the
+          way on, announced politely. The header count updates on its own —
+          it reads the same cart provider. */}
+      <div aria-live="polite">
         {added ? (
-          <>
-            {t("added")}{" "}
-            <Link href="/cart" className="text-ink underline underline-offset-4">
-              {t("viewCart")}
-            </Link>
-          </>
+          <div className="kv-toast" role="status">
+            <div className="flex items-start gap-3">
+              {image ? (
+                <span className="relative block size-16 shrink-0 overflow-hidden rounded-[10px] bg-white">
+                  <Image src={image} alt="" fill sizes="64px" className="object-contain p-1" />
+                </span>
+              ) : null}
+              <div className="min-w-0 grow">
+                <p className="flex items-center gap-2 text-[14px] font-bold text-white">
+                  <span className="grid size-5 place-items-center rounded-full bg-[#1f5cff]">
+                    <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 8.3 6.3 11.5 13 4.5" />
+                    </svg>
+                  </span>
+                  {t("added")}
+                </p>
+                {title ? <p className="mt-1 truncate text-[13px] text-white/80">{title}</p> : null}
+                <p className="mt-0.5 text-[12px] text-white/60">
+                  <span className="latin">{size}</span> · {retro ? t("retroBadge") : version === "fan" ? t("versionFan") : t("versionPlayer")} ·{" "}
+                  <Figure>{qty}</Figure> × <Price value={unitPrice} />
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAdded(false)}
+                aria-label={tCommon("close")}
+                className="grid size-7 shrink-0 place-items-center rounded-full text-white/70 hover:bg-white/10"
+              >
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M3 3l10 10M13 3 3 13" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <Link href="/cart" className="rounded-[8px] border border-white/20 px-3 py-2.5 text-center text-[13px] font-semibold text-white hover:bg-white/10">
+                {t("viewCart")} (<Figure>{cartCount}</Figure>)
+              </Link>
+              <Link href="/checkout" className="rounded-[8px] bg-[#1f5cff] px-3 py-2.5 text-center text-[13px] font-bold text-white hover:bg-[#3a72ff]">
+                {tCommon("checkout")}
+              </Link>
+            </div>
+          </div>
         ) : null}
-      </p>
+      </div>
 
       {/* Line total only once it differs from the unit price — otherwise it
           is the same number twice. */}
       {qty > 1 ? (
-        <p className="mt-1 text-xs text-ink-soft">
+        <p className="mt-3 text-[13px] text-ink-soft">
           <Figure>{qty}</Figure> × <Price value={unitPrice} /> ={" "}
           <Price value={unitPrice * qty} />
         </p>
@@ -394,9 +450,7 @@ function OptionButton({
       type="button"
       aria-pressed={pressed}
       onClick={onClick}
-      className={`border px-4 py-2.5 text-[13px] transition-colors ${
-        pressed ? "border-ink bg-chip" : "border-rule hover:border-ink"
-      }`}
+      className="kv-opt"
     >
       {children}
     </button>

@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/config";
 import { accessoriesByCategory, keychainForTeam } from "@/data/accessories";
 import { slugify } from "@/data/slug";
 import { AccessoryForm } from "@/components/product/AccessoryForm";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { Wrap } from "@/components/shared/PageLede";
 import { alternatesFor, localeUrl } from "@/lib/site";
 
@@ -35,7 +35,7 @@ export async function generateMetadata({
   if (!accessory || !accessory.visible) return {};
 
   const t = await getTranslations({ locale, namespace: "accessories" });
-  const team = locale === "ar" ? accessory.teamAr : accessory.team;
+  const team = locale === "ar" ? accessory.teamAr : locale === "he" && accessory.teamHe ? accessory.teamHe : accessory.team;
   const title = t("keychainTitle", { team });
 
   return {
@@ -63,7 +63,7 @@ export default async function KeychainPage({
   if (!accessory || !accessory.visible) notFound();
 
   const t = await getTranslations("accessories");
-  const team = locale === "ar" ? accessory.teamAr : accessory.team;
+  const team = locale === "ar" ? accessory.teamAr : locale === "he" && accessory.teamHe ? accessory.teamHe : accessory.team;
   const title = t("keychainTitle", { team });
 
   const jsonLd = {
@@ -90,21 +90,19 @@ export default async function KeychainPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label={t("eyebrow")} className="pt-6">
-        <span className="mono-eyebrow text-ink-soft">
-          <Link href="/accessories/keychains" className="transition-colors hover:text-ink">
-            {t("keychainsLabel")}
-          </Link>
-          <span aria-hidden className="mx-2">
-            ·
-          </span>
-          {team}
-        </span>
-      </nav>
+      <Breadcrumbs
+        tone="light"
+        className="pt-6"
+        items={[
+          { label: t("categoryTitle"), href: "/accessories" },
+          { label: t("keychainsLabel"), href: "/accessories/keychains" },
+          { label: team },
+        ]}
+      />
 
       <section className="grid items-start gap-10 pt-8 pb-16 wide:grid-cols-2 wide:gap-14">
         <div className="wide:sticky wide:top-24">
-          <div className="grid aspect-square place-items-center bg-tile">
+          <div className="kv-panel grid aspect-square place-items-center overflow-hidden" style={{ background: "linear-gradient(180deg,#f6f7fb,#e9edf5)" }}>
             <Image
               src={accessory.image}
               alt={title}
@@ -112,14 +110,14 @@ export default async function KeychainPage({
               height={900}
               priority
               sizes="(max-width: 900px) 100vw, 50vw"
-              className="h-auto w-[86%]"
+              className="h-auto w-[86%] mix-blend-multiply"
             />
           </div>
         </div>
 
         <div>
-          <span className="mono-eyebrow text-ink-soft">{team}</span>
-          <h1 className="mt-2.5 mb-1.5 text-[28px] leading-tight">{title}</h1>
+          <span className="kv-chip">{team}</span>
+          <h1 className="mt-4 mb-3 text-[clamp(1.7rem,3vw,2.4rem)] leading-tight font-extrabold">{title}</h1>
           <p className="mb-7 max-w-[46ch] text-ink-soft">{t("keychainBody")}</p>
           <AccessoryForm handle={accessory.handle} price={accessory.price} />
         </div>

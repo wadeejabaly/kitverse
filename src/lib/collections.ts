@@ -29,8 +29,8 @@ export const RETRO_SLUG = "retro" as const;
 export type Collection =
   | { type: "kind"; slug: KindSlug; kind: Kind; products: Product[] }
   | { type: "retro"; slug: typeof RETRO_SLUG; products: Product[] }
-  | { type: "league"; slug: string; name: string; nameAr: string; products: Product[] }
-  | { type: "team"; slug: string; name: string; nameAr: string; products: Product[] };
+  | { type: "league"; slug: string; name: string; nameAr: string; nameHe: string; products: Product[] }
+  | { type: "team"; slug: string; name: string; nameAr: string; nameHe: string; products: Product[] };
 
 /**
  * Resolve a slug to a collection, or undefined if it names nothing.
@@ -59,6 +59,7 @@ export function resolveCollection(slug: string): Collection | undefined {
       slug: league.slug,
       name: league.name,
       nameAr: league.nameAr,
+      nameHe: league.nameHe,
       products: byLeague(league.slug),
     };
   }
@@ -70,6 +71,7 @@ export function resolveCollection(slug: string): Collection | undefined {
       slug: team.slug,
       name: team.name,
       nameAr: team.nameAr,
+      nameHe: team.nameHe,
       products: byTeam(team.slug),
     };
   }

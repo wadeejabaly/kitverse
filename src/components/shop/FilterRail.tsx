@@ -23,11 +23,9 @@ export function FilterGroup({
     // The group label sits above its own hairline rather than floating over
     // the options: the rail reads as a set of small indexes, which is what it
     // is, and the eye can find the group boundaries without any boxes.
-    <div id={id} className="scroll-mt-32">
-      <span className="mono-eyebrow mb-3 block border-b border-rule pb-3 text-ink-soft">
-        {label}
-      </span>
-      <div className="flex flex-col gap-2.5">{children}</div>
+    <div id={id} className="scroll-mt-32 border-b border-rule pb-5 last:border-b-0 last:pb-0">
+      <span className="kv-filter-head">{label}</span>
+      <div className="flex flex-col gap-2">{children}</div>
     </div>
   );
 }
@@ -64,24 +62,19 @@ export function FilterCheckbox({
       href={href}
       role="checkbox"
       aria-checked={checked}
-      className={`flex items-center justify-between gap-2.5 text-start text-sm transition-colors ${
-        checked ? "text-ink" : "text-ink-soft hover:text-ink"
+      className={`flex items-center justify-between gap-2.5 rounded-md py-0.5 text-start text-[14px] transition-colors ${
+        checked ? "font-semibold text-ink" : "text-ink-soft hover:text-ink"
       }`}
     >
       <span className="flex min-w-0 items-center gap-2.5">
-        <span
-          aria-hidden
-          className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center border transition-colors ${
-            checked ? "border-ink bg-ink" : "border-rule"
-          }`}
-        >
+        <span aria-hidden className="kv-check" data-on={checked}>
           {checked ? (
             <svg
               viewBox="0 0 10 10"
-              className="h-2 w-2 text-ground"
+              className="h-2.5 w-2.5"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             >
@@ -91,7 +84,7 @@ export function FilterCheckbox({
         </span>
         <span className="truncate">{label}</span>
       </span>
-      <span className="mono-eyebrow latin shrink-0 text-ink-soft">
+      <span className="latin shrink-0 rounded-full bg-chip px-2 py-0.5 text-[11px] font-semibold text-ink-soft">
         <Figure>{count}</Figure>
       </span>
     </Link>

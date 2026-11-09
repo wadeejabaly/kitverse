@@ -13,6 +13,7 @@ export interface CartProductInfo {
   handle: string;
   title: string;
   titleAr: string;
+  titleHe?: string;
   season: string;
   image: string;
 }
@@ -27,6 +28,7 @@ export interface CartAccessoryInfo {
   handle: string;
   team: string;
   teamAr: string;
+  teamHe?: string;
   price: number;
   image: string;
 }
@@ -61,6 +63,10 @@ export function CartView({
   const tProduct = useTranslations("product");
   const tAccessories = useTranslations("accessories");
   const { items, hydrated, remove, updateQty } = useCart();
+  const titleFor = (product: CartProductInfo, lang: string) =>
+    lang === "ar" ? product.titleAr : lang === "he" && product.titleHe ? product.titleHe : product.title;
+  const teamName = (accessory: CartAccessoryInfo) =>
+    locale === "ar" ? accessory.teamAr : locale === "he" && accessory.teamHe ? accessory.teamHe : accessory.team;
 
   const byHandle = new Map(products.map((product) => [product.handle, product]));
   const byAccessoryHandle = new Map(accessories.map((accessory) => [accessory.handle, accessory]));
@@ -108,46 +114,55 @@ export function CartView({
 
   if (lines.length === 0 && accessoryLines.length === 0) {
     return (
-      <div className="py-16">
-        <h2 className="mb-2.5 text-xl">{t("emptyTitle")}</h2>
-        <p className="mb-7 max-w-[46ch] text-ink-soft">{t("emptyBody")}</p>
-        <Link href="/shop" className="btn">
-          {tCommon("continueShopping")}
-        </Link>
+      <div className="py-12 wide:py-16">
+        <div className="kv-panel mx-auto max-w-xl px-6 py-12 text-center">
+          <span className="kv-icon-tile mx-auto mb-5 !size-14 !rounded-full">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <path d="M3.2 5.5h9.6l-.8 8.3H4z" strokeLinejoin="round" />
+              <path d="M6 7.2V4.8a2 2 0 0 1 4 0v2.4" strokeLinecap="round" />
+            </svg>
+          </span>
+          <h2 className="kv-section-title mb-2.5">{t("emptyTitle")}</h2>
+          <p className="mx-auto mb-7 max-w-[46ch] text-ink-soft">{t("emptyBody")}</p>
+          <Link href="/shop" className="btn">
+            {tCommon("continueShopping")}
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <>
-      <section className="pt-8">
+    <div className="grid items-start gap-6 py-8 wide:grid-cols-[1fr_360px] wide:gap-10 wide:py-12">
+    <div className="kv-panel px-4 sm:px-6">
+      <section>
         {lines.map(({ item, product, priced, key }) => (
           <div
             key={key}
-            className="grid grid-cols-[110px_1fr] items-start gap-5 border-b border-rule py-6 wide:grid-cols-[110px_1fr_auto]"
+            className="grid grid-cols-[88px_1fr] items-start gap-4 border-b border-rule py-5 last:border-b-0 sm:grid-cols-[110px_1fr_auto] sm:gap-5"
           >
             <Link
               href={`/product/${product.handle}`}
-              className="grid aspect-square place-items-center bg-tile"
+              className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]"
             >
               <Image
                 src={product.image}
-                alt={locale === "ar" ? product.titleAr : product.title}
+                alt={titleFor(product, locale)}
                 width={220}
                 height={220}
                 sizes="110px"
-                className="h-auto w-[86%]"
+                className="h-auto w-[86%] mix-blend-multiply"
               />
             </Link>
 
             <div>
-              <h2 className="mb-1 text-[15px] font-normal">
-                <Link href={`/product/${product.handle}`}>
-                  {locale === "ar" ? product.titleAr : product.title}
+              <h2 className="mb-1.5 text-[15px] leading-snug font-bold">
+                <Link href={`/product/${product.handle}`} className="hover:text-[#1f5cff]">
+                  {titleFor(product, locale)}
                 </Link>
               </h2>
 
-              <dl className="text-[13px] text-ink-soft">
+              <dl className="flex flex-wrap gap-1.5 text-[12.5px] text-ink-soft">
                 <Prop label={t("propSize")}>
                   <span className="latin tabular">{item.size}</span>
                 </Prop>
@@ -176,7 +191,7 @@ export function CartView({
               </dl>
 
               <div className="mt-3 flex items-center gap-4">
-                <div className="flex items-center border border-rule">
+                <div className="flex items-center rounded-[8px] border-[1.5px] border-rule bg-tile" dir="ltr">
                   <StepperButton
                     label={t("decrease")}
                     disabled={item.qty <= 1}
@@ -198,14 +213,14 @@ export function CartView({
                 <button
                   type="button"
                   onClick={() => remove(key)}
-                  className="text-[13px] text-ink-soft underline-offset-4 transition-colors hover:text-ink hover:underline"
+                  className="inline-flex items-center gap-1.5 text-[13px] text-ink-soft transition-colors hover:text-[#c0392b]"
                 >
                   {tCommon("remove")}
                 </button>
               </div>
             </div>
 
-            <span className="col-span-2 text-accent wide:col-span-1 wide:text-end">
+            <span className="col-span-2 text-[16px] font-extrabold text-ink sm:col-span-1 sm:text-end">
               <Price value={priced.lineTotal} />
             </span>
           </div>
@@ -217,39 +232,39 @@ export function CartView({
           those, so the <dl> is skipped entirely rather than shown empty. */}
       {accessoryLines.length > 0 ? (
         <section className="pt-2">
-          <h2 className="mono-eyebrow mb-1 pt-6 text-ink-soft">
+          <h2 className="kv-filter-head mb-0 border-t border-rule pt-5">
             {tAccessories("eyebrow")}
           </h2>
           {accessoryLines.map(({ item, accessory, priced, key }) => (
             <div
               key={key}
-              className="grid grid-cols-[110px_1fr] items-start gap-5 border-b border-rule py-6 wide:grid-cols-[110px_1fr_auto]"
+              className="grid grid-cols-[88px_1fr] items-start gap-4 border-b border-rule py-5 last:border-b-0 sm:grid-cols-[110px_1fr_auto] sm:gap-5"
             >
               <Link
                 href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`}
-                className="grid aspect-square place-items-center bg-tile"
+                className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[linear-gradient(180deg,#f3f5fa,#e9edf5)]"
               >
                 <Image
                   src={accessory.image}
-                  alt={locale === "ar" ? accessory.teamAr : accessory.team}
+                  alt={teamName(accessory)}
                   width={220}
                   height={220}
                   sizes="110px"
-                  className="h-auto w-[86%]"
+                  className="h-auto w-[86%] mix-blend-multiply"
                 />
               </Link>
 
               <div>
-                <h3 className="mb-1 text-[15px] font-normal">
+                <h3 className="mb-1 text-[15px] font-bold">
                   <Link href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`}>
                     {tAccessories("keychainTitle", {
-                      team: locale === "ar" ? accessory.teamAr : accessory.team,
+                      team: teamName(accessory),
                     })}
                   </Link>
                 </h3>
 
                 <div className="mt-3 flex items-center gap-4">
-                  <div className="flex items-center border border-rule">
+                  <div className="flex items-center rounded-[8px] border-[1.5px] border-rule bg-tile" dir="ltr">
                     <StepperButton
                       label={t("decrease")}
                       disabled={item.qty <= 1}
@@ -271,14 +286,14 @@ export function CartView({
                   <button
                     type="button"
                     onClick={() => remove(key)}
-                    className="text-[13px] text-ink-soft underline-offset-4 transition-colors hover:text-ink hover:underline"
+                    className="inline-flex items-center gap-1.5 text-[13px] text-ink-soft transition-colors hover:text-[#c0392b]"
                   >
                     {tCommon("remove")}
                   </button>
                 </div>
               </div>
 
-              <span className="col-span-2 text-accent wide:col-span-1 wide:text-end">
+              <span className="col-span-2 text-[16px] font-extrabold text-ink sm:col-span-1 sm:text-end">
                 <Price value={priced.lineTotal} />
               </span>
             </div>
@@ -286,40 +301,48 @@ export function CartView({
         </section>
       ) : null}
 
-      {/* Totals sit at the inline end — margin-inline-start:auto in the
-          mockup, which mirrors correctly in Arabic without a second rule. */}
-      <div className="flex max-w-[340px] flex-col gap-2.5 pt-6 pb-10 ms-auto">
+    </div>
+
+      {/* The summary card (redesign phase 2): sticky beside the lines on a
+          desktop, under them on a phone. Same numbers as before — the
+          subtotal from the pricing engine; delivery depends on the area,
+          which is chosen at checkout. */}
+      <aside className="kv-panel flex flex-col gap-3 p-6 wide:sticky wide:top-28">
+        <h2 className="kv-filter-head mb-1">{t("summaryTitle")}</h2>
         <Row label={t("shipping")}>
           <span className="text-ink-soft">{t("shippingTbd")}</span>
         </Row>
-        <p className="text-xs text-ink-soft">{t("shippingNote")}</p>
-        <div className="flex justify-between border-t border-rule pt-3 text-[17px]">
-          <span>{t("subtotal")}</span>
-          <Price value={totals.subtotal} />
+        <p className="text-[12.5px] text-ink-soft">{t("shippingNote")}</p>
+        <div className="flex items-baseline justify-between border-t border-rule pt-4">
+          <span className="font-bold">{t("subtotal")}</span>
+          <Price value={totals.subtotal} className="text-[1.6rem] leading-none font-extrabold" />
         </div>
 
-        {/* /checkout arrives in the next wave; the link is live now so the
-            path through the store is complete and testable. */}
-        <Link href="/checkout" className="btn mt-2.5">
+        <Link href="/checkout" className="btn mt-2 w-full">
           {tCommon("checkout")}
+          <span aria-hidden className="btn-flood-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
         </Link>
         <Link
           href="/shop"
-          className="text-center text-[13px] text-ink-soft transition-colors hover:text-ink"
+          className="text-center text-[13px] font-semibold text-ink-soft transition-colors hover:text-ink"
         >
           {tCommon("continueShopping")}
         </Link>
-        <p className="mt-1 text-xs text-ink-soft">{t("deliveryNote")}</p>
-      </div>
-    </>
+        <p className="mt-1 border-t border-rule pt-3 text-[12.5px] text-ink-soft">{t("deliveryNote")}</p>
+      </aside>
+    </div>
   );
 }
 
 function Prop({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex gap-1.5">
+    <div className="flex gap-1 rounded-full bg-chip px-2.5 py-0.5">
       <dt>{label}:</dt>
-      <dd>{children}</dd>
+      <dd className="font-semibold text-ink">{children}</dd>
     </div>
   );
 }
@@ -350,7 +373,7 @@ function StepperButton({
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className="h-8 w-8 text-ink-soft transition-colors hover:text-ink disabled:opacity-40"
+      className="grid h-9 w-9 place-items-center text-ink transition-colors hover:text-[#1f5cff] disabled:opacity-30"
     >
       {children}
     </button>

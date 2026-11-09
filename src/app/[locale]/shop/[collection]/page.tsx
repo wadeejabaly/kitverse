@@ -3,17 +3,20 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/config";
-import { getTeams } from "@/data/catalog";
+import { getTeams, localName } from "@/data/catalog";
 import { seasonYear } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import type { Product } from "@/data/types";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { TeamFilterList } from "@/components/shop/TeamFilterList";
 import { FilterGroup, FilterCheckbox } from "@/components/shop/FilterRail";
+import { MobileFilters } from "@/components/shop/MobileFilters";
+import { SortSelect } from "@/components/shop/SortSelect";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { Season } from "@/components/shared/Money";
 import { collectionParams, resolveCollection, type Collection } from "@/lib/collections";
-import { allParams, collectionHref, shopHref, toggled } from "@/lib/shop-href";
+import { allParams, collectionHref, parseSort, shopHref, toggled } from "@/lib/shop-href";
+import { sortProducts } from "@/lib/sort-products";
 import { alternatesFor } from "@/lib/site";
 
 /**
@@ -44,7 +47,19 @@ export function generateStaticParams() {
 function collectionName(collection: Collection, locale: string, t: (key: string) => string) {
   if (collection.type === "kind") return t(`kinds.${collection.kind}`);
   if (collection.type === "retro") return t("kinds.retro");
-  return locale === "ar" ? collection.nameAr : collection.name;
+  return localName(collection, locale);
+}
+
+/** The generated photo for a collection's page hero (public/home/cat-*.webp,
+ *  built from real catalog photos — see category-images.ts). A team page
+ *  gets the plain stadium band: there is no photo of every club. */
+function collectionArt(collection: Collection): string | undefined {
+  if (collection.type === "retro") return "/home/cat-retro.webp";
+  if (collection.type === "kind") {
+    return collection.kind === "national" ? "/home/cat-national.webp" : "/home/cat-clubs.webp";
+  }
+  if (collection.type === "league") return "/home/cat-clubs.webp";
+  return undefined;
 }
 
 export async function generateMetadata({
@@ -104,7 +119,11 @@ export default async function CollectionPage({
     teams.length === 0 || teams.includes(slugify(product.team));
   const matchesSeason = (product: Product) => seasons.length === 0 || seasons.includes(product.season);
 
-  const results = all.filter((product) => matchesTeam(product) && matchesSeason(product));
+  const sort = parseSort(query.sort);
+  const results = sortProducts(
+    all.filter((product) => matchesTeam(product) && matchesSeason(product)),
+    sort,
+  );
 
   // Cross-filtered facet sets: everything except the facet being counted.
   const forTeamFacet = all.filter((p) => matchesSeason(p));
@@ -114,7 +133,7 @@ export default async function CollectionPage({
     ? getTeams()
         .map((entry) => ({
           slug: entry.slug,
-          name: locale === "ar" ? entry.nameAr : entry.name,
+          name: localName(entry, locale),
           count: forTeamFacet.filter((p) => slugify(p.team) === entry.slug).length,
         }))
         .filter((option) => option.count > 0 || teams.includes(option.slug))
@@ -132,20 +151,25 @@ export default async function CollectionPage({
 
   const hasFilter = teams.length > 0 || seasons.length > 0;
   const hasAnyFilterableFacet = (showTeamFilter && teamOptions.length > 0) || seasonOptions.length > 1;
+  const crumbs = [{ label: t("eyebrow"), href: "/shop" }, { label: name }];
 
   return (
     <Wrap>
-      <PageLede eyebrow={eyebrow} title={name} intro={t("intro")} />
+      <PageLede eyebrow={eyebrow} title={name} intro={t("intro")} crumbs={crumbs} art={collectionArt(collection)}>
+        <span className="kv-pagehero-stat">
+          <strong className="latin">{all.length}</strong> {t("shirtsLabel")}
+        </span>
+      </PageLede>
 
       <section
         className={
           hasAnyFilterableFacet
-            ? "grid gap-7 pt-8 pb-14 wide:grid-cols-[220px_1fr] wide:gap-14"
-            : "pt-8 pb-14"
+            ? "grid gap-6 pt-8 pb-14 wide:grid-cols-[250px_1fr] wide:gap-10 wide:pt-10"
+            : "pt-8 pb-14 wide:pt-10"
         }
       >
         {hasAnyFilterableFacet ? (
-          <aside className="flex flex-col gap-9 self-start wide:sticky wide:top-28">
+          <MobileFilters active={teams.length + seasons.length}>
             {seasonOptions.length > 1 ? (
               <FilterGroup label={t("year")}>
                 {seasonOptions.map((option) => (
@@ -154,6 +178,7 @@ export default async function CollectionPage({
                     href={collectionHref(slug, {
                       team: teams,
                       season: toggled(seasons, option.value),
+                      sort,
                     })}
                     checked={seasons.includes(option.value)}
                     label={<Season value={option.value} />}
@@ -169,26 +194,23 @@ export default async function CollectionPage({
                   teams={teamOptions}
                   selected={teams}
                   basePath={`/shop/${slug}`}
-                  otherParams={{ season: seasons }}
+                  otherParams={{ season: seasons, sort: sort === "featured" ? [] : [sort] }}
                 />
               </FilterGroup>
             ) : null}
 
             {hasFilter ? (
-              <Link
-                href={`/shop/${slug}`}
-                className="text-start text-sm text-ink-soft underline-offset-4 transition-colors hover:text-ink hover:underline"
-              >
+              <Link href={collectionHref(slug, { sort })} className="btn btn-quiet w-full">
                 {t("clear")}
               </Link>
             ) : null}
-          </aside>
+          </MobileFilters>
         ) : null}
 
-        <div>
-          <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-rule pb-4">
+        <div className="min-w-0">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             {/* Strings, not numbers — see the identical note on /shop. */}
-            <span className="mono-eyebrow text-ink-soft">
+            <span className="text-[14px] font-semibold text-ink">
               {hasFilter
                 ? t("showing", { count: String(results.length), total: String(all.length) })
                 : t("count", {
@@ -196,22 +218,25 @@ export default async function CollectionPage({
                     countText: String(all.length),
                   })}
             </span>
-            <Link
-              href={shopHref({})}
-              className="mono-eyebrow text-ink-soft transition-colors hover:text-ink"
-            >
-              {t("eyebrow")}
-            </Link>
+            {all.length > 1 ? <SortSelect value={sort} /> : null}
           </div>
 
           {results.length > 0 ? (
-            <ProductGrid products={results} locale={locale} priorityCount={4} reveal />
+            <ProductGrid
+              products={results}
+              locale={locale}
+              columns={hasAnyFilterableFacet ? 3 : 4}
+              priorityCount={4}
+              reveal
+            />
           ) : (
-            <div className="py-14">
-              <h2 className="mb-2.5 text-xl">{t("emptyTitle")}</h2>
-              <p className="mb-6 max-w-[46ch] text-ink-soft">{t("emptyBody")}</p>
-              <Link href={`/shop/${slug}`} className="btn btn-quiet">
-                {t("clear")}
+            <div className="kv-panel px-6 py-14 text-center">
+              <h2 className="kv-section-title mb-2.5">{all.length === 0 ? t("comingSoonTitle") : t("emptyTitle")}</h2>
+              <p className="mx-auto mb-6 max-w-[46ch] text-ink-soft">
+                {all.length === 0 ? t("comingSoonBody") : t("emptyBody")}
+              </p>
+              <Link href={all.length === 0 ? shopHref({}) : `/shop/${slug}`} className="btn">
+                {all.length === 0 ? t("browseAll") : t("clear")}
               </Link>
             </div>
           )}

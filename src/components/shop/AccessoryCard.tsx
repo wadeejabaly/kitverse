@@ -25,12 +25,12 @@ export function AccessoryCard({
   priority?: boolean;
 }) {
   const t = useTranslations("accessories");
-  const title = locale === "ar" ? accessory.teamAr : accessory.team;
+  const title = locale === "ar" ? accessory.teamAr : locale === "he" && accessory.teamHe ? accessory.teamHe : accessory.team;
   const label = t("keychainTitle", { team: title });
 
   return (
-    <Link href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`} className="group block text-start">
-      <div className="mb-3.5 grid aspect-square place-items-center overflow-hidden bg-tile ring-1 ring-inset ring-transparent transition-colors duration-300 ease-out group-hover:ring-electric">
+    <Link href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`} className="kv-pcard group text-start">
+      <div className="kv-pcard-media">
         <Image
           src={accessory.image}
           alt={label}
@@ -38,15 +38,15 @@ export function AccessoryCard({
           height={900}
           priority={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
-          className="h-auto w-[86%] transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+          className="h-auto w-[86%] mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-[1.05]"
         />
       </div>
-      <h3 className="mb-1 text-sm font-normal">{label}</h3>
-      <div className="flex items-baseline justify-between gap-2.5">
-        <span className="mono-eyebrow text-ink-soft">{title}</span>
-        <span className="flex items-baseline gap-2 text-sm text-accent transition-colors duration-300 ease-out group-hover:text-electric">
-          <Price value={accessory.price} />
-        </span>
+      <div className="kv-pcard-body">
+        <span className="kv-pcard-team">{title}</span>
+        <h3 className="kv-pcard-title">{label}</h3>
+        <div className="kv-pcard-foot">
+          <Price value={accessory.price} className="kv-pcard-price" />
+        </div>
       </div>
     </Link>
   );

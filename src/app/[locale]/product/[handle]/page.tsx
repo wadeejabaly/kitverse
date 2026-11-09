@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/config";
-import { getLeagues, getProduct, getVisibleProducts } from "@/data/catalog";
-import { priceFor } from "@/data/pricing";
+import { getLeagues, getProduct, getVisibleProducts, localName } from "@/data/catalog";
+import { isRetroSeason, priceFor } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductForm } from "@/components/product/ProductForm";
@@ -12,9 +12,11 @@ import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductSleeveProvider } from "@/components/product/ProductSleeveContext";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { Season } from "@/components/shared/Money";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { SectionHead, Wrap } from "@/components/shared/PageLede";
 import { teamFor, titleFor } from "@/lib/product";
 import { alternatesFor, localeUrl } from "@/lib/site";
+import { enabledPaymentMethods } from "@/lib/payment-methods";
 
 /**
  * Product detail page.
@@ -74,7 +76,7 @@ export default async function ProductPage({
   const team = teamFor(product, locale);
   const teamSlug = slugify(product.team);
   const league = getLeagues().find((entry) => entry.slug === product.league);
-  const leagueName = league ? (locale === "ar" ? league.nameAr : league.name) : null;
+  const leagueName = league ? localName(league, locale) : null;
 
   const related = getVisibleProducts()
     .filter((entry) => entry.handle !== product.handle && slugify(entry.team) === teamSlug)
@@ -107,32 +109,16 @@ export default async function ProductPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label={t("breadcrumbShop")} className="pt-6">
-        <span className="mono-eyebrow text-ink-soft">
-          <Link href="/shop" className="transition-colors hover:text-ink">
-            {t("breadcrumbShop")}
-          </Link>
-          {leagueName ? (
-            <>
-              <span aria-hidden className="mx-2">
-                ·
-              </span>
-              <Link
-                href={`/shop/${product.league}`}
-                className="transition-colors hover:text-ink"
-              >
-                {leagueName}
-              </Link>
-            </>
-          ) : null}
-          <span aria-hidden className="mx-2">
-            ·
-          </span>
-          <Link href={`/shop/${teamSlug}`} className="transition-colors hover:text-ink">
-            {team}
-          </Link>
-        </span>
-      </nav>
+      <Breadcrumbs
+        tone="light"
+        className="pt-6"
+        items={[
+          { label: t("breadcrumbShop"), href: "/shop" },
+          ...(leagueName && product.league ? [{ label: leagueName, href: `/shop/${product.league}` }] : []),
+          { label: team, href: `/shop/${teamSlug}` },
+          { label: title },
+        ]}
+      />
 
       {/* Wraps both columns in one shared Sleeve choice (owner decision
           2026-10-26): picking "Long sleeve" in <ProductForm> can swap
@@ -140,7 +126,7 @@ export default async function ProductPage({
           columns below with no other parent in common — see
           ProductSleeveContext.tsx. */}
       <ProductSleeveProvider>
-        <section className="grid items-start gap-10 pt-8 pb-10 wide:grid-cols-2 wide:gap-14">
+        <section className="grid items-start gap-8 pt-6 pb-14 wide:grid-cols-[1.08fr_1fr] wide:gap-14">
           {/* The tile is sticky so the buy box can scroll past it on tall
               screens. Most products have one photo today; a product with more
               (see Product.images) gets a thumbnail row under the tile — see
@@ -151,7 +137,7 @@ export default async function ProductPage({
               the one place where motion costs more than it gives. The details
               column opposite carries the entrance instead, 90ms behind the
               fold — enough to read as "the page settled", not as a curtain. */}
-          <div className="wide:sticky wide:top-24">
+          <div className="min-w-0 wide:sticky wide:top-24">
             <ProductGallery
               images={[product.image, ...(product.images ?? [])]}
               imagesLongSleeve={product.imagesLongSleeve}
@@ -160,14 +146,19 @@ export default async function ProductPage({
           </div>
 
           <Reveal delay={90}>
-            <span className="mono-eyebrow text-ink-soft">
-              {team}
-              <span aria-hidden className="mx-2">
-                ·
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="kv-chip">{team}</span>
+              <span className="kv-chip latin">
+                <Season value={product.season} />
               </span>
-              <Season value={product.season} />
-            </span>
-            <h1 className="mt-2.5 mb-1.5 text-[28px] leading-tight">{title}</h1>
+              <span className="kv-chip">{t(`kit.${product.kit}`)}</span>
+              {isRetroSeason(product.season) ? (
+                <span className="kv-chip">{t("retroBadge")}</span>
+              ) : null}
+            </div>
+            <h1 className="mt-4 mb-4 text-[clamp(1.7rem,3vw,2.4rem)] leading-tight font-extrabold tracking-[-0.02em]">
+              {title}
+            </h1>
 
             <ProductForm
               handle={product.handle}
@@ -176,22 +167,73 @@ export default async function ProductPage({
               team={product.team}
               kind={product.kind}
               leagueName={leagueName}
+              image={product.image}
+              title={title}
             />
 
-            <div className="mt-8 border-t border-rule">
-              <Accordion summary={t("accordionShipping")} open>
-                {t("accordionShippingBody")}
-              </Accordion>
-              <Accordion summary={t("accordionReturns")}>
-                {t("accordionReturnsBody")}
+            {/* Service strip: facts the shop already states elsewhere
+                (delivery window from the shipping page, cash on delivery
+                and online payment from checkout). */}
+            <ul className="mt-7 grid gap-3 rounded-[14px] border border-rule bg-tile p-4 text-[13.5px] sm:grid-cols-2">
+              <li className="flex items-center gap-3">
+                <span className="kv-icon-tile !size-9 !rounded-[10px]">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" strokeLinejoin="round" /><circle cx="7" cy="17.5" r="1.5" /><circle cx="17" cy="17.5" r="1.5" /></svg>
+                </span>
+                {t("serviceDelivery")}
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="kv-icon-tile !size-9 !rounded-[10px]">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="6" width="18" height="12" rx="2" /><path d="M3 10h18" /></svg>
+                </span>
+                {(() => {
+                  const pay = enabledPaymentMethods();
+                  const list = [pay.bit ? "Bit" : null, pay.paypal ? "PayPal" : null, pay.cash ? t("payCash") : null]
+                    .filter(Boolean)
+                    .join(" · ");
+                  return list ? t("servicePayment", { methods: list }) : t("servicePaymentGeneric");
+                })()}
+              </li>
+            </ul>
+
+            <div className="mt-6 border-t border-rule">
+              <Accordion summary={t("accordionDetails")} open>
+                <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5">
+                  <dt>{t("detailTeam")}</dt>
+                  <dd className="text-ink">{team}</dd>
+                  {leagueName ? (
+                    <>
+                      <dt>{t("detailLeague")}</dt>
+                      <dd className="text-ink">{leagueName}</dd>
+                    </>
+                  ) : null}
+                  <dt>{t("detailSeason")}</dt>
+                  <dd className="text-ink">
+                    <Season value={product.season} />
+                  </dd>
+                  <dt>{t("detailKit")}</dt>
+                  <dd className="text-ink">{t(`kit.${product.kit}`)}</dd>
+                  <dt>{t("detailVersions")}</dt>
+                  <dd className="text-ink">
+                    {isRetroSeason(product.season) ? t("retroBadge") : `${t("versionFan")} · ${t("versionPlayer")}`}
+                  </dd>
+                </dl>
               </Accordion>
               <Accordion summary={t("accordionSizing")}>
                 {t("accordionSizingBody")}{" "}
-                <Link
-                  href="/size-guide"
-                  className="text-ink underline underline-offset-4"
-                >
+                <Link href="/size-guide" className="font-semibold text-[#1f5cff] underline-offset-4 hover:underline">
                   {t("accordionSizingLink")}
+                </Link>
+              </Accordion>
+              <Accordion summary={t("accordionShipping")}>
+                {t("accordionShippingBody")}{" "}
+                <Link href="/shipping" className="font-semibold text-[#1f5cff] underline-offset-4 hover:underline">
+                  {t("readMore")}
+                </Link>
+              </Accordion>
+              <Accordion summary={t("accordionReturns")}>
+                {t("accordionReturnsBody")}{" "}
+                <Link href="/returns" className="font-semibold text-[#1f5cff] underline-offset-4 hover:underline">
+                  {t("readMore")}
                 </Link>
               </Accordion>
             </div>
@@ -246,21 +288,15 @@ function Accordion({
   children: React.ReactNode;
 }) {
   return (
-    <details open={open} className="group border-b border-rule">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-sm text-ink-soft transition-colors duration-200 group-open:text-ink hover:text-ink [&::-webkit-details-marker]:hidden">
+    <details open={open} className="kv-acc">
+      <summary>
         {summary}
-        {/* Grid-cell stacking rather than absolute offsets: the two strokes
-            share one centred cell, so there is no physical left/top anywhere
-            and the glyph is identical in both directions. */}
-        <span
-          aria-hidden
-          className="grid size-3 shrink-0 place-items-center text-ink-soft"
-        >
-          <span className="col-start-1 row-start-1 h-px w-3 bg-current" />
-          <span className="col-start-1 row-start-1 h-3 w-px bg-current transition-transform duration-300 ease-out group-open:rotate-90" />
+        <span aria-hidden className="kv-acc-icon">
+          <span />
+          <span />
         </span>
       </summary>
-      <div className="max-w-[52ch] pb-5 text-sm text-ink-soft">{children}</div>
+      <div className="kv-acc-body max-w-[60ch]">{children}</div>
     </details>
   );
 }

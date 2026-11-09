@@ -41,7 +41,13 @@ export default async function KeychainsPage({
 
   return (
     <Wrap>
-      <PageLede eyebrow={t("eyebrow")} title={t("keychainsLabel")} intro={t("keychainsIntro")} />
+      <PageLede
+        eyebrow={t("eyebrow")}
+        title={t("keychainsLabel")}
+        intro={t("keychainsIntro")}
+        crumbs={[{ label: t("categoryTitle"), href: "/accessories" }, { label: t("keychainsLabel") }]}
+        art="/home/cat-accessories.webp"
+      />
 
       <section className="pt-8 pb-[clamp(72px,10vw,120px)]">
         <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-rule pb-4">

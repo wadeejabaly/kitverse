@@ -10,16 +10,17 @@ export default async function LocaleNotFound() {
   const t = await getTranslations("notFound");
 
   return (
-    <section className="mx-auto flex w-full max-w-page grow flex-col justify-center gap-6 px-6 py-24">
-      <p className="mono-eyebrow tabular text-ink-soft">404</p>
-      <h1 className="text-3xl leading-tight sm:text-4xl">{t("title")}</h1>
-      <p className="max-w-xl leading-relaxed text-ink-soft">{t("body")}</p>
-      <Link
-        href="/"
-        className="self-start border border-rule px-7 py-2.5 text-sm transition-colors hover:border-ink"
-      >
-        {t("backHome")}
-      </Link>
+    // Redesign phase 2: the stadium night, a big gold 404, the site button.
+    <section className="kv-pagehero flex grow items-center">
+      <div aria-hidden className="kv-pagehero-shade" />
+      <div className="relative mx-auto flex w-full max-w-page flex-col gap-5 px-6 py-24">
+        <p className="latin text-[clamp(4rem,12vw,8rem)] leading-none font-extrabold text-[#c9a55c]">404</p>
+        <h1 className="kv-pagehero-title">{t("title")}</h1>
+        <p className="kv-pagehero-intro">{t("body")}</p>
+        <Link href="/" className="btn mt-2 self-start">
+          {t("backHome")}
+        </Link>
+      </div>
     </section>
   );
 }
