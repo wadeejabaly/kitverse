@@ -29,6 +29,20 @@ function fromOurSite(req: NextRequest): boolean {
   return ours.includes(host) && !/bot|crawl|spider|preview|headless/i.test(req.headers.get("user-agent") ?? "");
 }
 
+/** Vercel's edge attaches these to every request, resolved from the request IP - which we never
+ *  see or store, only this coarse geo (owner decision 2026-11-10, see the location migration).
+ *  Absent in local dev (no edge network in front of `next dev`), so every field is nullable. */
+function geoFromHeaders(req: NextRequest): { country: string | null; countryRegion: string | null; city: string | null } {
+  const country = req.headers.get("x-vercel-ip-country");
+  const countryRegion = req.headers.get("x-vercel-ip-country-region");
+  const rawCity = req.headers.get("x-vercel-ip-city");
+  let city: string | null = null;
+  if (rawCity) {
+    try { city = decodeURIComponent(rawCity); } catch { city = rawCity; }
+  }
+  return { country, countryRegion, city };
+}
+
 export async function POST(req: NextRequest) {
   if (!fromOurSite(req)) return NextResponse.json({ ok: true }); // quietly ignored
   const raw = await req.text();
@@ -43,6 +57,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ ok: false }, { status: 400 });
 
   const { type, sessionId, path, productHandle, locale, referrerHost } = parsed.data;
+  const geo = geoFromHeaders(req);
   try {
     await db().from("site_events").insert({
       type,
@@ -51,6 +66,9 @@ export async function POST(req: NextRequest) {
       product_handle: productHandle ?? null,
       locale: locale ?? null,
       referrer_host: referrerHost ?? null,
+      country: geo.country,
+      country_region: geo.countryRegion,
+      city: geo.city,
     });
   } catch {
     // Never let a logging failure become the shopper's problem.
