@@ -97,7 +97,7 @@ const MAX_DISCOUNT_CODES = 5;
  *  One that checks out but doesn't yet meet its own minimum order stays in
  *  this list rather than being dropped, so it kicks in on its own the
  *  moment the cart grows enough — see discountQualifies below. */
-type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean };
+type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean };
 
 /** What the discount-code input is doing right now. */
 type DiscountCheck =
@@ -156,6 +156,8 @@ export function CheckoutView({
     "form" | "paying" | "redirecting" | "placing" | "done"
   >("form");
   const [errorCode, setErrorCode] = useState<CheckoutErrorCode | null>(null);
+  // Why a discount code was refused when the order was sent (e.g. "first_order_only").
+  const [errorReason, setErrorReason] = useState<string | null>(null);
   // The gift-box add-on (owner decision 2026-10-23): a per-ORDER quantity,
   // not a per-shirt flag — 0 means no box at all.
   const [giftBoxQty, setGiftBoxQty] = useState(0);
@@ -237,13 +239,14 @@ export function CheckoutView({
         body: JSON.stringify({ code }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown }
+        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown }
         | null;
       if (data?.ok && (data.kind === "percent" || data.kind === "fixed") && typeof data.value === "number") {
         const next: AppliedDiscount = {
           code: upper, kind: data.kind, value: data.value,
           minOrder: typeof data.minOrder === "number" ? data.minOrder : 0,
           stackable: data.stackable === true,
+          firstOrderOnly: data.firstOrderOnly === true,
         };
         // Same rule the server enforces (src/lib/discounts.ts
         // codesCanCombine): more than one code only works when EVERY one of
@@ -426,7 +429,7 @@ export function CheckoutView({
     setReturnNotice(null);
     setPhase("placing");
 
-    type CashResponse = { reference?: unknown; token?: unknown; code?: unknown } | null;
+    type CashResponse = { reference?: unknown; token?: unknown; code?: unknown; reason?: unknown } | null;
     let payload: CashResponse = null;
     try {
       const response = await fetch("/api/checkout/cash/start", {
@@ -458,6 +461,7 @@ export function CheckoutView({
     // now) would otherwise keep being resent on every retry — clear them so
     // "Send order" can actually succeed next time.
     if (code === "invalid_discount_code") clearDiscountCodes();
+    setErrorReason(typeof payload?.reason === "string" ? payload.reason : null);
     setErrorCode(code);
   }
 
@@ -474,7 +478,7 @@ export function CheckoutView({
     setReturnNotice(null);
     setPhase("placing");
 
-    type StartResponse = { approveUrl?: unknown; redirectUrl?: unknown; code?: unknown } | null;
+    type StartResponse = { approveUrl?: unknown; redirectUrl?: unknown; code?: unknown; reason?: unknown } | null;
     let payload: StartResponse = null;
     try {
       const response = await fetch(`/api/checkout/${path}/start`, {
@@ -496,6 +500,7 @@ export function CheckoutView({
     setPhase("form");
     const code = isErrorCode(payload?.code) ? payload.code : "server_error";
     if (code === "invalid_discount_code") clearDiscountCodes();
+    setErrorReason(typeof payload?.reason === "string" ? payload.reason : null);
     setErrorCode(code);
   }
 
@@ -787,7 +792,10 @@ export function CheckoutView({
             <ul className="mb-2.5 flex flex-col gap-1.5">
               {appliedDiscounts.map((d) => (
                 <li key={d.code} className="flex items-center justify-between gap-3 text-sm">
-                  <span dir="ltr" className="latin font-medium">{d.code}</span>
+                  <span className="flex flex-col">
+                    <span dir="ltr" className="latin font-medium">{d.code}</span>
+                    {d.firstOrderOnly ? <span className="text-xs text-ink-soft">{t("discountFirstOrderOnly")}</span> : null}
+                  </span>
                   <button type="button" className="text-xs text-ink-soft underline underline-offset-4" onClick={() => removeDiscountCode(d.code)}>
                     {t("discountRemove")}
                   </button>
@@ -951,7 +959,7 @@ export function CheckoutView({
           )}
 
           <p aria-live="polite" className="mt-3 min-h-6 text-sm font-semibold text-[#c0392b]">
-            {errorCode ? <ErrorMessage code={errorCode} /> : null}
+            {errorCode ? <ErrorMessage code={errorCode} reason={errorReason} /> : null}
           </p>
 
           {/* The cancellation right lives in the terms; it has to be reachable
@@ -971,8 +979,9 @@ export function CheckoutView({
   );
 }
 
-function ErrorMessage({ code }: { code: CheckoutErrorCode }) {
+function ErrorMessage({ code, reason }: { code: CheckoutErrorCode; reason?: string | null }) {
   const t = useTranslations("checkout");
+  if (code === "invalid_discount_code" && reason === "first_order_only") return <>{t("errorFirstOrderOnly")}</>;
   switch (code) {
     case "cart_empty":
       return <>{t("errorCartEmpty")}</>;

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   const r = await createPendingOnlineOrder(parsed.data, "paypal");
   if (!r.ok) {
     if (r.code === "server_error") console.error("paypal order (prepare) failed", r.detail);
-    return NextResponse.json<CheckoutErrorBody>({ code: r.code }, { status: r.code === "server_error" ? 500 : 400 });
+    return NextResponse.json<CheckoutErrorBody>({ code: r.code, ...(r.code === "invalid_discount_code" && r.detail ? { reason: r.detail } : {}) }, { status: r.code === "server_error" ? 500 : 400 });
   }
 
   const site = env().NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");

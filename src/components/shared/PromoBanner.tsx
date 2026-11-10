@@ -1,35 +1,54 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import priceList from "@/data/price-list.json";
+import promo from "@/data/promo.json";
 
 /**
- * Site-wide strip for the "3 player shirts for 300" bundle (owner request
- * 2026-11-04: "create code 3FOR299 and put it instantly when they buy ...
- * put a banner of the code use 3for299 to get the promotion"). There is no
- * code to type - src/lib/pricing/engine.ts's `bundle_3` offer applies the
- * moment 3+ eligible shirts are in the cart, same as the price list already
- * described before today ("3FOR299" is just this deal's name for the ad/
- * banner, matching the Meta campaign). Add-ons (name/number, patches, size)
- * are never discounted - the engine only ever lowers the shirt's own price.
+ * Site-wide strip for the first-order welcome code (owner request
+ * 2026-11-10: "remove the promotion from the website and make it 30 shekels
+ * off your first order from 300 ILS" — the old "3 player shirts for 300"
+ * strip is gone and its `bundle_3` offer is switched off in the price list).
  *
- * Reads `active` straight off the exported price list rather than hardcoding
- * "on" - the one place this deal's state lives is admin Pricing (offer
- * `bundle_3`), so turning it off there removes the banner on the next build
- * with no code change, and a stale cached build never shows a dead promo.
+ * Everything shown comes from src/data/promo.json, which
+ * scripts/export-store-catalog.ts writes on every build from the newest
+ * ACTIVE first-order-only code in admin Discounts — so the amount, minimum
+ * and code on the strip are always the code the checkout will actually
+ * accept, and pausing the code in admin removes the strip on the next build.
+ * The rule itself (first order per phone, minimum order) is enforced only at
+ * checkout, in src/lib/orders/web.ts.
  */
-type PL = { offers?: { id: string; active: boolean; unit_price: { short: number; long?: number } }[] };
-const bundle3 = (priceList as unknown as PL).offers?.find((o) => o.id === "bundle_3");
+type Welcome = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number };
+const welcome = (promo as { welcome?: Welcome }).welcome;
 
 export async function PromoBanner() {
-  if (!bundle3?.active) return null;
+  if (!welcome) return null;
   const t = await getTranslations("promo");
+  const amount = welcome.kind === "fixed" ? `₪${welcome.value}` : `${welcome.value}%`;
 
   return (
     <Link
       href="/shop"
       className="block border-b border-rule bg-accent px-4 py-2.5 text-center text-sm font-medium text-accent-ink transition-opacity hover:opacity-90"
     >
-      {t("bundle3")}
+      {welcome.minOrder > 0
+        ? t.rich("welcome", {
+            amount,
+            min: `₪${welcome.minOrder}`,
+            code: welcome.code,
+            c: (chunks) => (
+              <strong dir="ltr" className="latin tracking-wide">
+                {chunks}
+              </strong>
+            ),
+          })
+        : t.rich("welcomeNoMin", {
+            amount,
+            code: welcome.code,
+            c: (chunks) => (
+              <strong dir="ltr" className="latin tracking-wide">
+                {chunks}
+              </strong>
+            ),
+          })}
       <span className="mx-2 opacity-70">·</span>
       <span className="underline underline-offset-2">{t("cta")}</span>
     </Link>

@@ -43,3 +43,14 @@ describe("codesCanCombine", () => {
     expect(codesCanCombine([{ stackable: false }, { stackable: false }])).toBe(false);
   });
 });
+
+describe("the first-order welcome code (₪30 off from ₪300)", () => {
+  const welcome = { kind: "fixed" as const, value: ILS(30), min_order: ILS(300) };
+  it("is worth nothing just under ₪300", () => {
+    expect(discountAmount(welcome, ILS(300) - 1)).toBe(0);
+  });
+  it("takes ₪30 off at ₪300 and above", () => {
+    expect(discountAmount(welcome, ILS(300))).toBe(ILS(30));
+    expect(discountAmount(welcome, ILS(415))).toBe(ILS(30));
+  });
+});

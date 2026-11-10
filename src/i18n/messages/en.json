@@ -4,7 +4,8 @@
     "description": "Club and national team football shirts in Fan and Player versions. Clear prices, delivery nationwide."
   },
   "promo": {
-    "bundle3": "3 player shirts for ₪300 — code 3FOR299, applied automatically at checkout",
+    "welcome": "{amount} off your first order of {min} or more — code <c>{code}</c> at checkout",
+    "welcomeNoMin": "{amount} off your first order — code <c>{code}</c> at checkout",
     "cta": "Shop now"
   },
   "nav": {
@@ -613,7 +614,9 @@
     "discountInvalid": "That code isn't valid.",
     "discountNotStackable": "That code can't be combined with the one(s) you already applied.",
     "discountMinOrder": "{code} needs a minimum order of ₪{amount} to apply.",
-    "discountRow": "Discount ({code})"
+    "discountRow": "Discount ({code})",
+    "discountFirstOrderOnly": "First order only",
+    "errorFirstOrderOnly": "That code is for a first order only, and this phone number has already ordered with us. Remove it and send the order again."
   },
   "thankYou": {
     "eyebrow": "Order placed",

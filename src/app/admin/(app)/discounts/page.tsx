@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 type Row = {
   code: string; kind: "percent" | "fixed"; value: number; min_order: number;
-  starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number; active: boolean; stackable: boolean;
+  starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number; active: boolean; stackable: boolean; first_order_only: boolean;
 };
 
 function statusOf(r: Row): { label: string; tone: Tone } {
@@ -28,7 +28,7 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
   const sp = await searchParams;
   const saved = sp.saved === "1";
   const error = typeof sp.error === "string" ? sp.error : null;
-  const rows = ((await db().from("discount_codes").select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count,active,stackable")
+  const rows = ((await db().from("discount_codes").select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count,active,stackable,first_order_only")
     .order("created_at", { ascending: false })).data ?? []) as Row[];
 
   return (
@@ -56,6 +56,7 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
                     <span dir="ltr" className="font-mono text-sm font-medium tracking-wide">{r.code}</span>
                     <Badge tone={status.tone}>{status.label}</Badge>
                     {r.stackable ? <Badge>Combinable</Badge> : null}
+                    {r.first_order_only ? <Badge>First order only</Badge> : null}
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted">
                     <span>{worth(r)}</span>

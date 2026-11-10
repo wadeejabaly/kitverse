@@ -137,6 +137,21 @@ async function main() {
   if (pe) throw pe;
   writeFileSync("src/data/price-list.json", JSON.stringify(pl.data, null, 2) + "\n");
 
+  // The site-wide welcome banner (owner request 2026-11-10: "30 shekels off your first order from
+  // 300"): the newest ACTIVE first-order-only discount code, as plain ILS. No such code (or the
+  // owner paused it in admin Discounts) = no banner on the next build. Amounts come from the code,
+  // never from the copy.
+  const { data: codes, error: ce } = await db.from("discount_codes")
+    .select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count")
+    .eq("active", true).eq("first_order_only", true).order("created_at", { ascending: false });
+  if (ce) throw ce;
+  const nowIso = new Date().toISOString();
+  type CodeRow = { code: string; kind: "percent" | "fixed"; value: number; min_order: number; starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number };
+  const welcome = ((codes ?? []) as CodeRow[]).find((c) => (!c.starts_at || c.starts_at <= nowIso) && (!c.ends_at || c.ends_at > nowIso) && (c.max_uses == null || c.used_count < c.max_uses));
+  writeFileSync("src/data/promo.json", JSON.stringify(welcome
+    ? { welcome: { code: welcome.code, kind: welcome.kind, value: welcome.kind === "fixed" ? welcome.value / 100 : welcome.value, minOrder: welcome.min_order / 100 } }
+    : {}, null, 2) + "\n");
+
   writeFileSync("src/data/catalog.json", JSON.stringify({ products }, null, 2) + "\n");
   writeFileSync("src/data/collections.json", JSON.stringify({ leagues, teams }, null, 2) + "\n");
   const photos = products.filter((p) => !p.image.includes("_placeholder")).length;

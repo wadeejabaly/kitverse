@@ -30,6 +30,9 @@ export type DiscountCode = {
   // codes on the same order? Default false (every code created before this
   // existed keeps its old, exclusive-only behaviour).
   stackable: boolean;
+  // Owner request 2026-11-10 ("30 shekels off your first order from 300"):
+  // only for a shopper whose phone has no earlier real order.
+  first_order_only: boolean;
   created_at: string;
 };
 
@@ -61,6 +64,26 @@ export async function findActiveDiscountCode(raw: string): Promise<DiscountLooku
  */
 export function codesCanCombine(rows: Pick<DiscountCode, "stackable">[]): boolean {
   return rows.length <= 1 || rows.every((r) => r.stackable);
+}
+
+/**
+ * True when this phone number already has an order that went past "draft"
+ * (an unpaid PayPal/Bit attempt stays a draft) and wasn't cancelled - i.e. it
+ * is NOT this shopper's first order. Every customer row with that phone
+ * counts (a website buyer, or an Instagram customer the owner recorded a
+ * phone for).
+ */
+export async function hasEarlierOrder(phone: string): Promise<boolean> {
+  const customers = ((await db().from("customers").select("id").eq("phone", phone)).data ?? []) as { id: string }[];
+  if (!customers.length) return false;
+  const r = await db()
+    .from("orders")
+    .select("id")
+    .in("customer_id", customers.map((c) => c.id))
+    .not("status", "in", "(draft,cancelled)")
+    .limit(1);
+  if (r.error) throw new Error(`first-order check: ${r.error.message}`);
+  return (r.data ?? []).length > 0;
 }
 
 /** The agorot amount a code is worth against a given items subtotal (0 if the subtotal doesn't meet min_order). Never exceeds the subtotal. */

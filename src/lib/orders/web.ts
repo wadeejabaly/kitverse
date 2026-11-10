@@ -8,7 +8,7 @@ import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
-import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, normalizeCode, type DiscountCode } from "../discounts";
+import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, type DiscountCode } from "../discounts";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
@@ -66,6 +66,11 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
     discounts.push(lookup.row);
   }
   if (!codesCanCombine(discounts)) return { ok: false, code: "invalid_discount_code", detail: "not_stackable" };
+  // A first-order-only code (e.g. the "₪30 off your first order over ₪300"
+  // welcome code) is refused when this phone has ordered before.
+  if (discounts.some((d) => d.first_order_only) && (await hasEarlierOrder(phone))) {
+    return { ok: false, code: "invalid_discount_code", detail: "first_order_only" };
+  }
 
   // The shopper never picks a region any more — match their typed city against
   // the same town → zone list the Instagram bot uses. An unrecognised town

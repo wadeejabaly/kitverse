@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const r = await createWebOrder(parsed.data);
   if (!r.ok) {
     if (r.code === "server_error") console.error("website order failed", r.detail);
-    return NextResponse.json<CheckoutErrorBody>({ code: r.code }, { status: r.code === "server_error" ? 500 : 400 });
+    return NextResponse.json<CheckoutErrorBody>({ code: r.code, ...(r.code === "invalid_discount_code" && r.detail ? { reason: r.detail } : {}) }, { status: r.code === "server_error" ? 500 : 400 });
   }
   return NextResponse.json({ reference: String(r.number), token: r.token });
 }

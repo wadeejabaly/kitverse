@@ -135,6 +135,8 @@ export type CheckoutErrorCode =
 
 export interface CheckoutErrorBody {
   code: CheckoutErrorCode;
+  /** For invalid_discount_code only: why (e.g. "first_order_only", "min_order", "used_up"). */
+  reason?: string;
 }
 
 /** The customer-facing order reference: the first block of the order uuid. */

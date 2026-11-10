@@ -25,12 +25,14 @@ export async function POST(req: NextRequest) {
   const lookup = await findActiveDiscountCode(parsed.data.code);
   if (!lookup.ok) return NextResponse.json({ ok: false, reason: lookup.reason });
 
-  const { kind, value, min_order, stackable } = lookup.row;
+  const { kind, value, min_order, stackable, first_order_only } = lookup.row;
   return NextResponse.json({
     ok: true,
     kind,
     value: kind === "fixed" ? value / 100 : value,
     minOrder: min_order / 100,
     stackable,
+    // Shown next to the applied code; the real check (by phone) happens when the order is placed.
+    firstOrderOnly: first_order_only === true,
   });
 }

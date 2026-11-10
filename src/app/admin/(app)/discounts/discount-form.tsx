@@ -40,6 +40,10 @@ export function DiscountForm() {
         <input type="checkbox" name="stackable" className="h-4 w-4 accent-[var(--pitch)]" />
         Can be combined with other codes
       </label>
+      <label className="flex items-end gap-2 text-sm text-ink">
+        <input type="checkbox" name="firstOrderOnly" className="h-4 w-4 accent-[var(--pitch)]" />
+        First order only (checked by phone number)
+      </label>
       <div className="flex items-end">
         <button className={cx(button.primary, "w-full")}>Create code</button>
       </div>

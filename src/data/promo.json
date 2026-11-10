@@ -1,0 +1,8 @@
+{
+  "welcome": {
+    "code": "WELCOME30",
+    "kind": "fixed",
+    "value": 30,
+    "minOrder": 300
+  }
+}
