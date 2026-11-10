@@ -50,6 +50,28 @@
       "source": "website",
       "name_ar": "بوكس هدية",
       "name_en": "Gift box"
+    },
+    {
+      "id": "keychain",
+      "per": "order",
+      "price": 18,
+      "source": "website",
+      "name_ar": "ميدالية",
+      "name_en": "Keychain"
+    },
+    {
+      "id": "scarf",
+      "per": "order",
+      "price": 50,
+      "source": "website",
+      "name_ar": "شال",
+      "name_en": "Scarf",
+      "paired_price": {
+        "price": 40,
+        "per_shirt": 1,
+        "starts_at": "2026-11-09T22:00:00.000Z",
+        "ends_at": "2026-11-10T22:00:00.000Z"
+      }
     }
   ],
   "groups": [

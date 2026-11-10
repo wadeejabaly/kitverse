@@ -189,6 +189,58 @@
       "image": "/products/keychain-al-nassr.jpg",
       "visible": true,
       "teamHe": "אל-נאסר"
+    },
+    {
+      "handle": "scarf-real-madrid-navy-white",
+      "category": "scarf",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "teamHe": "ריאל מדריד",
+      "variant": "Navy & White",
+      "variantAr": "كحلي وأبيض",
+      "variantHe": "כחול-לבן",
+      "price": 50,
+      "image": "/products/accessories/scarf-real-madrid-navy-white.jpg",
+      "visible": true
+    },
+    {
+      "handle": "scarf-real-madrid-white-gold",
+      "category": "scarf",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "teamHe": "ריאל מדריד",
+      "variant": "White & Gold",
+      "variantAr": "أبيض وذهبي",
+      "variantHe": "לבן-זהב",
+      "price": 50,
+      "image": "/products/accessories/scarf-real-madrid-white-gold.jpg",
+      "visible": true
+    },
+    {
+      "handle": "scarf-real-madrid-hala-madrid-navy",
+      "category": "scarf",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "teamHe": "ריאל מדריד",
+      "variant": "¡Hala Madrid! Navy",
+      "variantAr": "هلا مدريد، كحلي",
+      "variantHe": "הלה מדריד, כחול כהה",
+      "price": 50,
+      "image": "/products/accessories/scarf-real-madrid-hala-madrid-navy.jpg",
+      "visible": true
+    },
+    {
+      "handle": "scarf-real-madrid-hala-madrid-spain",
+      "category": "scarf",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "teamHe": "ריאל מדריד",
+      "variant": "¡Hala Madrid! Spain",
+      "variantAr": "هلا مدريد، ألوان إسبانيا",
+      "variantHe": "הלה מדריד, צבעי ספרד",
+      "price": 50,
+      "image": "/products/accessories/scarf-real-madrid-hala-madrid-spain.jpg",
+      "visible": true
     }
   ]
 }

@@ -1,13 +1,14 @@
 import type { Sleeve, Size, Version } from "./types";
 import priceList from "./price-list.json";
 import { tieredTotal } from "@/lib/pricing/tiers";
+import { pairedActive, pairedCount, type PairedPrice } from "@/lib/pricing/paired";
 
 /**
  * Every number below comes from the bot's price list (src/data/price-list.json, exported from the
  * database by scripts/export-store-catalog.ts), so the website and the Instagram bot always quote
  * the same prices. The server re-prices every order with src/lib/pricing/engine.ts.
  */
-type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number; price_tiers?: number[] }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] } };
+type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number; price_tiers?: number[]; paired_price?: PairedPrice }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] } };
 const pl = priceList as unknown as PL;
 const groupPrice = (id: string) => pl.groups.find((g) => g.id === id)?.price ?? 0;
 const addonPrice = (id: string) => pl.addons.find((a) => a.id === id)?.price ?? 0;
@@ -268,4 +269,55 @@ export const GIFT_BOX_MAX_QTY = 10;
 export function giftBoxTotalFor(qty: number): number {
   const clamped = Math.min(GIFT_BOX_MAX_QTY, Math.max(0, Math.floor(qty)));
   return round2(GIFT_BOX_PRICE * clamped);
+}
+
+/* --------------------------------------------------------- accessories -- */
+
+/**
+ * Accessories are really sold online (owner request 2026-11-10): each
+ * category is a per-order add-on in the price list ('keychain', 'scarf'),
+ * edited in admin Pricing, and the server prices them with the same engine
+ * as everything else. These mirror that for display only.
+ */
+export function accessoryListPrice(category: string): number | null {
+  const a = pl.addons.find((x) => x.id === category);
+  return a ? a.price : null;
+}
+
+/** The "cheaper with a shirt" deal on an accessory category, when one is on right now (scarf ₪40 with a shirt, 2026-11-10). */
+export function accessoryDeal(category: string, now: Date = new Date()): { price: number; perShirt: number; endsAt: string | null } | null {
+  const a = pl.addons.find((x) => x.id === category);
+  if (!a?.paired_price || !pairedActive(a.paired_price, now)) return null;
+  return { price: a.paired_price.price, perShirt: a.paired_price.per_shirt, endsAt: a.paired_price.ends_at ?? null };
+}
+
+/**
+ * What the deal takes off an order with `qty` units of `category` and
+ * `shirts` shirts (ILS, >= 0) - exactly what the server engine will charge
+ * less, so the checkout total and the order total agree.
+ */
+export function accessoryDealSaving(category: string, qty: number, shirts: number, now: Date = new Date()): number {
+  const a = pl.addons.find((x) => x.id === category);
+  if (!a?.paired_price) return 0;
+  const cheap = pairedCount(a.paired_price, qty, shirts, now);
+  return round2(cheap * Math.max(0, a.price - a.paired_price.price));
+}
+
+/** Every accessory deal that applies to a basket right now: [{ category, qty (units at the deal price), saving (ILS) }]. */
+export function accessoryDeals(
+  accessories: { category: string; qty: number }[],
+  shirts: number,
+  now: Date = new Date(),
+): { category: string; qty: number; saving: number }[] {
+  const qtyBy = new Map<string, number>();
+  for (const a of accessories) qtyBy.set(a.category, (qtyBy.get(a.category) ?? 0) + a.qty);
+  const out: { category: string; qty: number; saving: number }[] = [];
+  for (const [category, qty] of qtyBy) {
+    const saving = accessoryDealSaving(category, qty, shirts, now);
+    if (saving > 0) {
+      const a = pl.addons.find((x) => x.id === category)!;
+      out.push({ category, qty: pairedCount(a.paired_price, qty, shirts, now), saving });
+    }
+  }
+  return out;
 }

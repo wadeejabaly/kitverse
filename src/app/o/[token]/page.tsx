@@ -4,6 +4,7 @@ import { Banknote, CreditCard, MessageCircle, Truck, ShieldCheck, Check, Smartph
 import { db } from "@/lib/db";
 import { readOrderToken } from "@/lib/orders/link";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
+import { getAccessory } from "@/data/accessories";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,13 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
   const pids = [...new Set(items.map((i) => i.product_id).filter(Boolean))] as string[];
   const products = pids.length ? ((await db().from("products").select("id,title_ar,title_en,primary_image_url,photo_status").in("id", pids)).data ?? []) as Product[] : [];
   const q = o.quote;
+  // keychains / scarves on the order (owner request 2026-11-10), named in Arabic from the accessories catalogue
+  const accessories = (((await db().from("order_accessories").select("handle,category,title,qty").eq("order_id", o.id).order("created_at")).data ?? []) as { handle: string; category: string; title: string; qty: number }[])
+    .map((x) => {
+      const a = getAccessory(x.handle);
+      const name = a ? (x.category === "scarf" ? `شال ${a.teamAr}${a.variantAr ? ` · ${a.variantAr}` : ""}` : `ميدالية ${a.teamAr}`) : x.title;
+      return { ...x, name, image: a?.image ?? null };
+    });
   const confirmed = CONFIRMED.includes(o.status) || o.status === "delivered";
   // Website orders wait for the OWNER's OK, not the customer's — a different message than the
   // bot's "confirm with us in chat" line, which is only ever shown to an Instagram customer.
@@ -123,6 +131,14 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
             </article>
           );
         })}
+        {accessories.map((x) => (
+          <article key={x.handle} className="flex items-center gap-3 py-4">
+            <div className="grid h-[72px] w-[72px] shrink-0 place-items-center overflow-hidden rounded-md bg-white ring-1 ring-line">
+              {x.image ? <img src={x.image} alt="" className="h-full w-full object-contain" /> : null}
+            </div>
+            <h2 className="flex-1 text-[15px] font-semibold leading-snug">{x.name}{x.qty > 1 ? <span className="text-ink-2"> ×{x.qty}</span> : null}</h2>
+          </article>
+        ))}
       </section>
 
       {q ? (

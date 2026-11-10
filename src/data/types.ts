@@ -126,7 +126,7 @@ export interface AccessoryCartItem {
  */
 export type CartItem = JerseyCartItem | AccessoryCartItem;
 
-export type AccessoryCategory = "keychain";
+export type AccessoryCategory = "keychain" | "scarf";
 
 /**
  * A non-jersey product (2026-10-25). Intentionally a separate, much simpler
@@ -142,7 +142,11 @@ export interface Accessory {
   team: string; // EN
   teamAr: string;
   teamHe: string;
-  price: number; // ILS, flat — e.g. 18. No size/version pricing.
+  price: number; // ILS, flat — e.g. 18. No size/version pricing. Overridden by the price list's add-on for the category (src/data/accessories.ts).
   image: string;
   visible: boolean;
+  /** Which design, when a team has more than one of the same item (scarves, 2026-11-10): "Navy & White". */
+  variant?: string;
+  variantAr?: string;
+  variantHe?: string;
 }

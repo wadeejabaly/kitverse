@@ -1,5 +1,6 @@
 import accessoriesData from "./accessories.json";
 import { slugify } from "./slug";
+import { accessoryListPrice } from "./pricing";
 import type { Accessory } from "./types";
 
 /**
@@ -24,14 +25,17 @@ import type { Accessory } from "./types";
  * raised from the original ₪14.99 on 2026-11-02).
  */
 
-const accessories: Accessory[] = accessoriesData.accessories as Accessory[];
+// Owner request 2026-11-10 (accessories really sold online): the price is the price list's add-on
+// for the category ('keychain', 'scarf' - edited in admin Pricing), the same number the server
+// charges; the JSON's own `price` is only a fallback for a category the price list doesn't have.
+const accessories: Accessory[] = (accessoriesData.accessories as Accessory[]).map((a) => ({ ...a, price: accessoryListPrice(a.category) ?? a.price }));
 
 /** Every visible accessory, regardless of category. */
 export function getVisibleAccessories(): Accessory[] {
   return accessories.filter((a) => a.visible);
 }
 
-/** Every visible accessory in one category (just "keychain" today). */
+/** Every visible accessory in one category ("keychain" or "scarf"). */
 export function accessoriesByCategory(category: Accessory["category"]): Accessory[] {
   return getVisibleAccessories().filter((a) => a.category === category);
 }
@@ -44,4 +48,19 @@ export function getAccessory(handle: string): Accessory | undefined {
 /** The team a keychain belongs to, matched by slugifying `accessory.team` — mirrors catalog.ts's byTeam(). */
 export function keychainForTeam(teamSlug: string): Accessory | undefined {
   return accessoriesByCategory("keychain").find((a) => slugify(a.team) === teamSlug);
+}
+
+/** The page an accessory lives on: keychains by team slug, scarves by their own handle (a team has several). */
+export function accessoryHref(a: { category: string; handle: string; team: string }): string {
+  return a.category === "scarf" ? `/accessories/scarves/${a.handle}` : `/accessories/keychains/${slugify(a.team)}`;
+}
+
+/** Team name in the visitor's language. */
+export function accessoryTeam(a: { team: string; teamAr: string; teamHe?: string }, locale: string): string {
+  return locale === "ar" ? a.teamAr : locale === "he" && a.teamHe ? a.teamHe : a.team;
+}
+
+/** The design name in the visitor's language (scarves), or null. */
+export function accessoryVariant(a: { variant?: string; variantAr?: string; variantHe?: string }, locale: string): string | null {
+  return (locale === "ar" ? a.variantAr : locale === "he" ? a.variantHe : a.variant) ?? a.variant ?? null;
 }

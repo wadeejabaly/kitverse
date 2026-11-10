@@ -4,6 +4,8 @@ import { Link } from "@/i18n/navigation";
 import type { Accessory } from "@/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Price } from "@/components/shared/Money";
+import { accessoryHref, accessoryTeam } from "@/data/accessories";
+import { accessoryLabel } from "@/components/shop/accessoryLabel";
 
 /**
  * The accessory tile — a keychain today, whatever else the Accessories
@@ -25,11 +27,11 @@ export function AccessoryCard({
   priority?: boolean;
 }) {
   const t = useTranslations("accessories");
-  const title = locale === "ar" ? accessory.teamAr : locale === "he" && accessory.teamHe ? accessory.teamHe : accessory.team;
-  const label = t("keychainTitle", { team: title });
+  const title = accessoryTeam(accessory, locale);
+  const label = accessoryLabel(t, accessory, locale);
 
   return (
-    <Link href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`} className="kv-pcard group text-start">
+    <Link href={accessoryHref(accessory)} className="kv-pcard group text-start">
       <div className="kv-pcard-media">
         <Image
           src={accessory.image}

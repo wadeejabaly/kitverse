@@ -38,6 +38,7 @@ export default async function AccessoriesPage({
   const t = await getTranslations("accessories");
 
   const keychains = accessoriesByCategory("keychain");
+  const scarves = accessoriesByCategory("scarf");
 
   return (
     <Wrap>
@@ -73,6 +74,26 @@ export default async function AccessoriesPage({
             <span className="kv-pcard-title text-[17px]">{t("keychainsLabel")}</span>
           </span>
         </Link>
+        {scarves.length ? (
+          <Link href="/accessories/scarves" className="kv-pcard group col-span-2 sm:col-span-1">
+            <span className="kv-pcard-media">
+              <Image
+                src={scarves[0].image}
+                alt=""
+                width={600}
+                height={600}
+                sizes="(max-width: 640px) 100vw, 300px"
+                className="h-auto w-[86%] mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.05]"
+              />
+            </span>
+            <span className="kv-pcard-body">
+              <span className="kv-pcard-team">
+                {t("count", { count: scarves.length, countText: String(scarves.length) })}
+              </span>
+              <span className="kv-pcard-title text-[17px]">{t("scarvesLabel")}</span>
+            </span>
+          </Link>
+        ) : null}
       </section>
     </Wrap>
   );

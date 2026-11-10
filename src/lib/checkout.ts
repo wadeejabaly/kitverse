@@ -91,8 +91,21 @@ export const CustomerSchema = z.object({
 
 export type CustomerInput = z.infer<typeof CustomerSchema>;
 
+/**
+ * Accessories (owner request 2026-11-10: keychains and scarves are really sold
+ * online now). Only the handle and a quantity are trusted from the browser:
+ * the item must exist in src/data/accessories.json and its price comes from
+ * the price list's add-on for its category, through the pricing engine.
+ */
+export const CheckoutAccessorySchema = z.object({
+  handle: z.string().min(1).max(80).regex(/^[a-z0-9-]+$/),
+  qty: z.number().int().min(1).max(10),
+});
+
 export const CreateOrderRequestSchema = z.object({
-  items: z.array(CheckoutItemSchema).min(1).max(MAX_CART_LINES),
+  // May be empty when the order is accessories only (at least one of the two - checked in prepareOrder)
+  items: z.array(CheckoutItemSchema).max(MAX_CART_LINES),
+  accessories: z.array(CheckoutAccessorySchema).max(40).optional().default([]),
   customer: CustomerSchema,
   locale: z.enum(["ar", "en", "he"]),
   // The checkout-only gift-box add-on (owner decision 2026-10-23): how many

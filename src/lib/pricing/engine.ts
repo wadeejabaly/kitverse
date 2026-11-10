@@ -5,6 +5,7 @@
  */
 import type { PriceListData, PriceGroup, Offer } from "./schema";
 import { tieredTotal } from "./tiers";
+import { pairedCount } from "./paired";
 
 export type Audience = "adult" | "women" | "kids";
 export type Version = "fan" | "player";
@@ -163,12 +164,16 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
     if (!a) throw new PricingError(`unknown add-on ${id}`);
     return { id, label: a.name_ar, amount: A(a.price) };
   });
+  // shirts in the order, for add-ons that are cheaper bought with a shirt (paired_price)
+  const shirtCount = items.reduce((s, i) => s + i.qty, 0);
   for (const x of input.orderAddons ?? []) {
     if (!x.qty) continue;
     const a = addon(x.id);
     if (!a || a.per !== "order") throw new PricingError(`unknown order add-on ${x.id}`);
-    if (!Number.isInteger(x.qty) || x.qty < 0 || x.qty > 10) throw new PricingError(`bad qty for ${x.id}`);
-    orderAddons.push({ id: a.id, label: x.qty > 1 ? `${a.name_ar} ×${x.qty}` : a.name_ar, amount: A(a.price) * x.qty });
+    if (!Number.isInteger(x.qty) || x.qty < 0 || x.qty > 50) throw new PricingError(`bad qty for ${x.id}`);
+    const cheap = pairedCount(a.paired_price, x.qty, shirtCount, now);
+    const amount = cheap * A(a.paired_price?.price ?? a.price) + (x.qty - cheap) * A(a.price);
+    orderAddons.push({ id: a.id, label: x.qty > 1 ? `${a.name_ar} ×${x.qty}` : a.name_ar, amount });
   }
 
   const itemsTotal = lines.reduce((s, l) => s + l.lineTotal, 0) + orderAddons.reduce((s, a) => s + a.amount, 0);

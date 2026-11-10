@@ -294,7 +294,7 @@
   "accessories": {
     "eyebrow": "אקססוריז",
     "categoryTitle": "אקססוריז",
-    "categoryMetaDescription": "אקססוריז של KitVerse: מחזיקי מפתחות לקבוצות, ובדרך עוד דברים.",
+    "categoryMetaDescription": "אקססוריז של KitVerse: מחזיקי מפתחות וצעיפים של קבוצות.",
     "categoryIntro": "תוספות קטנות לחולצה שלכם.",
     "count": "{count, plural, =0 {אין פריטים} one {פריט אחד} two {שני פריטים} many {{countText} פריטים} other {{countText} פריטים}}",
     "keychainsLabel": "מחזיקי מפתחות",
@@ -306,7 +306,15 @@
     "added": "נוסף לעגלה.",
     "viewCart": "לצפייה בעגלה",
     "checkoutExcluded": "עדיין לא נכלל בהזמנה הזו",
-    "checkoutNotice": "עדיין אי אפשר להזמין מחזיקי מפתחות אונליין — הם יוצאו מההזמנה שלכם למטה. תסירו אותם מהעגלה, או תכתבו לנו באינסטגרם כדי להוסיף אחד להזמנת תשלום במזומן."
+    "checkoutNotice": "עדיין אי אפשר להזמין מחזיקי מפתחות אונליין — הם יוצאו מההזמנה שלכם למטה. תסירו אותם מהעגלה, או תכתבו לנו באינסטגרם כדי להוסיף אחד להזמנת תשלום במזומן.",
+    "scarvesLabel": "צעיפים",
+    "scarvesIntro": "צעיפי קבוצות למשחק או לקיר.",
+    "scarfTitle": "צעיף {team} · {variant}",
+    "scarfTitleOnly": "צעיף {team}",
+    "scarfBody": "צעיף קבוצה סרוג עם פרנזים בקצוות, אפשר להוסיף לכל הזמנה.",
+    "scarfMetaDescription": "צעיף {team}, {variant}. תוספת של KitVerse לכל הזמנה.",
+    "dealBadge": "היום בלבד: ⁦₪{price}⁩ עם חולצה (צעיף אחד לכל חולצה בהזמנה).",
+    "dealRow": "צעיף עם חולצה ×{qty}"
   },
   "product": {
     "breadcrumbShop": "חנות",

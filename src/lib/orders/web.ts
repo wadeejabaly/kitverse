@@ -6,6 +6,7 @@ import { requote, type OrderRow } from "./draft";
 import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
+import { getAccessory } from "@/data/accessories";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
 import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, type DiscountCode } from "../discounts";
@@ -81,7 +82,12 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   const handles = [...new Set(req.items.map((i) => i.handle))];
   const products = must(await db().from("products").select("id,handle,title_en,status,flags").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string; flags: string[] }[];
   const lines = req.items.map((i) => ({ i, p: products.find((p) => p.handle === i.handle && p.status !== "hidden") }));
-  if (!lines.length) return { ok: false, code: "cart_empty" };
+  // accessories (owner request 2026-11-10): only real, visible ones; quantities of the same handle are merged
+  const accessoryQty = new Map<string, number>();
+  for (const a of req.accessories ?? []) accessoryQty.set(a.handle, Math.min(10, (accessoryQty.get(a.handle) ?? 0) + a.qty));
+  const accessories = [...accessoryQty].map(([handle, qty]) => ({ a: getAccessory(handle), handle, qty }));
+  if (accessories.some((x) => !x.a || !x.a.visible)) return { ok: false, code: "invalid_request", detail: "unknown accessory" };
+  if (!lines.length && !accessories.length) return { ok: false, code: "cart_empty" };
   if (lines.some((l) => !l.p)) return { ok: false, code: "invalid_request", detail: "unknown product" };
   for (const { i } of lines) {
     const { name, number } = splitNameNumber(i.nameNumber);
@@ -113,13 +119,19 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   }).select("*").single(), "web order") as OrderRow;
 
   try {
-    must(await db().from("order_items").insert(lines.map(({ i, p }) => {
+    if (lines.length) must(await db().from("order_items").insert(lines.map(({ i, p }) => {
       const { name, number } = splitNameNumber(i.nameNumber);
       // re-validated against the catalogue (team type, league, the cap) - whatever the browser sent, only an eligible set is ever stored
       const store = getStoreProduct(i.handle);
       const patches = store ? sanitizePatches(i.patches, store) : [];
       return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
     })).select("id"), "web items");
+    if (accessories.length) {
+      must(await db().from("order_accessories").insert(accessories.map(({ a, handle, qty }) => ({
+        order_id: order.id, handle, category: a!.category, qty,
+        title: `${a!.team} ${a!.category === "scarf" ? "Scarf" : "Keychain"}${a!.variant ? ` - ${a!.variant}` : ""}`,
+      }))).select("id"), "web accessories");
+    }
     let q = await requote(order);
 
     if (discounts.length) {

@@ -132,9 +132,13 @@ export async function requote(order: OrderRow): Promise<Quote> {
   }
   const adj = must(await db().from("adjustments").select("reason,amount").eq("order_id", order.id), "adjustments") as { reason: string; amount: number }[];
   const boxes = items.filter((i) => i.box).reduce((n, i) => n + i.qty, 0) + (order.gift_boxes ?? 0); // boxed shirts + boxes ordered on the website
+  // accessories (keychains, scarves - owner request 2026-11-10): priced as the price list's per-order add-on for their category
+  const acc = must(await db().from("order_accessories").select("category,qty").eq("order_id", order.id), "order accessories") as { category: string; qty: number }[];
+  const accQty = new Map<string, number>();
+  for (const a of acc) accQty.set(a.category, (accQty.get(a.category) ?? 0) + a.qty);
   const q = quote(list.data, { items: cart, zoneId: order.zone_id, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
-    orderAddons: boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : [] });
-  const status = order.status === "draft" && cart.length ? "quoted" : order.status;
+    orderAddons: [...(boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : []), ...[...accQty].map(([id, qty]) => ({ id, qty: Math.min(qty, 50) }))] });
+  const status = order.status === "draft" && (cart.length || acc.length) ? "quoted" : order.status;
   must(await db().from("orders").update({
     quote: q, subtotal: q.itemsTotal, discount_total: q.discountTotal, delivery_fee: q.delivery?.fee ?? 0, total: q.total,
     price_list_version_id: list.id, status,

@@ -150,3 +150,40 @@ describe("order add-ons with a quantity", () => {
     expect(() => quote(withBox, { items: [shirt()], orderAddons: [{ id: "name_number", qty: 1 }] })).toThrow();
   });
 });
+
+describe("accessories: scarf ₪50, ₪40 with a shirt (one per shirt) during the deal window", () => {
+  const withScarf: typeof list = {
+    ...list,
+    addons: [
+      ...list.addons,
+      { id: "keychain", name_en: "Keychain", name_ar: "ميدالية", price: 18, per: "order" },
+      { id: "scarf", name_en: "Scarf", name_ar: "شال", price: 50, per: "order",
+        paired_price: { price: 40, per_shirt: 1, starts_at: "2026-11-09T22:00:00.000Z", ends_at: "2026-11-10T22:00:00.000Z" } },
+    ],
+  };
+  const during = new Date("2026-11-10T15:00:00Z");
+  const after = new Date("2026-11-10T22:00:00Z"); // midnight Israel time - deal over
+  const scarfAmount = (items: CartItem[], scarves: number, now: Date) =>
+    quote(withScarf, { items, orderAddons: [{ id: "scarf", qty: scarves }], now }).orderAddons.find((a) => a.id === "scarf")!.amount;
+
+  it("one scarf per shirt at ₪40, the rest at ₪50", () => {
+    expect(scarfAmount([shirt()], 1, during)).toBe(ILS(40));
+    expect(scarfAmount([shirt()], 2, during)).toBe(ILS(40 + 50));
+    expect(scarfAmount([shirt({ qty: 2 })], 3, during)).toBe(ILS(40 + 40 + 50));
+  });
+  it("no shirt, or outside the day: ₪50 each", () => {
+    expect(scarfAmount([], 2, during)).toBe(ILS(100));
+    expect(scarfAmount([shirt()], 1, after)).toBe(ILS(50));
+    expect(scarfAmount([shirt()], 1, new Date("2026-11-09T21:59:59Z"))).toBe(ILS(50));
+  });
+  it("keychains are a flat per-unit price and count toward the order total", () => {
+    const q = quote(withScarf, { items: [shirt()], orderAddons: [{ id: "keychain", qty: 3 }, { id: "scarf", qty: 1 }], now: during });
+    expect(q.orderAddons.map((a) => [a.id, a.amount])).toEqual([["keychain", ILS(54)], ["scarf", ILS(40)]]);
+    expect(q.itemsTotal).toBe(ILS(110 + 54 + 40));
+  });
+  it("an accessories-only order prices too", () => {
+    const q = quote(withScarf, { items: [], orderAddons: [{ id: "scarf", qty: 1 }], zoneId: list.delivery.zones[0].id, now: during });
+    expect(q.itemsTotal).toBe(ILS(50));
+    expect(q.total).toBe(ILS(50) + q.delivery!.fee);
+  });
+});

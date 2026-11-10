@@ -3,7 +3,10 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { cartTotals, priceLine, round2 } from "@/data/pricing";
+import { accessoryDeals, cartTotals, priceLine, round2 } from "@/data/pricing";
+import { accessoryHref } from "@/data/accessories";
+import { accessoryLabel } from "@/components/shop/accessoryLabel";
+import type { AccessoryCategory } from "@/data/types";
 import { PATCH_PROP_KEYS } from "@/data/patches";
 import { lineKey, useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
@@ -26,6 +29,10 @@ export interface CartProductInfo {
  */
 export interface CartAccessoryInfo {
   handle: string;
+  category: AccessoryCategory;
+  variant?: string;
+  variantAr?: string;
+  variantHe?: string;
   team: string;
   teamAr: string;
   teamHe?: string;
@@ -105,6 +112,12 @@ export function CartView({
     ...lines.map((line) => line.priced),
     ...accessoryLines.map((line) => line.priced),
   ]);
+  // "cheaper with a shirt" accessory deals (scarf ₪40 with a shirt, owner request 2026-11-10) - same rule as the server engine
+  const deals = accessoryDeals(
+    accessoryLines.map((line) => ({ category: line.accessory.category, qty: line.item.qty })),
+    lines.reduce((n, line) => n + line.item.qty, 0),
+  );
+  const dealSaving = round2(deals.reduce((s, d) => s + d.saving, 0));
 
   // Pre-hydration the cart is unknowable, so reserve the space rather than
   // rendering an "empty cart" that may be about to contradict itself.
@@ -241,7 +254,7 @@ export function CartView({
               className="grid grid-cols-[88px_1fr] items-start gap-4 border-b border-rule py-5 last:border-b-0 sm:grid-cols-[110px_1fr_auto] sm:gap-5"
             >
               <Link
-                href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`}
+                href={accessoryHref(accessory)}
                 className="grid aspect-square place-items-center overflow-hidden rounded-[12px] bg-[#f1f3f7]"
               >
                 <Image
@@ -256,10 +269,8 @@ export function CartView({
 
               <div>
                 <h3 className="mb-1 text-[15px] font-bold">
-                  <Link href={`/accessories/keychains/${accessory.handle.replace(/^keychain-/, "")}`}>
-                    {tAccessories("keychainTitle", {
-                      team: teamName(accessory),
-                    })}
+                  <Link href={accessoryHref(accessory)}>
+                    {accessoryLabel(tAccessories, accessory, locale)}
                   </Link>
                 </h3>
 
@@ -313,9 +324,16 @@ export function CartView({
           <span className="text-ink-soft">{t("shippingTbd")}</span>
         </Row>
         <p className="text-[12.5px] text-ink-soft">{t("shippingNote")}</p>
+        {deals.map((d) => (
+          <Row key={d.category} label={tAccessories("dealRow", { qty: String(d.qty) })}>
+            <span dir="ltr">
+              -<Price value={d.saving} />
+            </span>
+          </Row>
+        ))}
         <div className="flex items-baseline justify-between border-t border-rule pt-4">
           <span className="font-bold">{t("subtotal")}</span>
-          <Price value={totals.subtotal} className="text-[1.6rem] leading-none font-extrabold" />
+          <Price value={round2(totals.subtotal - dealSaving)} className="text-[1.6rem] leading-none font-extrabold" />
         </div>
 
         <Link href="/checkout" className="btn mt-2 w-full">

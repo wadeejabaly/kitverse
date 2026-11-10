@@ -294,7 +294,7 @@
   "accessories": {
     "eyebrow": "إكسسوارات",
     "categoryTitle": "إكسسوارات",
-    "categoryMetaDescription": "إكسسوارات كيتفيرس: ميداليات مفاتيح للفرق، وبالطريق أشياء زيادة.",
+    "categoryMetaDescription": "إكسسوارات كيتفيرس: ميداليات وشالات للفرق.",
     "categoryIntro": "أشياء صغيرة زيادة عالقميص.",
     "count": "{count, plural, =0 {لا قطع} one {قطعة واحدة} two {قطعتان} few {{countText} قطع} many {{countText} قطعة} other {{countText} قطعة}}",
     "keychainsLabel": "ميداليات مفاتيح",
@@ -306,7 +306,15 @@
     "added": "انضافت للسلة.",
     "viewCart": "شوف السلة",
     "checkoutExcluded": "لسا مش داخلة بهاي الطلبية",
-    "checkoutNotice": "ميداليات المفاتيح لسا مش متاحة نطلبها أونلاين — رح نشيلها من طلبيتك تحت. شيلها من السلة، أو راسلنا بالإنستغرام لو بدك تضيفها على طلبية الدفع عند الاستلام."
+    "checkoutNotice": "ميداليات المفاتيح لسا مش متاحة نطلبها أونلاين — رح نشيلها من طلبيتك تحت. شيلها من السلة، أو راسلنا بالإنستغرام لو بدك تضيفها على طلبية الدفع عند الاستلام.",
+    "scarvesLabel": "شالات",
+    "scarvesIntro": "شالات الفرق للملعب أو للحيط.",
+    "scarfTitle": "شال {team} · {variant}",
+    "scarfTitleOnly": "شال {team}",
+    "scarfBody": "شال فريق محاك مع شرّابات بالأطراف، بينضاف لأي طلب.",
+    "scarfMetaDescription": "شال {team}، {variant}. إضافة من كيتفيرس لأي طلب.",
+    "dealBadge": "اليوم بس: ⁦₪{price}⁩ مع قميص (شال واحد لكل قميص بالطلب).",
+    "dealRow": "شال مع قميص ×{qty}"
   },
   "product": {
     "breadcrumbShop": "المتجر",

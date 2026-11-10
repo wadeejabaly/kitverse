@@ -37,6 +37,18 @@ export const Addon = z.object({
    * that only knows about `price` still shows a sane single-unit figure.
    */
   price_tiers: z.array(z.number().nonnegative()).min(1).optional(),
+  /**
+   * Cheaper when bought with a shirt (owner request 2026-11-10, the scarf):
+   * up to `per_shirt` units per shirt in the order cost `price` instead of the
+   * add-on's own price, between `starts_at` and `ends_at` (ISO; the end is
+   * exclusive). See src/lib/pricing/paired.ts.
+   */
+  paired_price: z.object({
+    price: z.number().nonnegative(),
+    per_shirt: z.number().positive(),
+    starts_at: z.string().nullable().optional(),
+    ends_at: z.string().nullable().optional(),
+  }).optional(),
 });
 
 /**

@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, cartTotals, priceLine, round2 } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryDeals, cartTotals, priceLine, round2 } from "@/data/pricing";
+import { accessoryLabel } from "@/components/shop/accessoryLabel";
 import { PATCH_PROP_KEYS } from "@/data/patches";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
 import type { CartAccessoryInfo, CartProductInfo } from "@/components/cart/CartView";
@@ -47,12 +48,11 @@ import type { ManualMethod } from "@/lib/manual-pay-core";
  * checkout, not on the cart page: one box per order at most, but
  * quantity-selectable, because a single box can hold more than one shirt.
  *
- * Accessories (2026-10-25, phase 1 of the keychains feature): shown in the
- * summary so the total still matches the cart, but excluded from the order
- * actually sent — orderRequestBody() only ever lists jersey items, since the
- * database and the order-writing code don't have an accessory concept yet
- * (see the project notes for the migration that will add one). A banner and
- * a per-line tag say so plainly rather than silently dropping the item.
+ * Accessories (keychains, scarves): really ordered since 2026-11-10 (owner
+ * request) - orderRequestBody() sends each one's handle and quantity, and the
+ * server prices them from the price list (per-order add-ons 'keychain' /
+ * 'scarf', with the scarf's "₪40 with a shirt" deal) with the same engine as
+ * everything else. An accessories-only order is allowed.
  */
 
 type FormValues = {
@@ -340,9 +340,7 @@ export function CheckoutView({
     })
     .filter((line) => line !== null);
 
-  // Accessory lines (2026-10-25): shown in the summary and counted in the
-  // total so the number on screen matches the cart page, but NOT sent to
-  // the server — see orderRequestBody() and the banner below.
+  // Accessory lines: shown, counted and sent with the order (handle + qty only).
   const accessoryLines = items
     .filter((item) => item.kind === "accessory")
     .map((item) => {
@@ -377,11 +375,18 @@ export function CheckoutView({
   // SAME figure (not a shrinking base) — same as the server
   // (src/lib/orders/web.ts) — and the combined cut is capped at the items
   // subtotal so stacking several codes can never discount past 100%.
-  const itemsSubtotal = round2(totals.subtotal + totals.giftBox);
+  // "cheaper with a shirt" accessory deals (scarf ₪40 with a shirt, owner request 2026-11-10): the
+  // same rule the server engine applies, part of the items figure codes are measured against
+  const deals = accessoryDeals(
+    accessoryLines.map((line) => ({ category: line.accessory.category, qty: line.item.qty })),
+    lines.reduce((n, line) => n + line.item.qty, 0),
+  );
+  const dealSaving = round2(deals.reduce((s, d) => s + d.saving, 0));
+  const itemsSubtotal = round2(totals.subtotal + totals.giftBox - dealSaving);
   const qualifyingDiscounts = appliedDiscounts.filter((d) => itemsSubtotal >= d.minOrder);
   const perCodeAmount = (d: AppliedDiscount) => round2(d.kind === "percent" ? (itemsSubtotal * d.value) / 100 : d.value);
   const discountAmount = Math.min(itemsSubtotal, round2(qualifyingDiscounts.reduce((sum, d) => sum + perCodeAmount(d), 0)));
-  const grandTotal = round2(totals.total - discountAmount);
+  const grandTotal = round2(totals.total - dealSaving - discountAmount);
 
   const parsed = CustomerSchema.safeParse({
     ...values,
@@ -406,15 +411,7 @@ export function CheckoutView({
     // on screen while they fill it in again. It clears when they try to pay.
   }
 
-  /**
-   * The cart's CHOICES, which is all either processor is ever sent.
-   *
-   * Jersey items only (2026-10-25): the order-writing code and the database
-   * have no accessory concept yet, so an accessory line in the cart is left
-   * out here entirely rather than sent in a shape the server would reject or
-   * silently mis-handle. The summary UI says this plainly; see the file doc
-   * comment.
-   */
+  /** The cart's CHOICES, which is all either processor is ever sent - never a price. */
   function orderRequestBody() {
     return JSON.stringify({
       items: items
@@ -428,6 +425,10 @@ export function CheckoutView({
           qty: item.qty,
           ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
         })),
+      // accessories are really ordered now (owner request 2026-11-10): handle + qty only, priced on the server
+      accessories: items
+        .filter((item) => item.kind === "accessory")
+        .map((item) => ({ handle: item.handle, qty: item.qty })),
       customer: parsed.success ? parsed.data : null,
       locale,
       giftBoxQty,
@@ -585,19 +586,6 @@ export function CheckoutView({
         <p className="mx-auto mb-7 max-w-[46ch] text-ink-soft">{tCart("emptyBody")}</p>
         <Link href="/shop" className="btn">
           {tCommon("continueShopping")}
-        </Link>
-      </div>
-    );
-  }
-
-  // A cart that is only keychains has nothing checkout can submit yet.
-  if (lines.length === 0) {
-    return (
-      <div className="kv-panel mx-auto my-12 max-w-xl px-6 py-12 text-center">
-        <h2 className="kv-section-title mb-2.5">{tAccessories("checkoutExcluded")}</h2>
-        <p className="mx-auto mb-7 max-w-[46ch] text-ink-soft">{tAccessories("checkoutNotice")}</p>
-        <Link href="/cart" className="btn">
-          {tAccessories("viewCart")}
         </Link>
       </div>
     );
@@ -773,7 +761,7 @@ export function CheckoutView({
               </span>
             </li>
           ))}
-          {accessoryLines.map(({ accessory, priced, key }) => (
+          {accessoryLines.map(({ item, accessory, priced, key }) => (
             <li
               key={key}
               className="grid grid-cols-[64px_1fr_auto] items-start gap-4 border-b border-rule py-4"
@@ -781,7 +769,7 @@ export function CheckoutView({
               <span className="grid aspect-square place-items-center overflow-hidden rounded-[10px] bg-[#f1f3f7]">
                 <Image
                   src={accessory.image}
-                  alt={locale === "ar" ? accessory.teamAr : accessory.team}
+                  alt={accessoryLabel(tAccessories, accessory, locale)}
                   width={128}
                   height={128}
                   sizes="64px"
@@ -789,12 +777,8 @@ export function CheckoutView({
                 />
               </span>
               <span className="text-[13px]">
-                <span className="block">
-                  {tAccessories("keychainTitle", {
-                    team: locale === "ar" ? accessory.teamAr : accessory.team,
-                  })}
-                </span>
-                <span className="block text-ink-soft">{tAccessories("checkoutExcluded")}</span>
+                <span className="block">{accessoryLabel(tAccessories, accessory, locale)}</span>
+                {item.qty > 1 ? <span className="block text-ink-soft" dir="ltr">×{item.qty}</span> : null}
               </span>
               <span className="text-[13.5px] font-bold text-ink">
                 <Price value={priced.lineTotal} />
@@ -802,12 +786,6 @@ export function CheckoutView({
             </li>
           ))}
         </ul>
-
-        {accessoryLines.length > 0 ? (
-          <p className="mt-4 border border-rule bg-chip px-4 py-3.5 text-xs text-ink-soft">
-            {tAccessories("checkoutNotice")}
-          </p>
-        ) : null}
 
         {/* Gift box (owner decision 2026-10-23) — one per order, but
             quantity-selectable, since a single box can hold more than one
@@ -914,6 +892,13 @@ export function CheckoutView({
               <Price value={totals.giftBox} />
             </Row>
           ) : null}
+          {deals.map((d) => (
+            <Row key={d.category} label={tAccessories("dealRow", { qty: String(d.qty) })}>
+              <span dir="ltr">
+                -<Price value={d.saving} />
+              </span>
+            </Row>
+          ))}
           {qualifyingDiscounts.map((d) => (
             <Row key={d.code} label={t("discountRow", { code: d.code })}>
               <span dir="ltr">

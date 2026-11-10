@@ -38,6 +38,8 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
     const badges = r.patches.length ? ` + ${r.patches.map((p) => PATCHES[p as PatchId]?.label_ar ?? p).join(" + ")}` : "";
     return `${r.qty}× ${print}${badges}`;
   }).join(", ");
+  // keychains / scarves (owner request 2026-11-10: accessories are really sold online)
+  const accessories = ((await db().from("order_accessories").select("handle,title,qty").eq("order_id", o.id).order("created_at")).data ?? []) as { handle: string; title: string; qty: number }[];
   const events = (await db().from("order_events").select("from_status,to_status,actor,note,created_at").eq("order_id", o.id).order("created_at")).data ?? [];
   const a = o.address ?? {};
   const st = ORDER_STATUS[o.status] ?? ORDER_STATUS.draft;
@@ -101,6 +103,19 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
             </div>
             {o.quote?.summaryAr ? <p className="mt-4 rounded-xl bg-paper px-3 py-2 text-sm text-ink-2" dir="auto">{o.quote.summaryAr}</p> : null}
           </Card>
+          {accessories.length ? (
+            <Card>
+              <SectionTitle>Accessories</SectionTitle>
+              <div className="divide-y divide-line">
+                {accessories.map((x) => (
+                  <div key={x.handle} className="flex items-center justify-between gap-3 py-2.5 text-sm first:pt-0 last:pb-0">
+                    <span className="font-medium">{x.title}</span>
+                    <Badge>×{x.qty}</Badge>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          ) : null}
           <Card>
             <SectionTitle>History</SectionTitle>
             <ol className="flex flex-col gap-2 text-sm">
