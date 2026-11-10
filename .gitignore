@@ -26,3 +26,7 @@ supabase/.branches/
 
 .DS_Store
 eval-results/
+
+# spreadsheet copies written by npm run catalog:build (products.json is the source)
+catalog/products.csv
+catalog/featured.csv

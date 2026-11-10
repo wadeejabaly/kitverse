@@ -14,8 +14,8 @@ import {
  * Cookie-consent state.
  *
  * - The choice persists in a FIRST-PARTY cookie (this one IS essential).
- * - Non-essential scripts load ONLY after "accepted" — gate them with
- *   <ConsentGatedScript> or read `consent` from useConsent().
+ * - Non-essential scripts load ONLY after "accepted" — check `consent` from
+ *   useConsent() before loading one.
  * - "cookie settings" in the footer reopens the banner via openSettings().
  */
 
