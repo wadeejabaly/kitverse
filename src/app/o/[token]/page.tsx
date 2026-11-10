@@ -63,7 +63,7 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
         <h1 className="text-[26px] font-bold leading-tight">{confirmed ? "طلبيتك" : pendingOwnerApproval ? "استلمنا طلبيتك" : "ملخص الطلبية"}</h1>
         <p className="text-sm text-muted">
           {confirmed
-            ? `تأكدت ${date} · ${q?.delivery?.days ?? "7-14"} يوم انشالله (لا يشمل جمعة وسبت)`
+            ? `تأكدت ${date} · 10-20 يوم عمل انشالله (لا يشمل جمعة وسبت)`
             : pendingOwnerApproval
               ? "عم نراجعها ومنأكدلك خلال وقت قصير"
               : "لما تتأكد من كلشي، ثبت الطلبية معنا بالشات"}
