@@ -20,7 +20,7 @@ export async function buildState(conv: ConversationRow, customer: CustomerRow, r
   const lines: string[] = [`# State (system, not from the customer)`, `Now: ${israelNow()} (Israel).`];
 
   const pastOrders = must(await db().from("orders").select("id", { count: "exact", head: false })
-    .eq("customer_id", customer.id).not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation,cancelled)"), "past orders") as unknown[];
+    .eq("customer_id", customer.id).not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation,awaiting_payment_verification,cancelled)"), "past orders") as unknown[];
   lines.push(`Customer: ${customer.full_name ?? customer.display_name ?? customer.ig_username ?? "unknown"}${pastOrders.length ? ` - returning customer, ${pastOrders.length} past order(s): be extra warm` : " - new customer"}.`);
   if (conv.source_type) lines.push(`Conversation started from: ${conv.source_type}${conv.source_ref ? ` (${conv.source_ref})` : ""}.`);
   if (conv.window_expires_at) {

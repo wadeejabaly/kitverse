@@ -112,7 +112,7 @@ export function timeAgo(iso: string | null | undefined) {
 
 /** How an order is paid, as the owner reads it (Bit was shown as "Cash" - a courier could collect twice). */
 export const payLabel = (method: string | null | undefined, paymentStatus?: string | null, long = false) => {
-  const base = method === "paypal" ? "PayPal" : method === "bit" ? "Bit" : long ? "Cash on delivery" : "Cash";
+  const base = method === "paypal" ? "PayPal" : method === "bit" ? "Bit" : method === "bit_personal" ? (long ? "Bit (personal transfer)" : "Bit transfer") : method === "paypal_me" ? "PayPal.Me" : long ? "Cash on delivery" : "Cash";
   return method && method !== "cod" ? `${base}${paymentStatus === "paid" ? " · paid" : paymentStatus === "refunded" ? " · refunded" : " · not paid yet"}` : base;
 };
 
@@ -146,6 +146,7 @@ export const MODE: Record<string, { label: string; tone: Tone }> = {
 export const ORDER_STATUS: Record<string, { label: string; tone: Tone }> = {
   draft: { label: "Draft", tone: "neutral" }, quoted: { label: "Quoted", tone: "neutral" },
   awaiting_details: { label: "Awaiting details", tone: "neutral" }, awaiting_confirmation: { label: "Awaiting confirm", tone: "neutral" },
+  awaiting_payment_verification: { label: "Verify payment", tone: "amber" },
   confirmed: { label: "New", tone: "green" }, paid: { label: "Paid", tone: "green" }, in_supplier_batch: { label: "At supplier", tone: "amber" },
   produced: { label: "Produced", tone: "amber" }, at_warehouse: { label: "At warehouse", tone: "amber" }, with_courier: { label: "With courier", tone: "amber" },
   delivered: { label: "Delivered", tone: "neutral" }, cancelled: { label: "Cancelled", tone: "red" }, issue: { label: "Issue", tone: "red" },

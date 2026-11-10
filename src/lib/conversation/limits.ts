@@ -25,7 +25,7 @@ export async function checkGate(conv: ConversationRow): Promise<Gate> {
     db().from("messages").select("id", { count: "exact", head: true }).eq("conversation_id", conv.id).eq("direction", "in").gte("created_at", new Date(now.getTime() - 60_000).toISOString()),
     db().rpc("spend_today_usd"),
     db().from("orders").select("id", { count: "exact", head: true }).eq("customer_id", conv.customer_id)
-      .not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation,cancelled)"),
+      .not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation,awaiting_payment_verification,cancelled)"),
     db().from("orders").select("id", { count: "exact", head: true }).eq("conversation_id", conv.id).in("status", ["quoted", "awaiting_details", "awaiting_confirmation"]),
     db().from("agent_runs").select("id", { count: "exact", head: true }).eq("conversation_id", conv.id)
       .in("outcome", ["replied", "drafted", "approval"]).gte("created_at", new Date(now.getTime() - 24 * 3600_000).toISOString()),

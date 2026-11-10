@@ -13,13 +13,13 @@ export default async function Orders({ searchParams }: PageProps<"/admin/orders"
   if (status === "needs_approval") return <NeedsApproval />;
 
   let q = db().from("orders").select("id,number,status,total,payment_method,payment_status,confirmed_at,address,source,customer:customers(ig_user_id)")
-    .not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation)").order("confirmed_at", { ascending: false }).limit(100);
+    .not("status", "in", "(draft,quoted,awaiting_details,awaiting_confirmation,awaiting_payment_verification)").order("confirmed_at", { ascending: false }).limit(100);
   if (status === "open") q = q.not("status", "in", "(delivered,cancelled)");
   else if (status !== "all") q = q.eq("status", status);
   const { data } = await q;
   const rows = (data ?? []) as unknown as { id: string; number: number; status: string; total: number; payment_method: string | null; payment_status: string | null; confirmed_at: string | null; address: { full_name?: string; town?: string } | null; source: string; customer: { ig_user_id: string | null } }[];
   const batchable = rows.some((r) => r.status === "confirmed" || r.status === "paid");
-  const pendingCount = (await db().from("orders").select("id", { count: "exact", head: true }).eq("status", "awaiting_confirmation").eq("source", "website")).count ?? 0;
+  const pendingCount = (await db().from("orders").select("id", { count: "exact", head: true }).in("status", ["awaiting_confirmation", "awaiting_payment_verification"]).eq("source", "website")).count ?? 0;
   const tabs = [["needs_approval", pendingCount ? `Needs approval (${pendingCount})` : "Needs approval"], ["open", "Open"], ["confirmed", "New"], ["with_courier", "With courier"], ["all", "All"]];
 
   return (
@@ -70,6 +70,12 @@ async function NeedsApproval() {
     .select("id,number,total,payment_method,payment_status,created_at,address,quote")
     .eq("status", "awaiting_confirmation").eq("source", "website").order("created_at");
   const rows = (data ?? []) as unknown as { id: string; number: number; total: number; payment_method: string | null; payment_status: string | null; created_at: string; address: { full_name?: string; town?: string; phone?: string } | null; quote: { summaryAr?: string } | null }[];
+  // Personal Bit / PayPal.Me (owner requests 2026-11-10): the customer says they paid - check your app, then confirm or reject on the order page
+  const verify = ((await db().from("orders").select("id,number,total,payment_method,created_at,address")
+    .eq("status", "awaiting_payment_verification").eq("source", "website").order("created_at")).data ?? []) as unknown as { id: string; number: number; total: number; payment_method: string | null; created_at: string; address: { full_name?: string; town?: string } | null }[];
+  // ...and the ones still waiting for the customer to pay (nothing to do yet, listed so a transfer without a report can still be matched)
+  const unpaid = ((await db().from("orders").select("id,number,total,payment_method,created_at,address")
+    .eq("status", "quoted").eq("source", "website").eq("payment_status", "unpaid").in("payment_method", ["bit_personal", "paypal_me"]).order("created_at", { ascending: false }).limit(20)).data ?? []) as unknown as typeof verify;
   const tabs = [["needs_approval", "Needs approval"], ["open", "Open"], ["confirmed", "New"], ["with_courier", "With courier"], ["all", "All"]];
 
   return (
@@ -78,7 +84,15 @@ async function NeedsApproval() {
       <div className="mb-4 inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
         {tabs.map(([f, label]) => <Link key={f} href={`/admin/orders?status=${f}`} className={cx("rounded-lg px-3 py-1.5", f === "needs_approval" ? "bg-ink text-paper" : "text-ink-2 hover:text-ink")}>{label}</Link>)}
       </div>
-      {!rows.length ? <EmptyState icon={ClipboardCheck} title="Nothing waiting" text="New website orders show up here the moment they're placed." /> : (
+      {verify.length ? (
+        <>
+          <h2 className="mb-2 text-sm font-semibold text-ink-2">Payments to verify ({verify.length})</h2>
+          <Card padded={false} className="mb-5 divide-y divide-line overflow-hidden">
+            {verify.map((o) => <ManualRow key={o.id} o={o} badge={<Badge tone="amber">Verify payment</Badge>} />)}
+          </Card>
+        </>
+      ) : null}
+      {!rows.length && verify.length ? null : !rows.length ? <EmptyState icon={ClipboardCheck} title="Nothing waiting" text="New website orders show up here the moment they're placed." /> : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {rows.map((o) => (
             <div key={o.id} className="flex flex-col gap-3 px-4 py-3.5 sm:px-5">
@@ -104,6 +118,32 @@ async function NeedsApproval() {
           ))}
         </Card>
       )}
+      {unpaid.length ? (
+        <details className="mt-5">
+          <summary className="cursor-pointer text-sm text-muted">Waiting for the customer to pay - Bit / PayPal.Me ({unpaid.length})</summary>
+          <Card padded={false} className="mt-2 divide-y divide-line overflow-hidden">
+            {unpaid.map((o) => <ManualRow key={o.id} o={o} badge={<Badge>Not paid yet</Badge>} />)}
+          </Card>
+        </details>
+      ) : null}
     </>
+  );
+}
+
+function ManualRow({ o, badge }: { o: { id: string; number: number; total: number; payment_method: string | null; created_at: string; address: { full_name?: string; town?: string } | null }; badge: React.ReactNode }) {
+  return (
+    <Link href={`/admin/orders/${o.id}`} className="flex items-center gap-3 px-4 py-3.5 sm:px-5">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="font-medium tabular-nums">#{o.number}</span>
+          <span className="truncate text-sm" dir="auto">{o.address?.full_name ?? ""}</span>
+          {badge}
+        </div>
+        <div className="mt-0.5 flex items-center gap-2 text-xs text-muted">
+          <span>{payLabel(o.payment_method, "unpaid", true).split(" · ")[0]}</span>·<span>note KV{o.number}</span>·<span>{ilTime(o.created_at)}</span>
+        </div>
+      </div>
+      <span className="font-medium tabular-nums">₪{o.total / 100}</span>
+    </Link>
   );
 }

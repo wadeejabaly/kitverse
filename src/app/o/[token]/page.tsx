@@ -156,10 +156,17 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
 
       <section className="flex flex-col gap-2.5">
         <h2 className="text-sm font-semibold text-ink-2">طريقة الدفع</h2>
-        {o.payment_method === "bit"
+        {o.payment_method === "bit_personal" || o.payment_method === "paypal_me" ? (
+          // personal Bit / PayPal.Me (owner requests 2026-11-10): paid only once the owner confirms it
+          <>
+            <PayOption icon={o.payment_method === "bit_personal" ? Smartphone : CreditCard} title={o.payment_method === "bit_personal" ? "Bit" : "PayPal"} selected
+              text={o.payment_status === "paid" ? "تأكّدت الدفعة - ما في إشي تدفعه للشليح" : o.status === "awaiting_payment_verification" ? "بعتتلنا تفاصيل الدفعة - عم نتأكد منها" : "لسا ما انْدفعت"} />
+            {o.payment_status !== "paid" ? <a href={`/checkout/pay?t=${encodeURIComponent(token)}`} className="text-sm font-semibold text-pitch underline-offset-4 hover:underline">تفاصيل الدفع</a> : null}
+          </>
+        ) : o.payment_method === "bit"
           ? <PayOption icon={Smartphone} title="Bit" text={o.payment_status === "paid" ? "دفعت عن طريق Bit - ما في إشي تدفعه للشليح" : "الدفع عن طريق Bit"} selected />
           : <PayOption icon={Banknote} title="كاش عند الاستلام" text="بتدفع للشليح لما توصلك الطلبية" selected={o.payment_method !== "paypal"} />}
-        <PayOption icon={CreditCard} title="PayPal أو بطاقة" text={o.payment_method === "paypal" && o.payment_status === "paid" ? "دفعت عن طريق PayPal - ما في إشي تدفعه للشليح" : paypalReady ? "ادفع هلأ بأمان عن طريق PayPal" : "قريبًا"} selected={o.payment_method === "paypal"} disabled={!paypalReady && o.payment_method !== "paypal"} />
+        {o.payment_method === "bit_personal" || o.payment_method === "paypal_me" ? null : <PayOption icon={CreditCard} title="PayPal أو بطاقة" text={o.payment_method === "paypal" && o.payment_status === "paid" ? "دفعت عن طريق PayPal - ما في إشي تدفعه للشليح" : paypalReady ? "ادفع هلأ بأمان عن طريق PayPal" : "قريبًا"} selected={o.payment_method === "paypal"} disabled={!paypalReady && o.payment_method !== "paypal"} />}
         {o.payment_status === "paid" ? <p className="flex items-center gap-1.5 text-sm font-medium text-pitch"><Check className="h-4 w-4" /> مدفوعة، شكرًا الك</p> : null}
       </section>
 

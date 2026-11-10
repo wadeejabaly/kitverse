@@ -197,7 +197,7 @@ export async function flagReversedPayment(orderId: string, what: string, capture
   await notify({ kind: `order.payment_${what}`, priority: "urgent", title: `PayPal payment ${what}: order #${o.number}`, body: "The money is no longer with you - don't send this order until it's paid again.", link: `/admin/orders/${o.id}` });
 }
 
-export type OrderPublicState = { number: number; method: "cod" | "paypal" | "bit" | null; paid: boolean; status: string };
+export type OrderPublicState = { number: number; method: "cod" | "paypal" | "bit" | "bit_personal" | "paypal_me" | null; paid: boolean; status: string };
 
 /**
  * What the thank-you page (and the payment-return routes) are allowed to
@@ -208,6 +208,6 @@ export async function orderPublicState(orderId: string): Promise<OrderPublicStat
   const r = await db().from("orders").select("number,payment_method,payment_status,status").eq("id", orderId).maybeSingle();
   if (r.error) throw new Error(`orderPublicState: ${r.error.message}`);
   if (!r.data) return null;
-  const row = r.data as { number: number; payment_method: "cod" | "paypal" | "bit" | null; payment_status: string; status: string };
+  const row = r.data as { number: number; payment_method: "cod" | "paypal" | "bit" | "bit_personal" | "paypal_me" | null; payment_status: string; status: string };
   return { number: row.number, method: row.payment_method, paid: row.payment_status === "paid" || row.payment_status === "deposit_paid", status: row.status };
 }

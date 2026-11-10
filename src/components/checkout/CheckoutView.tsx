@@ -14,6 +14,8 @@ import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
 import { CityCombobox } from "@/components/checkout/CityCombobox";
 import type { TownOption } from "@/data/localities";
 import { trackCheckoutStart } from "@/lib/analytics/track";
+import { BitMark } from "@/components/checkout/BitMark";
+import type { ManualMethod } from "@/lib/manual-pay-core";
 
 /**
  * Checkout.
@@ -176,6 +178,25 @@ export function CheckoutView({
   useEffect(() => {
     trackCheckoutStart();
   }, []);
+
+  // Personal Bit / PayPal.Me (owner requests 2026-11-10): switched on and off in admin Settings
+  // without a deploy, so this static page asks the server which ones are live right now.
+  const [manualMethods, setManualMethods] = useState<{ bitPersonal: boolean; paypalMe: boolean }>({ bitPersonal: false, paypalMe: false });
+  useEffect(() => {
+    let live = true;
+    fetch("/api/checkout/manual/methods", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { bitPersonal?: unknown; paypalMe?: unknown } | null) => {
+        if (live && d) setManualMethods({ bitPersonal: d.bitPersonal === true, paypalMe: d.paypalMe === true });
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
+  // One id per visit to this page: a double click or a retry of the same checkout returns the
+  // order it already created instead of a second one (payments_manual_attempt unique index).
+  const attemptId = useRef<string | null>(null);
 
   /**
    * Owner decision 2026-10-25: no region picker — the shopper just types
@@ -495,6 +516,46 @@ export function CheckoutView({
       }
     } catch {
       // Network failure — handled exactly like a rejected request below.
+    }
+
+    setPhase("form");
+    const code = isErrorCode(payload?.code) ? payload.code : "server_error";
+    if (code === "invalid_discount_code") clearDiscountCodes();
+    setErrorReason(typeof payload?.reason === "string" ? payload.reason : null);
+    setErrorCode(code);
+  }
+
+  /**
+   * Personal Bit / PayPal.Me: write the (unpaid) order, then show its pay
+   * page on THIS site - the amount, the payee, the order number to put in the
+   * note, and the "I've paid" form. Nothing is ever marked paid from here: the
+   * owner confirms every one of these by hand (src/lib/orders/manual-pay.ts).
+   */
+  async function placeManualOrder(method: ManualMethod) {
+    setErrorCode(null);
+    setReturnNotice(null);
+    setPhase("placing");
+    attemptId.current ??= crypto.randomUUID();
+
+    type StartResponse = { token?: unknown; code?: unknown; reason?: unknown } | null;
+    let payload: StartResponse = null;
+    try {
+      const order = JSON.parse(orderRequestBody()) as Record<string, unknown>;
+      const response = await fetch("/api/checkout/manual/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...order, method, attemptId: attemptId.current }),
+      });
+      payload = (await response.json().catch(() => null)) as StartResponse;
+      if (response.ok && typeof payload?.token === "string") {
+        // the order exists now: empty the cart (a second "Pay" can't make a second order) and go to its pay page
+        setPhase("done");
+        clear();
+        router.push(`/checkout/pay?t=${encodeURIComponent(payload.token)}`);
+        return;
+      }
+    } catch {
+      // Network failure - handled exactly like a rejected request below.
     }
 
     setPhase("form");
@@ -881,7 +942,7 @@ export function CheckoutView({
             </p>
           ) : null}
 
-          {!cashEnabled && !paypalEnabled && !bitEnabled ? (
+          {!cashEnabled && !paypalEnabled && !bitEnabled && !manualMethods.bitPersonal && !manualMethods.paypalMe ? (
             <DemoPanel title={t("demoTitle")} body={t("demoBody")} />
           ) : (
             <div className="flex flex-col gap-6">
@@ -929,6 +990,44 @@ export function CheckoutView({
                 </div>
               ) : null}
 
+              {/* Personal Bit (owner request 2026-11-10): a transfer to the owner's own Bit
+                  number, confirmed by hand. The next page shows the number, the exact
+                  amount and the order number for the note. */}
+              {manualMethods.bitPersonal ? (
+                <div className="rounded-[12px] border border-rule p-4">
+                  <div className="mb-1.5 flex items-center gap-2.5">
+                    <BitMark className="h-6" />
+                    <p className="text-sm font-bold">{t("payBitPersonal")}</p>
+                  </div>
+                  <p className="mb-4 text-xs text-ink-soft">{t("payBitPersonalNote")}</p>
+                  <button
+                    type="button"
+                    className="btn w-full"
+                    disabled={phase !== "form" || !parsed.success || cityCheck.status !== "found"}
+                    onClick={() => placeManualOrder("bit_personal")}
+                  >
+                    {phase === "placing" ? t("payCodPlacing") : t("payBitPersonalButton")}
+                  </button>
+                </div>
+              ) : null}
+
+              {/* PayPal.Me (owner request 2026-11-10): the owner's personal PayPal.Me link,
+                  amount pre-filled, confirmed by hand. */}
+              {manualMethods.paypalMe ? (
+                <div className="rounded-[12px] border border-rule p-4">
+                  <p className="mb-1.5 text-sm font-bold">{t("payPalMe")}</p>
+                  <p className="mb-4 text-xs text-ink-soft">{t("payPalMeNote")}</p>
+                  <button
+                    type="button"
+                    className="btn btn-quiet w-full"
+                    disabled={phase !== "form" || !parsed.success || cityCheck.status !== "found"}
+                    onClick={() => placeManualOrder("paypal_me")}
+                  >
+                    {phase === "placing" ? t("payCodPlacing") : t("payPalMeButton")}
+                  </button>
+                </div>
+              ) : null}
+
               {/* Cash on delivery — last, and plain (owner decision
                   2026-10-23): no deposit, nothing charged here at all. The
                   buyer pays the courier in full when the order arrives.
@@ -937,7 +1036,7 @@ export function CheckoutView({
                   reads as active — never hidden behind a separate message. */}
               {cashEnabled ? (
                 <div className="rounded-[12px] border border-rule p-4">
-                  {bitEnabled || paypalEnabled ? <p className="mb-1.5 text-sm font-bold">{t("payCodIntro")}</p> : null}
+                  {bitEnabled || paypalEnabled || manualMethods.bitPersonal || manualMethods.paypalMe ? <p className="mb-1.5 text-sm font-bold">{t("payCodIntro")}</p> : null}
                   <p className="mb-4 text-xs text-ink-soft">{t("payCashNote")}</p>
                   <button
                     type="button"

@@ -9,6 +9,9 @@ import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../or
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime, payLabel } from "../../../ui";
 import { CancelOrderButton } from "./cancel-order-button";
 import { CancelInventoryPrompt } from "./cancel-inventory-prompt";
+import { ManualPaymentCard, type ManualPaymentInfo } from "./manual-payment-card";
+import { getManualPayConfig, manualPaymentFor, proofUrl } from "@/lib/orders/manual-pay";
+import { formatBitPhone, formatIls, manualPayState, transferNote } from "@/lib/manual-pay-core";
 
 export const dynamic = "force-dynamic";
 
@@ -42,12 +45,29 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
   // the current status is always the default, so Save never changes it by accident
   const next = flow.includes(o.status) ? flow : [o.status, ...flow];
   const awaitingOk = o.status === "awaiting_confirmation" && o.source === "website";
+  // Personal Bit / PayPal.Me (owner requests 2026-11-10): only the owner's check below marks these paid
+  const isManual = o.payment_method === "bit_personal" || o.payment_method === "paypal_me";
+  let manual: ManualPaymentInfo | null = null;
+  if (isManual) {
+    const p = await manualPaymentFor(o.id);
+    const cfg = await getManualPayConfig();
+    const state = manualPayState({ orderStatus: o.status, paymentStatus: o.payment_status ?? "unpaid", payment: p ? { status: p.status, reportedAt: p.reported_at, reviewNote: p.review_note } : null });
+    manual = {
+      orderId: o.id, method: o.payment_method as ManualPaymentInfo["method"], expected: formatIls(o.total), note: transferNote(o.number), state,
+      reference: p?.customer_reference ?? null, proofUrl: p?.proof_path ? await proofUrl(p.proof_path) : null,
+      reportedAt: p?.reported_at ? ilTime(p.reported_at) : null, received: p?.received_amount != null ? formatIls(p.received_amount) : null,
+      verifiedAt: p?.verified_at ? ilTime(p.verified_at) : null, reviewNote: p?.review_note ?? null,
+      payee: o.payment_method === "bit_personal" ? (cfg.bit.phone ? formatBitPhone(cfg.bit.phone) : null) : cfg.paypalMe.username ? `paypal.me/${cfg.paypalMe.username}` : null,
+    };
+  }
+  const awaitingManual = !!manual && (manual.state === "awaiting_payment" || manual.state === "awaiting_verification" || manual.state === "needs_resubmit");
+  const stLabel = o.status === "awaiting_payment_verification" ? `Awaiting ${o.payment_method === "bit_personal" ? "Bit" : "PayPal"} payment verification` : st.label;
   const msgLabels: Record<string, string> = { produced: "Produced", at_warehouse: "At warehouse", with_courier: "With courier" };
 
   return (
     <>
       <Link href="/admin/orders" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Orders</Link>
-      <PageHeader title={`Order #${o.number}`} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={st.tone}>{st.label}</Badge><span>₪{o.total / 100} · {payLabel(o.payment_method, o.payment_status, true)}</span></span>}
+      <PageHeader title={`Order #${o.number}`} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={st.tone}>{stLabel}</Badge><span>₪{o.total / 100} · {payLabel(o.payment_method, o.payment_status, true)}</span></span>}
         actions={<>
           <a href={`/o/${orderToken(o.id)}`} target="_blank" rel="noreferrer" className={button.ghost}><ExternalLink className="h-4 w-4" /> Customer page</a>
           {o.conversation_id ? <Link href={`/admin/inbox/${o.conversation_id}`} className={button.ghost}><MessagesSquare className="h-4 w-4" /> Chat</Link> : null}
@@ -101,7 +121,8 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               <div className="flex items-start gap-2 text-ink-2" dir="auto"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted" />{[a.town, a.street, a.house_number, a.landmark].filter(Boolean).join("، ")}</div>
             </div>
           </Card>
-          {awaitingOk ? (
+          {manual ? <ManualPaymentCard p={manual} /> : null}
+          {awaitingManual ? null : awaitingOk ? (
             <Card>
               <SectionTitle>Website order - waiting for your OK</SectionTitle>
               <p className="mb-3 text-sm text-muted">Approve to send it into the normal flow (supplier batch, delivery). Decline cancels it.</p>

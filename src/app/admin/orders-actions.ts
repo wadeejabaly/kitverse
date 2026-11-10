@@ -8,6 +8,8 @@ import { db, must } from "@/lib/db";
 import { STATUS_MESSAGE } from "@/lib/orders/admin";
 import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { sendOrderWhatsAppAlerts } from "@/lib/notify-whatsapp";
+import { rejectManualPayment, verifyManualPayment } from "@/lib/orders/manual-pay";
+import { formatIls, parseIlsToAgorot } from "@/lib/manual-pay-core";
 
 const StatusChange = z.object({
   orderId: z.string().uuid(),
@@ -31,6 +33,8 @@ export async function changeOrderStatus(form: FormData) {
   // owner decision 2026-11-02 (Part 9): one WhatsApp message per shirt, as soon as the order is
   // approved - no-op until WhatsApp is actually configured (src/lib/notify-whatsapp.ts)
   if (becomingConfirmed && !o.confirmed_at) await sendOrderWhatsAppAlerts(o.id); // first confirmation only, not every re-confirm
+  // a cancelled personal-Bit / PayPal.Me order: its still-pending payment is cancelled too (never left "pending" to be confirmed later)
+  if (c.status === "cancelled") await db().from("payments").update({ status: "cancelled" }).eq("order_id", o.id).eq("status", "pending").in("provider", ["bit_personal", "paypal_me"]);
   if (c.status === "delivered") {
     await db().from("cash_collections").upsert({ order_id: o.id, amount: 0, status: "with_courier" }, { onConflict: "order_id", ignoreDuplicates: true });
   }
@@ -99,4 +103,42 @@ export async function declineWebOrder(form: FormData) {
   }
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
+}
+
+/**
+ * Personal Bit / PayPal.Me (owner requests 2026-11-10): the owner's manual
+ * check is the ONLY thing that marks these orders paid
+ * (src/lib/orders/manual-pay.ts). Returns a state for the admin card so an
+ * amount that doesn't match the order total is shown, not silently accepted.
+ */
+export type ManualPayActionState = { ok?: boolean; error?: string; mismatch?: { kind: "short" | "over"; difference: string } } | null;
+
+export async function confirmManualPayment(_prev: ManualPayActionState, form: FormData): Promise<ManualPayActionState> {
+  const staff = await requireStaff();
+  const orderId = z.string().uuid().parse(form.get("orderId"));
+  const received = parseIlsToAgorot(String(form.get("received") ?? ""));
+  if (received === null || received <= 0) return { error: "Type the amount that actually arrived, e.g. 300 or 299.90" };
+  const r = await verifyManualPayment({ orderId, staffId: staff.id, receivedAgorot: received, acceptMismatch: form.get("acceptMismatch") === "on", note: (form.get("note") as string) || undefined });
+  revalidatePath(`/admin/orders/${orderId}`);
+  revalidatePath("/admin/orders");
+  if (r.ok) return { ok: true };
+  if (r.code === "amount_mismatch") return { mismatch: { kind: r.kind, difference: formatIls(r.differenceAgorot) } };
+  const why: Record<string, string> = {
+    not_found: "No Bit / PayPal.Me payment on this order.",
+    not_pending: "This payment was already handled (refresh the page).",
+    order_cancelled: "This order is cancelled. If the money did arrive, refund it from your Bit / PayPal app.",
+    bad_amount: "Type the amount that actually arrived.",
+    server_error: "Couldn't save - try again.",
+  };
+  return { error: why[r.code] ?? "Couldn't save - try again." };
+}
+
+export async function rejectManualPaymentAction(_prev: ManualPayActionState, form: FormData): Promise<ManualPayActionState> {
+  const staff = await requireStaff();
+  const orderId = z.string().uuid().parse(form.get("orderId"));
+  const mode = z.enum(["retry", "cancel"]).parse(form.get("mode"));
+  const r = await rejectManualPayment({ orderId, staffId: staff.id, mode, note: (form.get("note") as string) || undefined });
+  revalidatePath(`/admin/orders/${orderId}`);
+  revalidatePath("/admin/orders");
+  return r.ok ? { ok: true } : { error: "This payment was already handled (refresh the page)." };
 }

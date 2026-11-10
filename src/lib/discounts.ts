@@ -80,7 +80,8 @@ export async function hasEarlierOrder(phone: string): Promise<boolean> {
     .from("orders")
     .select("id")
     .in("customer_id", customers.map((c) => c.id))
-    .not("status", "in", "(draft,cancelled)")
+    // an unpaid online / manual-payment checkout that never went anywhere ("quoted") is not an order yet
+    .not("status", "in", "(draft,quoted,cancelled)")
     .limit(1);
   if (r.error) throw new Error(`first-order check: ${r.error.message}`);
   return (r.data ?? []).length > 0;

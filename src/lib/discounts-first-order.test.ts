@@ -46,7 +46,15 @@ describe("hasEarlierOrder (first-order-only codes)", () => {
   it("is false when the only orders are drafts (unpaid PayPal/Bit attempts) or cancelled", async () => {
     orders = [{ customer_id: "c1", status: "draft" }, { customer_id: "c1", status: "cancelled" }];
     expect(await hasEarlierOrder("+972501234567")).toBe(false);
-    expect(lastStatusFilter).toBe("(draft,cancelled)");
+    expect(lastStatusFilter).toBe("(draft,quoted,cancelled)");
+  });
+  it("ignores an unpaid online / Bit / PayPal.Me checkout that never went anywhere (quoted)", async () => {
+    orders = [{ customer_id: "c1", status: "quoted" }];
+    expect(await hasEarlierOrder("+972501234567")).toBe(false);
+  });
+  it("counts an order whose payment the customer reported (awaiting verification)", async () => {
+    orders = [{ customer_id: "c1", status: "awaiting_payment_verification" }];
+    expect(await hasEarlierOrder("+972501234567")).toBe(true);
   });
   it("is true once the phone has a real order", async () => {
     orders = [{ customer_id: "c1", status: "awaiting_confirmation" }];

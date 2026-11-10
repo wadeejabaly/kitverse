@@ -1,4 +1,4 @@
-import { Bot, Cpu, Gauge, Wallet, FlaskConical, Sparkles, Smartphone } from "lucide-react";
+import { Bot, Cpu, Gauge, Wallet, FlaskConical, Sparkles, Smartphone, Banknote, CreditCard } from "lucide-react";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { BOT_MODELS, isBotModel } from "@/lib/agent/models";
@@ -6,6 +6,7 @@ import { isWhatsAppConfigured } from "@/lib/notify-whatsapp";
 import { saveSetting } from "../../actions";
 import { PageHeader, Card, Badge, button, input, cx } from "../../ui";
 import { RegisterWhatsAppButton } from "./register-whatsapp-button";
+import { formatBitPhone, normalizeBitPhone, normalizePayPalMeUsername } from "@/lib/manual-pay-core";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +44,11 @@ export default async function Settings() {
   const overrideOn = isFuture(spend.override_until);
   const rl = s.rate_limits ?? {};
   const spent = Number((await db().rpc("spend_today_usd")).data ?? 0);
+  // owner requests 2026-11-10: personal Bit / PayPal.Me at checkout (src/lib/orders/manual-pay.ts)
+  const bitPhone = normalizeBitPhone(s.bit_personal?.phone);
+  const bitOn = s.bit_personal?.enabled === true;
+  const ppUser = normalizePayPalMeUsername(s.paypal_me?.username);
+  const ppOn = s.paypal_me?.enabled === true;
   const testers = { enabled: (s.testers?.enabled as boolean | undefined) ?? true, usernames: (s.testers?.usernames as string[] | undefined) ?? [], code: (s.testers?.code as string | undefined) || "kvtest", joined: ((s.testers?.allowed_ids as string[] | undefined) ?? []).length };
 
   return (
@@ -123,6 +129,36 @@ export default async function Settings() {
             <input type="hidden" name="key" value="deposit" />
             <label className="flex items-center gap-2.5"><input type="checkbox" name="enabled" defaultChecked={!!s.deposit?.enabled} className="h-4 w-4 accent-[var(--pitch)]" />Require a {String(s.deposit?.min_ils ?? 35)}-{String(s.deposit?.max_ils ?? 50)}₪ Bit deposit</label>
             <button className={button.ghost}>Save</button>
+          </form>
+        </Section>
+
+        <Section icon={Banknote} title="Bit (personal account)" text="Customers transfer to your own Bit number. Bit doesn't tell the website when money arrives, so every Bit order waits until you confirm it in Orders.">
+          <form action={saveSetting} className="flex flex-col gap-3 text-sm">
+            <input type="hidden" name="key" value="bit_personal" />
+            <label className="flex items-center gap-2.5"><input type="checkbox" name="enabled" defaultChecked={bitOn} className="h-4 w-4 accent-[var(--pitch)]" />Offer Bit at checkout</label>
+            <label className="flex flex-col gap-1 text-xs text-muted">
+              Your Bit phone number
+              <input name="phone" defaultValue={bitPhone ? formatBitPhone(bitPhone) : ""} placeholder="050-123-4567" inputMode="tel" dir="ltr" className={`${input} w-48 tabular-nums`} />
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-muted">
+              Name customers will see in Bit (optional, so they know they reached the right person)
+              <input name="name" defaultValue={String(s.bit_personal?.name ?? "")} placeholder="e.g. Wadi J." dir="auto" className={`${input} w-56`} />
+            </label>
+            {bitOn && bitPhone ? <p className="text-xs text-muted">Live at checkout: {formatBitPhone(bitPhone)}</p> : null}
+            <button className={`${button.primary} self-start`}>Save</button>
+          </form>
+        </Section>
+
+        <Section icon={CreditCard} title="PayPal.Me" text="Customers pay through your personal PayPal.Me link, with the amount filled in. PayPal.Me can't send a note or bring them back automatically, so you confirm each one in Orders.">
+          <form action={saveSetting} className="flex flex-col gap-3 text-sm">
+            <input type="hidden" name="key" value="paypal_me" />
+            <label className="flex items-center gap-2.5"><input type="checkbox" name="enabled" defaultChecked={ppOn} className="h-4 w-4 accent-[var(--pitch)]" />Offer PayPal.Me at checkout</label>
+            <label className="flex flex-col gap-1 text-xs text-muted">
+              Your PayPal.Me name (the part after paypal.me/) or the whole link
+              <input name="username" defaultValue={ppUser ?? ""} placeholder="yourname" dir="ltr" className={`${input} w-56 font-mono`} />
+            </label>
+            {ppOn && ppUser ? <p className="text-xs text-muted">Live at checkout: <a className="underline" href={`https://www.paypal.me/${ppUser}`} target="_blank" rel="noreferrer">paypal.me/{ppUser}</a></p> : null}
+            <button className={`${button.primary} self-start`}>Save</button>
           </form>
         </Section>
 

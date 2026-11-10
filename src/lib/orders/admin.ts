@@ -5,7 +5,7 @@ export const STATUS_FLOW = ["confirmed", "paid", "in_supplier_batch", "produced"
 
 export const STATUS_LABEL: Record<string, [string, string]> = {
   draft: ["مسودة", "Draft"], quoted: ["عرض سعر", "Quoted"], awaiting_details: ["بانتظار التفاصيل", "Awaiting details"],
-  awaiting_confirmation: ["بانتظار التأكيد", "Awaiting confirmation"], confirmed: ["مؤكدة", "Confirmed"], paid: ["مدفوعة", "Paid"],
+  awaiting_confirmation: ["بانتظار التأكيد", "Awaiting confirmation"], awaiting_payment_verification: ["بانتظار تأكيد الدفع", "Awaiting payment verification"], confirmed: ["مؤكدة", "Confirmed"], paid: ["مدفوعة", "Paid"],
   in_supplier_batch: ["عند المورد", "At supplier"], produced: ["جاهزة بالمصنع", "Produced"], at_warehouse: ["وصلت المخزن", "At warehouse"],
   with_courier: ["مع التوصيل", "With courier"], delivered: ["وصلت", "Delivered"], cancelled: ["ملغية", "Cancelled"], issue: ["مشكلة", "Issue"],
 };

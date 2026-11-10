@@ -14,7 +14,7 @@ export default async function AppShell({ children }: { children: React.ReactNode
   const staff = await requireStaff();
   const [{ count: pending }, { count: webOrders }, { count: unread }, priceList, botSetting] = await Promise.all([
     db().from("approvals").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    db().from("orders").select("id", { count: "exact", head: true }).eq("status", "awaiting_confirmation").eq("source", "website"),
+    db().from("orders").select("id", { count: "exact", head: true }).in("status", ["awaiting_confirmation", "awaiting_payment_verification"]).eq("source", "website"),
     db().from("notifications").select("id", { count: "exact", head: true }).is("read_at", null).neq("priority", "quiet"),
     db().from("price_list_versions").select("status").order("version", { ascending: false }).limit(1).maybeSingle(),
     db().from("bot_settings").select("value").eq("key", "bot_on").maybeSingle(),

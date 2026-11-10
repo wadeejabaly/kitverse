@@ -16,6 +16,7 @@ import { normalize } from "@/lib/text";
 import { requote, type OrderRow } from "@/lib/orders/draft";
 import { isBotModel } from "@/lib/agent/models";
 import { israelDayEnd } from "@/lib/time";
+import { normalizeBitPhone, normalizePayPalMeUsername } from "@/lib/manual-pay-core";
 import { conversationPatch } from "@/lib/conversation/gate";
 import { TEST_CHAT_USER } from "@/lib/conversation/test-chat";
 
@@ -189,7 +190,7 @@ export async function testChatSend(form: FormData) {
 
 export async function saveSetting(form: FormData) {
   const staff = await requireStaff();
-  const key = z.enum(["autonomy", "spend_override", "deposit", "rate_limits", "spend_limits", "testers", "ai_model"]).parse(form.get("key"));
+  const key = z.enum(["autonomy", "spend_override", "deposit", "rate_limits", "spend_limits", "testers", "ai_model", "bit_personal", "paypal_me"]).parse(form.get("key"));
   const get = async (k: string) => ((await db().from("bot_settings").select("value").eq("key", k).maybeSingle()).data?.value ?? {}) as Record<string, unknown>;
   let row: { key: string; value: Record<string, unknown> };
   if (key === "autonomy") row = { key, value: { mode: form.get("mode") === "auto" ? "auto" : "draft" } };
@@ -215,6 +216,22 @@ export async function saveSetting(form: FormData) {
     const kept = { ...cur };
     delete kept.denied_ids; delete kept.denied_ids_for; // old denial cache, now its own "tester_denials" row
     row = { key, value: { ...kept, enabled: form.get("mode") !== "everyone", usernames, code } };
+  } else if (key === "bit_personal") {
+    // owner request 2026-11-10: the personal Bit number customers transfer to (src/lib/orders/manual-pay.ts)
+    const raw = String(form.get("phone") ?? "").trim();
+    const phone = raw ? normalizeBitPhone(raw) : null;
+    if (raw && !phone) throw new Error("The Bit number must be an Israeli mobile number, e.g. 050-123-4567");
+    const enabled = form.get("enabled") === "on";
+    if (enabled && !phone) throw new Error("Add your Bit number before turning Bit on");
+    row = { key, value: { enabled, phone, name: String(form.get("name") ?? "").trim().slice(0, 40) || null } };
+  } else if (key === "paypal_me") {
+    // owner request 2026-11-10: the personal PayPal.Me username (or link) customers pay through
+    const raw = String(form.get("username") ?? "").trim();
+    const username = raw ? normalizePayPalMeUsername(raw) : null;
+    if (raw && !username) throw new Error("The PayPal.Me name is the part after paypal.me/ - letters and numbers only, up to 20");
+    const enabled = form.get("enabled") === "on";
+    if (enabled && !username) throw new Error("Add your PayPal.Me name before turning PayPal.Me on");
+    row = { key, value: { enabled, username } };
   } else if (key === "deposit") {
     const cur = await get("deposit");
     // the Settings page promises 35-50₪ by Bit: keep those amounts even if the row was never seeded

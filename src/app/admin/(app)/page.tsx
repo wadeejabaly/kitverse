@@ -12,7 +12,7 @@ export default async function Overview() {
     db().rpc("spend_today_usd"),
     db().from("approvals").select("id", { count: "exact", head: true }).eq("status", "pending"),
     db().from("approvals").select("id,kind,proposal,draft_reply,created_at,conversation:conversations(customer:customers(full_name,display_name,ig_username))").eq("status", "pending").order("created_at").limit(6),
-    db().from("orders").select("id", { count: "exact", head: true }).eq("status", "awaiting_confirmation").eq("source", "website"),
+    db().from("orders").select("id", { count: "exact", head: true }).in("status", ["awaiting_confirmation", "awaiting_payment_verification"]).eq("source", "website"),
     db().from("orders").select("total,customer:customers(ig_user_id)").gte("confirmed_at", since).neq("status", "cancelled"),
     db().from("conversations").select("id,messages(direction,created_at)").eq("mode", "owner").eq("channel", "instagram")
       .order("created_at", { referencedTable: "messages", ascending: false }).limit(1, { referencedTable: "messages" }),
