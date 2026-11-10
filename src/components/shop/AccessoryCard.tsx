@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import type { Accessory } from "@/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Price } from "@/components/shared/Money";
-import { accessoryHref, accessoryTeam } from "@/data/accessories";
+import { accessoryHref, accessoryTeam, isInStock } from "@/data/accessories";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
 
 /**
@@ -27,6 +27,8 @@ export function AccessoryCard({
   priority?: boolean;
 }) {
   const t = useTranslations("accessories");
+  const tCommon = useTranslations("common");
+  const inStock = isInStock(accessory);
   const title = accessoryTeam(accessory, locale);
   const label = accessoryLabel(t, accessory, locale);
 
@@ -40,14 +42,18 @@ export function AccessoryCard({
           height={900}
           priority={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
-          className="h-auto w-[86%] mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+          className={`h-auto w-[86%] mix-blend-multiply transition-transform${inStock ? "" : " opacity-50 grayscale"} duration-500 ease-out group-hover:scale-[1.05]`}
         />
       </div>
       <div className="kv-pcard-body">
         <span className="kv-pcard-team">{title}</span>
         <h3 className="kv-pcard-title">{label}</h3>
         <div className="kv-pcard-foot">
-          <Price value={accessory.price} className="kv-pcard-price" />
+          {inStock ? (
+            <Price value={accessory.price} className="kv-pcard-price" />
+          ) : (
+            <span className="mono-eyebrow text-ink-soft">{tCommon("outOfStock")}</span>
+          )}
         </div>
       </div>
     </Link>

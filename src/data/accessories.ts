@@ -35,9 +35,21 @@ export function getVisibleAccessories(): Accessory[] {
   return accessories.filter((a) => a.visible);
 }
 
+/** In stock unless explicitly marked `inStock: false` (owner request 2026-11-10: out-of-stock items stay on the site). */
+export function isInStock(a: Pick<Accessory, "inStock">): boolean {
+  return a.inStock !== false;
+}
+
+/** Visible AND in stock - the only accessories the cart, checkout and server will take. */
+export function getOrderableAccessories(): Accessory[] {
+  return getVisibleAccessories().filter(isInStock);
+}
+
 /** Every visible accessory in one category ("keychain" or "scarf"). */
 export function accessoriesByCategory(category: Accessory["category"]): Accessory[] {
-  return getVisibleAccessories().filter((a) => a.category === category);
+  // in-stock first (stable), so out-of-stock designs sit at the end of the grid
+  const list = getVisibleAccessories().filter((a) => a.category === category);
+  return [...list.filter(isInStock), ...list.filter((a) => !isInStock(a))];
 }
 
 /** A single accessory by handle, visible or not — mirrors catalog.ts's getProduct(). */

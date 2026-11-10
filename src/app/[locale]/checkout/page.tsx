@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getVisibleProducts } from "@/data/catalog";
-import { getVisibleAccessories } from "@/data/accessories";
+import { getOrderableAccessories } from "@/data/accessories";
 import type { CartAccessoryInfo, CartProductInfo } from "@/components/cart/CartView";
 import { CheckoutView } from "@/components/checkout/CheckoutView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
@@ -50,7 +50,7 @@ export default async function CheckoutPage({
     image: product.image,
   }));
 
-  const accessories: CartAccessoryInfo[] = getVisibleAccessories().map((accessory) => ({
+  const accessories: CartAccessoryInfo[] = getOrderableAccessories().map((accessory) => ({
     handle: accessory.handle,
     category: accessory.category,
     variant: accessory.variant,

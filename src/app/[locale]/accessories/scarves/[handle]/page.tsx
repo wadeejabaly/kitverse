@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/config";
-import { accessoriesByCategory, accessoryTeam, accessoryVariant, getAccessory } from "@/data/accessories";
+import { accessoriesByCategory, accessoryTeam, accessoryVariant, getAccessory, isInStock } from "@/data/accessories";
 import { AccessoryForm } from "@/components/product/AccessoryForm";
 import { AccessoryDealNote } from "@/components/product/AccessoryDealNote";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
@@ -44,6 +44,8 @@ export default async function ScarfPage({ params }: { params: Promise<{ locale: 
   const t = await getTranslations("accessories");
   const team = accessoryTeam(a, locale);
   const title = accessoryLabel(t, a, locale);
+  const tCommon = await getTranslations("common");
+  const inStock = isInStock(a);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -53,7 +55,7 @@ export default async function ScarfPage({ params }: { params: Promise<{ locale: 
     description: t("scarfMetaDescription", { team, variant: accessoryVariant(a, locale) ?? "" }),
     sku: a.handle,
     brand: { "@type": "Brand", name: team },
-    offers: { "@type": "Offer", priceCurrency: "ILS", price: String(a.price), availability: "https://schema.org/InStock", url: localeUrl(locale, `/accessories/scarves/${handle}`) },
+    offers: { "@type": "Offer", priceCurrency: "ILS", price: String(a.price), availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock", url: localeUrl(locale, `/accessories/scarves/${handle}`) },
   };
 
   return (
@@ -74,8 +76,14 @@ export default async function ScarfPage({ params }: { params: Promise<{ locale: 
           <span className="kv-chip">{team}</span>
           <h1 className="mt-4 mb-3 text-[clamp(1.7rem,3vw,2.4rem)] leading-tight font-extrabold">{title}</h1>
           <p className="mb-5 max-w-[46ch] text-ink-soft">{t("scarfBody")}</p>
-          <AccessoryDealNote category="scarf" className="mb-6" />
-          <AccessoryForm handle={a.handle} price={a.price} />
+          {inStock ? (
+            <>
+              <AccessoryDealNote category="scarf" className="mb-6" />
+              <AccessoryForm handle={a.handle} price={a.price} />
+            </>
+          ) : (
+            <p className="mono-eyebrow border border-rule px-4 py-3 text-ink-soft">{tCommon("outOfStock")}</p>
+          )}
         </div>
       </section>
     </Wrap>

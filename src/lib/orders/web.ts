@@ -6,7 +6,7 @@ import { requote, type OrderRow } from "./draft";
 import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
-import { getAccessory } from "@/data/accessories";
+import { getAccessory, isInStock } from "@/data/accessories";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
 import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, type DiscountCode } from "../discounts";
@@ -87,6 +87,7 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   for (const a of req.accessories ?? []) accessoryQty.set(a.handle, Math.min(10, (accessoryQty.get(a.handle) ?? 0) + a.qty));
   const accessories = [...accessoryQty].map(([handle, qty]) => ({ a: getAccessory(handle), handle, qty }));
   if (accessories.some((x) => !x.a || !x.a.visible)) return { ok: false, code: "invalid_request", detail: "unknown accessory" };
+  if (accessories.some((x) => x.a && !isInStock(x.a))) return { ok: false, code: "invalid_request", detail: "accessory out of stock" };
   if (!lines.length && !accessories.length) return { ok: false, code: "cart_empty" };
   if (lines.some((l) => !l.p)) return { ok: false, code: "invalid_request", detail: "unknown product" };
   for (const { i } of lines) {

@@ -145,6 +145,8 @@ export interface Accessory {
   price: number; // ILS, flat — e.g. 18. No size/version pricing. Overridden by the price list's add-on for the category (src/data/accessories.ts).
   image: string;
   visible: boolean;
+  /** false = shown on the site but marked "Out of stock" and not orderable (owner request 2026-11-10). Missing = in stock. */
+  inStock?: boolean;
   /** Which design, when a team has more than one of the same item (scarves, 2026-11-10): "Navy & White". */
   variant?: string;
   variantAr?: string;

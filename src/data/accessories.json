@@ -191,6 +191,174 @@
       "teamHe": "אל-נאסר"
     },
     {
+      "handle": "scarf-juventus",
+      "category": "scarf",
+      "team": "Juventus",
+      "teamAr": "يوفنتوس",
+      "teamHe": "יובנטוס",
+      "price": 50,
+      "image": "/products/accessories/scarf-juventus.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-tottenham-hotspur",
+      "category": "scarf",
+      "team": "Tottenham Hotspur",
+      "teamAr": "توتنهام",
+      "teamHe": "טוטנהאם",
+      "price": 50,
+      "image": "/products/accessories/scarf-tottenham-hotspur.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-chelsea",
+      "category": "scarf",
+      "team": "Chelsea",
+      "teamAr": "تشيلسي",
+      "teamHe": "צ'לסי",
+      "price": 50,
+      "image": "/products/accessories/scarf-chelsea.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-manchester-united",
+      "category": "scarf",
+      "team": "Manchester United",
+      "teamAr": "مانشستر يونايتد",
+      "teamHe": "מנצ'סטר יונייטד",
+      "price": 50,
+      "image": "/products/accessories/scarf-manchester-united.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-manchester-city",
+      "category": "scarf",
+      "team": "Manchester City",
+      "teamAr": "مانشستر سيتي",
+      "teamHe": "מנצ'סטר סיטי",
+      "price": 50,
+      "image": "/products/accessories/scarf-manchester-city.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-atletico-madrid",
+      "category": "scarf",
+      "team": "Atlético Madrid",
+      "teamAr": "أتلتيكو مدريد",
+      "teamHe": "אתלטיקו מדריד",
+      "price": 50,
+      "image": "/products/accessories/scarf-atletico-madrid.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-liverpool",
+      "category": "scarf",
+      "team": "Liverpool",
+      "teamAr": "ليفربول",
+      "teamHe": "ליברפול",
+      "price": 50,
+      "image": "/products/accessories/scarf-liverpool.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-real-madrid-blue-black",
+      "category": "scarf",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "teamHe": "ריאל מדריד",
+      "price": 50,
+      "image": "/products/accessories/scarf-real-madrid-blue-black.jpg",
+      "visible": true,
+      "inStock": true,
+      "variant": "Blue & Black",
+      "variantAr": "أزرق وأسود",
+      "variantHe": "כחול-שחור"
+    },
+    {
+      "handle": "scarf-inter-milan",
+      "category": "scarf",
+      "team": "Inter Milan",
+      "teamAr": "إنتر ميلان",
+      "teamHe": "אינטר מילאן",
+      "price": 50,
+      "image": "/products/accessories/scarf-inter-milan.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-borussia-dortmund",
+      "category": "scarf",
+      "team": "Borussia Dortmund",
+      "teamAr": "بوروسيا دورتموند",
+      "teamHe": "בורוסיה דורטמונד",
+      "price": 50,
+      "image": "/products/accessories/scarf-borussia-dortmund.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-bayern-munich",
+      "category": "scarf",
+      "team": "Bayern Munich",
+      "teamAr": "بايرن ميونخ",
+      "teamHe": "באיירן מינכן",
+      "price": 50,
+      "image": "/products/accessories/scarf-bayern-munich.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-barcelona",
+      "category": "scarf",
+      "team": "Barcelona",
+      "teamAr": "برشلونة",
+      "teamHe": "ברצלונה",
+      "price": 50,
+      "image": "/products/accessories/scarf-barcelona.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-paris-saint-germain",
+      "category": "scarf",
+      "team": "Paris Saint-Germain",
+      "teamAr": "باريس سان جيرمان",
+      "teamHe": "פריז סן ז'רמן",
+      "price": 50,
+      "image": "/products/accessories/scarf-paris-saint-germain.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-arsenal",
+      "category": "scarf",
+      "team": "Arsenal",
+      "teamAr": "أرسنال",
+      "teamHe": "ארסנל",
+      "price": 50,
+      "image": "/products/accessories/scarf-arsenal.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
+      "handle": "scarf-ac-milan",
+      "category": "scarf",
+      "team": "AC Milan",
+      "teamAr": "ميلان",
+      "teamHe": "מילאן",
+      "price": 50,
+      "image": "/products/accessories/scarf-ac-milan.jpg",
+      "visible": true,
+      "inStock": true
+    },
+    {
       "handle": "scarf-real-madrid-navy-white",
       "category": "scarf",
       "team": "Real Madrid",
@@ -201,7 +369,8 @@
       "variantHe": "כחול-לבן",
       "price": 50,
       "image": "/products/accessories/scarf-real-madrid-navy-white.jpg",
-      "visible": true
+      "visible": true,
+      "inStock": false
     },
     {
       "handle": "scarf-real-madrid-white-gold",
@@ -214,7 +383,8 @@
       "variantHe": "לבן-זהב",
       "price": 50,
       "image": "/products/accessories/scarf-real-madrid-white-gold.jpg",
-      "visible": true
+      "visible": true,
+      "inStock": false
     },
     {
       "handle": "scarf-real-madrid-hala-madrid-navy",
@@ -227,7 +397,8 @@
       "variantHe": "הלה מדריד, כחול כהה",
       "price": 50,
       "image": "/products/accessories/scarf-real-madrid-hala-madrid-navy.jpg",
-      "visible": true
+      "visible": true,
+      "inStock": false
     },
     {
       "handle": "scarf-real-madrid-hala-madrid-spain",
@@ -240,7 +411,8 @@
       "variantHe": "הלה מדריד, צבעי ספרד",
       "price": 50,
       "image": "/products/accessories/scarf-real-madrid-hala-madrid-spain.jpg",
-      "visible": true
+      "visible": true,
+      "inStock": false
     }
   ]
 }

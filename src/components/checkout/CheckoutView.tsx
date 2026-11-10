@@ -427,7 +427,7 @@ export function CheckoutView({
         })),
       // accessories are really ordered now (owner request 2026-11-10): handle + qty only, priced on the server
       accessories: items
-        .filter((item) => item.kind === "accessory")
+        .filter((item) => item.kind === "accessory" && byAccessoryHandle.has(item.handle))
         .map((item) => ({ handle: item.handle, qty: item.qty })),
       customer: parsed.success ? parsed.data : null,
       locale,

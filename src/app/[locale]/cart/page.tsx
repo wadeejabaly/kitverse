@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getVisibleProducts } from "@/data/catalog";
-import { getVisibleAccessories } from "@/data/accessories";
+import { getOrderableAccessories } from "@/data/accessories";
 import { CartView, type CartAccessoryInfo, type CartProductInfo } from "@/components/cart/CartView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { alternatesFor } from "@/lib/site";
@@ -46,7 +46,7 @@ export default async function CartPage({
     image: product.image,
   }));
 
-  const accessories: CartAccessoryInfo[] = getVisibleAccessories().map((accessory) => ({
+  const accessories: CartAccessoryInfo[] = getOrderableAccessories().map((accessory) => ({
     handle: accessory.handle,
     category: accessory.category,
     variant: accessory.variant,
