@@ -1,9 +1,24 @@
 @import "tailwindcss";
 
-/* Kitverse palette: warm paper, ink, pitch green. */
+/*
+ * Kitverse admin - design tokens (admin redesign 2026-11-10).
+ *
+ * The same identity as the redesigned storefront (src/app/globals.css): the
+ * night-stadium navy of its hero and page bands (--flood-ground #0a1024), the
+ * electric blue CTA (#2f6bff), the crest gold used sparingly, and the Changa
+ * typeface. The admin is the dark side of that brand: a deep navy console with
+ * hairline borders, one loud blue accent and gold only for highlights.
+ *
+ * Token names are kept from the old console (bg-surface, text-ink, pitch...)
+ * so every page and component inherits the new look; `pitch` is now the brand
+ * blue (it used to be green) and the green "success" tone has its own tokens.
+ */
+/* The customer order page (/o, src/app/o/layout.tsx) also loads this file and
+   keeps the original light store palette on :root - do not change it here. */
 :root {
   --paper: #f6f5f1;
   --surface: #ffffff;
+  --raised: #ffffff;
   --ink: #15140f;
   --ink-2: #3d3b33;
   --muted: #77746a;
@@ -20,32 +35,46 @@
   --pitch-fill: #1e4620;
   --pitch-fill-2: #2c5e2f;
   --link: #1e4620;
+  --gold: #856618;
+  --gold-soft: #f6efdc;
+  --green: #1e7a46;
+  --green-soft: #e7f4ec;
+  --sidebar: #ffffff;
 }
 
-/* Admin: dark console look (black page, framed panel, hairline borders). */
+/* Admin: the dark navy console. */
 .admin-theme {
-  --void: #000000;
-  --paper: #0a0a0a;
-  --surface: #0e0e0e;
-  --raised: #161616;
-  --ink: #ededed;
-  --ink-2: #c2c2c2;
-  --muted: #8a8a8a;
-  --line: #242424;
-  --line-2: #333333;
-  --pitch: #3ecf8e;
-  --pitch-2: #5ad9a0;
-  --pitch-soft: #0d2a1d;
-  --pitch-fill: #0b7a4b;
-  --pitch-fill-2: #0e8f58;
-  --link: #5aa7f2;
+  --void: #050914;          /* page behind everything */
+  --paper: #0a1024;         /* main panel (storefront --flood-ground) */
+  --surface: #0f1731;       /* cards */
+  --raised: #16203f;        /* hover / raised rows / inputs */
+  --ink: #f3f5fa;           /* text */
+  --ink-2: #c7cee3;         /* secondary text */
+  --muted: #8a94b5;         /* labels, meta (storefront --flood-ink-soft family) */
+  --line: #1c2649;          /* hairlines */
+  --line-2: #2a3663;        /* stronger borders */
+  --pitch: #6f95ff;         /* brand blue for text / icons on navy */
+  --pitch-2: #93b0ff;
+  --pitch-soft: #14214a;    /* blue tint fill */
+  --pitch-fill: #2f6bff;    /* storefront electric blue - buttons, bars */
+  --pitch-fill-2: #4a7dff;
+  --link: #8fb0ff;
+  --gold: #d4b26a;          /* crest gold - highlights only */
+  --gold-soft: #2a2312;
+  --green: #4ade9b;         /* success */
+  --green-soft: #0f2a22;
   --amber: #f5b14c;
-  --amber-soft: #2a1e0b;
-  --red: #f47067;
-  --red-soft: #2c1312;
+  --amber-soft: #2b2010;
+  --red: #ff7a70;
+  --red-soft: #321519;
+  --sidebar: #070c1d;
   color-scheme: dark;
 }
-html:has(.admin-theme), html:has(.admin-theme) body { background: #000; }
+
+html:has(.admin-theme),
+html:has(.admin-theme) body {
+  background: var(--void);
+}
 
 @theme inline {
   --color-paper: var(--paper);
@@ -62,21 +91,127 @@ html:has(.admin-theme), html:has(.admin-theme) body { background: #000; }
   --color-amber-soft: var(--amber-soft);
   --color-red: var(--red);
   --color-red-soft: var(--red-soft);
+  --color-green: var(--green);
+  --color-green-soft: var(--green-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
   --color-void: var(--void);
-  --color-raised: var(--raised, var(--surface));
+  --color-raised: var(--raised);
+  --color-sidebar: var(--sidebar);
   --color-pitch-fill: var(--pitch-fill);
   --color-pitch-fill-2: var(--pitch-fill-2);
   --color-link: var(--link);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-changa-latin), var(--font-changa-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-reem-kufi-latin), var(--font-changa-latin), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 body {
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+body.admin-theme {
+  background: var(--void);
+  font-family: var(--font-changa-latin), var(--font-changa-arabic), ui-sans-serif, system-ui, sans-serif;
+}
 
-/* Arabic customer text inside the English admin */
-[dir="auto"], .ar { font-family: var(--font-geist-sans), "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif; }
+/* The stadium-light glow behind the console (same mood as the storefront hero). */
+.admin-glow {
+  background:
+    radial-gradient(1200px 520px at 78% -12%, rgb(47 107 255 / 0.16), transparent 62%),
+    radial-gradient(900px 420px at -10% -20%, rgb(212 178 106 / 0.06), transparent 60%),
+    var(--void);
+}
+
+/* Arabic / Hebrew customer text inside the English admin */
+[dir="auto"],
+.ar {
+  font-family: var(--font-changa-arabic), var(--font-changa-latin), "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif;
+}
+
+/* Cards: a hairline with a faint top highlight, like the storefront's tiles on the night band. */
+.kv-card {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.025), transparent 40%), var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 12px 30px -18px rgb(0 0 0 / 0.7);
+}
+
+/* The display face (Reem Kufi, the storefront's headline font) for page titles and big numbers. */
+.kv-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.kv-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Data tables */
+.kv-adm-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+}
+.kv-adm-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.kv-adm-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.kv-adm-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.kv-adm-table tbody tr {
+  transition: background-color 120ms ease-out;
+}
+.kv-adm-table tbody tr:hover {
+  background: rgb(255 255 255 / 0.025);
+}
+
+/* Native selects / date inputs pick the dark scheme */
+.admin-theme select,
+.admin-theme input[type="date"] {
+  color-scheme: dark;
+}
+
+/* Thin scrollbars inside the console */
+.admin-theme * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+@keyframes kv-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.kv-skeleton {
+  background: linear-gradient(90deg, var(--surface) 0px, var(--raised) 160px, var(--surface) 320px);
+  background-size: 800px 100%;
+  animation: kv-shimmer 1.3s linear infinite;
+  border-radius: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-skeleton { animation: none; }
+}

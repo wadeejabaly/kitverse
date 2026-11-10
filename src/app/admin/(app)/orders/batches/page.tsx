@@ -11,7 +11,7 @@ export default async function Batches() {
   return (
     <>
       <Link href="/admin/orders" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Orders</Link>
-      <PageHeader title="Supplier batches" subtitle="Each batch is one spreadsheet you send the supplier on WhatsApp." />
+      <PageHeader eyebrow="Sales" title="Supplier batches" subtitle="Each batch is one spreadsheet you send the supplier on WhatsApp." />
       {!rows.length ? <EmptyState icon={Truck} title="No batches yet" text="Create one from the Orders page." /> : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {rows.map((b) => (

@@ -6,6 +6,7 @@ import { testChatSend } from "../../actions";
 import { Thread, type ThreadMsg } from "../thread";
 import { PageHeader, Card, EmptyState, Badge, button } from "../../ui";
 import SendBox from "./send-box";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -19,10 +20,10 @@ export default async function TestChat() {
   const cost = conv ? ((await db().from("agent_runs").select("cost_usd").eq("conversation_id", conv.id)).data ?? []).reduce((s, r) => s + Number(r.cost_usd), 0) : 0;
   return (
     <>
-      <PageHeader title="Test the bot" subtitle="Chat as a customer. Same catalog, prices and rules - nothing is sent to Instagram, orders made here are marked as tests."
+      <PageHeader eyebrow="Instagram" title="Test the bot" subtitle="Chat as a customer. Same catalog, prices and rules - nothing is sent to Instagram, orders made here are marked as tests."
         actions={<>
           <Badge>${cost.toFixed(3)} this chat</Badge>
-          <form action={testChatSend}><input type="hidden" name="reset" value="1" /><button className={button.ghost}><RotateCcw className="h-4 w-4" /> New chat</button></form>
+          <form action={testChatSend}><input type="hidden" name="reset" value="1" /><SubmitButton bare className={button.ghost}><RotateCcw className="h-4 w-4" /> New chat</SubmitButton></form>
         </>} />
       <Card className="min-h-[50vh]">
         {msgs.length ? <Thread messages={msgs} /> : <EmptyState icon={FlaskConical} title="Say hi like a customer would" text="Try: قديش بلوزة برشلونة الجديدة؟ · or send a size question, a discount request, a team we don't have." />}

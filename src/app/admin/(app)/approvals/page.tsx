@@ -12,7 +12,7 @@ export default async function Approvals() {
   const rows = (data ?? []) as unknown as { id: string; kind: string; priority: string; proposal: { summary?: string }; draft_reply: string | null; created_at: string; conversation: { customer: { full_name: string | null; display_name: string | null; ig_username: string | null } } | null }[];
   return (
     <>
-      <PageHeader title="Approvals" subtitle="Replies and decisions waiting for you. Oldest first." />
+      <PageHeader eyebrow="Instagram" title="Approvals" subtitle="Replies and decisions waiting for you. Oldest first." />
       {!rows.length ? <EmptyState icon={ClipboardCheck} title="All clear" text="When the bot needs you - a reply to approve, a discount, a shirt we may not have - it shows up here and on your phone." /> : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {rows.map((a) => {

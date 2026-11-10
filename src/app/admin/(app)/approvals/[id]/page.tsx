@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { decideApproval } from "../../../actions";
 import { ChatWindow, Thread, type ThreadMsg } from "../../thread";
 import { PageHeader, Card, Badge, SectionTitle, button, input, KIND } from "../../../ui";
+import { SubmitButton } from "../../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -77,9 +78,9 @@ export default async function ApprovalPage({ params, searchParams }: PageProps<"
                   </>
                 )}
                 <div className="flex flex-wrap gap-2">
-                  <button name="decision" value="approved" className={button.primary}><Check className="h-4 w-4" />{isDraft ? "Send" : isAvail ? "Available" : "Approve"}</button>
-                  <button name="decision" value="rejected" className={button.danger}><X className="h-4 w-4" />{isDraft ? "Don't send" : isAvail ? "Not available" : "Reject"}</button>
-                  <button name="decision" value="taken_over" className={button.ghost}><Hand className="h-4 w-4" />I&apos;ll reply myself</button>
+                  <SubmitButton bare name="decision" value="approved" className={button.primary}><Check className="h-4 w-4" />{isDraft ? "Send" : isAvail ? "Available" : "Approve"}</SubmitButton>
+                  <SubmitButton bare name="decision" value="rejected" className={button.danger}><X className="h-4 w-4" />{isDraft ? "Don't send" : isAvail ? "Not available" : "Reject"}</SubmitButton>
+                  <SubmitButton bare name="decision" value="taken_over" className={button.ghost}><Hand className="h-4 w-4" />I&apos;ll reply myself</SubmitButton>
                 </div>
               </form>
             </Card>

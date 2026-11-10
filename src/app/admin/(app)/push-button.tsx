@@ -27,8 +27,8 @@ export default function PushButton({ vapidKey, compact = false }: { vapidKey: st
   return (
     <button
       className={compact
-        ? "grid h-9 w-9 place-items-center rounded-lg text-pitch hover:bg-raised"
-        : "flex items-center justify-center gap-2 rounded-lg bg-pitch-fill px-3.5 py-2 text-sm font-medium text-white hover:bg-pitch-fill-2"}
+        ? "grid h-10 w-10 place-items-center rounded-xl border border-line-2 bg-raised/40 text-pitch hover:bg-raised"
+        : "flex h-10 items-center justify-center gap-2 rounded-xl border border-pitch/40 bg-pitch-soft px-3.5 text-sm font-semibold text-ink hover:bg-pitch-fill/25"}
       aria-label="Enable phone alerts"
       onClick={async () => {
         const perm = await Notification.requestPermission();

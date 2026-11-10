@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { batchOrderIds, batchLines } from "@/lib/orders/admin";
 import { markBatchSent } from "../../../../orders-actions";
 import { PageHeader, Card, Badge, button } from "../../../../ui";
+import { SubmitButton } from "../../../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,10 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
   return (
     <>
       <Link href="/admin/orders/batches" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Batches</Link>
-      <PageHeader title="Supplier batch" subtitle={`${lines.length} lines from ${orderIds.length} order${orderIds.length === 1 ? "" : "s"}. Download the sheet, send it on WhatsApp, then mark it sent.`}
+      <PageHeader eyebrow="Sales" title="Supplier batch" subtitle={`${lines.length} lines from ${orderIds.length} order${orderIds.length === 1 ? "" : "s"}. Download the sheet, send it on WhatsApp, then mark it sent.`}
         actions={<>
           <a href={`/admin/orders/batches/${id}/csv`} className={button.primary}><Download className="h-4 w-4" /> Download sheet</a>
-          {b.status !== "sent" ? <form action={markBatchSent}><input type="hidden" name="batchId" value={id} /><button className={button.ghost}><Check className="h-4 w-4" /> Mark as sent</button></form> : <Badge tone="green">Sent</Badge>}
+          {b.status !== "sent" ? <form action={markBatchSent}><input type="hidden" name="batchId" value={id} /><SubmitButton bare className={button.ghost}><Check className="h-4 w-4" /> Mark as sent</SubmitButton></form> : <Badge tone="green">Sent</Badge>}
         </>} />
       <Card padded={false} className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-sm">

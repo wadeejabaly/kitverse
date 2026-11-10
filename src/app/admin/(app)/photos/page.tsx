@@ -10,6 +10,7 @@ import { PhotoManagerButton } from "./photo-manager";
 import { MigrateRealPhotosButton } from "./migrate-real-photos-button";
 import { DeleteProductButton } from "./delete-product-button";
 import { ProductManager } from "./product-manager";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,7 @@ function RenameControl({ id, titleEn, titleAr }: { id: string; titleEn: string; 
         <input type="hidden" name="productId" value={id} />
         <input name="titleEn" defaultValue={titleEn} required placeholder="English name" className={cx(ctrl, "px-2 py-1 text-xs")} />
         <input name="titleAr" defaultValue={titleAr ?? ""} dir="rtl" placeholder="الاسم بالعربية (اختياري)" className={cx(ctrl, "px-2 py-1 text-xs")} />
-        <button className="self-start rounded-md bg-pitch-fill px-2 py-1 text-[11px] font-medium text-white hover:bg-pitch-fill-2">Save name</button>
+        <SubmitButton bare className="self-start rounded-md bg-pitch-fill px-2 py-1 text-[11px] font-medium text-white hover:bg-pitch-fill-2">Save name</SubmitButton>
       </form>
     </details>
   );
@@ -91,14 +92,14 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
 
   return (
     <>
-      <PageHeader title="Photos" subtitle={`Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots. ${env().VERCEL_DEPLOY_HOOK_URL ? "Photos you upload show on the website about 2 minutes later." : "Photos you upload reach the bot right away and the website after the next site update."}`} />
+      <PageHeader eyebrow="Catalog" title="Photos & shirts" subtitle={`Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots. ${env().VERCEL_DEPLOY_HOOK_URL ? "Photos you upload show on the website about 2 minutes later." : "Photos you upload reach the bot right away and the website after the next site update."}`} />
       <MigrateRealPhotosButton />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
-          <Link href={qs("missing")} className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-ink text-paper" : "text-ink-2")}>Needs a photo ({missing.length})</Link>
-          <Link href={qs("all")} className={cx("rounded-lg px-3 py-1.5", tab === "all" ? "bg-ink text-paper" : "text-ink-2")}>Change a photo</Link>
-          <Link href={qs("manage")} className={cx("rounded-lg px-3 py-1.5", tab === "manage" ? "bg-ink text-paper" : "text-ink-2")}>Manage shirts</Link>
-          <Link href={qs("rejected")} className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-ink text-paper" : "text-ink-2")}>Rejected photos</Link>
+          <Link href={qs("missing")} className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-pitch-fill text-white" : "text-ink-2")}>Needs a photo ({missing.length})</Link>
+          <Link href={qs("all")} className={cx("rounded-lg px-3 py-1.5", tab === "all" ? "bg-pitch-fill text-white" : "text-ink-2")}>Change a photo</Link>
+          <Link href={qs("manage")} className={cx("rounded-lg px-3 py-1.5", tab === "manage" ? "bg-pitch-fill text-white" : "text-ink-2")}>Manage shirts</Link>
+          <Link href={qs("rejected")} className={cx("rounded-lg px-3 py-1.5", tab === "rejected" ? "bg-pitch-fill text-white" : "text-ink-2")}>Rejected photos</Link>
         </div>
         {tab !== "rejected" ? (
           <form className="flex flex-wrap items-center gap-2" action="/admin/photos">

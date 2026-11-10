@@ -6,6 +6,7 @@ import { addInventory, setInventoryQty } from "../../inventory-actions";
 import { PageHeader, Card, SectionTitle, Badge, EmptyState, cx, button, input } from "../../ui";
 import { DeleteStockButton } from "./delete-stock-button";
 import { maxPatches } from "@/lib/patch-limits";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -96,7 +97,7 @@ function AddStockRow({ product }: { product: ProductHit }) {
               </div>
             </div>
           ) : null}
-          <button className={cx(button.primary, "self-start py-1.5")}>Add</button>
+          <SubmitButton bare className={cx(button.primary, "self-start py-1.5")}>Add</SubmitButton>
         </form>
       </details>
     </div>
@@ -123,7 +124,7 @@ function StockRow({ row }: { row: StockRow }) {
       <form action={setInventoryQty} className="flex items-center gap-1.5">
         <input type="hidden" name="id" value={row.id} />
         <input name="qty" type="number" min={0} max={999} defaultValue={row.qty} className={cx(input, "w-16 py-1.5 text-center")} />
-        <button className={cx(button.ghost, "px-2.5 py-1.5 text-xs")}>Save</button>
+        <SubmitButton bare className={cx(button.ghost, "px-2.5 py-1.5 text-xs")}>Save</SubmitButton>
       </form>
       <DeleteStockButton id={row.id} label={label} />
     </div>
@@ -154,7 +155,7 @@ export default async function InventoryPage({ searchParams }: PageProps<"/admin/
 
   return (
     <>
-      <PageHeader title="Inventory" subtitle="On-hand stock you've logged yourself - mostly shirts freed up by a cancelled order. Order pages check this to tell you if an item is in stock or needs ordering from the supplier." />
+      <PageHeader eyebrow="Catalog" title="Inventory" subtitle="On-hand stock you've logged yourself - mostly shirts freed up by a cancelled order. Order pages check this to tell you if an item is in stock or needs ordering from the supplier." />
 
       <Card className="mb-5">
         <SectionTitle>Add stock</SectionTitle>

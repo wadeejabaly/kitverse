@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { conversationAction, ownerSend } from "../../../actions";
 import { ChatWindow, Thread, type ThreadMsg } from "../../thread";
 import { PageHeader, Card, Badge, SectionTitle, button, input, MODE, KIND, ORDER_STATUS } from "../../../ui";
+import { SubmitButton } from "../../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -25,14 +26,14 @@ export default async function Conversation({ params }: PageProps<"/admin/inbox/[
   const act = (action: string, label: string, Icon: typeof Bot, style: string = button.ghost) => (
     <form action={conversationAction}>
       <input type="hidden" name="conversationId" value={conv.id} /><input type="hidden" name="action" value={action} />
-      <button className={`${style} w-full justify-start`}><Icon className="h-4 w-4" />{label}</button>
+      <SubmitButton bare className={`${style} w-full justify-start`}><Icon className="h-4 w-4" />{label}</SubmitButton>
     </form>
   );
 
   return (
     <>
       <Link href="/admin/inbox" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Inbox</Link>
-      <PageHeader title={who} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={mode.tone}>{mode.label}</Badge>{unlimited ? <Badge>No reply limit</Badge> : null}<span>{conv.bot_replies_total} bot replies</span></span>} />
+      <PageHeader eyebrow="Instagram chat" title={who} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={mode.tone}>{mode.label}</Badge>{unlimited ? <Badge>No reply limit</Badge> : null}<span>{conv.bot_replies_total} bot replies</span></span>} />
 
       <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
         <div className="flex flex-col gap-3">
@@ -45,7 +46,7 @@ export default async function Conversation({ params }: PageProps<"/admin/inbox/[
           <form action={ownerSend} className="flex gap-2">
             <input type="hidden" name="conversationId" value={conv.id} />
             <input name="text" required placeholder="Write to the customer…" className={input} dir="auto" autoComplete="off" />
-            <button className={button.primary} aria-label="Send"><Send className="h-4 w-4" /></button>
+            <SubmitButton bare className={button.primary} aria-label="Send"><Send className="h-4 w-4" /></SubmitButton>
           </form>
           <p className="text-xs text-muted">Writing here (or in Instagram) pauses the bot in this chat for 12 hours.</p>
         </div>

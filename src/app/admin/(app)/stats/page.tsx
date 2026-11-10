@@ -1,9 +1,12 @@
-import { Eye, Users, ShoppingCart, CreditCard, ShoppingBag, TrendingUp, Globe } from "lucide-react";
+import Link from "next/link";
+import { Eye, Users, ShoppingCart, CreditCard, ShoppingBag, TrendingUp, Globe, Wallet, Receipt, Shirt, UserCheck } from "lucide-react";
 import { db } from "@/lib/db";
 import { getProduct } from "@/data/catalog";
 import { titleFor } from "@/lib/product";
 import { israelDayStart, israelDayEnd } from "@/lib/time";
-import { PageHeader, Card, Stat, SectionTitle, EmptyState } from "../../ui";
+import { PageHeader, Card, Stat, SectionTitle, EmptyState, Kpi, Tabs, ils, cx } from "../../ui";
+import { AreaChart, BarChart, Donut, RankList, ChartCard } from "../../charts";
+import { allOrders, customerName, dailySeries, delta, METHOD_LABEL, productSales, summarize as summarizeSales } from "../../metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -40,32 +43,6 @@ function topCounts(keys: (string | null)[], fallback: string, n: number): { labe
   return top;
 }
 
-/** A single-series magnitude bar chart, plain divs - one brand hue, rounded data-end, a thin
- *  gap between bars, exact value on hover via `title` (no legend needed for one series). */
-function TrendBars({ data, title: chartTitle }: { data: { label: string; value: number }[]; title: string }) {
-  const max = Math.max(1, ...data.map((d) => d.value));
-  return (
-    <div>
-      <div className="mb-2 text-xs font-medium text-muted">{chartTitle}</div>
-      <div className="flex h-24 items-end gap-1">
-        {data.map((d, i) => (
-          <div key={i} className="group relative flex-1" title={`${d.label}: ${d.value.toLocaleString()}`}>
-            <div
-              className="w-full rounded-t-[3px] bg-pitch-fill transition-colors group-hover:bg-pitch-fill-2"
-              style={{ height: `${Math.max(3, Math.round((d.value / max) * 96))}px` }}
-            />
-          </div>
-        ))}
-      </div>
-      <div className="mt-1.5 flex gap-1 text-[10px] text-muted">
-        {data.map((d, i) => (
-          <div key={i} className="flex-1 truncate text-center">{i % 2 === 0 || data.length <= 8 ? d.label : ""}</div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function FunnelRow({ label, value, of, icon: Icon }: { label: string; value: number; of: number; icon: typeof Eye }) {
   const pct = of > 0 ? Math.round((value / of) * 100) : 0;
   return (
@@ -73,7 +50,7 @@ function FunnelRow({ label, value, of, icon: Icon }: { label: string; value: num
       <Icon className="h-4 w-4 shrink-0 text-muted" strokeWidth={1.75} />
       <span className="w-32 shrink-0 text-sm text-ink-2">{label}</span>
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-raised">
-        <div className="h-full rounded-full bg-pitch-fill" style={{ width: `${Math.max(pct ? 2 : 0, pct)}%` }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-pitch-fill to-pitch-2" style={{ width: `${Math.max(pct ? 2 : 0, pct)}%` }} />
       </div>
       <span className="w-20 shrink-0 text-right text-sm font-medium tabular-nums text-ink">{value.toLocaleString()}</span>
       <span className="w-12 shrink-0 text-right text-xs tabular-nums text-muted">{of > 0 ? `${pct}%` : "—"}</span>
@@ -101,7 +78,9 @@ async function eventsSince(since: string): Promise<EventRow[]> {
   return out;
 }
 
-export default async function Stats() {
+export default async function Stats({ searchParams }: PageProps<"/admin/stats">) {
+  const sp = await searchParams;
+  const period = [7, 30, 90, 365].includes(Number(sp.days)) ? Number(sp.days) : 30;
   const now = new Date();
   const since = new Date(now.getTime() - WINDOW_DAYS * 86400_000).toISOString();
   const todayStart = israelDayStart();
@@ -155,11 +134,69 @@ export default async function Stats() {
 
   const visitors7 = last7.visitors;
 
+  // ---- Sales (admin redesign 2026-11-10): real orders, same definitions as the dashboard (../../metrics.ts)
+  const all = await allOrders();
+  const pStart = new Date(now.getTime() - period * 86400_000).toISOString();
+  const pPrevStart = new Date(now.getTime() - 2 * period * 86400_000).toISOString();
+  const cur = summarizeSales(all, pStart);
+  const prev = summarizeSales(all.filter((o) => o.confirmed_at && o.confirmed_at < pStart), pPrevStart);
+  const series = dailySeries(all, Math.min(period, 90), now);
+  const weekly = period > 90;
+  const weeks = weekly ? weeklySeries(all, period, now) : null;
+  const prodSales = await productSales(cur.sales.map((o) => o.id));
+  const methods = new Map<string, number>();
+  for (const o of cur.sales) methods.set(o.payment_method ?? "cod", (methods.get(o.payment_method ?? "cod") ?? 0) + o.total);
+  const byCustomer = new Map<string, { name: string; spend: number; orders: number }>();
+  for (const o of cur.sales) {
+    const r = byCustomer.get(o.customer_id) ?? { name: customerName(o), spend: 0, orders: 0 };
+    r.spend += o.total; r.orders += 1; byCustomer.set(o.customer_id, r);
+  }
+  const topCustomers = [...byCustomer.entries()].sort((a, b) => b[1].spend - a[1].spend).slice(0, 6);
+  const newBuyers = [...byCustomer.keys()].filter((id) => !all.some((o) => o.customer_id === id && o.confirmed_at && o.confirmed_at < pStart && o.status !== "cancelled")).length;
+  const pct = (d: number | null) => d === null ? null : <span className={cx("font-semibold", d >= 0 ? "text-green" : "text-red")}>{d >= 0 ? "▲" : "▼"} {Math.abs(d)}% vs previous {period} days</span>;
+
   return (
     <>
-      <PageHeader title="Site stats" subtitle="Traffic, add-to-cart and checkout, from the website's own first-party event log - anonymous and session-scoped, not a tracking cookie." />
+      <PageHeader eyebrow="Insights" title="Analytics" subtitle="Sales from your orders, plus traffic from the website's own first-party event log (anonymous, session-scoped - not a tracking cookie)." />
 
-      <SectionTitle>Today</SectionTitle>
+      <Tabs active={String(period)} items={[[7, "7 days"], [30, "30 days"], [90, "90 days"], [365, "12 months"]].map(([d, label]) => ({ key: String(d), label: String(label), href: `/admin/stats?days=${d}` }))} />
+
+      <SectionTitle>Sales · last {period} days</SectionTitle>
+      <div className="mb-4 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <Kpi label="Revenue" icon={Wallet} value={ils(cur.revenue)} tone="gold" hint={pct(delta(cur.revenue, prev.revenue)) ?? "Confirmed, not cancelled"} />
+        <Kpi label="Orders" icon={Receipt} value={cur.count} hint={pct(delta(cur.count, prev.count)) ?? undefined} />
+        <Kpi label="Average order value" icon={CreditCard} value={ils(cur.aov)} tone="gold" hint={prev.count ? `${ils(prev.aov)} the period before` : undefined} />
+        <Kpi label="Buyers" icon={UserCheck} value={cur.buyers} tone="green" hint={`${newBuyers} first-time`} />
+      </div>
+      <div className="mb-4 grid gap-4 xl:grid-cols-[1.65fr_1fr]">
+        <ChartCard title={weekly ? "Revenue per week" : "Revenue per day"} figure={ils(cur.revenue)} sub="By the day you confirmed each order (Israel time)">
+          <AreaChart data={(weeks ?? series).map((d) => ({ label: d.label, value: d.revenue / 100 }))} format={(v) => `₪${Math.round(v).toLocaleString()}`} />
+        </ChartCard>
+        <ChartCard title="Payment methods" sub="Share of revenue">
+          {methods.size ? <Donut data={[...methods.entries()].sort((a, b) => b[1] - a[1]).map(([m, v]) => ({ label: METHOD_LABEL[m] ?? m, value: v / 100 }))} format={(v) => `₪${Math.round(v).toLocaleString()}`} /> : <EmptyState icon={CreditCard} title="No sales in this period" />}
+        </ChartCard>
+      </div>
+      <div className="mb-4 grid gap-4 lg:grid-cols-2">
+        <ChartCard title={weekly ? "Orders per week" : "Orders per day"} figure={cur.count}>
+          <BarChart data={(weeks ?? series).map((d) => ({ label: d.label, value: d.orders }))} />
+        </ChartCard>
+        <ChartCard title="Sales by category" sub="Units sold">
+          {prodSales.categories.length ? <Donut data={prodSales.categories} /> : <EmptyState icon={Shirt} title="Nothing sold in this period" />}
+        </ChartCard>
+      </div>
+      <div className="mb-8 grid gap-4 lg:grid-cols-2">
+        <ChartCard title="Best-selling products" sub={`${prodSales.shirtsSold} shirts · ${prodSales.accessoriesSold} accessories sold`}>
+          <RankList rows={prodSales.best.slice(0, 8).map((b) => ({ label: b.title, value: b.qty, sub: `${b.orders.size} order${b.orders.size === 1 ? "" : "s"}` }))} color="#d4b26a" empty={<EmptyState icon={Shirt} title="Nothing sold in this period" />} />
+        </ChartCard>
+        <ChartCard title="Top customers" sub="By spend in this period">
+          <RankList rows={topCustomers.map(([id, c]) => ({ key: id, label: <Link href={`/admin/customers/${id}`} className="hover:text-pitch" dir="auto">{c.name}</Link>, value: c.spend / 100, sub: `${c.orders} order${c.orders === 1 ? "" : "s"}` }))}
+            format={(v) => `₪${v.toLocaleString()}`} empty={<EmptyState icon={Users} title="No buyers in this period" />} />
+        </ChartCard>
+      </div>
+
+      <div className="kv-eyebrow mb-3">Website traffic</div>
+
+      <SectionTitle>Traffic today</SectionTitle>
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-5">
         <Stat label="Visitors" value={today.visitors} icon={Users} />
         <Stat label="Page views" value={today.pageviews} icon={Eye} />
@@ -168,7 +205,7 @@ export default async function Stats() {
         <Stat label="Orders" value={today.orders} icon={ShoppingBag} accent hint={`₪${today.revenue.toLocaleString()}`} />
       </div>
 
-      <SectionTitle>Last 7 days</SectionTitle>
+      <SectionTitle>Traffic · last 7 days</SectionTitle>
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-5">
         <Stat label="Visitors" value={last7.visitors} icon={Users} />
         <Stat label="Page views" value={last7.pageviews} icon={Eye} />
@@ -179,9 +216,9 @@ export default async function Stats() {
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <section className="flex flex-col gap-6">
-          <Card>
-            <TrendBars data={visitorTrend} title={`Visitors per day — last ${TREND_DAYS} days`} />
-          </Card>
+          <ChartCard title={`Visitors per day · last ${TREND_DAYS} days`}>
+            <BarChart data={visitorTrend} labelEvery={2} />
+          </ChartCard>
 
           <div>
             <SectionTitle>Visit → cart → checkout → order (last 7 days)</SectionTitle>
@@ -244,4 +281,15 @@ export default async function Stats() {
       </div>
     </>
   );
+}
+
+/** Weekly buckets for the 12-month view (7-day blocks ending today). */
+function weeklySeries(orders: Awaited<ReturnType<typeof allOrders>>, days: number, now: Date) {
+  const daily = dailySeries(orders, days, now);
+  const out: { label: string; revenue: number; orders: number }[] = [];
+  for (let i = daily.length % 7; i < daily.length; i += 7) {
+    const chunk = daily.slice(i, i + 7);
+    out.push({ label: chunk[0].label, revenue: chunk.reduce((s, d) => s + d.revenue, 0), orders: chunk.reduce((s, d) => s + d.orders, 0) });
+  }
+  return out;
 }

@@ -32,7 +32,7 @@ export default async function Catalog() {
 
   return (
     <>
-      <PageHeader title="Catalog" subtitle="The shirts on the website - Wadeea's hand-picked list. The bot can also sell any other shirt the supplier has." />
+      <PageHeader eyebrow="Catalog" title="Products" subtitle="The shirts on the website - Wadeea's hand-picked list. The bot can also sell any other shirt the supplier has." />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="On the website" value={shirts.length} icon={Store} />
         <Stat label="Teams" value={new Set(shirts.map((s) => s.team)).size} icon={Layers} />

@@ -22,10 +22,10 @@ export default async function Inbox({ searchParams }: PageProps<"/admin/inbox">)
 
   return (
     <>
-      <PageHeader title="Inbox" subtitle="Every Instagram conversation the bot is handling." />
+      <PageHeader eyebrow="Instagram" title="Inbox" subtitle="Every Instagram conversation the bot is handling." />
       <div className="mb-4 inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
         {tabs.map(([f, label]) => (
-          <Link key={f} href={f ? `/admin/inbox?filter=${f}` : "/admin/inbox"} className={cx("rounded-lg px-3 py-1.5", filter === f ? "bg-ink text-paper" : "text-ink-2 hover:text-ink")}>{label}</Link>
+          <Link key={f} href={f ? `/admin/inbox?filter=${f}` : "/admin/inbox"} className={cx("rounded-lg px-3 py-1.5", filter === f ? "bg-pitch-fill text-white" : "text-ink-2 hover:text-ink")}>{label}</Link>
         ))}
       </div>
       {!rows.length ? <EmptyState icon={MessagesSquare} title="No conversations yet" text="Chats appear here as soon as customers message @kitversejerseys." /> : (

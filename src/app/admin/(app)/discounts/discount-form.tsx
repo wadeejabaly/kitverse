@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { createDiscountCode, deleteDiscountCode } from "../../discounts-actions";
 import { button, input, cx } from "../../ui";
+import { SubmitButton } from "../../submit-button";
 
 const field = "flex flex-col gap-1 text-xs text-muted";
 
@@ -45,7 +46,7 @@ export function DiscountForm() {
         First order only (checked by phone number)
       </label>
       <div className="flex items-end">
-        <button className={cx(button.primary, "w-full")}>Create code</button>
+        <SubmitButton bare className={cx(button.primary, "w-full")}>Create code</SubmitButton>
       </div>
     </form>
   );
@@ -59,7 +60,7 @@ export function DeleteCodeButton({ code }: { code: string }) {
       onSubmit={(e) => { if (!confirm(`Delete the code "${code}"? This can't be undone.`)) e.preventDefault(); }}
     >
       <input type="hidden" name="code" value={code} />
-      <button className={cx(button.ghost, "text-red")} aria-label="Delete code"><Trash2 className="h-4 w-4" /></button>
+      <SubmitButton bare className={cx(button.ghost, "text-red")} aria-label="Delete code"><Trash2 className="h-4 w-4" /></SubmitButton>
     </form>
   );
 }

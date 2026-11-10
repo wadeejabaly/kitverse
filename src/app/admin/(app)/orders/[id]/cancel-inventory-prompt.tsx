@@ -1,6 +1,7 @@
 import { returnOrderToInventory, skipInventoryReturn } from "../../../inventory-actions";
 import { Card, SectionTitle, button } from "../../../ui";
 import type { BatchLine } from "@/lib/orders/admin";
+import { SubmitButton } from "../../../submit-button";
 
 /**
  * Owner request 2026-11-04, verbatim: "i want it to ask me first, because not every cancelled order
@@ -23,14 +24,14 @@ export function CancelInventoryPrompt({ orderId, lines }: { orderId: string; lin
               <span>{l.title}<span className="text-muted"> · {l.version}, {l.sleeve} sleeve, {l.size}{l.qty > 1 ? ` ×${l.qty}` : ""}</span></span>
             </label>
           ))}
-          <button className={`${button.primary} mt-1 self-start`}>Add checked to inventory</button>
+          <SubmitButton bare className={`${button.primary} mt-1 self-start`}>Add checked to inventory</SubmitButton>
         </form>
       ) : (
         <p className="mb-3 text-sm text-muted">None of these items have a catalog match to track stock against.</p>
       )}
       <form action={skipInventoryReturn} className="mt-2">
         <input type="hidden" name="orderId" value={orderId} />
-        <button className={`${button.ghost} text-xs`}>None of these - skip</button>
+        <SubmitButton bare className={`${button.ghost} text-xs`}>None of these - skip</SubmitButton>
       </form>
     </Card>
   );

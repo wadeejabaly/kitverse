@@ -15,7 +15,7 @@ export default async function Media() {
     links: { id: string; status: string; confidence: number | null; product: { title_ar: string | null; title_en: string; primary_image_url: string | null } }[] }[];
   return (
     <>
-      <PageHeader title="Posts & shirts" subtitle="New posts and stories are matched to shirts automatically. Confirm the matches so the bot knows what a reply refers to." />
+      <PageHeader eyebrow="Instagram" title="Posts & shirts" subtitle="New posts and stories are matched to shirts automatically. Confirm the matches so the bot knows what a reply refers to." />
       {!rows.length ? <EmptyState icon={Images} title="Nothing synced yet" text="Posts and stories appear here every 15 minutes once Instagram is connected." /> : (
         <div className="grid gap-4 sm:grid-cols-2">
           {rows.map((m) => (

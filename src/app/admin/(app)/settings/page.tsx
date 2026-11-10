@@ -7,6 +7,7 @@ import { saveSetting } from "../../actions";
 import { PageHeader, Card, Badge, button, input, cx } from "../../ui";
 import { RegisterWhatsAppButton } from "./register-whatsapp-button";
 import { formatBitPhone, normalizeBitPhone, normalizePayPalMeUsername } from "@/lib/manual-pay-core";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,7 @@ export default async function Settings() {
 
   return (
     <>
-      <PageHeader title="Settings" subtitle="How the bot behaves. Changes apply right away." />
+      <PageHeader eyebrow="System" title="Settings" subtitle="How the bot behaves, payment methods and alerts. Changes apply right away." />
       <div className="flex flex-col gap-4">
         <Section icon={FlaskConical} title="Who the bot talks to" text="While testing, the bot only answers the Instagram accounts listed here. Everyone else is ignored by the bot and you answer them in Instagram as usual.">
           <form action={saveSetting} className="flex flex-col gap-2">
@@ -70,7 +71,7 @@ export default async function Settings() {
             </label>
             <p className="text-xs text-muted">{testers.joined} account{testers.joined === 1 ? "" : "s"} connected so far.</p>
             {testers.enabled && !testers.usernames.length ? <p className="text-xs text-amber">No test accounts yet, so the bot answers nobody.</p> : null}
-            <button className={`${button.primary} mt-1 self-start`}>Save</button>
+            <SubmitButton bare className={`${button.primary} mt-1 self-start`}>Save</SubmitButton>
           </form>
         </Section>
 
@@ -79,7 +80,7 @@ export default async function Settings() {
             <input type="hidden" name="key" value="autonomy" />
             <Choice name="mode" value="draft" checked={autonomy !== "auto"} title="I approve every reply" text="The bot writes, you tap Send. Recommended for launch." />
             <Choice name="mode" value="auto" checked={autonomy === "auto"} title="Bot replies by itself" text="Discounts, missing shirts, complaints and similar still come to you." />
-            <button className={`${button.primary} mt-1 self-start`}>Save</button>
+            <SubmitButton bare className={`${button.primary} mt-1 self-start`}>Save</SubmitButton>
           </form>
         </Section>
 
@@ -87,7 +88,7 @@ export default async function Settings() {
           <form action={saveSetting} className="flex flex-col gap-2">
             <input type="hidden" name="key" value="ai_model" />
             {BOT_MODELS.map((m) => <Choice key={m.id} name="model" value={m.id} checked={model === m.id} title={m.title} text={m.text} />)}
-            <button className={`${button.primary} mt-1 self-start`}>Save</button>
+            <SubmitButton bare className={`${button.primary} mt-1 self-start`}>Save</SubmitButton>
           </form>
         </Section>
 
@@ -101,12 +102,12 @@ export default async function Settings() {
             <input type="hidden" name="key" value="spend_limits" />
             <label className="flex flex-col gap-1 text-xs text-muted">Alert at ($){num("daily_alert_usd", spend.daily_alert_usd ?? 10)}</label>
             <label className="flex flex-col gap-1 text-xs text-muted">Stop at ($){num("daily_stop_usd", spend.daily_stop_usd ?? 25)}</label>
-            <button className={button.ghost}>Save</button>
+            <SubmitButton bare className={button.ghost}>Save</SubmitButton>
           </form>
           <form action={saveSetting} className="mt-3 flex flex-wrap gap-2">
             <input type="hidden" name="key" value="spend_override" />
-            {overrideOn ? <button name="value" value="off" className={button.ghost}>Restore the daily cap</button> : (
-              <><button name="value" value="today" className={button.ghost}>Ignore the cap today</button><button name="value" value="forever" className={button.ghost}>Ignore the cap always</button></>
+            {overrideOn ? <SubmitButton bare name="value" value="off" className={button.ghost}>Restore the daily cap</SubmitButton> : (
+              <><SubmitButton bare name="value" value="today" className={button.ghost}>Ignore the cap today</SubmitButton><SubmitButton bare name="value" value="forever" className={button.ghost}>Ignore the cap always</SubmitButton></>
             )}
           </form>
         </Section>
@@ -120,7 +121,7 @@ export default async function Settings() {
             ].map(([k, label]) => (
               <div key={k} className="flex items-center justify-between gap-3 border-b border-line pb-3 last:border-0 last:pb-0"><span className="text-ink-2">{label}</span>{num(k, rl[k])}</div>
             ))}
-            <button className={`${button.primary} self-start`}>Save</button>
+            <SubmitButton bare className={`${button.primary} self-start`}>Save</SubmitButton>
           </form>
         </Section>
 
@@ -128,7 +129,7 @@ export default async function Settings() {
           <form action={saveSetting} className="flex items-center justify-between gap-3 text-sm">
             <input type="hidden" name="key" value="deposit" />
             <label className="flex items-center gap-2.5"><input type="checkbox" name="enabled" defaultChecked={!!s.deposit?.enabled} className="h-4 w-4 accent-[var(--pitch)]" />Require a {String(s.deposit?.min_ils ?? 35)}-{String(s.deposit?.max_ils ?? 50)}₪ Bit deposit</label>
-            <button className={button.ghost}>Save</button>
+            <SubmitButton bare className={button.ghost}>Save</SubmitButton>
           </form>
         </Section>
 
@@ -145,7 +146,7 @@ export default async function Settings() {
               <input name="name" defaultValue={String(s.bit_personal?.name ?? "")} placeholder="e.g. Wadi J." dir="auto" className={`${input} w-56`} />
             </label>
             {bitOn && bitPhone ? <p className="text-xs text-muted">Live at checkout: {formatBitPhone(bitPhone)}</p> : null}
-            <button className={`${button.primary} self-start`}>Save</button>
+            <SubmitButton bare className={`${button.primary} self-start`}>Save</SubmitButton>
           </form>
         </Section>
 
@@ -158,7 +159,7 @@ export default async function Settings() {
               <input name="username" defaultValue={ppUser ?? ""} placeholder="yourname" dir="ltr" className={`${input} w-56 font-mono`} />
             </label>
             {ppOn && ppUser ? <p className="text-xs text-muted">Live at checkout: <a className="underline" href={`https://www.paypal.me/${ppUser}`} target="_blank" rel="noreferrer">paypal.me/{ppUser}</a></p> : null}
-            <button className={`${button.primary} self-start`}>Save</button>
+            <SubmitButton bare className={`${button.primary} self-start`}>Save</SubmitButton>
           </form>
         </Section>
 

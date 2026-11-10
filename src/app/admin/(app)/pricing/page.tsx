@@ -3,6 +3,7 @@ import { currentPriceList } from "@/lib/pricing/load";
 import { env } from "@/lib/env";
 import { savePrices, publishPriceList } from "../../pricing-actions";
 import { PageHeader, Card, Badge, SectionTitle, button, input, cx } from "../../ui";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -27,9 +28,9 @@ export default async function Pricing({ searchParams }: PageProps<"/admin/pricin
 
   return (
     <>
-      <PageHeader title="Pricing" subtitle="Every price the bot and the website charge. Change a number and tap Save."
+      <PageHeader eyebrow="Catalog" title="Pricing & shipping" subtitle="Every price the bot and the website charge. Change a number and tap Save."
         actions={<>
-          {draft ? <form action={publishPriceList}><button className={button.ghost}><BadgeCheck className="h-4 w-4" /> Approve &amp; publish</button></form> : <Badge tone="green">Published</Badge>}
+          {draft ? <form action={publishPriceList}><SubmitButton bare className={button.ghost}><BadgeCheck className="h-4 w-4" /> Approve &amp; publish</SubmitButton></form> : <Badge tone="green">Published</Badge>}
           <button form="prices" className={button.primary}><Save className="h-4 w-4" /> Save prices</button>
         </>} />
 
@@ -89,7 +90,7 @@ export default async function Pricing({ searchParams }: PageProps<"/admin/pricin
         </Card>
 
         <div className="flex flex-wrap items-center gap-3">
-          <button className={button.primary}><Save className="h-4 w-4" /> Save prices</button>
+          <SubmitButton bare className={button.primary}><Save className="h-4 w-4" /> Save prices</SubmitButton>
           <span className="text-xs text-muted">The bot and the website checkout switch to the new prices the moment you save. Totals are always calculated from these numbers, never typed by the bot.</span>
         </div>
       </form>

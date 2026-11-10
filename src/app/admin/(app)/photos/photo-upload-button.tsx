@@ -84,7 +84,7 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
     : "flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-line-2 bg-surface px-2 py-1.5 text-xs hover:bg-raised";
   const iconClass = variant === "row" ? "h-4 w-4" : "h-3.5 w-3.5";
   const toggleBtn = (active: boolean) =>
-    cx("flex-1 rounded-md px-2 py-1 text-[11px] font-medium", active ? "bg-ink text-paper" : "text-muted hover:text-ink");
+    cx("flex-1 rounded-md px-2 py-1 text-[11px] font-medium", active ? "bg-pitch-fill text-white" : "text-muted hover:text-ink");
 
   const sleeveToggle = (
     <div className="inline-flex rounded-lg border border-line-2 bg-paper p-0.5" role="radiogroup" aria-label="Which sleeve length this photo is for">

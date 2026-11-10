@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { setDiscountCodeActive } from "../../discounts-actions";
 import { PageHeader, Card, Badge, EmptyState, SectionTitle, button, ilTime, type Tone } from "../../ui";
 import { DiscountForm, DeleteCodeButton } from "./discount-form";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,7 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
 
   return (
     <>
-      <PageHeader title="Discounts" subtitle='Codes shoppers type at checkout for a percent or a flat amount off. By default a code works alone - check "Can be combined with other codes" to let it stack with other combinable codes.' />
+      <PageHeader eyebrow="Sales" title="Discounts" subtitle='Codes shoppers type at checkout for a percent or a flat amount off. By default a code works alone - check "Can be combined with other codes" to let it stack with other combinable codes.' />
 
       {error ? <p className="mb-4 rounded-xl bg-red-soft px-3 py-2.5 text-sm text-red">{error}</p> : null}
       {saved ? <p className="mb-4 rounded-xl bg-pitch-soft/60 px-3 py-2.5 text-sm text-ink">Code saved - it works at checkout right away.</p> : null}
@@ -69,9 +70,9 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
                 <form action={setDiscountCodeActive}>
                   <input type="hidden" name="code" value={r.code} />
                   <input type="hidden" name="active" value={r.active ? "0" : "1"} />
-                  <button className={button.ghost} aria-label={r.active ? "Pause" : "Resume"}>
+                  <SubmitButton bare className={button.ghost} aria-label={r.active ? "Pause" : "Resume"}>
                     {r.active ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </button>
+                  </SubmitButton>
                 </form>
                 <DeleteCodeButton code={r.code} />
               </div>

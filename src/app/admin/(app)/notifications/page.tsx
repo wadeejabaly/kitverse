@@ -3,6 +3,7 @@ import { Bell, CheckCheck } from "lucide-react";
 import { db } from "@/lib/db";
 import { markNotificationsRead } from "../../actions";
 import { PageHeader, Card, EmptyState, button, cx, timeAgo } from "../../ui";
+import { SubmitButton } from "../../submit-button";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,7 @@ export default async function Notifications() {
   const rows = data ?? [];
   return (
     <>
-      <PageHeader title="Notifications" actions={rows.some((n) => !n.read_at) ? <form action={markNotificationsRead}><button className={button.ghost}><CheckCheck className="h-4 w-4" /> Mark all read</button></form> : null} />
+      <PageHeader eyebrow="System" title="Notifications" actions={rows.some((n) => !n.read_at) ? <form action={markNotificationsRead}><SubmitButton bare className={button.ghost}><CheckCheck className="h-4 w-4" /> Mark all read</SubmitButton></form> : null} />
       {!rows.length ? <EmptyState icon={Bell} title="No notifications" /> : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {rows.map((n) => (

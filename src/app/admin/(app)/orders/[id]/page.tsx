@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink, Check, X } from "lucide-react";
+import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink, Check, X, User, CreditCard, Shirt } from "lucide-react";
 import { db } from "@/lib/db";
 import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
 import { orderToken } from "@/lib/orders/link";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
-import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime, payLabel } from "../../../ui";
+import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime, payLabel, ils, KV, cx } from "../../../ui";
+import { SubmitButton } from "../../../submit-button";
 import { CancelOrderButton } from "./cancel-order-button";
 import { CancelInventoryPrompt } from "./cancel-inventory-prompt";
 import { ManualPaymentCard, type ManualPaymentInfo } from "./manual-payment-card";
@@ -18,7 +19,7 @@ export const dynamic = "force-dynamic";
 export default async function OrderPage({ params }: PageProps<"/admin/orders/[id]">) {
   const { id } = await params;
   const o = (await db().from("orders").select("*").eq("id", id).maybeSingle()).data as
-    { id: string; number: number; status: string; source: string; total: number; conversation_id: string | null; payment_method: string | null; payment_status: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string } | null; returned_to_inventory_at: string | null } | null;
+    { id: string; number: number; status: string; source: string; total: number; customer_id: string; created_at: string; confirmed_at: string | null; conversation_id: string | null; payment_method: string | null; payment_status: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string; itemsTotal?: number; discountTotal?: number; delivery?: { fee: number; label?: string } | null; orderAddons?: { label: string; amount: number }[] } | null; returned_to_inventory_at: string | null } | null;
   if (!o) notFound();
   const lines = await batchLines([o.id]);
   const pids = [...new Set(lines.map((l) => l.product_id).filter(Boolean))] as string[];
@@ -69,17 +70,20 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
   return (
     <>
       <Link href="/admin/orders" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Orders</Link>
-      <PageHeader title={`Order #${o.number}`} subtitle={<span className="inline-flex items-center gap-2"><Badge tone={st.tone}>{stLabel}</Badge><span>₪{o.total / 100} · {payLabel(o.payment_method, o.payment_status, true)}</span></span>}
+      <PageHeader eyebrow={o.source === "website" ? "Website order" : "Instagram order"} title={`Order #${o.number}`}
+        subtitle={<span className="mt-1 inline-flex flex-wrap items-center gap-2"><Badge tone={st.tone}>{stLabel}</Badge><Badge tone={o.payment_status === "paid" ? "green" : "neutral"}>{payLabel(o.payment_method, o.payment_status, true)}</Badge><span>{ils(o.total)} · placed {ilTime(o.created_at)}</span></span>}
         actions={<>
           <a href={`/o/${orderToken(o.id)}`} target="_blank" rel="noreferrer" className={button.ghost}><ExternalLink className="h-4 w-4" /> Customer page</a>
           {o.conversation_id ? <Link href={`/admin/inbox/${o.conversation_id}`} className={button.ghost}><MessagesSquare className="h-4 w-4" /> Chat</Link> : null}
           {o.status !== "cancelled" && !awaitingOk ? <CancelOrderButton orderId={o.id} number={o.number} /> : null}
         </>} />
 
+      <Progress status={o.status} />
+
       <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div className="flex flex-col gap-4">
           <Card>
-            <SectionTitle>Shirts</SectionTitle>
+            <SectionTitle><span className="inline-flex items-center gap-2"><Shirt className="h-3.5 w-3.5" /> Shirts</span></SectionTitle>
             <div className="divide-y divide-line">
               {lines.map((l, i) => {
                 const rows = stockRows(l);
@@ -101,7 +105,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
                 );
               })}
             </div>
-            {o.quote?.summaryAr ? <p className="mt-4 rounded-xl bg-paper px-3 py-2 text-sm text-ink-2" dir="auto">{o.quote.summaryAr}</p> : null}
+            {o.quote?.summaryAr ? <p className="mt-4 rounded-xl bg-raised/60 px-3 py-2 text-sm text-ink-2" dir="auto">{o.quote.summaryAr}</p> : null}
           </Card>
           {accessories.length ? (
             <Card>
@@ -118,22 +122,42 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
           ) : null}
           <Card>
             <SectionTitle>History</SectionTitle>
-            <ol className="flex flex-col gap-2 text-sm">
-              {events.map((e, i) => (
-                <li key={i} className="flex gap-3"><span className="w-28 shrink-0 text-xs text-muted">{ilTime(e.created_at)}</span><span>{(ORDER_STATUS[e.to_status] ?? { label: e.to_status }).label}<span className="text-muted"> · {e.actor}{e.note ? ` · ${e.note}` : ""}</span></span></li>
-              ))}
-            </ol>
+            {events.length ? (
+              <ol className="relative ms-1.5 flex flex-col gap-4 border-s border-line-2 ps-5 text-sm">
+                {events.map((e, i) => {
+                  const es = ORDER_STATUS[e.to_status] ?? { label: e.to_status, tone: "neutral" as const };
+                  return (
+                    <li key={i} className="relative">
+                      <span className={cx("absolute -start-[25.5px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-surface", i === events.length - 1 ? "bg-pitch-fill" : "bg-line-2")} />
+                      <div className="flex flex-wrap items-center gap-2"><Badge tone={es.tone}>{es.label}</Badge><span className="text-xs text-muted">{ilTime(e.created_at)} · {e.actor}</span></div>
+                      {e.note ? <p className="mt-1 text-[13px] text-ink-2" dir="auto">{e.note}</p> : null}
+                    </li>
+                  );
+                })}
+              </ol>
+            ) : <p className="text-sm text-muted">No changes recorded yet.</p>}
           </Card>
         </div>
 
         <div className="flex flex-col gap-4">
           {o.status === "cancelled" && !o.returned_to_inventory_at ? <CancelInventoryPrompt orderId={o.id} lines={lines} /> : null}
           <Card>
-            <SectionTitle>Delivery</SectionTitle>
+            <SectionTitle action={<Link href={`/admin/customers/${o.customer_id}`} className="inline-flex items-center gap-1 text-sm font-medium text-link hover:underline"><User className="h-3.5 w-3.5" /> Profile</Link>}>Customer & delivery</SectionTitle>
             <div className="flex flex-col gap-2 text-sm">
-              <div className="font-medium" dir="auto">{a.full_name}</div>
+              <div className="font-semibold" dir="auto">{a.full_name}</div>
               <div className="flex items-center gap-2 text-ink-2"><Phone className="h-4 w-4 text-muted" /><a href={`tel:${a.phone}`} className="tabular-nums hover:underline">{a.phone}</a>{a.phone_alt ? <span className="text-muted"> / {a.phone_alt}</span> : null}</div>
               <div className="flex items-start gap-2 text-ink-2" dir="auto"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted" />{[a.town, a.street, a.house_number, a.landmark].filter(Boolean).join("، ")}</div>
+            </div>
+          </Card>
+          <Card>
+            <SectionTitle><span className="inline-flex items-center gap-2"><CreditCard className="h-3.5 w-3.5" /> Payment</span></SectionTitle>
+            <div className="divide-y divide-line">
+              <KV label="Method">{payLabel(o.payment_method, null, true)}</KV>
+              <KV label="Status">{o.payment_status === "paid" ? <Badge tone="green">Paid</Badge> : o.payment_status === "refunded" ? <Badge tone="red">Refunded</Badge> : <Badge>{o.payment_method && o.payment_method !== "cod" ? "Not paid yet" : "Pays on delivery"}</Badge>}</KV>
+              {o.quote?.itemsTotal != null ? <KV label="Items">{ils(o.quote.itemsTotal)}</KV> : null}
+              {o.quote?.discountTotal ? <KV label="Discount"><span className="text-green">-{ils(o.quote.discountTotal)}</span></KV> : null}
+              {o.quote?.delivery ? <KV label="Delivery">{ils(o.quote.delivery.fee)}</KV> : null}
+              <KV label="Total"><span className="kv-display text-lg font-bold">{ils(o.total)}</span></KV>
             </div>
           </Card>
           {manual ? <ManualPaymentCard p={manual} /> : null}
@@ -142,8 +166,8 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               <SectionTitle>Website order - waiting for your OK</SectionTitle>
               <p className="mb-3 text-sm text-muted">Approve to send it into the normal flow (supplier batch, delivery). Decline cancels it.</p>
               <div className="flex gap-2">
-                <form action={approveWebOrder}><input type="hidden" name="orderId" value={o.id} /><button className={button.primary}><Check className="h-4 w-4" /> Approve</button></form>
-                <form action={declineWebOrder}><input type="hidden" name="orderId" value={o.id} /><button className={button.danger}><X className="h-4 w-4" /> Decline</button></form>
+                <form action={approveWebOrder}><input type="hidden" name="orderId" value={o.id} /><SubmitButton pendingText="Approving…"><Check className="h-4 w-4" /> Approve</SubmitButton></form>
+                <form action={declineWebOrder}><input type="hidden" name="orderId" value={o.id} /><SubmitButton variant="danger" pendingText="Declining…"><X className="h-4 w-4" /> Decline</SubmitButton></form>
               </div>
             </Card>
           ) : (
@@ -151,11 +175,13 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
             <SectionTitle>Update status</SectionTitle>
             <form action={changeOrderStatus} className="flex flex-col gap-3 text-sm">
               <input type="hidden" name="orderId" value={o.id} />
-              <select name="status" defaultValue={o.status} className={input}>
-                {next.map((s) => <option key={s} value={s}>{(ORDER_STATUS[s] ?? { label: s }).label}</option>)}
-              </select>
+              <label className="flex flex-col gap-1.5 text-xs text-muted">Move this order to
+                <select name="status" defaultValue={o.status} className={input}>
+                  {next.map((s) => <option key={s} value={s}>{(ORDER_STATUS[s] ?? { label: s }).label}{s === o.status ? " (current)" : s === nextStep(o.status) ? " - next step" : ""}</option>)}
+                </select>
+              </label>
               {o.conversation_id ? (
-                <label className="flex items-start gap-2.5 rounded-xl bg-paper p-3">
+                <label className="flex items-start gap-2.5 rounded-xl bg-raised/60 p-3">
                   <input type="checkbox" name="notify" className="mt-0.5 h-4 w-4 accent-[var(--pitch)]" />
                   <span>Message the customer on Instagram
                     <span className="mt-1 block text-xs text-muted">Only for: {Object.keys(STATUS_MESSAGE).map((k) => msgLabels[k]).join(", ")}. Sent in your style, in Arabic.</span>
@@ -163,12 +189,57 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
                 </label>
               ) : null}
               <input name="note" placeholder="Note (optional)" className={input} />
-              <button className={`${button.primary} self-start`}>Save</button>
+              <SubmitButton className="self-start" pendingText="Saving…">Save status</SubmitButton>
             </form>
           </Card>
           )}
         </div>
       </div>
     </>
+  );
+}
+
+const STEPS = [
+  { key: "confirmed", label: "Confirmed", statuses: ["confirmed", "paid"] },
+  { key: "in_supplier_batch", label: "At supplier", statuses: ["in_supplier_batch"] },
+  { key: "produced", label: "Produced", statuses: ["produced"] },
+  { key: "at_warehouse", label: "At warehouse", statuses: ["at_warehouse"] },
+  { key: "with_courier", label: "With courier", statuses: ["with_courier"] },
+  { key: "delivered", label: "Delivered", statuses: ["delivered"] },
+];
+
+/** The status the order normally moves to next - marked in "Update status" (the current status stays selected, so Save never changes it by accident). */
+function nextStep(status: string): string | null {
+  const i = STEPS.findIndex((s) => s.statuses.includes(status));
+  return i >= 0 && i < STEPS.length - 1 ? STEPS[i + 1].key : null;
+}
+
+/** Where the order is in its journey, at a glance. */
+function Progress({ status }: { status: string }) {
+  const at = STEPS.findIndex((s) => s.statuses.includes(status));
+  if (status === "cancelled" || status === "issue") {
+    return <div className={cx("kv-card mb-5 border-l-[3px] px-4 py-3 text-sm", status === "cancelled" ? "border-l-red text-red" : "border-l-amber text-amber")}>{status === "cancelled" ? "This order is cancelled." : "This order has an issue - check the history and notes."}</div>;
+  }
+  return (
+    <div className="kv-card mb-5 overflow-x-auto px-4 py-4">
+      <ol className="flex min-w-[560px] items-center">
+        {STEPS.map((s, i) => {
+          const done = at >= 0 && i < at, current = i === at;
+          return (
+            <li key={s.key} className="flex flex-1 items-center last:flex-none">
+              <span className="flex items-center gap-2">
+                <span className={cx("grid h-7 w-7 shrink-0 place-items-center rounded-full text-[12px] font-bold",
+                  done ? "bg-pitch-fill text-white" : current ? "bg-gold text-[#1a1406] ring-4 ring-gold/20" : "bg-raised text-muted ring-1 ring-line-2")}>
+                  {done ? <Check className="h-3.5 w-3.5" /> : i + 1}
+                </span>
+                <span className={cx("whitespace-nowrap text-[13px] font-medium", current ? "text-ink" : done ? "text-ink-2" : "text-muted")}>{s.label}</span>
+              </span>
+              {i < STEPS.length - 1 ? <span className={cx("mx-3 h-px flex-1", done ? "bg-pitch-fill" : "bg-line-2")} /> : null}
+            </li>
+          );
+        })}
+      </ol>
+      {at < 0 ? <p className="mt-3 text-xs text-muted">Not confirmed yet - the journey starts once you approve it (and, for Bit / PayPal.Me, once you confirm the payment).</p> : null}
+    </div>
   );
 }
