@@ -1,28 +1,21 @@
-# Kitverse catalog (draft v1, 2026-09-29)
+# catalog/
 
-Built from the supplier's Yupoo catalog (jerseyxie.x.yupoo.com, crawled 2026-09-28/29) plus the
-old site's product list (names, Arabic names, images only - **no prices**). Rebuild with
-`tools/catalog-build/build_catalog.py <out-dir>`.
+Source data for the shop's catalog. The live catalog is the database (`products`,
+`product_options`, `product_images`); these files seed it, choose what the website shows, and feed
+the image tools.
 
-## Files
-| File | What |
-|---|---|
-| `teams.json` | 729 teams: EN name, AR name (190 have one), aliases customers type, club/national, league |
-| `products.json` | 10,745 shirt products; each groups the supplier's albums into options (audience × version × sleeve) with album IDs |
-| `products.csv` | Same, flat, for review in a spreadsheet |
-| `featured.csv` | 333 products proposed for the website (curated top clubs + nations, current seasons, H/A/T, + 34 retro icons) |
-| `stats.json` | Counts and flag totals |
-| `not-offered-summary.json` | Supplier albums left out (training, jackets, shorts, polo, baby, rugby...) |
+| File | What | Used by |
+|---|---|---|
+| `store-selection.json` | Wadeea's hand-picked website shirts (the website list) | `scripts/apply-store-selection.ts`, `scripts/export-store-catalog.ts` |
+| `store-collections.json` | Leagues/teams shown as collections on the website | `scripts/export-store-catalog.ts` |
+| `image-overrides.json` | Admin-uploaded photo URL -> standardized copy in `public/products/std/` | `scripts/export-store-catalog.ts` (see `docs/image-standardization.md`) |
+| `showcase-sources/` | Source photos for the homepage 360° showcase frames | `scripts/images/showcase_frames.py` |
+| `products.json`, `teams.json` | The supplier catalog (10,745 shirts, 729 teams, crawled 2026-09-28/29) - the first-time database seed | `npm run db:seed` (`scripts/seed-catalog.ts`) |
+| `stats.json`, `not-offered-summary.json` | Counts from that crawl, and the supplier albums left out (training, jackets, shorts, baby...) | reference |
 
-## Status levels
-- **featured** - on the website + bot
-- **available** - bot can find and sell it (confirms with the supplier photo), not on the website
-- not offered (not in products) - bot hands the request to the owner
+Rebuild `products.json`/`teams.json` from a fresh crawl with `npm run catalog:build`
+(`tools/catalog-build/`, reads the local crawl data in `tools/catalog-build/data/`). It also writes
+`products.csv` and `featured.csv` for spreadsheet review; those are not committed.
 
-## Known gaps (to fix before launch)
-- 3,246 "special edition" products and 2,454 with no kit stated: one product per supplier album; names need a photo check. Only matters for items that get asked for / featured.
-- 539 teams (mostly small clubs) have no Arabic name yet - the bot translates on the fly; featured teams are all covered.
-- Hebrew names not added yet.
-- No Liverpool / Juventus current kits at this supplier -> owner availability check via Telegram.
-- Supplier sizes per product (e.g. new season only to 2XL) not captured yet - comes from the supplier album pages.
-- The old catalog's Rugby "Springbok" shirt was dropped on purpose.
+Statuses in the database: **featured** = on the website and the bot, **available** = the bot can
+sell it on request, **hidden** = off everywhere.

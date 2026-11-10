@@ -79,35 +79,6 @@
   --band: #182448; /* the crest navy, edge to edge */
   --band-ink: #ffffff; /* 15.2:1 on the band */
 
-  /* The plaque is a MATERIAL, not a fill, and it is described by two pairs.
-     --band-hi/--band-lo are the opaque gradient every browser can draw: the
-     crest navy lifted a little at the near corner and deepened at the far one,
-     so the surface has a direction instead of being a rectangle of one colour.
-     --band-glass-* are the same two stops carrying alpha, used only where a
-     backdrop blur is actually available (see .band-glass).
-
-     The alphas are not a taste call. They are the floor that keeps band-ink
-     legible when the worst-case pixel — a pure white product tile — is what
-     the blur is sampling, and the numbers below are READ OFF THE RENDERED
-     FRAME rather than computed from the token, because a computed background
-     colour says nothing true about a surface whose colour is made at composite
-     time. Method: force the wall behind the plaque to #FFF, hide the plaque's
-     own text, screenshot, and take the LIGHTEST pixel in the surface.
-
-       glass    light  8.39:1 headline / 5.48:1 band-soft
-                dark   8.81:1          / 5.67:1
-       opaque   light 12.92:1          / 7.82:1
-                dark  11.66:1          / 7.12:1
-
-     Everything clears AA; the headline clears AAA on all four. The glass end
-     is dearer than the flat navy it replaced (13.71:1 measured) and that is
-     the trade being made — a surface you can see the shirts through cannot
-     also be a surface nothing reaches. */
-  --band-hi: #1d2b54;
-  --band-lo: #101a35;
-  --band-glass-hi: rgb(29 43 84 / 0.88);
-  --band-glass-lo: rgb(16 26 53 / 0.8);
-
   /* Floodlight hero tokens. <HeroD/> — the home-page hero — is a
      self-contained dark stage with its own ground and ink. Previously the
      one place the crest's electric blue appeared at all; as of 2026-10-25
@@ -118,7 +89,6 @@
      same way a product tile is always white — the hero is always this
      stage. See "THE FLOODLIGHT HERO" further down for the surface itself. */
   --flood-ground: #0a1024;
-  --flood-ground-2: #0b1228; /* barely lifted off --flood-ground now — see the owner note by .kv-flood-glow */
   --flood-blue: #2f6bff;
   --flood-blue-2: #5b8cff;
   --flood-gold: #c9a55c;
@@ -174,10 +144,6 @@
     --header-glass: rgb(20 22 31 / 0.82);
     --band: #1a2033; /* a cool panel against the warm near-black ground */
     --band-ink: #f1efe9; /* 14.0:1 on the band */
-    --band-hi: #212a45;
-    --band-lo: #12172a;
-    --band-glass-hi: rgb(33 42 69 / 0.92);
-    --band-glass-lo: rgb(18 23 42 / 0.85);
   }
 }
 
@@ -197,10 +163,6 @@
   --header-glass: rgb(20 22 31 / 0.82);
   --band: #1a2033; /* a cool panel against the warm near-black ground */
   --band-ink: #f1efe9; /* 14.0:1 on the band */
-  --band-hi: #212a45;
-  --band-lo: #12172a;
-  --band-glass-hi: rgb(33 42 69 / 0.92);
-  --band-glass-lo: rgb(18 23 42 / 0.85);
 }
 
 /* Map tokens into Tailwind v4 (CSS-first @theme) →
@@ -429,19 +391,6 @@ h2 {
    bottom so the page opens and closes on the same bar. <footer> has no
    other pseudo-element, so this can be its own ::before rather than
    needing the header's position:relative wrapper trick. */
-.footer-accent {
-  position: relative;
-}
-
-.footer-accent::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--electric) 55%, var(--gold));
-  pointer-events: none;
-}
 
 /* The one button treatment on the site. Accent-to-electric fill for the
    primary action (add to cart, checkout, shop all), a hairline outline for
@@ -575,18 +524,6 @@ h2 {
    site has always made for it. It is decoration and nothing else: aria-hidden
    in the markup, and held at a contrast where it reads as a watermark in the
    paper rather than as a word anyone is asked to read. */
-.ghost-wordmark {
-  font-family: var(--type-sans);
-  font-size: clamp(3.5rem, 15vw, 13rem);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  line-height: 0.82;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.05;
-  user-select: none;
-  white-space: nowrap;
-}
 
 /* The same idea one step down: a watermark ordinal for the value strip.
    Like the ghost wordmark it is aria-hidden in the markup and carries no
@@ -649,31 +586,6 @@ h2 {
    grows in the reading direction and mirrors itself in Arabic. Transform
    only — animating background-size or width would be a layout-thrashing
    version of the same picture. */
-.underline-draw {
-  position: relative;
-  display: inline-block;
-}
-
-.underline-draw::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  bottom: -2px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[dir="rtl"] .underline-draw::after {
-  transform-origin: right center;
-}
-
-.group:hover .underline-draw::after,
-.group:focus-visible .underline-draw::after {
-  transform: scaleX(1);
-}
 
 .index-row-name {
   transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -691,38 +603,7 @@ h2 {
   transform: translateX(-10px);
 }
 
-/* ============================================================
-   THE BAND
-   The one navy surface on the site: crest navy carrying band-ink
-   type and a paper grain. Used exactly once — the hero plaque in
-   <HeroB/>, sitting over the drifting wall of shirts.
-
-   ONCE is the rule, not an accident of the current design. This
-   was originally the Fan/Player explainer's full-bleed band, and
-   for a moment the page carried both. Two navy slabs in one scroll
-   do not read as two emphases; they read as a pattern, and then
-   neither is an event. The explainer went back to the page ground
-   and the hero kept the navy.
-
-   THE BAND IS A MATERIAL, NOT A FILL. Three layers, in order:
-
-     1. the surface — an opaque navy gradient, or, where a backdrop
-        blur is available, a translucent tint over a blurred view of
-        the wall of shirts (see .band-glass);
-     2. the grain — a fractal turbulence tile at ~4.5%, which is
-        also what keeps a 400px-tall two-stop gradient from banding
-        on an 8-bit display;
-     3. the plate frame — a hairline drawn 8–12px inside the edge,
-        so the panel reads as a plate fixed to the wall rather than
-        as a rectangle cut out of it.
-
-   A crest watermark was tried as a fourth layer and dropped: at any
-   alpha where it registered at all, badge.png's wordmark and its
-   electric blue registered too, and both are things this UI has
-   agreed not to say outside the badge artwork itself.
-   ============================================================ */
-
-/* The grain tile, shared by both surfaces. A two-octave fractal
+/* The grain tile (used by .energy-band). A two-octave fractal
    feTurbulence, desaturated, with its alpha baked INTO the SVG rather than
    applied as element `opacity` — an opacity below 1 on the glass layer would
    dilute its own backdrop-filter result back toward the unfiltered backdrop.
@@ -736,167 +617,15 @@ h2 {
   --kv-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='kvGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23kvGrain)' opacity='0.045'/%3E%3C/svg%3E");
 }
 
-.band {
-  /* The gradient's axis is physical, so it is mirrored by hand: it runs from
-     the corner the reading starts in toward the far one, and the eyebrow and
-     headline sit on the densest part of the surface in both locales.
-
-     The mirror is a custom property rather than a second background-image
-     declaration, and that is not a style preference. `[dir="rtl"] .band` is
-     more specific than `.band`, so an RTL override that restated the whole
-     background would outrank the `background-image: none` the glass gate below
-     needs — leaving the Arabic page with an OPAQUE plaque under a translucent
-     one, frosted glass over a wall it cannot see. (It did, for one commit.)
-     A custom property carries the difference with no specificity of its own. */
-  --band-angle: 158deg;
-
-  color: var(--band-ink);
-  position: relative;
-  overflow: hidden;
-  background-color: var(--band);
-  background-image: var(--kv-grain),
-    linear-gradient(var(--band-angle), var(--band-hi), var(--band-lo));
-  background-size:
-    240px 240px,
-    auto;
-  /* One-time entrance, transform only. See the note on kv-plaque-in. */
-  animation: kv-plaque-in 620ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-[dir="rtl"] .band {
-  --band-angle: 202deg;
-}
-
-/* The frosted layer. Hidden by default and switched on only under the
-   @supports/@media gate below, so every path that cannot render it correctly
-   falls back to the opaque gradient instead of to a see-through panel.
-
-   It is a real element rather than a pseudo-element for one reason: the
-   plaque must not create a Backdrop Root above it. `isolation: isolate` (which
-   .band used to carry, so that a z-index:-1 pseudo stayed put) is exactly such
-   a root — with it in place the blur samples only the plaque's own background
-   and the wall of shirts never reaches the glass. Two positioned children in
-   tree order — glass first, content second — give the same painting order with
-   no stacking context at all. */
-.band-glass {
-  display: none;
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-/* The plate frame. Hairline, band-ink at low alpha, radius 0 like everything
-   else. Drawn last so it sits over the glass, and inset far enough that no
-   glyph ever comes near it. */
-.band::after {
-  content: "";
-  position: absolute;
-  inset: clamp(8px, 1.2vw, 12px);
-  pointer-events: none;
-  border: 1px solid color-mix(in srgb, var(--band-ink) 15%, transparent);
-  animation: kv-plate-in 620ms 200ms ease-out backwards;
-}
-
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  /* Desktop only, and that is a performance decision rather than a layout one.
-     The backdrop here is not static the way the header's is — the wall of
-     shirts is translating under it continuously, so the blur re-rasterises
-     every frame for as long as the hero is on screen. On the phone that is a
-     battery and LCP cost against a Lighthouse budget of 90, and the plaque is
-     nearly the full measure there anyway, so there is very little wall left to
-     look through. Phones get the opaque gradient, which is the same material
-     one layer shallower. 56.25rem is the site's `wide` breakpoint. */
-  @media (min-width: 56.25rem) {
-    .band {
-      background-color: transparent;
-      background-image: none;
-    }
-
-    .band-glass {
-      display: block;
-      background-image: var(--kv-grain),
-        linear-gradient(var(--band-angle), var(--band-glass-hi), var(--band-glass-lo));
-      background-size:
-        240px 240px,
-        auto;
-      -webkit-backdrop-filter: blur(18px) saturate(0.85);
-      backdrop-filter: blur(18px) saturate(0.85);
-    }
-  }
-}
-
-/* Transparency is a preference, not a given. A reader who has asked for less
-   of it gets the opaque surface — authored as an override rather than as a
-   condition on the gate above, because an unknown media feature makes a query
-   never match, and gating the frost ON it would silently delete the material
-   in every browser that has not shipped the feature yet. */
-@media (prefers-reduced-transparency: reduce) {
-  .band {
-    background-color: var(--band);
-    background-image: var(--kv-grain),
-      linear-gradient(var(--band-angle), var(--band-hi), var(--band-lo));
-  }
-
-  .band-glass {
-    display: none;
-  }
-}
-
-/* The plaque's one entrance: it rises a little and settles. TRANSFORM ONLY —
-   the headline inside it is the page's LCP element and has to paint at full
-   opacity on the first frame, which is the same reason .line-mask never
-   touches opacity either. `backwards` fill, not `both`: the FROM state applies
-   through the delay and then the animation lets go entirely, so the plaque is
-   not left holding a transform (and therefore a containing block) forever.
-   The frame fades in just behind it — that layer is decoration, so opacity is
-   free there. Nothing here loops. */
-@keyframes kv-plaque-in {
-  from {
-    transform: translateY(16px);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes kv-plate-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Secondary text inside the band cannot use --ink-soft: that is a token for
-   the page ground, and the band is a different surface. It is the band's own
-   ink at low alpha, which is correct in both schemes with no extra token, and
-   measures 8.9:1 (light) / 8.2:1 (dark) against the opaque band. On the
-   frosted surface, against the worst white tile the blur can find, the same
-   74% holds 5.48:1 / 5.67:1 — see the --band-glass-* note up top.
-
-   (A matching `.band-rule` used to sit here for hairlines on the band. The
-   only thing that ever drew one was the Fan/Player explainer, which is on the
-   page ground now and uses --rule like every other section.) */
-.band-soft {
-  color: color-mix(in srgb, var(--band-ink) 74%, transparent);
-}
-
 /* ============================================================
    THE ENERGY BAND
-   Owner decision 2026-10-25 ("Nike × Adidas vibe"): a second, simpler dark
-   surface — not THE BAND above, which stays <HeroB/>'s specific
-   plaque-over-shirts material — for one loud beat of colour between
-   otherwise quiet sections. Full-bleed (unlike the band, which is a
-   contained card), angled top and bottom edges rather than a plain
-   rectangle, and the same grain tile THE BAND uses so the two surfaces
-   still read as one family. Deliberately NOT fenced to "once": the whole
-   point of this one is that a page can reach for it more than a single
-   time.
+   Owner decision 2026-10-25 ("Nike × Adidas vibe"): a simple dark
+   surface for one loud beat of colour between otherwise quiet sections.
+   Full-bleed, angled top and bottom edges rather than a plain rectangle,
+   with the grain tile above. Deliberately NOT fenced to "once": a page can
+   reach for it more than a single time.
 
-   Text: --band-ink only, same rule THE BAND follows and for the same
-   measured reason — --gold reads 2.82:1 here and fails; see .btn-band's
-   own note. Ghost figures and eyebrows inside get their own small
+   Text: --band-ink only - --gold reads 2.82:1 here and fails. Ghost figures and eyebrows inside get their own small
    overrides below rather than fighting the base rules authored for the
    page ground. */
 .energy-band {
@@ -946,11 +675,6 @@ h2 {
 
 /* Bidi isolation helper — wrap numerals, prices, dates, URLs and Latin terms
    inside RTL copy (or use <bdi>) so they don't reorder. */
-.bidi-isolate {
-  unicode-bidi: isolate;
-  direction: ltr;
-  display: inline-block;
-}
 
 /* RTL discipline: logical properties ONLY, in CSS as in Tailwind classes —
    margin-inline / padding-inline / inset-inline, text-align: start | end.
@@ -1069,40 +793,12 @@ h2 {
    components because the winner is promoted into the home page
    unchanged, and a hero's type scale and its motion belong in the
    stylesheet with the rest of the system. D — Floodlight — is the
-   one live on the home page; A, B and C stay on /hero-preview for
-   reference, which is also the only place .band / .band-glass
-   still render (they live in HeroB).
+   one that shipped; the A/B/C variants were removed 2026-11-10.
 
    This block is authored LAST on purpose: the reduced-motion
    override at the bottom has to come after the global
    reduced-motion backstop to beat it (see the note there).
    ============================================================ */
-
-/* ---- Variant C's headline ----
-   The retired `.display` step at 70% volume: 5.25rem → 3.7rem at the
-   ceiling, 2.5rem → 1.75rem at the floor, and the same 0.7 applied
-   to the vw term so the ramp between them scales too. Leading opens
-   very slightly (1.02 → 1.06) because a smaller display line does
-   not need to be set as tightly. Arabic drops the tracking and takes
-   the same 0.7 off its own scale.
-
-   Used only by <HeroC/>, which is kept on /hero-preview in case the
-   owner revisits the typographic direction. It carries its own
-   numbers rather than deriving them, so it survived `.display`. */
-.display-quiet {
-  font-size: clamp(1.75rem, 4.5vw, 3.7rem);
-  line-height: 1.06;
-  letter-spacing: -0.028em;
-  font-weight: 500;
-  text-wrap: balance;
-}
-
-[lang="ar"] .display-quiet {
-  letter-spacing: normal;
-  line-height: 1.34;
-  font-weight: 400;
-  font-size: clamp(1.5rem, 4.05vw, 3.45rem);
-}
 
 /* ---- Variant A's crossfade ----
    Two shirts occupying one grid cell, swapped on a long timer. The
@@ -1111,9 +807,6 @@ h2 {
    happened, not something that pulls the eye. The layers are
    painted by the server with the first shirt opaque, so a browser
    that never runs the timer simply shows one shirt. */
-.kv-crossfade {
-  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
-}
 
 /* ---- Variant B's ambient wall ----
    A row of product tiles wide enough to overflow its window twice,
@@ -1127,15 +820,6 @@ h2 {
    Duration comes in as --kv-drift per row (two different values, so
    the rows never fall into step). ~2 minutes for a full pass is the
    difference between a background and a carousel. */
-.kv-marquee {
-  display: flex;
-  width: max-content;
-  animation: kv-drift var(--kv-drift, 120s) linear infinite;
-}
-
-.kv-marquee-reverse {
-  animation-name: kv-drift-back;
-}
 
 @keyframes kv-drift {
   from {
@@ -1143,15 +827,6 @@ h2 {
   }
   to {
     transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes kv-drift-back {
-  from {
-    transform: translate3d(-50%, 0, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -1173,23 +848,6 @@ h2 {
    instead of ending it on a hard edge. `black`/`transparent` here are
    opacity stops, not colours — nothing is painted in them — which is
    why this is not a token violation. */
-.kv-wall {
-  direction: ltr;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 13%,
-    black 87%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 13%,
-    black 87%,
-    transparent
-  );
-}
 
 /* The primary action when it sits ON the band rather than on the page
    ground. `.btn` fills with --accent, and in light mode --accent and
@@ -1198,10 +856,6 @@ h2 {
    label — keeps one button treatment on the site and measures 15.2:1
    (light) / 14.0:1 (dark) either way. No new token: both values are the
    band's own pair. */
-.btn-band {
-  background: var(--band-ink);
-  color: var(--band);
-}
 
 /* ============================================================
    THE FLOODLIGHT HERO
@@ -1214,18 +868,14 @@ h2 {
    corner wash (.kv-flood-glow), a diagonal beam raking across it
    (.kv-flood-beam), then the headline/CTA/shirt stage.
 
-   USED EXACTLY ONCE, the same rule THE BAND keeps above, and now
-   the page's single dark surface: HeroB's plaque left the home
-   page when this arrived, so the home scroll still has exactly
-   one navy moment. A second one anywhere would turn the effect
+   USED EXACTLY ONCE: the home scroll has exactly one navy moment. A second one anywhere would turn the effect
    into a pattern instead of an opening statement.
 
    Both the wash and the beam originate near the headline's own
    corner, so the light reads as coming from behind the type and
    spilling across the shirt — which is why they are mirrored by
    hand for the two reading directions rather than centred and
-   left alone. The mirror lives in custom properties, the same
-   device --band-angle uses and for the same reason: an RTL
+   left alone. The mirror lives in custom properties: an RTL
    override restating the whole background would have to
    out-specificity the base rule, and a custom property carries
    the difference with none.
@@ -1237,9 +887,6 @@ h2 {
    depth here is all gradients and one box-shadow. */
 .kv-flood {
   --flood-corner-x: 78%;
-  --flood-corner-x2: 100%;
-  --flood-beam-angle: 115deg;
-  --flood-beam-tilt: 8deg;
   /* The shirt stage's side — the OPPOSITE of --flood-corner-x (the text
      side) — used to park the watermark wordmark behind the shirt in
      both directions without a second [dir="ltr"] override block. */
@@ -1250,16 +897,13 @@ h2 {
 
 [dir="ltr"] .kv-flood {
   --flood-corner-x: 22%;
-  --flood-corner-x2: 0%;
-  --flood-beam-angle: 245deg;
-  --flood-beam-tilt: -8deg;
   --flood-shirt-x: 71%;
 }
 
 /* The hero eyebrow on the flood surface. This is NOT a use of --gold —
    it is a distinct token for a distinct dark surface, the same
    relationship --band-ink has to --ink. Unlayered, so it beats
-   .mono-eyebrow's @layer base colour the way .band-soft does. */
+   .mono-eyebrow's @layer base colour. */
 .kv-flood-eyebrow {
   color: var(--flood-gold);
 }
@@ -1774,8 +1418,8 @@ h2 {
 
    A second dark-on-photo surface, built the same way .energy-band is: the
    tint and shade are --accent/--electric color-mixes, not new colour, and
-   the text sits on --band-ink — the token both THE BAND and .energy-band
-   already use for "ink on a navy surface" — rather than reaching for the
+   the text sits on --band-ink — the token .energy-band
+   already uses for "ink on a navy surface" — rather than reaching for the
    hero's --flood-ink, which is explicitly scoped to the hero alone (see its
    own note further up). So this stays a THIRD dark moment built from the
    same two tokens as the other two, not a fourth colour introduced for one
@@ -1959,12 +1603,6 @@ h2 {
    strip parked half a width off, so the row would render with a hole
    in it. `animation: none` puts it back at translate 0. Later in the
    file and equally specific, so this wins. */
-@media (prefers-reduced-motion: reduce) {
-  .kv-marquee {
-    animation: none !important;
-    transform: none !important;
-  }
-}
 
 /* ================================================================
    SITE SYSTEM — REDESIGN PHASE 2 (owner spec 2026-11-09)
@@ -2603,13 +2241,6 @@ h2 {
 
 .kv-table td:first-child {
   font-weight: 800;
-}
-
-.kv-gold-rule {
-  display: block;
-  width: 2.4rem;
-  height: 2px;
-  background: var(--gold);
 }
 
 /* ---- Footer ---- */

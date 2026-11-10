@@ -4,14 +4,14 @@ Client-side context providers that wrap the whole app in
 `src/app/[locale]/layout.tsx`.
 
 - **`ConsentProvider`** — cookie-consent state, persisted in a first-party
-  cookie. Read it with `useConsent()`.
-- **`ConsentGatedScript`** — loads a third-party script only after the visitor
-  has accepted. Every non-essential script must go through it.
+  cookie. Read it with `useConsent()`; every non-essential script must check
+  it before loading.
 
-## No animation runtime
+## Motion
 
-This project ships no animation library. The design is quiet retail: hover
-states, a small image scale on product cards, and nothing that needs a
-scroll-driven runtime. Motion that does get added must respect
-`prefers-reduced-motion` (there is a global backstop in `globals.css`) and
+The only animation runtime is GSAP + ScrollTrigger, loaded on demand for the
+hero's desktop parallax (`src/components/motion/`, gated by
+`heavyMotionAllowed()` - phones and reduced-motion readers never fetch it).
+Scrolling itself is the browser's own (no smooth-scroll library). Any motion
+must respect `prefers-reduced-motion` (global backstop in `globals.css`) and
 must not be required to read the page.

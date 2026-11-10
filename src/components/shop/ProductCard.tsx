@@ -12,10 +12,7 @@ import { hasPhoto, shortSeason, teamFor, titleFor } from "@/lib/product";
  * then a baseline-aligned meta row of season (mono, Latin-only treatment) and
  * price (accent). Hover scales the image 1.03 and, as of 2026-10-25 (the
  * site's bolder, more athletic-brand direction), draws an electric-blue
- * frame around the tile and shifts the price into the same colour — the
- * same underline-draw mechanic the magazine index rows already use
- * elsewhere, here as a ring instead of a line since the target is a square
- * tile, not a row of text.
+ * frame around the tile and shifts the price into the same colour.
  *
  * This card is the one shared by every listing page on the site (shop, each
  * league, retro, national teams, search, new/last season), so this one
