@@ -31,8 +31,13 @@ First pass (612 photos inspected: 503 committed, 91 admin uploads, 18 new retro 
 234 left as the original because the automatic shape check could not confirm a whole shirt
 (crest/label close-ups, folded or tilted shots, damaged mattes) - conservative on purpose.
 
-Card fronts still on the original photo (need a better source photo or a manual cut-out):
-inter-milan away, liverpool away, tottenham home, valencia home, west-ham away, chelsea third
-(white on white); iraq third, newcastle home/away/third, psg third (model shots - psg third also
-carries a "X/..." watermark, which breaks the photo rules); torino away, turkey home, psg away
-(matte failed). Athletic Bilbao away/third and Fiorentina third have no photo.
+2026-11-10: the nine card fronts the automatic matte could not separate (inter-milan away,
+liverpool away, tottenham home, valencia home, west-ham away, chelsea third - white on white;
+torino away, turkey home, psg away) were cut out with Photoroom background removal (the owner's
+Photoroom connector; a cut-out only, no generative edit) and laid out with
+`standardize.py`, which now accepts a ready-made transparent cut-out as input.
+
+Card fronts still on the original photo: iraq third, newcastle home/away/third, psg third (model
+shots - a person wearing the shirt; background removal keeps the person, and Photoroom's ghost
+mannequin needs a paid tier - psg third also carries a "X/..." watermark, which breaks the photo
+rules). Athletic Bilbao away/third and Fiorentina third have no photo.

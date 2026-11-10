@@ -173,6 +173,18 @@ def defringe(rgb: np.ndarray, alpha: np.ndarray, bg: np.ndarray) -> np.ndarray:
 
 def standardize(path: str, out_path: str, allow_edge: bool = False) -> dict:
     img = Image.open(path)
+    if img.mode == "RGBA" and img.getchannel("A").getextrema()[0] < 8:
+        # Already a cut-out (e.g. a Photoroom background removal for a white
+        # shirt on white that the automatic matte could not separate): use
+        # its alpha as is and only lay it out on the standard canvas.
+        rgba = np.asarray(img)
+        rgb = rgba[..., :3]
+        alpha = rgba[..., 3].astype(np.float32) / 255
+        bg = np.array([255, 255, 255])
+        diag = {"components": 1, "uniform_background": True, "tolerance": 0, "ai_missed_share": 0.0,
+                "colour_missed_share": 0.0, "touches_border": False, "edge_share": 0.0, "source_cutout": True}
+        fg = rgb.astype(np.float32)
+        return _layout(path, out_path, rgb, alpha, fg, bg, diag)
     img = img.convert("RGB")
     rgb = np.asarray(img)
     bg = border_colour(rgb)
@@ -202,7 +214,11 @@ def standardize(path: str, out_path: str, allow_edge: bool = False) -> dict:
             **diag,
         }
     fg = defringe(rgb, alpha, bg)
+    return _layout(path, out_path, rgb, alpha, fg, bg, diag)
 
+
+def _layout(path: str, out_path: str, rgb: np.ndarray, alpha: np.ndarray, fg: np.ndarray, bg: np.ndarray, diag: dict) -> dict:
+    """Crop to the shirt, scale to the standard box, centre on the canvas, add the shadow, save."""
     ys, xs = np.where(alpha > 0.1)
     if not len(xs):
         return {"source": path, "status": "failed", "reason": "no garment found"}
