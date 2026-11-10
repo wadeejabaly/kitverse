@@ -13,7 +13,23 @@ export const dynamic = "force-dynamic";
 const WINDOW_DAYS = 30; // how far back site_events is fetched for this whole page
 const TREND_DAYS = 14; // the daily bar chart's span
 
-type EventRow = { type: string; session_id: string; path: string | null; product_handle: string | null; referrer_host: string | null; created_at: string };
+type EventRow = {
+  type: string;
+  session_id: string;
+  path: string | null;
+  product_handle: string | null;
+  referrer_host: string | null;
+  country: string | null;
+  city: string | null;
+  created_at: string;
+};
+
+/** "Ramallah, PS" / "PS" / "—" depending on what the edge actually resolved. */
+function formatLocation(country: string | null, city: string | null): string {
+  if (!country && !city) return "—";
+  if (city && country) return `${city}, ${country}`;
+  return city ?? country ?? "—";
+}
 type OrderRow = { total: number; confirmed_at: string; customer: { ig_user_id: string | null } | null };
 
 function summarize(events: EventRow[], orders: OrderRow[], sinceIso: string) {
@@ -70,7 +86,7 @@ function FunnelRow({ label, value, of, icon: Icon }: { label: string; value: num
 async function eventsSince(since: string): Promise<EventRow[]> {
   const out: EventRow[] = [];
   for (let from = 0; from < 100_000; from += 1000) {
-    const { data } = await db().from("site_events").select("type,session_id,path,product_handle,referrer_host,created_at")
+    const { data } = await db().from("site_events").select("type,session_id,path,product_handle,referrer_host,country,city,created_at")
       .gte("created_at", since).order("created_at", { ascending: true }).order("id").range(from, from + 999);
     out.push(...((data ?? []) as EventRow[]));
     if (!data || data.length < 1000) break;
@@ -125,11 +141,35 @@ export default async function Stats({ searchParams }: PageProps<"/admin/stats">)
   }
   const topReferrers = topCounts([...referrerBySession.values()], "Direct / unknown", 6);
 
+  // Location is resolved per-request from the Vercel edge (owner decision 2026-11-10), so every
+  // event in a session carries the same country/city - same one-per-session dedup as referrer above.
+  const locationBySession = new Map<string, string | null>();
+  for (const e of landingViews) {
+    if (!locationBySession.has(e.session_id)) locationBySession.set(e.session_id, formatLocation(e.country, e.city));
+  }
+  const topLocations = topCounts([...locationBySession.values()], "Unknown", 6);
+
   const addToCartByProduct = topCounts(last7Events.filter((e) => e.type === "add_to_cart").map((e) => e.product_handle), "(unknown)", 8)
     .map((row) => {
       if (row.label === "Other" || row.label === "(unknown)") return row;
       const product = getProduct(row.label);
       return { ...row, label: product ? titleFor(product, "en") : row.label };
+    });
+
+  // Owner request 2026-11-10: "what location is the person who added to his cart and which items
+  // did he add" - the raw feed, newest first, rather than only aggregated counts above.
+  const recentAddToCart = last7Events
+    .filter((e) => e.type === "add_to_cart")
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .slice(0, 20)
+    .map((e) => {
+      const product = e.product_handle ? getProduct(e.product_handle) : undefined;
+      return {
+        time: new Date(e.created_at).toLocaleString("en-GB", { timeZone: "Asia/Jerusalem", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }),
+        item: product ? titleFor(product, "en") : (e.product_handle ?? "(unknown)"),
+        location: formatLocation(e.country, e.city),
+        session: e.session_id,
+      };
     });
 
   const visitors7 = last7.visitors;
@@ -265,6 +305,20 @@ export default async function Stats({ searchParams }: PageProps<"/admin/stats">)
           </div>
 
           <div>
+            <SectionTitle>Top locations (7 days)</SectionTitle>
+            {topLocations.length ? (
+              <Card padded={false} className="divide-y divide-line overflow-hidden">
+                {topLocations.map((r) => (
+                  <div key={r.label} className="flex items-center justify-between px-4 py-2.5 text-sm">
+                    <span className="flex items-center gap-1.5 truncate text-ink-2"><Globe className="h-3.5 w-3.5 shrink-0 text-muted" />{r.label}</span>
+                    <span className="shrink-0 tabular-nums text-muted">{r.count.toLocaleString()}</span>
+                  </div>
+                ))}
+              </Card>
+            ) : <EmptyState icon={Globe} title="No visits yet" />}
+          </div>
+
+          <div>
             <SectionTitle>Most added to cart (7 days)</SectionTitle>
             {addToCartByProduct.length ? (
               <Card padded={false} className="divide-y divide-line overflow-hidden">
@@ -272,6 +326,23 @@ export default async function Stats({ searchParams }: PageProps<"/admin/stats">)
                   <div key={r.label} className="flex items-center justify-between px-4 py-2.5 text-sm">
                     <span className="truncate text-ink-2">{r.label}</span>
                     <span className="shrink-0 tabular-nums text-muted">{r.count.toLocaleString()}</span>
+                  </div>
+                ))}
+              </Card>
+            ) : <EmptyState icon={ShoppingCart} title="Nothing added to a cart yet" />}
+          </div>
+
+          <div>
+            <SectionTitle>Recent add-to-cart activity</SectionTitle>
+            {recentAddToCart.length ? (
+              <Card padded={false} className="divide-y divide-line overflow-hidden">
+                {recentAddToCart.map((r, i) => (
+                  <div key={`${r.session}-${i}`} className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm">
+                    <div className="flex min-w-0 flex-col">
+                      <span className="truncate text-ink-2">{r.item}</span>
+                      <span className="flex items-center gap-1 text-xs text-muted"><Globe className="h-3 w-3 shrink-0" />{r.location}</span>
+                    </div>
+                    <span className="shrink-0 whitespace-nowrap text-xs tabular-nums text-muted">{r.time}</span>
                   </div>
                 ))}
               </Card>
