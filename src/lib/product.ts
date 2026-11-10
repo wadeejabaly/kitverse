@@ -1,5 +1,6 @@
 import type { Product } from "@/data/types";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
+import { maxPatches } from "@/lib/patch-limits";
 
 /**
  * Locale-aware reads of a Product's bilingual fields, plus the small display
@@ -76,7 +77,7 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
         ? { type: "national" as const, league_id: null as string | null }
         : null;
   if (!team) return [];
-  const max = team.type === "national" ? 3 : 2;
+  const max = maxPatches({ type: team.type, leagueId: team.league_id, season: product.season });
   const seen = new Set<PatchId>();
   const valid: PatchId[] = [];
   for (const p of patches) {

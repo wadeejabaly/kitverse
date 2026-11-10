@@ -38,10 +38,10 @@ const Detail = z.object({
 
 async function teamFor(productId: string) {
   const row = must(
-    await db().from("products").select("team:teams(type,league_id)").eq("id", productId).single(),
+    await db().from("products").select("season,team:teams(type,league_id)").eq("id", productId).single(),
     "product team",
-  ) as unknown as { team: { type: "club" | "national"; league_id: string | null } };
-  return row.team;
+  ) as unknown as { season: string | null; team: { type: "club" | "national"; league_id: string | null } };
+  return row;
 }
 
 /** Throws with the owner-facing reason if the print/patches combo isn't valid for this product's team. */
@@ -49,7 +49,8 @@ async function validateDetail(productId: string, printName: string, printNumber:
   const printErr = validatePrint(printName || null, printNumber || null);
   if (printErr) throw new Error(printErr);
   if (patches.length) {
-    const patchErr = checkPatches(patches, await teamFor(productId));
+    const { team, season } = await teamFor(productId);
+    const patchErr = checkPatches(patches, team, season);
     if (patchErr) throw new Error(patchErr);
   }
 }

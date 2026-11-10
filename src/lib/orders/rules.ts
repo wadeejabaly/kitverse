@@ -1,4 +1,5 @@
 /** Pure validation rules for order lines and customer details (unit-tested). */
+import { maxPatches } from "../patch-limits";
 
 export const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"] as const;
 export const KIDS_SIZES = ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28"] as const;
@@ -64,9 +65,10 @@ export type PatchId = keyof typeof PATCHES;
  * badge plus the Peace and Champions badges, all three at once if the
  * customer wants them).
  */
-export function checkPatches(patches: PatchId[], team: { type: "club" | "national"; league_id: string | null }): string | null {
-  const max = team.type === "national" ? 3 : 2;
-  if (patches.length > max) return `more than ${max} patches allowed`;
+export function checkPatches(patches: PatchId[], team: { type: "club" | "national"; league_id: string | null }, season?: string | null): string | null {
+  // owner decision 2026-11-10: La Liga 2025/26 + 2026/27 shirts take only 1 (src/lib/patch-limits.ts)
+  const max = maxPatches({ type: team.type, leagueId: team.league_id, season });
+  if (patches.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
   for (const p of patches) {
     const rule = PATCHES[p];
     if (!rule) return `unknown patch ${p}`;

@@ -3,7 +3,7 @@ import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS } from "@/data/pricing";
 import type { Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX } from "@/lib/product";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
-import { MAX_PATCHES_NATIONAL } from "@/data/patches";
+
 
 /**
  * The checkout wire contract — shared by the browser form and the API routes.
@@ -47,7 +47,7 @@ export const CheckoutItemSchema = z.object({
   // the 2-for-clubs/3-for-nationals cap) is re-checked server-side against
   // the catalogue — see sanitizePatches() in lib/product.ts — whatever is
   // sent here. The array bound is a sanity ceiling, not the real cap.
-  patches: z.array(PatchIdSchema).max(MAX_PATCHES_NATIONAL).default([]),
+  patches: z.array(PatchIdSchema).max(3) /* the largest cap (national shirts); the per-shirt cap is enforced by sanitizePatches */.default([]),
   // Clamped rather than rejected server-side; the bound here is a sanity
   // ceiling so an absurd number never reaches the clamp.
   qty: z.number().int().min(1).max(1000),

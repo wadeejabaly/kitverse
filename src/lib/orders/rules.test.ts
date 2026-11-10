@@ -68,3 +68,19 @@ describe("text", () => {
     expect(similarity("Atlético Madrid", "atletico madrid")).toBe(1);
   });
 });
+
+describe("patch cap: La Liga 2025/26 + 2026/27 take only 1 (owner decision 2026-11-10)", () => {
+  const laLiga = { type: "club" as const, league_id: "la-liga" };
+  it("refuses a second patch on La Liga 2025/26 and 2026/27, in any season spelling", () => {
+    for (const season of ["2025/26", "2026/27", "25/26", "2026-27"]) {
+      expect(checkPatches(["league"], laLiga, season)).toBeNull();
+      expect(checkPatches(["league", "champions_league"], laLiga, season)).toBe("only 1 patch allowed on this shirt");
+    }
+  });
+  it("keeps 2 for older La Liga seasons, other leagues, and 3 for national teams", () => {
+    expect(checkPatches(["league", "champions_league"], laLiga, "2024/25")).toBeNull();
+    expect(checkPatches(["league", "champions_league"], laLiga, "2008/09")).toBeNull();
+    expect(checkPatches(["league", "champions_league"], { type: "club", league_id: "premier-league" }, "2026/27")).toBeNull();
+    expect(checkPatches(["world_cup", "world_cup_peace", "world_cup_champions"], { type: "national", league_id: null }, "2026")).toBeNull();
+  });
+});

@@ -64,7 +64,7 @@ async function prepareItem(it: NewItem): Promise<Result<Omit<ItemRow, "id">>> {
   const printErr = validatePrint(it.print_name, it.print_number);
   if (printErr) return { ok: false, error: printErr };
   const team = (await allTeams()).find((t) => t.id === p.team_id);
-  const patchErr = it.patches?.length && team ? checkPatches(it.patches, team) : null;
+  const patchErr = it.patches?.length && team ? checkPatches(it.patches, team, p.season) : null;
   if (patchErr) return { ok: false, error: patchErr, needsOwner: `patch check: ${patchErr}` };
   if (it.box) {
     const list = await currentPriceList();

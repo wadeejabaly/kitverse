@@ -1,6 +1,7 @@
 import { slugify } from "./slug";
 import type { Kind } from "./types";
 import type { PatchId } from "@/lib/orders/rules";
+import { maxPatches } from "@/lib/patch-limits";
 
 /**
  * The storefront's patch picker (owner ask 2026-10-26): a small photo per
@@ -69,14 +70,17 @@ export const PATCH_PROP_KEYS: Record<PatchId, string> = {
   world_cup_champions: "propPatchWorldCupChampions",
 };
 
-/** A club shirt takes at most 2 patches (one per sleeve); a national shirt up to 3. Mirrors checkPatches()'s cap. */
-export const MAX_PATCHES_CLUB = 2;
-export const MAX_PATCHES_NATIONAL = 3;
-
-export function maxPatchesFor(product: { league: string | null; kind: Kind }): number {
-  if (product.league !== null) return MAX_PATCHES_CLUB;
-  if (product.kind === "national") return MAX_PATCHES_NATIONAL;
-  return 0;
+/**
+ * A club shirt takes at most 2 patches (one per sleeve), a national shirt up
+ * to 3 - except La Liga 2025/26 and 2026/27, only 1. Same rule as
+ * checkPatches() / sanitizePatches(): src/lib/patch-limits.ts.
+ */
+export function maxPatchesFor(product: { league: string | null; kind: Kind; season?: string | null }): number {
+  return maxPatches({
+    type: product.league !== null ? "club" : product.kind === "national" ? "national" : null,
+    leagueId: product.league,
+    season: product.season,
+  });
 }
 
 /**

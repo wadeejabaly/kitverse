@@ -325,6 +325,7 @@
     "patchLeague": "{league} patch",
     "patchWorldCup": "World Cup patch",
     "patchHint": "Pick as many as you like. 1st patch {p1}, 2nd {p2}, 3rd {p3}.",
+    "patchHintOne": "One patch on this shirt, {p1}. Picking another swaps it.",
     "quantity": "Quantity",
     "added": "Added to your cart.",
     "viewCart": "View cart",

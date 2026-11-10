@@ -66,7 +66,7 @@ export function ProductForm({
   const retro = isRetroSeason(season);
 
   const patchOptions = patchOptionsFor({ league, kind, team });
-  const maxPatches = maxPatchesFor({ league, kind });
+  const maxPatches = maxPatchesFor({ league, kind, season });
 
   const [size, setSize] = useState<Size>("M");
   const [version, setVersion] = useState<Version>("fan");
@@ -91,6 +91,8 @@ export function ProductForm({
   function togglePatch(id: PatchId) {
     setPatches((current) => {
       if (current.includes(id)) return current.filter((p) => p !== id);
+      // a one-patch shirt (La Liga 2025/26 + 2026/27, owner decision 2026-11-10): picking another swaps it
+      if (maxPatches === 1) return [id];
       if (current.length >= maxPatches) return current;
       return [...current, id];
     });
@@ -252,11 +254,15 @@ export function ProductForm({
       {patchOptions.length > 0 ? (
         <fieldset className="mb-7 border-0 p-0">
           <legend className="kv-legend">{t("patchLegend")}</legend>
-          <p className="mb-3 text-xs text-ink-soft">{t("patchHint", { p1: `₪${patchPrice(1)}`, p2: `₪${patchPrice(2)}`, p3: `₪${patchPrice(3)}` })}</p>
+          <p className="mb-3 text-xs text-ink-soft">
+            {maxPatches === 1
+              ? t("patchHintOne", { p1: `₪${patchPrice(1)}` })
+              : t("patchHint", { p1: `₪${patchPrice(1)}`, p2: `₪${patchPrice(2)}`, p3: `₪${patchPrice(3)}` })}
+          </p>
           <div className="flex flex-wrap gap-2.5">
             {patchOptions.map((option) => {
               const selected = patches.includes(option.id);
-              const disabled = !selected && patches.length >= maxPatches;
+              const disabled = maxPatches > 1 && !selected && patches.length >= maxPatches;
               return (
                 <button
                   key={option.id}
@@ -307,7 +313,7 @@ export function ProductForm({
               </small>
             </p>
           ) : null}
-          {patches.length >= maxPatches ? (
+          {maxPatches > 1 && patches.length >= maxPatches ? (
             <p className="mt-1 text-xs text-ink-soft">
               {t("patchMaxHint", { max: maxPatches })}
             </p>

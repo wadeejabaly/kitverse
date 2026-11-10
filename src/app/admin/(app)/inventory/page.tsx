@@ -5,6 +5,7 @@ import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { addInventory, setInventoryQty } from "../../inventory-actions";
 import { PageHeader, Card, SectionTitle, Badge, EmptyState, cx, button, input } from "../../ui";
 import { DeleteStockButton } from "./delete-stock-button";
+import { maxPatches } from "@/lib/patch-limits";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ const AUDIENCE_LABEL: Record<string, string> = { adult: "Adult", women: "Women",
 const VERSION_LABEL: Record<string, string> = { fan: "Fan", player: "Player" };
 
 type Team = { type: "club" | "national"; league_id: string | null };
-type ProductHit = { id: string; title_en: string; team: ({ name_en: string } & Team) | null };
+type ProductHit = { id: string; title_en: string; season: string | null; team: ({ name_en: string } & Team) | null };
 type StockRow = {
   id: string; product_id: string; audience: string; version: string; sleeve: string; size: string; qty: number; note: string | null;
   print_name: string; print_number: string; patches: string[];
@@ -36,7 +37,7 @@ function patchIdsFor(team: Team | null): PatchId[] {
  * exact print name/number/badges on that physical shirt, straight to addInventory. */
 function AddStockRow({ product }: { product: ProductHit }) {
   const patchIds = patchIdsFor(product.team);
-  const max = product.team?.type === "national" ? 3 : 2;
+  const max = maxPatches({ type: product.team?.type ?? null, leagueId: product.team?.league_id ?? null, season: product.season });
   return (
     <div className="rounded-lg border border-line-2 px-3 py-2.5">
       <details>
@@ -148,7 +149,7 @@ export default async function InventoryPage({ searchParams }: PageProps<"/admin/
     .order("updated_at", { ascending: false })).data ?? []) as unknown as StockRow[];
 
   const results = q
-    ? ((await db().from("products").select("id,title_en,team:teams(name_en,type,league_id)").ilike("search_text", `%${q}%`).order("title_en").limit(12)).data ?? []) as unknown as ProductHit[]
+    ? ((await db().from("products").select("id,title_en,season,team:teams(name_en,type,league_id)").ilike("search_text", `%${q}%`).order("title_en").limit(12)).data ?? []) as unknown as ProductHit[]
     : [];
 
   return (
