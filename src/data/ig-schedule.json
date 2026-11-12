@@ -1,5 +1,11 @@
 [
   {
+    "id": "test-now-cash-story",
+    "at": "2026-11-13T00:20:00+02:00",
+    "kind": "story",
+    "image": "/campaign/daily/nov19-ar-4-story.jpg"
+  },
+  {
     "id": "nov13-ar-2-story",
     "at": "2026-11-13T12:00:00+02:00",
     "kind": "story",
