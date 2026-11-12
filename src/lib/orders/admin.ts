@@ -22,6 +22,8 @@ export interface BatchLine {
   order_number: number; customer: string; town: string; team: string; title: string; season: string; kit: string;
   version: string; sleeve: string; audience: string; size: string; qty: number; print_name: string; print_number: string;
   patches: string; box: string; supplier_album: string;
+  /** For the picture sheet (owner request 2026-11-12): the shirt's photo for this sleeve, its raw patch ids, team + league for the patch art. */
+  photo: string | null; patch_ids: string[]; team_id: string | null; league_id: string | null;
 }
 
 /** The orders in a supplier batch that should still be made - an order cancelled after batching is left out. */
@@ -39,8 +41,15 @@ export async function batchLines(orderIds: string[]): Promise<BatchLine[]> {
   const items = must(await db().from("order_items").select("id,order_id,product_id,audience,version,sleeve,size,qty,print_name,print_number,patches,box").in("order_id", orderIds), "items") as
     { id: string; order_id: string; product_id: string | null; audience: string; version: string; sleeve: string; size: string; qty: number; print_name: string | null; print_number: string | null; patches: string[]; box: boolean }[];
   const pids = [...new Set(items.map((i) => i.product_id).filter(Boolean))] as string[];
-  const products = pids.length ? must(await db().from("products").select("id,title_en,season,kit,team:teams(name_en),options:product_options(audience,version,sleeve,supplier_album_ids)").in("id", pids), "products") as unknown as
-    { id: string; title_en: string; season: string | null; kit: string; team: { name_en: string }; options: { audience: string; version: string; sleeve: string; supplier_album_ids: string[] }[] }[] : [];
+  const products = pids.length ? must(await db().from("products").select("id,title_en,season,kit,primary_image_url,team:teams(id,name_en,league_id),options:product_options(audience,version,sleeve,supplier_album_ids),images:product_images(url,sleeve,sort,status)").in("id", pids), "products") as unknown as
+    { id: string; title_en: string; season: string | null; kit: string; primary_image_url: string | null; team: { id: string; name_en: string; league_id: string | null };
+      options: { audience: string; version: string; sleeve: string; supplier_album_ids: string[] }[]; images: { url: string; sleeve: string; sort: number; status: string }[] }[] : [];
+  // the front photo of the sleeve that was ordered (long-sleeve photos for a long-sleeve line), else the short-sleeve front, else the primary
+  const photoFor = (p: (typeof products)[number] | undefined, sleeve: string) => {
+    if (!p) return null;
+    const ok = (p.images ?? []).filter((im) => im.status !== "bad").sort((a, b) => a.sort - b.sort);
+    return ok.find((im) => im.sleeve === sleeve)?.url ?? ok.find((im) => im.sleeve === "short")?.url ?? p.primary_image_url ?? null;
+  };
   return items.map((i) => {
     const o = orders.find((x) => x.id === i.order_id)!;
     const p = products.find((x) => x.id === i.product_id);
@@ -52,6 +61,7 @@ export async function batchLines(orderIds: string[]): Promise<BatchLine[]> {
       sleeve: i.sleeve === "long" ? "Long" : "Short", audience: i.audience, size: i.size, qty: i.qty, print_name: i.print_name ?? "",
       print_number: i.print_number ?? "", patches: i.patches.join(" + "), box: i.box ? "yes" : "",
       supplier_album: album ? `https://jerseyxie.x.yupoo.com/albums/${album}?uid=1` : "",
+      photo: photoFor(p, i.sleeve), patch_ids: i.patches, team_id: p?.team.id ?? null, league_id: p?.team.league_id ?? null,
     };
   }).sort((a, b) => a.order_number - b.order_number);
 }

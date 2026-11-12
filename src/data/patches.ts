@@ -124,3 +124,44 @@ export function patchOptionsFor(product: {
   }
   return [];
 }
+
+/**
+ * The artwork for one patch id on a given club/national shirt, for the SUPPLIER sheet (owner request
+ * 2026-11-12: the Chinese supplier reads pictures, not words). Same images as the storefront picker;
+ * null when we have no art for it (e.g. a league patch for a league without artwork, club_world_cup),
+ * in which case the sheet falls back to a few words.
+ */
+export function patchArt(id: PatchId, shirt: { teamSlug: string | null; leagueId: string | null }): string | null {
+  switch (id) {
+    case "league":
+      return (shirt.leagueId && LEAGUE_ART[shirt.leagueId]) || null;
+    case "champions_league":
+    case "champions_league_full":
+      return (shirt.teamSlug && CHAMPIONS_LEAGUE_ART[shirt.teamSlug]) || CHAMPIONS_LEAGUE_GENERAL;
+    case "europa_league":
+      return EUROPA_LEAGUE_ART;
+    case "coppa_italia":
+      return COPPA_ITALIA_ART;
+    case "world_cup":
+      return WORLD_CUP_ART;
+    case "world_cup_champions":
+      return WORLD_CUP_CHAMPIONS_ART;
+    case "world_cup_peace":
+      return WORLD_CUP_PEACE_ART;
+    default:
+      return null;
+  }
+}
+
+/** A few English words for the supplier when a patch has no picture, or needs a hint next to it. */
+export const PATCH_SUPPLIER_WORDS: Record<PatchId, string> = {
+  league: "LEAGUE PATCH",
+  champions_league: "UCL",
+  champions_league_full: "UCL FULL SET + SPONSOR",
+  europa_league: "UEL",
+  club_world_cup: "CLUB WORLD CUP",
+  coppa_italia: "COPPA ITALIA",
+  world_cup: "WORLD CUP",
+  world_cup_peace: "WORLD CUP PEACE",
+  world_cup_champions: "WORLD CUP CHAMPIONS",
+};
