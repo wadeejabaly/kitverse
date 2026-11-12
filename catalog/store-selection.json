@@ -3981,6 +3981,29 @@
       ],
       "teamHe": "צרפת",
       "titleHe": "חולצת בית רטרו צרפת 1998"
+    },
+    {
+      "handle": "ajax-2019-20-retro-home-shirt",
+      "title": "Ajax 2019/20 Retro Home Shirt",
+      "titleAr": "قميص أياكس 2019/20 الأساسي ريترو",
+      "team": "Ajax",
+      "teamAr": "أياكس",
+      "kind": "previous",
+      "season": "2019/20",
+      "kit": "Home",
+      "league": "eredivisie",
+      "edition": "standard",
+      "image": "/products/ajax-2019-20-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "ajax-2019-20-retro-home-shirt",
+      "images": [
+        "/products/ajax-2019-20-retro-home-shirt-2.jpg",
+        "/products/ajax-2019-20-retro-home-shirt-3.jpg",
+        "/products/ajax-2019-20-retro-home-shirt-4.jpg"
+      ],
+      "teamHe": "אייאקס",
+      "titleHe": "חולצת בית רטרו אייאקס 2019/20"
     }
   ]
 }
