@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { CheckCircle2, ImagePlus, Loader2, X } from "lucide-react";
 import { isRetroSeason } from "@/data/pricing";
-import { SHIRT_KITS, seasonChoices, shirtNames, type ShirtKit } from "@/lib/catalog/shirt-names";
+import { SHIRT_KITS, parseSeasonInput, seasonChoices, shirtNames, type ShirtKit } from "@/lib/catalog/shirt-names";
 import { addShirt, type AddShirtResult } from "../../../catalog-actions";
 import { Card, SectionTitle, button, cx, input } from "../../../ui";
 
@@ -15,18 +15,23 @@ export interface TeamChoice {
   nameHe: string;
   type: "club" | "national";
   league: string | null;
+  /** Other names the team is known by (teams.aliases, e.g. "Barca") - typing one finds the team too. */
+  aliases: string[];
 }
 
 const KIT_LABEL: Record<ShirtKit, string> = { Home: "Home", Away: "Away", Third: "Third" };
 
 /**
- * The "Add shirt" form (owner request 2026-11-12). Everything is a choice, not free text, so every name
- * comes out in the one format (src/lib/catalog/shirt-names.ts) - the preview shows exactly what the
- * website will say in all three languages before saving.
+ * The "Add shirt" form (owner request 2026-11-12). The team and season can be TYPED or picked from the
+ * suggestions (owner request 2026-11-13) - a typed team must match one we have (English, Arabic or
+ * Hebrew name), a typed season is turned into the one format (parseSeasonInput: "2010", "10/11",
+ * "2010-11" -> "2010/11"), so every name still comes out in the one format
+ * (src/lib/catalog/shirt-names.ts) - the preview shows exactly what the website will say in all three
+ * languages before saving.
  */
 export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues: { slug: string; name: string }[] }) {
-  const [teamSlug, setTeamSlug] = useState("");
-  const [season, setSeason] = useState("");
+  const [teamText, setTeamText] = useState("");
+  const [seasonText, setSeasonText] = useState("");
   const [kit, setKit] = useState<ShirtKit>("Home");
   const [player, setPlayer] = useState(true);
   const [longSleeve, setLongSleeve] = useState(false);
@@ -35,8 +40,22 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
   const [result, setResult] = useState<AddShirtResult | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const team = teams.find((t) => t.slug === teamSlug) ?? null;
+  // the typed team: exact name in any language, else the only team whose name contains the text
+  const team = useMemo(() => {
+    const q = fold(teamText);
+    if (!q) return null;
+    const names = (t: TeamChoice) => [t.name, t.nameAr, t.nameHe, t.slug.replace(/-/g, " "), ...t.aliases].map(fold);
+    const exact = teams.find((t) => names(t).includes(q));
+    if (exact) return exact;
+    const partial = teams.filter((t) => names(t).some((n) => n.includes(q)));
+    return partial.length === 1 ? partial[0] : null;
+  }, [teamText, teams]);
+  const teamMatches = useMemo(() => {
+    const q = fold(teamText);
+    return q && !team ? teams.filter((t) => [t.name, t.nameAr, t.nameHe, ...t.aliases].map(fold).some((n) => n.includes(q))).slice(0, 8) : [];
+  }, [teamText, team, teams]);
   const seasons = useMemo(() => (team ? seasonChoices(team.type) : []), [team]);
+  const season = team ? (parseSeasonInput(seasonText, team.type) ?? "") : "";
 
   const retro = season ? isRetroSeason(season) : false;
   const names = team && season ? shirtNames({ team, season, kit, retro }) : null;
@@ -48,7 +67,7 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
   ].filter((g) => g.rows.length);
 
   function reset() {
-    setTeamSlug(""); setSeason(""); setKit("Home"); setPlayer(true); setLongSleeve(false);
+    setTeamText(""); setSeasonText(""); setKit("Home"); setPlayer(true); setLongSleeve(false);
     setShortPhotos([]); setLongPhotos([]); setResult(null);
   }
 
@@ -101,28 +120,45 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
         <div className="grid gap-5">
           <label className="grid gap-1.5">
             <span className="text-sm font-bold text-ink">Team</span>
-            <select className={input} value={teamSlug} onChange={(e) => {
-              // a season that doesn't fit the new team's type (club "2016/17" vs national "2026") is cleared
-              const next = teams.find((t) => t.slug === e.target.value);
-              if (next && season && !seasonChoices(next.type).includes(season)) setSeason("");
-              setTeamSlug(e.target.value);
-            }}>
-              <option value="">Choose a team…</option>
-              {groups.map((g) => (
-                <optgroup key={g.label} label={g.label}>
-                  {g.rows.map((t) => <option key={t.slug} value={t.slug}>{t.name}</option>)}
-                </optgroup>
-              ))}
-            </select>
+            <input className={input} list="kv-team-list" value={teamText} autoComplete="off" spellCheck={false}
+              placeholder="Type the team - e.g. Barcelona, برشلونة" onChange={(e) => setTeamText(e.target.value)} />
+            <datalist id="kv-team-list">
+              {groups.flatMap((g) => g.rows).map((t) => <option key={t.slug} value={t.name}>{`${t.nameAr} · ${t.type === "national" ? "national team" : leagues.find((l) => l.slug === t.league)?.name ?? "club"}`}</option>)}
+            </datalist>
+            {team ? (
+              <span className="text-xs text-green">✓ {team.name} · {team.nameAr} · {team.type === "national" ? "national team" : leagues.find((l) => l.slug === team.league)?.name ?? "club"}</span>
+            ) : teamText.trim() ? (
+              teamMatches.length ? (
+                <span className="flex flex-wrap gap-1.5 text-xs text-muted">Did you mean:
+                  {teamMatches.map((t) => (
+                    <button key={t.slug} type="button" onClick={() => setTeamText(t.name)} className="rounded-full border border-line-2 px-2 py-0.5 text-ink hover:border-pitch">{t.name}</button>
+                  ))}
+                </span>
+              ) : (
+                <span className="text-xs text-red">No team called &quot;{teamText.trim()}&quot; yet - check the spelling, or ask Claude to add the team.</span>
+              )
+            ) : (
+              <span className="text-xs text-muted">Type to search, or pick from the list.</span>
+            )}
           </label>
 
           <label className="grid gap-1.5">
             <span className="text-sm font-bold text-ink">Season</span>
-            <select className={input} value={season} onChange={(e) => setSeason(e.target.value)} disabled={!team}>
-              <option value="">{team ? "Choose a season…" : "Choose the team first"}</option>
-              {seasons.map((s) => <option key={s} value={s}>{s}{isRetroSeason(s) ? " · retro" : ""}</option>)}
-            </select>
-            <span className="text-xs text-muted">Seasons up to 2023/24 are retro (retro price, fan version only).</span>
+            <input className={input} list="kv-season-list" value={seasonText} autoComplete="off" inputMode="numeric" disabled={!team}
+              placeholder={team ? (team.type === "national" ? "Type the year - e.g. 2026" : "Type the season - e.g. 2010/11 or 2010") : "Type the team first"}
+              onChange={(e) => setSeasonText(e.target.value)} />
+            <datalist id="kv-season-list">
+              {seasons.map((s) => <option key={s} value={s}>{isRetroSeason(s) ? "retro" : ""}</option>)}
+            </datalist>
+            {team && seasonText.trim() ? (
+              season ? (
+                <span className="text-xs text-green">✓ {season}{isRetroSeason(season) ? " · retro" : ""}</span>
+              ) : (
+                <span className="text-xs text-red">{team.type === "national" ? "A national-team season is a year, e.g. 2026." : "Write it like 2010/11 (or just 2010)."}</span>
+              )
+            ) : (
+              <span className="text-xs text-muted">Seasons up to 2023/24 are retro (retro price, fan version only).</span>
+            )}
           </label>
 
           <fieldset className="grid gap-1.5">
@@ -184,6 +220,11 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
       </div>
     </div>
   );
+}
+
+/** Lower-case, no accents/diacritics or punctuation - so "Atlético", "atletico" and "ATLETICO" match. */
+function fold(s: string): string {
+  return s.normalize("NFKD").replace(/[\u0300-\u036f\u064b-\u0652]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 
 function PhotoPicker({ label, hint, files, onChange }: { label: string; hint: string; files: File[]; onChange: (files: File[]) => void }) {

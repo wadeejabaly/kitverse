@@ -45,3 +45,27 @@ export function seasonChoices(type: "club" | "national", newest = 2026, oldest =
   for (let y = newest; y >= oldest; y--) out.push(type === "national" ? String(y) : `${y}/${String((y + 1) % 100).padStart(2, "0")}`);
   return out;
 }
+
+/**
+ * A season the owner TYPED (owner request 2026-11-13: "let me type the team's name and year, not just
+ * look through the list"), in whatever way he writes it, turned into the one format - or null:
+ *   club:     "2010/11", "2010-11", "10/11", "2010/2011", "2010 11", or just "2010" -> "2010/11"
+ *   national: "2026", or a club-style "2026/27" -> "2026"
+ */
+export function parseSeasonInput(raw: string, type: "club" | "national"): string | null {
+  const t = raw.trim().replace(/\s+/g, "/").replace(/[\\.]/g, "/");
+  if (!t) return null;
+  let first: number | null = null, second: number | null = null;
+  let m = /^((?:19|20)\d{2})$/.exec(t);
+  if (m) first = Number(m[1]);
+  m = m ? null : /^((?:19|20)?\d{2})[/_-]((?:19|20)?\d{2})$/.exec(t);
+  if (m) {
+    first = m[1].length === 2 ? 2000 + Number(m[1]) : Number(m[1]);
+    if (m[1].length === 2 && first > 2040) first -= 100; // "98/99" -> 1998
+    second = Number(m[2].slice(-2));
+  }
+  if (first === null) return null;
+  const season = type === "national" ? String(first) : `${first}/${String((first + 1) % 100).padStart(2, "0")}`;
+  if (type === "club" && second !== null && second !== (first + 1) % 100) return null; // "2010/14" is not a season
+  return isValidSeason(season, type) ? season : null;
+}

@@ -142,3 +142,68 @@ export async function rejectManualPaymentAction(_prev: ManualPayActionState, for
   revalidatePath("/admin/orders");
   return r.ok ? { ok: true } : { error: "This payment was already handled (refresh the page)." };
 }
+
+/**
+ * Delete cancelled orders for good (owner request 2026-11-13: "give me an option to delete them myself").
+ * Only CANCELLED orders where no money is involved: never paid (payment_status unpaid, every payment
+ * row pending/failed/cancelled) and with no invoice, cash collection or issue record - those are
+ * skipped and reported. Their shirt lines, history, discounts and accessories go with them (database
+ * cascades); a pending/cancelled payment row and its uploaded proof screenshot are removed first, as
+ * are their lines in a supplier batch. The customer profile stays. `orderId` = one or more order ids,
+ * or `all=1` = every cancelled order.
+ */
+export type DeleteOrdersState = { done: boolean; deleted: number[]; skipped: { number: number; reason: string }[]; error?: string };
+
+export async function deleteCancelledOrders(_prev: DeleteOrdersState, form: FormData): Promise<DeleteOrdersState> {
+  const staff = await requireStaff();
+  const all = form.get("all") === "1";
+  const ids = z.array(z.string().uuid()).parse(form.getAll("orderId"));
+  if (!all && !ids.length) return { done: true, deleted: [], skipped: [], error: "No order picked." };
+
+  let q = db().from("orders").select("id,number,status,payment_status").eq("status", "cancelled");
+  if (!all) q = q.in("id", ids);
+  const orders = must(await q, "cancelled orders") as { id: string; number: number; status: string; payment_status: string }[];
+  if (!orders.length) return { done: true, deleted: [], skipped: [], error: "No cancelled orders to delete." };
+  const oid = orders.map((o) => o.id);
+
+  const [pays, invoices, cash, issues] = await Promise.all([
+    db().from("payments").select("id,order_id,status,proof_path").in("order_id", oid),
+    db().from("invoices").select("order_id").in("order_id", oid),
+    db().from("cash_collections").select("order_id").in("order_id", oid),
+    db().from("issues").select("order_id").in("order_id", oid),
+  ]);
+  for (const r of [pays, invoices, cash, issues]) if (r.error) return { done: true, deleted: [], skipped: [], error: r.error.message };
+  const payments = (pays.data ?? []) as { id: string; order_id: string; status: string; proof_path: string | null }[];
+  const has = (rows: { order_id: string }[] | null) => new Set((rows ?? []).map((r) => r.order_id));
+  const withInvoice = has(invoices.data), withCash = has(cash.data), withIssue = has(issues.data);
+
+  const skipped: DeleteOrdersState["skipped"] = [];
+  const ok: typeof orders = [];
+  for (const o of orders) {
+    const moneyMoved = o.payment_status !== "unpaid" || payments.some((p) => p.order_id === o.id && !["pending", "failed", "cancelled"].includes(p.status));
+    if (moneyMoved) skipped.push({ number: o.number, reason: "money was paid or refunded on it" });
+    else if (withInvoice.has(o.id)) skipped.push({ number: o.number, reason: "it has an invoice" });
+    else if (withCash.has(o.id)) skipped.push({ number: o.number, reason: "it has a cash collection record" });
+    else if (withIssue.has(o.id)) skipped.push({ number: o.number, reason: "it has an issue record" });
+    else ok.push(o);
+  }
+  if (!ok.length) return { done: true, deleted: [], skipped };
+  const okIds = ok.map((o) => o.id);
+
+  const items = must(await db().from("order_items").select("id").in("order_id", okIds), "order lines") as { id: string }[];
+  if (items.length) must(await db().from("supplier_batch_items").delete().in("order_item_id", items.map((i) => i.id)).select("id"), "batch lines");
+  const ownPays = payments.filter((p) => okIds.includes(p.order_id));
+  const proofs = ownPays.map((p) => p.proof_path).filter((p): p is string => !!p);
+  if (proofs.length) await db().storage.from("payment-proofs").remove(proofs);
+  if (ownPays.length) must(await db().from("payments").delete().in("id", ownPays.map((p) => p.id)).select("id"), "payments");
+  // the status guard again: an order un-cancelled in the meantime is left alone
+  const gone = must(await db().from("orders").delete().in("id", okIds).eq("status", "cancelled").select("number"), "delete orders") as { number: number }[];
+  const deleted = gone.map((g) => g.number).sort((a, b) => a - b);
+
+  await db().from("audit_log").insert({ actor: staff.id, action: "order.delete_cancelled", entity: "order", entity_id: null, after: { numbers: deleted, skipped } });
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin");
+  // deleted from its own page: that page is gone, back to the Cancelled tab
+  if (form.get("from") === "order" && deleted.length) redirect("/admin/orders?status=cancelled");
+  return { done: true, deleted, skipped };
+}

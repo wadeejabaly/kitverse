@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { createSupplierBatch, approveWebOrder, declineWebOrder } from "../../orders-actions";
 import { PageHeader, Card, Badge, EmptyState, ORDER_STATUS, button, ilTime, payLabel, input, ils, Tabs } from "../../ui";
 import { SubmitButton } from "../../submit-button";
+import { DeleteCancelledOrders } from "./delete-cancelled";
 import { allOrders, customerName, PENDING } from "../../metrics";
 import { israelDayStart, israelDayEnd } from "@/lib/time";
 
@@ -82,6 +83,9 @@ export default async function Orders({ searchParams }: PageProps<"/admin/orders"
         <span>{rows.length} order{rows.length === 1 ? "" : "s"}{filtered ? " match" : ""} · <span className="font-semibold text-ink">{ils(rows.filter((o) => o.status !== "cancelled").reduce((s, o) => s + o.total, 0))}</span></span>
         {batchable ? <span className="text-xs">New and paid orders are pre-ticked for the next supplier batch.</span> : null}
       </div>
+
+      {/* owner request 2026-11-13: delete cancelled orders himself (only ones without money/invoices - see deleteCancelledOrders) */}
+      {status === "cancelled" ? <DeleteCancelledOrders count={count("cancelled")} /> : null}
 
       {!rows.length ? <EmptyState icon={Package} title="No orders here" text={filtered ? "Nothing matches these filters." : "Orders show up here once they're confirmed."} /> : (
         <form action={createSupplierBatch} className="flex flex-col gap-3">

@@ -9,6 +9,7 @@ import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../or
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime, payLabel, ils, KV, cx } from "../../../ui";
 import { SubmitButton } from "../../../submit-button";
 import { CancelOrderButton } from "./cancel-order-button";
+import { DeleteCancelledOrders } from "../delete-cancelled";
 import { CancelInventoryPrompt } from "./cancel-inventory-prompt";
 import { ManualPaymentCard, type ManualPaymentInfo } from "./manual-payment-card";
 import { getManualPayConfig, manualPaymentFor, proofUrl } from "@/lib/orders/manual-pay";
@@ -76,6 +77,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
           <a href={`/o/${orderToken(o.id)}`} target="_blank" rel="noreferrer" className={button.ghost}><ExternalLink className="h-4 w-4" /> Customer page</a>
           {o.conversation_id ? <Link href={`/admin/inbox/${o.conversation_id}`} className={button.ghost}><MessagesSquare className="h-4 w-4" /> Chat</Link> : null}
           {o.status !== "cancelled" && !awaitingOk ? <CancelOrderButton orderId={o.id} number={o.number} /> : null}
+          {o.status === "cancelled" ? <DeleteCancelledOrders orderId={o.id} number={o.number} /> : null}
         </>} />
 
       <Progress status={o.status} />

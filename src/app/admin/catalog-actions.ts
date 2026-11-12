@@ -7,7 +7,7 @@ import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { env } from "@/lib/env";
 import { isRetroSeason } from "@/data/pricing";
-import { SHIRT_KITS, isValidSeason, shirtNames } from "@/lib/catalog/shirt-names";
+import { SHIRT_KITS, isValidSeason, parseSeasonInput, shirtNames } from "@/lib/catalog/shirt-names";
 import { OUT_OF_STOCK_FLAG, SITE_LISTED_FLAG } from "@/lib/catalog/stock";
 import collections from "../../../catalog/store-collections.json";
 
@@ -60,12 +60,14 @@ export async function addShirt(form: FormData): Promise<AddShirtResult> {
     longSleeve: form.get("longSleeve") === "on",
   });
   if (!parsed.success) return { ok: false, error: "Pick the team, season and kit." };
-  const { team: slug, season, kit, player, longSleeve } = parsed.data;
+  const { team: slug, kit, player, longSleeve } = parsed.data;
 
   const team = TEAMS.find((t) => t.slug === slug);
   if (!team) return { ok: false, error: "Unknown team." };
   const dbTeam = (await db().from("teams").select("id,type,league_id").eq("id", slug).maybeSingle()).data as { id: string; type: "club" | "national"; league_id: string | null } | null;
   if (!dbTeam) return { ok: false, error: `The team "${team.name}" isn't in the database yet - ask Claude to add it.` };
+  // the form sends the season already in the one format; a typed one is normalised the same way here
+  const season = parseSeasonInput(parsed.data.season, dbTeam.type) ?? parsed.data.season;
   if (!isValidSeason(season, dbTeam.type)) return { ok: false, error: dbTeam.type === "national" ? "A national-team season is a year, e.g. 2026." : "A club season looks like 2016/17." };
 
   const shortPhotos = form.getAll("shortPhotos").filter((f): f is File => f instanceof File && f.size > 0);

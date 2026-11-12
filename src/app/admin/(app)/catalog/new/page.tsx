@@ -11,13 +11,13 @@ export const dynamic = "force-dynamic";
 export default async function AddShirtPage() {
   const teams = (collections as { teams: { slug: string; name: string; nameAr: string; nameHe?: string }[] }).teams;
   const leagues = (collections as { leagues: { slug: string; name: string }[] }).leagues;
-  const rows = ((await db().from("teams").select("id,type,league_id").in("id", teams.map((t) => t.slug))).data ?? []) as { id: string; type: "club" | "national"; league_id: string | null }[];
+  const rows = ((await db().from("teams").select("id,type,league_id,aliases").in("id", teams.map((t) => t.slug))).data ?? []) as { id: string; type: "club" | "national"; league_id: string | null; aliases: string[] | null }[];
   const dbTeams = new Map(rows.map((r) => [r.id, r]));
   const choices: TeamChoice[] = teams
     .filter((t) => dbTeams.has(t.slug))
     .map((t) => {
       const d = dbTeams.get(t.slug)!;
-      return { slug: t.slug, name: t.name, nameAr: t.nameAr, nameHe: t.nameHe ?? t.name, type: d.type, league: d.league_id };
+      return { slug: t.slug, name: t.name, nameAr: t.nameAr, nameHe: t.nameHe ?? t.name, type: d.type, league: d.league_id, aliases: d.aliases ?? [] };
     });
   return (
     <>
