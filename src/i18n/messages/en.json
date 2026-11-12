@@ -7,7 +7,8 @@
     "cash": "Pay cash on delivery",
     "welcome": "{amount} off your first order of {min} or more — code <c>{code}</c> at checkout",
     "welcomeNoMin": "{amount} off your first order — code <c>{code}</c> at checkout",
-    "cta": "Shop now"
+    "cta": "Shop now",
+    "sale": "{amount} off everything — code <c>{code}</c> at checkout"
   },
   "nav": {
     "home": "Home",
