@@ -5,6 +5,7 @@ import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { notify } from "@/lib/notify";
 import { settings, type SpendLimits } from "@/lib/conversation/limits";
 import { syncInstagramMedia } from "@/lib/channels/media-sync";
+import { runScheduledPosts } from "@/lib/channels/ig-publish";
 
 /**
  * One bot turn per conversation burst: waits for the customer to stop typing (5s, max 20s),
@@ -117,4 +118,10 @@ export const mediaSync = inngest.createFunction(
 // just no longer scheduled - existing products and their supplier_album_ids (still used to order
 // stock, see src/lib/orders/admin.ts) are untouched.
 
-export const functions = [conversationTurn, quoteFollowup, approvalDecided, approvalReminder, spendWatch, mediaSync];
+/** Every 5 min: publish the scheduled Instagram posts/stories that are due (src/lib/channels/ig-publish.ts). */
+export const igAutopost = inngest.createFunction(
+  { id: "instagram-autopost", triggers: [{ cron: "*/5 * * * *" }], concurrency: [{ limit: 1 }] },
+  async ({ step }) => step.run("publish-due", () => runScheduledPosts()),
+);
+
+export const functions = [conversationTurn, quoteFollowup, approvalDecided, approvalReminder, spendWatch, mediaSync, igAutopost];
