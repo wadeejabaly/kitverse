@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ADDONS, GIFT_BOX_PRICE, SIZES, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
+import { ADDONS, GIFT_BOX_PRICE, SIZES, SLEEVES, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
 import { CHEST_PATCHES, patchPieces, sleevePatches, togglePatchIn } from "@/lib/patch-limits";
-import type { Kind, PatchId, Size } from "@/data/types";
+import type { Kind, PatchId, Size, Sleeve } from "@/data/types";
 import { maxPatchesFor, patchOptionsFor } from "@/data/patches";
 import { useCart } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
@@ -21,18 +21,21 @@ export interface BundleShirt {
   team: string;
   kind: Kind;
   image: string;
+  /** Front long-sleeve photo, when the shirt has one. */
+  imageLong?: string;
   title: string;
   kitLabel: string;
 }
 
 interface ShirtChoice {
   size: Size;
+  sleeve: Sleeve;
   personalise: boolean;
   nameNumber: string;
   patches: PatchId[];
 }
 
-const START: ShirtChoice = { size: "M", personalise: false, nameNumber: "", patches: [] };
+const START: ShirtChoice = { size: "M", sleeve: "short", personalise: false, nameNumber: "", patches: [] };
 
 /**
  * The bundle buy box (owner request 2026-11-12): the club's three shirts, each customised on its own,
@@ -61,7 +64,7 @@ export function BundleForm({ shirts, leagueName, bundleTitle }: { shirts: Bundle
   const unitPrices = shirts.map((shirt, i) => {
     const c = choices[i];
     const name = c.personalise ? sanitizeNameNumber(c.nameNumber).trim() : "";
-    return priceFor(shirt.season, c.size, BUNDLE_VERSION) + (name ? ADDONS.nameNumber : 0) + patchesTotal(patchPieces(c.patches, false));
+    return priceFor(shirt.season, c.size, BUNDLE_VERSION, c.sleeve) + (name ? ADDONS.nameNumber : 0) + patchesTotal(patchPieces(c.patches, false));
   });
   const total = unitPrices.reduce((s, p) => s + p, 0) + (giftBox ? GIFT_BOX_PRICE : 0);
 
@@ -74,7 +77,7 @@ export function BundleForm({ shirts, leagueName, bundleTitle }: { shirts: Bundle
         handle: shirt.handle,
         size: c.size,
         version: BUNDLE_VERSION,
-        sleeve: "short",
+        sleeve: c.sleeve,
         patches: c.patches,
         qty: 1,
         ...(name ? { nameNumber: name } : {}),
@@ -121,7 +124,7 @@ export function BundleForm({ shirts, leagueName, bundleTitle }: { shirts: Bundle
         <ul className="grid gap-1.5 text-[13.5px] text-ink-soft">
           {shirts.map((shirt, i) => (
             <li key={shirt.handle} className="flex justify-between gap-4">
-              <span>{shirt.kitLabel}</span>
+              <span>{shirt.kitLabel}{choices[i].sleeve === "long" ? ` · ${tp("sleeveLong")}` : ""}</span>
               <Price value={unitPrices[i]} />
             </li>
           ))}
@@ -202,7 +205,7 @@ function ShirtCard({
     <section className="kv-panel !p-4 sm:!p-5" aria-label={shirt.title}>
       <header className="mb-4 flex items-center gap-3">
         <span className="relative block size-16 shrink-0 overflow-hidden rounded-[10px] bg-tile">
-          <Image src={shirt.image} alt="" fill sizes="64px" className="object-contain" />
+          <Image src={choice.sleeve === "long" && shirt.imageLong ? shirt.imageLong : shirt.image} alt="" fill sizes="64px" className="object-contain" />
         </span>
         <div className="min-w-0 grow">
           <p className="mono-eyebrow text-ink-soft">{t("shirtN", { n: index + 1 })}</p>
@@ -232,6 +235,21 @@ function ShirtCard({
               </OptionButton>
             );
           })}
+        </div>
+      </fieldset>
+
+      {/* Sleeve (owner request 2026-11-12): long sleeve priced from the price list's long-sleeve player group */}
+      <fieldset className="mb-5 border-0 p-0">
+        <legend className="kv-legend">{tp("sleeve")}</legend>
+        <div className="flex flex-wrap gap-2">
+          {SLEEVES.map((option) => (
+            <OptionButton key={option} pressed={choice.sleeve === option} onClick={() => onChange({ sleeve: option })}>
+              {option === "short" ? tp("sleeveShort") : tp("sleeveLong")}
+              <small className="ms-1.5 text-ink-soft">
+                <Price value={priceFor(shirt.season, choice.size, BUNDLE_VERSION, option)} />
+              </small>
+            </OptionButton>
+          ))}
         </div>
       </fieldset>
 

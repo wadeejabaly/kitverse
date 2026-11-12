@@ -48,7 +48,7 @@ export default async function BundlePage({ params }: { params: Promise<{ locale:
   const productTitle = (p: (typeof products)[number]) => (locale === "ar" ? p.titleAr : locale === "he" ? p.titleHe || p.title : p.title);
 
   const shirts: BundleShirt[] = products.map((p) => ({
-    handle: p.handle, season: p.season, league: p.league, team: p.team, kind: p.kind, image: p.image,
+    handle: p.handle, season: p.season, league: p.league, team: p.team, kind: p.kind, image: p.image, imageLong: p.imagesLongSleeve?.[0],
     title: productTitle(p), kitLabel: tp(`kit.${p.kit}`),
   }));
 
