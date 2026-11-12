@@ -16,6 +16,10 @@ const Env = z.object({
   INSTAGRAM_ACCOUNT_ID: z.string().optional().default(""),
   INSTAGRAM_ACCESS_TOKEN: z.string().optional().default(""),
   IG_GRAPH_VERSION: z.string().default("v24.0"),
+  // Meta Marketing API, read-only ad spend for admin Profit (src/lib/profit/meta-ads.ts)
+  META_AD_ACCOUNT_ID: z.string().optional().default(""),
+  META_ADS_ACCESS_TOKEN: z.string().optional().default(""),
+  META_GRAPH_VERSION: z.string().default("v24.0"),
   ELEVENLABS_API_KEY: z.string().optional().default(""),
   OPENAI_API_KEY: z.string().optional().default(""),
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional().default(""),
