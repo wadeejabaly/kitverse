@@ -3,18 +3,12 @@
 Frames for the homepage 360° jersey showcase (owner spec 2026-11-09,
 "Interactive 360° jersey showcase").
 
-The hero picture is split into two layers so the shirt can change while the
-stadium and pedestal stay exactly where they are:
-
-  * public/home/showcase/plate.webp — the current hero composite
-    (public/home/hero-real-madrid.webp) with the shirt and its glow removed
-    (row-wise fill from the background on either side, then blurred and given
-    a little grain). Only the area the shirt covered changes; the pedestal and
-    every pixel away from the shirt are the original.
-  * public/home/showcase/<jersey>/<view>.webp — one transparent cut-out per
-    view, all normalised to the SAME box: bottom on the pedestal top, centred
-    on the original shirt, same height as the original shirt. That is what
-    keeps scale and position identical while rotating or switching jerseys.
+One transparent cut-out per view, public/home/showcase/<jersey>/<view>.webp,
+all normalised to the SAME 1456x1460 box: hem on row 1437, centred on x 722,
+the height of the original hero composite's shirt
+(public/home/hero-real-madrid.webp). That is what keeps scale and position
+identical while rotating or switching jerseys; src/data/showcase.ts
+(SHOWCASE_STAGE) stands that box on the podium of the hero film's last frame.
 
 Cut-outs never redraw the shirt: background removal (the same AI matte +
 colour flood as scripts/images/standardize.py), edge de-fringing and
@@ -24,7 +18,6 @@ the photo's. Views that are too small or whose matte is doubtful are reported
 so they can be re-shot rather than "fixed".
 
 Usage:
-  python3 scripts/images/showcase_frames.py --plate
   python3 scripts/images/showcase_frames.py --config scripts/images/showcase-sources.json
 Each config entry: {"id": "...", "views": [{"name": "front", "file": "...", "source": "composite"|"photo"}]}
 """
@@ -71,37 +64,6 @@ def composite_mask(img: Image.Image, session) -> np.ndarray:
     return np.clip(alpha, 0, 1)
 
 
-def make_plate(session) -> None:
-    import cv2
-
-    img = Image.open(HERO).convert("RGB")
-    rgb = np.asarray(img).astype(np.float32)
-    h, w = rgb.shape[:2]
-    shirt = composite_mask(img, session) > 0.5
-    region = ndimage.binary_dilation(shirt, iterations=150)  # the shirt plus its glow
-    region[PEDESTAL_Y - 6 :] = False
-    soft = cv2.GaussianBlur(rgb, (0, 0), 8)
-    fill = rgb.copy()
-    for y in range(h):
-        xs = np.nonzero(region[y])[0]
-        if not len(xs):
-            continue
-        x0, x1 = max(xs.min() - 1, 0), min(xs.max() + 1, w - 1)
-        left = soft[y, max(x0 - 20, 0) : x0 + 1].mean(0)
-        right = soft[y, x1 : min(x1 + 21, w)].mean(0)
-        t = np.linspace(0, 1, x1 - x0 + 1)[:, None]
-        fill[y, x0 : x1 + 1] = left * (1 - t) + right * t
-    fill = cv2.GaussianBlur(fill, (0, 0), 10) + np.random.default_rng(1).normal(0, 2.0, fill.shape)
-    a = np.clip(cv2.GaussianBlur(region.astype(np.float32), (0, 0), 30) * 1.6, 0, 1)[..., None]
-    # The lit strip where the hem meets the pedestal stays as it is (it reads
-    # as the pedestal's top light under every shirt) - no dark seam above it.
-    a[PEDESTAL_Y - 2 :] = 0
-    plate = np.clip(rgb * (1 - a) + fill * a, 0, 255).astype(np.uint8)
-    os.makedirs(OUT, exist_ok=True)
-    Image.fromarray(plate).save(f"{OUT}/plate.webp", "WEBP", quality=88, method=6)
-    print("plate ->", f"{OUT}/plate.webp")
-
-
 def photo_cutout(path: str) -> tuple[np.ndarray, np.ndarray, dict]:
     img = Image.open(path)
     if img.mode in ("RGBA", "LA", "P"):
@@ -122,6 +84,18 @@ def photo_cutout(path: str) -> tuple[np.ndarray, np.ndarray, dict]:
     alpha = np.minimum(alpha, cv2.GaussianBlur(inner, (0, 0), 1.0))
     fg = std.defringe(rgb, alpha, bg)
     return fg, alpha, diag
+
+
+# Frames are composed on the 1456x1460 canvas above but delivered smaller:
+# no screen shows one wider than ~1100 device pixels (a 3x phone), and the
+# site places them by percentages, so the size changes nothing on the page.
+DELIVER_WIDTH = 1100
+DELIVER_QUALITY = 84
+
+
+def deliver(frame: Image.Image) -> Image.Image:
+    w, h = frame.size
+    return frame.resize((DELIVER_WIDTH, round(h * DELIVER_WIDTH / w)), Image.LANCZOS)
 
 
 def normalise(fg: np.ndarray, alpha: np.ndarray) -> Image.Image:
@@ -173,7 +147,7 @@ def build(config: str, session) -> list[dict]:
             files = sorted(glob.glob(jersey["sequence"]))
             for i, frame in enumerate(place_sequence([Image.open(f).convert("RGBA") for f in files])):
                 dst = f"{OUT}/{jersey['id']}/{i:02d}.webp"
-                frame.save(dst, "WEBP", quality=86, method=6)
+                deliver(frame).save(dst, "WEBP", quality=DELIVER_QUALITY, method=6)
                 report.append({"jersey": jersey["id"], "view": i, "source": files[i], "output": dst, "flags": []})
             print(f"{jersey['id']:>32} {len(files)} sequence frames")
             continue
@@ -195,7 +169,7 @@ def build(config: str, session) -> list[dict]:
                     entry["flags"].append("low_resolution_source")
             frame = normalise(fg, alpha)
             dst = f"{OUT}/{jersey['id']}/{view['name']}.webp"
-            frame.save(dst, "WEBP", quality=86, method=6)
+            deliver(frame).save(dst, "WEBP", quality=DELIVER_QUALITY, method=6)
             entry["output"] = dst
             report.append(entry)
             print(f"{jersey['id']:>32} {view['name']:<6} {entry['flags']}")
@@ -204,13 +178,10 @@ def build(config: str, session) -> list[dict]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--plate", action="store_true")
     ap.add_argument("--config")
     ap.add_argument("--report")
     args = ap.parse_args()
     session = _session()
-    if args.plate:
-        make_plate(session)
     if args.config:
         report = build(args.config, session)
         if args.report:

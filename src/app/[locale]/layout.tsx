@@ -13,6 +13,8 @@ import { PageViewTracker } from "@/components/providers/PageViewTracker";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
 import { PromoBanner } from "@/components/shared/PromoBanner";
+import { InlineScript } from "@/components/shared/InlineScript";
+import { INTRO_PENDING_SCRIPT } from "@/components/hero/intro";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -90,8 +92,13 @@ export default async function LocaleLayout({
       dir={getDir(locale)}
       style={FONT_STACK_VARS}
       className={FONT_CLASS_NAMES}
+      // The home page intro flags <html> before hydration (see below).
+      suppressHydrationWarning
     >
       <body className="flex min-h-dvh flex-col bg-ground text-ink">
+        {/* First in <body>, before the banner and header are parsed: decides
+            whether the home page film intro plays (src/components/hero/intro.ts). */}
+        <InlineScript html={INTRO_PENDING_SCRIPT} />
         <NextIntlClientProvider messages={messages}>
           <ConsentProvider>
             {/* The cart wraps the whole locale tree: the header's live count

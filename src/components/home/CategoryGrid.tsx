@@ -18,7 +18,7 @@ import { CATEGORY_IMAGES } from "./category-images";
  * short and wide, not tall, and the heading is bold caps, not the site's
  * usual sentence case. All of that is deliberate here now — this section
  * reads as the floor of the hero rather than a new page section, which is
- * why it is rendered as HeroD's own sibling in page.tsx with NO <Wrap>
+ * why it is rendered as HeroVideo's own sibling in page.tsx with NO <Wrap>
  * around it, unlike every other section on the page.
  *
  * Replaces the old text-link "THE WAYS IN" row rather than joining it — both

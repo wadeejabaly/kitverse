@@ -27,7 +27,10 @@ export async function PromoBanner() {
   return (
     <Link
       href="/shop"
-      className="block border-b border-rule bg-accent px-4 py-2.5 text-center text-sm font-medium text-accent-ink transition-opacity hover:opacity-90"
+      // data-kv-chrome: measured and hidden by the home page video hero (HeroVideo.tsx).
+      // relative z-40: painted above that hero, which slides up underneath it.
+      data-kv-chrome
+      className="relative z-40 block border-b border-rule bg-accent px-4 py-2.5 text-center text-sm font-medium text-accent-ink transition-opacity hover:opacity-90"
     >
       {welcome.minOrder > 0
         ? t.rich("welcome", {

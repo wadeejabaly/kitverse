@@ -37,7 +37,8 @@ export async function Header() {
   const leagues = getLeagues();
 
   return (
-    <header className="header-glass header-accent sticky top-0 z-40">
+    // data-kv-chrome: measured and hidden by the home page video hero (HeroVideo.tsx).
+    <header data-kv-chrome className="header-glass header-accent sticky top-0 z-40">
       <div className="mx-auto flex w-full max-w-page items-center gap-6 px-6 py-5 wide:gap-10">
         <MobileMenu leagues={leagues} />
 

@@ -79,7 +79,7 @@
   --band: #182448; /* the crest navy, edge to edge */
   --band-ink: #ffffff; /* 15.2:1 on the band */
 
-  /* Floodlight hero tokens. <HeroD/> — the home-page hero — is a
+  /* Floodlight hero tokens. <HeroVideo/> — the home-page hero — is a
      self-contained dark stage with its own ground and ink. Previously the
      one place the crest's electric blue appeared at all; as of 2026-10-25
      that blue is --electric above, used sitewide, so this is no longer an
@@ -87,7 +87,7 @@
      --flood-ink/--flood-tile stay hero-only because nothing else on the
      site is a dark stage. They do not vary with the light/dark scheme, the
      same way a product tile is always white — the hero is always this
-     stage. See "THE FLOODLIGHT HERO" further down for the surface itself. */
+     stage. See "THE VIDEO HERO" further down for the surface itself. */
   --flood-ground: #0a1024;
   --flood-blue: #2f6bff;
   --flood-blue-2: #5b8cff;
@@ -786,119 +786,34 @@ h2 {
 }
 
 /* ============================================================
-   HERO VARIANTS (A / B / C / D)
+   THE VIDEO HERO (owner request 2026-11-11) — <HeroVideo/>
+   The home page's opening and its one navy moment: a film that
+   ends on an empty podium, then the site arrives and the showcase
+   shirt stands on that podium. Hero-only; the --flood-* tokens at
+   the top of this file are its palette.
 
-   Everything below exists for the alternative home-page openings
-   in src/components/hero/. It is authored here rather than in the
-   components because the winner is promoted into the home page
-   unchanged, and a hero's type scale and its motion belong in the
-   stylesheet with the rest of the system. D — Floodlight — is the
-   one that shipped; the A/B/C variants were removed 2026-11-10.
+   Geometry: .kv-vhero-stage is always the film's own 16:9 box. On
+   desktop it covers the hero (the header and banner float over its
+   top); on phones it is a crop centred on the podium, with the copy
+   below it. The film, its last frame as a still, and the showcase
+   all fill that box, and the shirt is placed in the frame's own
+   pixels (SHOWCASE_STAGE, src/data/showcase.ts), so it stays on the
+   podium at every size. Nothing here may parallax the shirt or the
+   film on its own: they only line up because they move together.
 
-   This block is authored LAST on purpose: the reduced-motion
-   override at the bottom has to come after the global
-   reduced-motion backstop to beat it (see the note there).
+   Intro states (set by HeroVideo's inline scripts, never by React):
+     html[data-kv-intro]            a home page load that will play
+                                    the film, before the hero exists
+     .kv-vhero[data-intro=playing]  the film plays: nothing else on
+                                    screen, and the page can't scroll
+     .kv-vhero[data-intro=done]     it ended: everything comes in once
+   No attribute (every other view): the end state, no animation.
+
+   No transform may stay on the header ([data-kv-chrome]): it would
+   become the containing block of <MobileMenu>'s fixed overlay (see
+   .header-glass). The hidden state is only ever shown while nothing
+   can be clicked, and the drop-in ends on `transform: none`.
    ============================================================ */
-
-/* ---- Variant A's crossfade ----
-   Two shirts occupying one grid cell, swapped on a long timer. The
-   transition is opacity only and it is deliberately slow: at 900ms
-   over a 7s cycle the change is something you notice having
-   happened, not something that pulls the eye. The layers are
-   painted by the server with the first shirt opaque, so a browser
-   that never runs the timer simply shows one shirt. */
-
-/* ---- Variant B's ambient wall ----
-   A row of product tiles wide enough to overflow its window twice,
-   translated by exactly half its own width. Because the second half
-   is a copy of the first, the end state is pixel-identical to the
-   start and the loop has no seam.
-
-   The translate is a percentage of the ELEMENT, not the viewport, so
-   the loop is correct at every width with no JS measuring anything.
-
-   Duration comes in as --kv-drift per row (two different values, so
-   the rows never fall into step). ~2 minutes for a full pass is the
-   difference between a background and a carousel. */
-
-@keyframes kv-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-/* The layer the rows live on.
-
-   `direction: ltr` is load-bearing and it has to sit HERE, on the
-   container, not on the strip. A strip 4,500px wide inside a 1,440px
-   window is placed by its containing block's direction: on the Arabic
-   page that pins its RIGHT edge to the window's right edge and hangs
-   the other 3,000px off to the left, so translating it further left
-   walks the whole row off screen within a few seconds. Setting
-   `direction` on the strip itself does not help — an element's own
-   `direction` lays out its CHILDREN, it does not move its own box.
-   The wall carries no text (it is aria-hidden decoration), so it has
-   no reading direction to preserve, and pinning it LTR makes one set
-   of keyframes correct in both locales.
-
-   The mask fades the wall out at the top and bottom of the section
-   instead of ending it on a hard edge. `black`/`transparent` here are
-   opacity stops, not colours — nothing is painted in them — which is
-   why this is not a token violation. */
-
-/* The primary action when it sits ON the band rather than on the page
-   ground. `.btn` fills with --accent, and in light mode --accent and
-   --band are the same navy, so the default button disappears into the
-   panel. Inverting it — the band's own ink as the fill, the band as the
-   label — keeps one button treatment on the site and measures 15.2:1
-   (light) / 14.0:1 (dark) either way. No new token: both values are the
-   band's own pair. */
-
-/* ============================================================
-   THE FLOODLIGHT HERO
-   Variant D's surface, and the home page's opening: a
-   stadium-at-night mood scoped to the hero alone, and the one
-   place on the site the crest's electric blue appears outside the
-   badge artwork (see the --flood-* tokens at the top of this
-   file). Three layers, painted in DOM order so each sits
-   correctly under the content: the navy ground with an ambient
-   corner wash (.kv-flood-glow), a diagonal beam raking across it
-   (.kv-flood-beam), then the headline/CTA/shirt stage.
-
-   USED EXACTLY ONCE: the home scroll has exactly one navy moment. A second one anywhere would turn the effect
-   into a pattern instead of an opening statement.
-
-   Both the wash and the beam originate near the headline's own
-   corner, so the light reads as coming from behind the type and
-   spilling across the shirt — which is why they are mirrored by
-   hand for the two reading directions rather than centred and
-   left alone. The mirror lives in custom properties: an RTL
-   override restating the whole background would have to
-   out-specificity the base rule, and a custom property carries
-   the difference with none.
-
-   No backdrop-filter and no `isolation` anywhere in this block:
-   this hero sits under a `fixed` mobile overlay and a sticky
-   translucent header, and either property on an ancestor
-   re-parents fixed descendants (see the header note above). The
-   depth here is all gradients and one box-shadow. */
-.kv-flood {
-  --flood-corner-x: 78%;
-  /* The shirt stage's side — the OPPOSITE of --flood-corner-x (the text
-     side) — used to park the watermark wordmark behind the shirt in
-     both directions without a second [dir="ltr"] override block. */
-  --flood-shirt-x: 29%;
-  background: var(--flood-ground);
-  color: var(--flood-ink);
-}
-
-[dir="ltr"] .kv-flood {
-  --flood-corner-x: 22%;
-  --flood-shirt-x: 71%;
-}
 
 /* The hero eyebrow on the flood surface. This is NOT a use of --gold —
    it is a distinct token for a distinct dark surface, the same
@@ -914,8 +829,8 @@ h2 {
 
 /* The CTA arrow (owner reference 2026-10-27 — both hero buttons carry a
    directional arrow in the mockup). A plain inline SVG, mirrored in RTL the
-   same way .kv-flood-badge-arrow and .kv-cat-card-arrow already are, so all
-   three "arrow" spots on the page follow one convention. */
+   same way .kv-cat-card-arrow is, so the arrows on the page follow one
+   convention. */
 [dir="rtl"] .btn-flood-arrow svg {
   transform: scaleX(-1);
 }
@@ -942,140 +857,491 @@ h2 {
   opacity: 0.7;
 }
 
-/* ---- The stadium signage watermark (owner reference 2026-10-27) ----
-   A faint "KITVERSE JERSEYS" wordmark standing behind the shirt, reading as
-   an ad board at the back of the stadium the way the reference's does.
-   Plain decorative text, not an image — the brand name itself is NOT
-   translated (a stadium hoarding wouldn't be), which is also why this sits
-   on --flood-ink at low opacity rather than taking a translated key.
-   `left` + `translate`, not a logical inset: --flood-shirt-x is a PHYSICAL
-   x position (same convention as --flood-corner-x in the radial-gradients
-   above), already flipped per [dir] on .kv-flood itself, so one rule here
-   covers both directions. */
-.kv-flood-watermark {
+/* ---- The hero box ----
+   Phones (and any portrait screen) first: header space, the stage,
+   then the copy on the navy, which fades into the category grid. */
+.kv-vhero {
+  --kv-podium-x: 0.3203; /* the podium's centre: x 615 of the film's 1920 */
+  --kv-shirt-scale: 1.16; /* no header over the stage here, so a bigger shirt */
+  --kv-pop-delay: 700ms;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  /* Slide up under the banner + header, measured by HeroVideo's script. */
+  margin-top: calc(-1 * var(--kv-chrome-h, 0px));
+  padding-bottom: 3rem;
+  overflow: hidden;
+  color: var(--flood-ink);
+  /* The film's own top edge (#11152f) down to the category grid's ground. */
+  background: linear-gradient(180deg, #11152f 0%, #070a24 55%, var(--flood-ground) 100%);
+}
+
+.kv-vhero-stagewrap {
+  /* 115vw tall = ~940 of the film's 1920px across: the podium, edge to edge. */
+  --kv-sh: min(115vw, 58svh);
+  /* While the film plays, the stage sits in the middle of the screen. */
+  --kv-settle: calc((100svh - var(--kv-sh)) / 2 - var(--kv-chrome-h, 0px));
+  position: relative;
+  flex: none;
+  height: var(--kv-sh);
+  margin-top: var(--kv-chrome-h, 0px);
+  overflow: hidden;
+  container-type: inline-size;
+  /* Opacity stops, not colours: the film's top and bottom edges dissolve
+     into the navy instead of ending on a line. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 9%, #000 84%, transparent 100%);
+}
+
+.kv-vhero-stage {
+  --kv-w: calc(var(--kv-sh) * 16 / 9);
   position: absolute;
-  inset-block: 0;
-  left: var(--flood-shirt-x);
-  translate: -50% 0;
-  align-items: center;
-  pointer-events: none;
-  /* display is Tailwind's `hidden wide:flex` on the element itself (see
-     HeroD.tsx) — not set here, so the utility's cascade position always
-     wins instead of racing this rule for specificity. */
+  top: 0;
+  width: var(--kv-w);
+  height: 100%;
+  /* The podium in the middle of the screen, without ever uncovering an edge. */
+  left: clamp(100cqw - var(--kv-w), 50cqw - var(--kv-w) * var(--kv-podium-x), 0px);
 }
 
-.kv-flood-watermark span {
-  display: block;
-  font-family: var(--type-sans);
-  font-weight: 700;
-  font-size: clamp(2.2rem, 7vw, 4.5rem);
-  line-height: 1.05;
-  letter-spacing: 0.02em;
-  color: var(--flood-ink);
-  opacity: 0.06;
-  white-space: nowrap;
-}
-
-/* ---- The new-season badge (same reference) ----
-   A small vertical card beside the shirt: gold eyebrow, the entry price,
-   an arrow button. Static — unlike the per-shirt .kv-flood-chip, it names
-   the season rather than whichever shirt is crossfading, so it never has
-   to change mid-cycle. */
-.kv-flood-badge {
-  background: color-mix(in srgb, var(--flood-tile) 88%, transparent);
-  border: 1px solid color-mix(in srgb, var(--flood-gold) 45%, transparent);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.6);
-}
-
-.kv-flood-badge-arrow {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--flood-ink) 35%, transparent);
-  color: var(--flood-ink);
-  transition:
-    background-color 200ms ease-out,
-    color 200ms ease-out,
-    border-color 200ms ease-out;
-}
-
-.kv-flood-badge:hover .kv-flood-badge-arrow {
-  background: var(--flood-blue-2);
-  border-color: var(--flood-blue-2);
-  color: var(--flood-ground);
-}
-
-[dir="rtl"] .kv-flood-badge-arrow svg {
-  transform: scaleX(-1);
-}
-
-/* ───────────── THE STADIUM HERO (2026-11-09) ─────────────
-   <HeroD/> rebuilt against the owner's two reference screenshots. The
-   gradient-built floodlight surface (glow, beam, CSS bulbs, podium) is gone:
-   the stadium is now a real plate (public/home/stadium.webp) and the shirt
-   stands on a real pedestal baked into its own composite. The --flood-*
-   tokens, the eyebrow rule, the watermark, the badge and the grain are kept
-   and reused. Hero-only, like everything else under .kv-flood. */
-.kv-stadium {
-  --stadium-read: 90deg; /* LTR: text on the left, so shade from the left */
-}
-
-[dir="rtl"] .kv-stadium {
-  --stadium-read: 270deg;
-}
-
-/* The plate's floodlights sit in its right half — behind the shirt in LTR.
-   In RTL the shirt column is on the left, so the plate is mirrored. Safe
-   only because the plate was generated with no text and no logos. */
-.kv-stadium-plate {
-  object-position: 65% 35%;
-}
-
-[dir="rtl"] .kv-stadium-plate {
-  transform: scaleX(-1);
-}
-
-.kv-stadium-shade {
+/* The box is the film's own 16:9, so `cover` crops nothing. */
+.kv-vhero-still,
+.kv-vhero-video {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(var(--stadium-read), rgb(5 9 24 / 0.78) 0%, rgb(5 9 24 / 0.45) 38%, transparent 62%),
-    linear-gradient(180deg, rgb(5 9 24 / 0.25) 0%, transparent 22%, transparent 72%, var(--flood-ground) 100%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Phones: the shirt stacks above the text, so the reading side is the
-   whole lower half — darken it evenly instead of by side. */
-@media (width < 56.25rem) {
-  .kv-stadium-shade {
-    background: linear-gradient(180deg, rgb(5 9 24 / 0.2) 0%, rgb(5 9 24 / 0.55) 45%, rgb(5 9 24 / 0.85) 75%, var(--flood-ground) 100%);
+/* The film only shows while it plays. It always ends on the still (the
+   same last frame, decoded exactly), which the shirt is aligned to;
+   [data-played] keeps the film up only while that still is still loading. */
+.kv-vhero-video {
+  display: none;
+  /* Opaque until its poster / first frame arrives, so the still underneath
+     (painted from the start, which is what counts as the page's main content
+     for LCP) never shows through early. */
+  background: #02031d;
+}
+
+.kv-vhero[data-intro="playing"] .kv-vhero-video,
+.kv-vhero-video[data-played] {
+  display: block;
+}
+
+/* The shirt is bigger on phones, scaled about its hem (the origin is set
+   inline from the frame geometry), so it stays standing on the podium. */
+.kv-showcase-stage {
+  scale: var(--kv-shirt-scale, 1);
+}
+
+/* A warm flash on the podium top as the shirt arrives (615, 797 in the
+   film; 1000 x 160 around it). */
+.kv-vhero-flash {
+  position: absolute;
+  left: 5.99%;
+  top: 66.39%;
+  width: 52.08%;
+  height: 14.81%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 230 175 / 0.55), rgb(255 205 130 / 0.18) 55%, transparent);
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kv-vhero-shade {
+  display: none;
+}
+
+/* ---- The copy ---- */
+.kv-vhero-copy {
+  position: relative;
+  /* Tucked under the stage's faded bottom edge. */
+  margin-top: -1.25rem;
+}
+
+.kv-vhero-copy-inner {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.kv-vhero .kv-showcase-meta {
+  display: none;
+}
+
+/* ---- Desktop: the film covers the hero, the copy on its empty side ---- */
+@media (width >= 56.25rem) and (orientation: landscape) {
+  .kv-vhero {
+    --kv-shirt-scale: 1;
+    --kv-pop-delay: 300ms;
+    display: block;
+    height: max(100svh, 36rem);
+    min-height: 0;
+    padding-bottom: 0;
+    background: rgb(1 1 33); /* the film's right edge, exactly: wide screens continue it */
+  }
+
+  .kv-vhero-stagewrap {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    margin-top: 0;
+    container-type: size;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* Always the hero's full height, so the collar clears the header and the
+     podium's base stays on screen at every shape. Narrower than 16:9 it
+     overflows and crops more of the empty right than of the floodlights;
+     wider than 16:9 it stops short of the right edge, where the film is the
+     same flat navy as the hero behind it. */
+  .kv-vhero-stage {
+    --kv-w: calc(100cqh * 16 / 9);
+    width: var(--kv-w);
+    height: 100%;
+    left: min(0px, (100cqw - var(--kv-w)) * 0.35);
+  }
+
+  .kv-vhero .kv-showcase-meta {
+    display: flex;
+  }
+
+  /* Legibility for the copy on the film's right, and the floor fading
+     into the category grid below. */
+  .kv-vhero-shade {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(270deg, rgb(2 3 29 / 0.72) 0%, rgb(2 3 29 / 0.4) 30%, transparent 50%),
+      linear-gradient(180deg, transparent 86%, var(--flood-ground) 100%);
+  }
+
+  /* Over the whole hero but click-through: only the column takes pointers,
+     so the shirt and its arrows stay usable underneath. */
+  .kv-vhero-copy {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding-top: var(--kv-chrome-h, 0px);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  /* Physical right in every locale: that is where the film is empty. */
+  .kv-vhero-col {
+    width: min(46%, 33rem);
+    margin-left: auto;
+    pointer-events: auto;
+  }
+
+  .kv-vhero .kv-stadium-display {
+    font-size: clamp(2.6rem, 4.7vw, 4.6rem);
+  }
+
+  [lang="ar"] .kv-vhero .kv-stadium-display,
+  [lang="he"] .kv-vhero .kv-stadium-display {
+    font-size: clamp(2.4rem, 4.2vw, 4.1rem);
   }
 }
 
-/* The signage sits high at the far end, like the reference's ad board. */
-.kv-stadium-watermark {
-  inset-block: 9% auto;
-  left: auto;
-  translate: none;
-  inset-inline-end: 3%;
+/* Wider than 16:9 the stage ends before the screen does: its right edge
+   dissolves into the hero's navy, so the film's brighter shots don't end on
+   a line (its last frame is already that navy there). */
+@media (width >= 56.25rem) and (min-aspect-ratio: 16/9) {
+  .kv-vhero-stage {
+    -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent);
+    mask-image: linear-gradient(90deg, #000 82%, transparent);
+  }
 }
 
-.kv-stadium-watermark span {
-  opacity: 0.08;
-  font-size: clamp(1.8rem, 3.4vw, 3.2rem);
-  transform: perspective(700px) rotateY(-16deg);
-  transform-origin: right center;
+/* ---- Portrait screens: the vertical film ----
+   intro-portrait.mp4 / podium-portrait.webp (9:16) cover the whole first
+   screen, under the header; the copy follows below on the navy. The empty
+   night in the film's top third is where the header sits. */
+@media (orientation: portrait) {
+  .kv-vhero {
+    --kv-shirt-scale: 1;
+    --kv-pop-delay: 300ms;
+    background: var(--flood-ground);
+  }
+
+  .kv-vhero-stagewrap {
+    height: max(100svh, 30rem);
+    margin-top: 0;
+    container-type: size;
+    /* Only the floor dissolves, into the copy's navy below. */
+    -webkit-mask-image: linear-gradient(180deg, #000 90%, transparent);
+    mask-image: linear-gradient(180deg, #000 90%, transparent);
+  }
+
+  /* Covers the screen; the podium (x 525 of 1080) as near the middle as the
+     edges allow; a screen wider than 9:16 crops sky rather than floor. */
+  .kv-vhero-stage {
+    --kv-w: max(100cqw, 100cqh * 9 / 16);
+    width: var(--kv-w);
+    height: calc(var(--kv-w) * 16 / 9);
+    left: clamp(100cqw - var(--kv-w), 50cqw - var(--kv-w) * 0.4861, 0px);
+    top: calc((100cqh - var(--kv-w) * 16 / 9) * 0.7);
+  }
+
+  .kv-vhero-copy {
+    margin-top: -2rem;
+  }
+
+  .kv-vhero .kv-showcase-meta {
+    display: flex;
+    top: 86.5%;
+  }
+
+  /* The podium flash on this film's podium (525, 1442; 840 x 140). */
+  .kv-vhero-flash {
+    left: 9.72%;
+    top: 71.46%;
+    width: 77.78%;
+    height: 7.29%;
+  }
 }
 
-[dir="rtl"] .kv-stadium-watermark span {
-  transform: perspective(700px) rotateY(16deg);
-  transform-origin: left center;
+/* The showcase's geometry for the film on screen (JerseyShowcase writes both
+   as --sc-*-l / --sc-*-p). */
+.kv-showcase {
+  --sc-frame-left: var(--sc-frame-left-l);
+  --sc-frame-top: var(--sc-frame-top-l);
+  --sc-frame-width: var(--sc-frame-width-l);
+  --sc-frame-height: var(--sc-frame-height-l);
+  --sc-origin: var(--sc-origin-l);
+  --sc-arrow-y: var(--sc-arrow-y-l);
+  --sc-arrow-left: var(--sc-arrow-left-l);
+  --sc-arrow-right: var(--sc-arrow-right-l);
+  --sc-shadow-left: var(--sc-shadow-left-l);
+  --sc-shadow-top: var(--sc-shadow-top-l);
+  --sc-shadow-width: var(--sc-shadow-width-l);
+  --sc-shadow-height: var(--sc-shadow-height-l);
+  --sc-meta-left: var(--sc-meta-left-l);
 }
 
+@media (orientation: portrait) {
+  .kv-showcase {
+    --sc-frame-left: var(--sc-frame-left-p);
+    --sc-frame-top: var(--sc-frame-top-p);
+    --sc-frame-width: var(--sc-frame-width-p);
+    --sc-frame-height: var(--sc-frame-height-p);
+    --sc-origin: var(--sc-origin-p);
+    --sc-arrow-y: var(--sc-arrow-y-p);
+    --sc-arrow-left: var(--sc-arrow-left-p);
+    --sc-arrow-right: var(--sc-arrow-right-p);
+    --sc-shadow-left: var(--sc-shadow-left-p);
+    --sc-shadow-top: var(--sc-shadow-top-p);
+    --sc-shadow-width: var(--sc-shadow-width-p);
+    --sc-shadow-height: var(--sc-shadow-height-p);
+    --sc-meta-left: var(--sc-meta-left-p);
+  }
+}
+
+/* ---- While the film plays ---- */
+html[data-kv-intro],
+html:has(.kv-vhero[data-intro="playing"]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+html[data-kv-intro] body,
+html:has(.kv-vhero[data-intro="playing"]) body {
+  overflow: hidden;
+}
+
+html[data-kv-intro] [data-kv-chrome],
+html:has(.kv-vhero[data-intro="playing"]) [data-kv-chrome] {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+html:has(.kv-vhero[data-intro="playing"]) [data-consent-banner] {
+  display: none;
+}
+
+/* Both: visibility keeps the copy and arrows out of the tab order, opacity
+   covers the showcase's current frame, which sets `visibility: visible`
+   inline and would otherwise show through a hidden parent. */
+.kv-vhero[data-intro="playing"] :is(.kv-vhero-copy, .kv-vhero-shade, .kv-showcase, .kv-vhero-flash) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.kv-vhero[data-intro="playing"] .kv-vhero-stagewrap {
+  transform: translateY(var(--kv-settle));
+}
+
+/* ---- Once it ends: the site comes in ----
+   Header and banner drop in; on phones the stage settles to its place;
+   the copy slides in from the side; the podium flashes and the shirt
+   pops up onto it; its arrows slide in from either side.
+   Every one ends on the element's own resting style, so they fill
+   `backwards` only: nothing (no transform on the header, no filter on
+   the shirt) is left applied once they finish. */
+html:has(.kv-vhero[data-intro="done"]) [data-kv-chrome] {
+  animation: kv-vhero-drop 700ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
+  animation: kv-vhero-fade 600ms ease 1.8s backwards;
+}
+
+.kv-vhero[data-intro="done"] .kv-vhero-stagewrap {
+  animation: kv-vhero-settle 900ms cubic-bezier(0.65, 0, 0.35, 1) backwards;
+}
+
+.kv-vhero[data-intro="done"] .kv-vhero-shade {
+  animation: kv-vhero-fade 1s ease backwards;
+}
+
+.kv-vhero[data-intro="done"] .kv-vhero-in {
+  animation: kv-vhero-from-right 760ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(200ms + var(--i, 0) * 90ms);
+}
+
+/* The headline's own rise (.line-mask), re-run now that it is visible. */
+.kv-vhero[data-intro="done"] .line-mask > * {
+  animation-name: kv-vhero-rise;
+  animation-delay: calc(var(--kv-delay, 0ms) + 280ms);
+}
+
+.kv-vhero[data-intro="done"] .kv-vhero-flash {
+  animation: kv-vhero-flash 1100ms ease-out backwards;
+  animation-delay: calc(var(--kv-pop-delay) - 100ms);
+}
+
+.kv-vhero[data-intro="done"] .kv-showcase-stage {
+  animation: kv-vhero-pop 820ms cubic-bezier(0.34, 1.45, 0.64, 1) backwards;
+  animation-delay: var(--kv-pop-delay);
+}
+
+.kv-vhero[data-intro="done"] .kv-showcase-arrow--prev {
+  animation: kv-vhero-from-left 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--kv-pop-delay) + 450ms);
+}
+
+.kv-vhero[data-intro="done"] .kv-showcase-arrow--next {
+  animation: kv-vhero-from-right 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--kv-pop-delay) + 450ms);
+}
+
+.kv-vhero[data-intro="done"] .kv-showcase-meta {
+  animation: kv-vhero-fade 600ms ease backwards;
+  animation-delay: calc(var(--kv-pop-delay) + 700ms);
+}
+
+@media (orientation: portrait), (width >= 56.25rem) and (orientation: landscape) {
+  /* The stage never moves on desktop or portrait screens: the film already
+     fills the screen there, so there is nothing to centre or settle. */
+  .kv-vhero[data-intro] .kv-vhero-stagewrap {
+    transform: none;
+    animation: none;
+  }
+}
+
+@keyframes kv-vhero-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kv-vhero-settle {
+  from {
+    transform: translateY(var(--kv-settle));
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes kv-vhero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes kv-vhero-from-right {
+  from {
+    opacity: 0;
+    translate: 3.5rem 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes kv-vhero-from-left {
+  from {
+    opacity: 0;
+    translate: -3.5rem 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes kv-vhero-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes kv-vhero-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes kv-vhero-pop {
+  from {
+    opacity: 0;
+    transform: translateY(5%) scale(0.35);
+    filter: brightness(2.2);
+  }
+  55% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* ---- The headline, CTAs and price row ---- */
 .kv-stadium-display {
   color: var(--flood-ink);
   font-size: clamp(2.6rem, 6.2vw, 5.4rem);
@@ -1221,21 +1487,9 @@ h2 {
   }
 }
 
-/* The composite is feathered into the plate: its own dark edges dissolve,
-   the shirt and the pedestal stay fully opaque. */
-.kv-stadium-shirt {
-  --kv-fade-x: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
-  --kv-fade-y: linear-gradient(180deg, transparent 0%, #000 24%, #000 84%, transparent 100%);
-  -webkit-mask-image: var(--kv-fade-x), var(--kv-fade-y);
-  -webkit-mask-composite: source-in;
-  mask-image: var(--kv-fade-x), var(--kv-fade-y);
-  mask-composite: intersect;
-}
-
-/* The 360° showcase on the pedestal (JerseyShowcase.tsx). The stage keeps
-   .kv-stadium-shirt's feathered edges; the arrows and the counter live outside
-   that mask so they are never faded. Arrow positions are set inline from the
-   shirt's own box, then nudged just outside the sleeves here. */
+/* The 360° showcase on the podium (JerseyShowcase.tsx). Everything is placed
+   inline in the film frame's pixels; the arrows are nudged just outside the
+   sleeves here. */
 .kv-showcase-surface {
   touch-action: pan-y; /* vertical scroll stays native; sideways drags turn the shirt */
   -webkit-user-select: none;
@@ -1324,10 +1578,13 @@ h2 {
   box-shadow: 0 0 0 4px rgb(201 162 74 / 0.15), 0 8px 22px rgb(0 0 0 / 0.4);
   outline: none;
 }
+/* The caption sits on the floor under the podium. */
 .kv-showcase-meta {
   position: absolute;
-  inset-inline: 0;
-  bottom: 3%;
+  left: var(--sc-meta-left);
+  top: 93%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1360,56 +1617,6 @@ h2 {
   }
 }
 
-/* The new-season card, overlapping the composite's outer edge. Desktop
-   only — on a phone there is no room beside the shirt. */
-.kv-stadium-badge {
-  position: absolute;
-  /* Below and a little further out than before the showcase: the arrow on
-     this side sits at the shirt's vertical middle (~47%), and the card now
-     clears both the arrow and most of the shirt. */
-  inset-inline-end: -6%;
-  top: 58%;
-  display: none;
-  flex-direction: column;
-  width: 196px;
-  padding: 1.35rem 1.4rem 1.25rem;
-  border-radius: 12px;
-  border-color: rgb(255 255 255 / 0.14);
-}
-
-@media (width >= 80rem) {
-  /* Room to step clear of the shirt: beside it, below the arrow. */
-  .kv-stadium-badge {
-    inset-inline-end: -20%;
-    top: 54%;
-  }
-}
-
-@media (width >= 56.25rem) {
-  .kv-stadium-badge {
-    display: flex;
-  }
-}
-
-.kv-stadium-badge .mono-eyebrow {
-  letter-spacing: 0.18em;
-}
-
-.kv-stadium-badge-rule {
-  display: block;
-  width: 2.2rem;
-  height: 2px;
-  margin-top: 0.65rem;
-  background: var(--flood-gold);
-}
-
-.kv-stadium-badge-price {
-  color: #3d77ff;
-  font-size: 2.3rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
 /* ───────────── THE CATEGORY GRID ─────────────
    Replaces the old text-link "THE WAYS IN" row (owner reference 2026-10-27,
    the four-up Clubs/National Teams/Retro Classics/Accessories photo-card
@@ -1434,7 +1641,7 @@ h2 {
    Revised 2026-10-27 (owner: "its not looking the same as the picture i
    provided"): full-bleed, flush under the hero, short wide cards instead of
    tall ones — see CategoryGrid.tsx's own note for the full list. No vw-based
-   full-bleed hack needed: like <HeroD/>'s own <section> and .energy-band,
+   full-bleed hack needed: like <HeroVideo/>'s own <section> and .energy-band,
    this renders OUTSIDE <Wrap> directly in the page body, which already spans
    the full width — see page.tsx. .kv-cat-strip's own --accent background
    shows through the grid's gap/padding (set in CategoryGrid.tsx, not here)
@@ -1570,39 +1777,6 @@ h2 {
 [dir="rtl"] .kv-cat-card-arrow svg {
   transform: scaleX(-1);
 }
-
-/* ---- Floodlight, pushed further (owner request 2026-10-23) ----
-   Four additions, each cheap on purpose — this hero is the page's LCP
-   section, so nothing here is a new network request of real weight, a new
-   JS dependency, or an unconditional animation that a phone pays for. */
-
-/* A fixed, faint noise texture over the whole stage — the cheapest
-   "filmic" signal there is: one inline SVG turbulence filter, no extra
-   request, nothing to blur or decode, nothing for a scroll or a pointer to
-   drive. Painted last in the DOM so the blend reaches the gradients below
-   it AND the content above them; pointer-events: none keeps the headline
-   link, the CTA and the shirt fully clickable underneath it. */
-.kv-flood-grain {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  /* Perf (owner report 2026-11-05, "a little bit of lag scrolling"): its own
-     GPU layer, painted once rather than every frame the hero animates. */
-  will-change: transform;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-}
-
-/* Reduced motion: the wall stops and rests at its authored position.
-
-   This has to be spelled out. The global backstop above zeroes
-   animation-duration with !important, which for an INFINITE animation
-   does not stop it — it snaps it to the 100% keyframe and leaves the
-   strip parked half a width off, so the row would render with a hole
-   in it. `animation: none` puts it back at translate 0. Later in the
-   file and equally specific, so this wins. */
 
 /* ================================================================
    SITE SYSTEM — REDESIGN PHASE 2 (owner spec 2026-11-09)

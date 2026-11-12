@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { MIN_FRAMES_FOR_360, SHOWCASE_SETTINGS, SHOWCASE_STAGE } from "@/data/showcase";
+import { MIN_FRAMES_FOR_360, SHOWCASE_SETTINGS, SHOWCASE_STAGE, SHOWCASE_STAGE_PORTRAIT, type ShowcaseStage } from "@/data/showcase";
 
 export type ShowcaseItem = { id: string; title: string; href: string; views: string[] };
 
@@ -26,13 +25,19 @@ type Labels = { prev: string; next: string; rotate: string; open: string };
  * click there can never turn the shirt. A quick tap on the shirt (no drag)
  * opens its product page.
  *
- * Integration with the scene: the frames sit in the exact box the original
- * shirt filled on the pedestal plate, with the stadium's rim light, a soft
- * top-light / bottom-shade pass clipped to the shirt itself (CSS mask of the
- * current frame) and a contact shadow on the pedestal.
+ * Integration with the scene: the component fills the hero's video stage
+ * (HeroVideo.tsx), whose box is always the playing film's own frame (16:9
+ * landscape, 9:16 on portrait screens), and places everything in that frame's
+ * pixels (SHOWCASE_STAGE / SHOWCASE_STAGE_PORTRAIT, both written as CSS
+ * variables; globals.css picks one per orientation), so the shirt stands on
+ * the podium of the film's last frame at every screen size. The stadium's
+ * rim light, a soft top-light / bottom-shade pass clipped to the shirt itself
+ * (CSS mask of the current frame) and a contact shadow on the podium top tie
+ * it into the scene. The phone layout enlarges the shirt about its hem with
+ * --kv-shirt-scale; the arrows follow the scaled sleeves.
  *
- * Server-rendered as the plate + the first shirt's front, so without
- * JavaScript (or before it loads) the hero is the same still picture.
+ * Server-rendered as the first shirt's front, so without JavaScript (or
+ * before it loads) the hero is the same still picture.
  */
 export function JerseyShowcase({
   items,
@@ -61,26 +66,20 @@ export function JerseyShowcase({
   const count = rotatable ? frames.length : 1;
   const S = SHOWCASE_STAGE;
 
-  const layout = useMemo(() => {
-    const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
-    return {
-      frame: {
-        left: pct(S.frame.x, S.width),
-        top: pct(S.frame.y, S.height),
-        width: pct(S.frame.width, S.width),
-        height: pct(S.frame.height, S.height),
-      },
-      arrowY: pct((S.shirt.top + S.shirt.bottom) / 2, S.height),
-      arrowLeft: pct(S.shirt.left, S.width),
-      arrowRight: pct(S.width - S.shirt.right, S.width),
-      shadow: {
-        left: pct(S.shirt.cx - S.shadowWidth / 2, S.width),
-        top: pct(S.shirt.bottom - 18, S.height),
-        width: pct(S.shadowWidth, S.width),
-        height: pct(46, S.height),
-      },
-    };
-  }, [S]);
+  // Both geometries as CSS variables (--sc-<name>-l / -p); globals.css maps
+  // --sc-<name> to the one for the screen's orientation.
+  const geometry = useMemo(
+    () => ({ ...placeVars(SHOWCASE_STAGE, "l"), ...placeVars(SHOWCASE_STAGE_PORTRAIT, "p") }) as React.CSSProperties,
+    [],
+  );
+  const layout = {
+    frame: { left: "var(--sc-frame-left)", top: "var(--sc-frame-top)", width: "var(--sc-frame-width)", height: "var(--sc-frame-height)" },
+    origin: "var(--sc-origin)",
+    arrowY: "var(--sc-arrow-y)",
+    arrowLeft: "var(--sc-arrow-left)",
+    arrowRight: "var(--sc-arrow-right)",
+    shadow: { left: "var(--sc-shadow-left)", top: "var(--sc-shadow-top)", width: "var(--sc-shadow-width)", height: "var(--sc-shadow-height)" },
+  };
 
   /** Angle (degrees, any value) -> frame index, wrapping both ways. */
   const show = useCallback(
@@ -119,12 +118,13 @@ export function JerseyShowcase({
     return () => window.clearTimeout(id);
   }, [entering, index]);
 
-  // Load the other shirts in idle time, nearest first (the current shirt's
-  // frames are already in the DOM below).
+  // Warm only the shirts one arrow-press away (next, then previous), in idle
+  // time and never while the home page film is playing, so the film has the
+  // bandwidth. Anything further loads when it is reached; frames are ~50 KB.
   useEffect(() => {
-    const order = [(index + 1) % items.length, (index - 1 + items.length) % items.length, ...items.keys()];
-    const queue = [...new Set(order)].filter((i) => i !== index);
+    const queue = [...new Set([(index + 1) % items.length, (index - 1 + items.length) % items.length])].filter((i) => i !== index);
     let cancelled = false;
+    let observer: MutationObserver | undefined;
     const idle = (fn: () => void) => {
       if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(fn, { timeout: 3000 });
       else setTimeout(fn, 500);
@@ -138,9 +138,20 @@ export function JerseyShowcase({
       }
       idle(next);
     };
-    idle(next);
+    const hero = document.getElementById("kv-vhero");
+    if (hero?.getAttribute("data-intro") === "playing") {
+      observer = new MutationObserver(() => {
+        if (hero.getAttribute("data-intro") === "playing") return;
+        observer?.disconnect();
+        idle(next);
+      });
+      observer.observe(hero, { attributes: true, attributeFilter: ["data-intro"] });
+    } else {
+      idle(next);
+    }
     return () => {
       cancelled = true;
+      observer?.disconnect();
     };
   }, [index, items]);
 
@@ -268,19 +279,10 @@ export function JerseyShowcase({
   const current = frames[rotatable ? frame : 0];
 
   return (
-    <div className="kv-showcase relative">
-      {/* The scene: the same plate, size and feathered edges as the original picture. */}
-      <div className="kv-stadium-shirt relative">
-        <Image
-          src={S.plate}
-          alt=""
-          width={S.width}
-          height={S.height}
-          priority={priority}
-          sizes="(max-width: 900px) 64vw, 560px"
-          className="pointer-events-none h-auto w-full select-none"
-          draggable={false}
-        />
+    <div className="kv-showcase absolute inset-0" style={geometry}>
+      {/* The shirt on the podium: contact shadow + the jersey, scaled and
+          revealed together about the hem. */}
+      <div className="kv-showcase-stage absolute inset-0" style={{ transformOrigin: layout.origin }}>
         <span aria-hidden className="kv-showcase-contact" style={layout.shadow} />
 
         {/* The jersey: the drag surface. */}
@@ -322,7 +324,7 @@ export function JerseyShowcase({
               draggable={false}
               decoding="async"
               loading={i === 0 ? "eager" : "lazy"}
-              fetchPriority={index === 0 && i === 0 ? "high" : "auto"}
+              fetchPriority={priority && index === 0 && i === 0 ? "high" : "auto"}
               className="kv-showcase-img"
               style={{ visibility: i === (rotatable ? frame : 0) ? "visible" : "hidden" }}
             />
@@ -398,4 +400,29 @@ function ShowcaseArrow({
 
 function reducedMotion(): boolean {
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+}
+
+/** One geometry as percentages of its film frame, under a variable suffix. */
+function placeVars(S: ShowcaseStage, suffix: string): Record<string, string> {
+  const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+  // The shirt scales about its hem (--kv-shirt-scale), so the arrows'
+  // positions are the unscaled offsets from the hem times that scale.
+  const scaled = (base: number, offset: number, of: number) => `calc(${pct(base, of)} + ${pct(offset, of)} * var(--kv-shirt-scale, 1))`;
+  const shadowHeight = S.shadowWidth * 0.094;
+  const values: Record<string, string> = {
+    "frame-left": pct(S.frame.x, S.width),
+    "frame-top": pct(S.frame.y, S.height),
+    "frame-width": pct(S.frame.width, S.width),
+    "frame-height": pct(S.frame.height, S.height),
+    origin: `${pct(S.shirt.cx, S.width)} ${pct(S.shirt.bottom, S.height)}`,
+    "arrow-y": scaled(S.shirt.bottom, -(S.shirt.bottom - S.shirt.top) / 2, S.height),
+    "arrow-left": scaled(S.shirt.cx, -(S.shirt.cx - S.shirt.left), S.width),
+    "arrow-right": scaled(S.width - S.shirt.cx, -(S.shirt.right - S.shirt.cx), S.width),
+    "shadow-left": pct(S.shirt.cx - S.shadowWidth / 2, S.width),
+    "shadow-top": pct(S.shirt.bottom - shadowHeight / 2, S.height),
+    "shadow-width": pct(S.shadowWidth, S.width),
+    "shadow-height": pct(shadowHeight, S.height),
+    "meta-left": pct(S.shirt.cx, S.width),
+  };
+  return Object.fromEntries(Object.entries(values).map(([key, value]) => [`--sc-${key}-${suffix}`, value]));
 }

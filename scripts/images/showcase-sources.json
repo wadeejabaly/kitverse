@@ -6,25 +6,65 @@
         "name": "front",
         "file": "public/home/hero-real-madrid.webp",
         "source": "composite"
-      },
+      }
+    ]
+  },
+  {
+    "id": "barcelona-2026-27-home",
+    "views": [
       {
-        "name": "back",
-        "file": "catalog/showcase-sources/real-madrid-2026-27-home-back.jpg",
+        "name": "front",
+        "file": "public/products/barcelona-2026-27-home-shirt.jpg",
         "source": "photo"
       }
     ]
   },
   {
-    "id": "manchester-united-2007-08-home",
+    "id": "manchester-united-2026-27-home",
     "views": [
       {
         "name": "front",
-        "file": "catalog/showcase-sources/manchester-united-2007-08-home-front.webp",
+        "file": "public/products/manchester-united-2026-27-home-shirt.jpg",
         "source": "photo"
-      },
+      }
+    ]
+  },
+  {
+    "id": "real-madrid-2026-27-away",
+    "views": [
       {
-        "name": "back",
-        "file": "catalog/showcase-sources/manchester-united-2007-08-home-back.webp",
+        "name": "front",
+        "file": "catalog/showcase-sources/real-madrid-2026-27-away-front.jpg",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "barcelona-2026-27-away",
+    "views": [
+      {
+        "name": "front",
+        "file": "public/products/barcelona-2026-27-away-shirt.jpg",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "liverpool-2026-27-home",
+    "views": [
+      {
+        "name": "front",
+        "file": "catalog/showcase-sources/liverpool-2026-27-home-front.jpg",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "barcelona-2026-27-third",
+    "views": [
+      {
+        "name": "front",
+        "file": "public/products/barcelona-2026-27-third-shirt.jpg",
         "source": "photo"
       }
     ]
@@ -34,18 +74,29 @@
     "views": [
       {
         "name": "front",
-        "file": "public/home/hero-arsenal.webp",
-        "source": "composite"
-      },
-      {
-        "name": "back",
-        "file": "catalog/showcase-sources/arsenal-2026-27-home-back.jpg",
+        "file": "public/products/arsenal-2026-27-home-shirt.jpg",
         "source": "photo"
       }
     ]
   },
   {
-    "id": "test-360",
-    "sequence": "catalog/showcase-sources/test-360/*.png"
+    "id": "france-2026-home",
+    "views": [
+      {
+        "name": "front",
+        "file": "catalog/showcase-sources/france-2026-home-front.jpg",
+        "source": "photo"
+      }
+    ]
+  },
+  {
+    "id": "bayern-munich-2026-27-away",
+    "views": [
+      {
+        "name": "front",
+        "file": "public/products/bayern-munich-2026-27-away-shirt.jpg",
+        "source": "photo"
+      }
+    ]
   }
 ]

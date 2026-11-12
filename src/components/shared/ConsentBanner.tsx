@@ -33,6 +33,8 @@ export function ConsentBanner() {
 
   return (
     <aside
+      // Held back while the home page film plays (globals.css, THE VIDEO HERO).
+      data-consent-banner
       role="region"
       aria-label={t("settingsTitle")}
       className="fixed bottom-0 start-0 end-0 z-50 p-3 sm:p-6"

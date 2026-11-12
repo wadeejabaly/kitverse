@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { getLeagues, getVisibleProducts, localName } from "@/data/catalog";
 import { ADDONS, priceFor } from "@/data/pricing";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
-import { HeroD } from "@/components/hero/HeroD";
+import { HeroVideo } from "@/components/hero/HeroVideo";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { Figure, Price } from "@/components/shared/Money";
@@ -27,9 +27,9 @@ export async function generateMetadata({
 /**
  * Home — the statement page.
  *
- * It opens on <HeroD/>: the stadium hero (rebuilt 2026-11-09 against the
- * owner's reference screenshots — a real stadium plate and the shirt on its
- * pedestal, see "THE STADIUM HERO" in globals.css), with the four category
+ * It opens on <HeroVideo/>: the film intro that ends on the podium, with the
+ * showcase shirt standing on it (owner request 2026-11-11, see "THE VIDEO
+ * HERO" in globals.css), with the four category
  * cards sitting on the same night directly under it. That is the ONE navy
  * moment at the top of the page, which is why the Fan/Player explainer below
  * stays on the page ground instead of painting itself as a band.
@@ -64,10 +64,10 @@ export default async function HomePage({
   return (
     <>
       {/* ─────────── HERO ───────────
-          The stadium hero. A complete component so that the hero can be
+          The video hero. A complete component so that the hero can be
           swapped or reverted without this page knowing how it is built.
-          See HeroD for the layers and the RTL mirroring. */}
-      <HeroD locale={locale} priority />
+          See HeroVideo for the intro and how the shirt meets the podium. */}
+      <HeroVideo locale={locale} />
 
       {/* ─────────── THE CATEGORY GRID ───────────
           Was "THE WAYS IN", a bordered text-link row. Rebuilt as the

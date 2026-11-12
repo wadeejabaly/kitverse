@@ -5,13 +5,15 @@
  *
  * Each view is one transparent frame built by scripts/images/showcase_frames.py
  * (sources listed in scripts/images/showcase-sources.json), normalised to the
- * same box on the pedestal so scale and position never jump. `views` is a
+ * same box so scale and position never jump; SHOWCASE_STAGE below stands that
+ * box on the podium in the hero video's last frame. `views` is a
  * real turntable sequence in rotation order, front first, evenly spaced
  * (24 frames = one every 15°). A shirt only turns when it has at least
  * MIN_FRAMES_FOR_360 frames; with fewer (e.g. just a front and a back photo)
  * it is shown still — a 360° turn is never faked from two pictures.
  *
- * The FIRST entry is what the hero shows on load (owner: Real Madrid first).
+ * The FIRST entry is what the hero shows on load (Real Madrid home, also the
+ * most popular).
  */
 export type ShowcaseJersey = {
   /** Unique id; also the folder under public/home/showcase/. */
@@ -31,34 +33,27 @@ export type ShowcaseJersey = {
 /** Fewer frames than this and the shirt is shown still (no rotation). */
 export const MIN_FRAMES_FOR_360 = 16;
 
-const sequence = (id: string, n: number) =>
-  Array.from({ length: n }, (_, i) => `/home/showcase/${id}/${String(i).padStart(2, "0")}.webp`);
+const front = (id: string) => [`/home/showcase/${id}/front.webp`];
 
+/**
+ * The site's 10 most popular shirts (owner request 2026-11-12), most popular
+ * first, ranked on 2026-11-12 from site_events (distinct visitors viewing the
+ * product page + 3x add-to-cart) and real orders (5x). Front views only, so
+ * each is shown still; a shirt gets the 360° drag once it has a real
+ * turntable sequence (24 frames, `<id>/00.webp`...`23.webp`, built by the
+ * frames script's `sequence` config entries).
+ */
 export const SHOWCASE_JERSEYS: ShowcaseJersey[] = [
-  {
-    id: "real-madrid-2026-27-home",
-    handle: "real-madrid-2026-27-home-shirt",
-    name: "Real Madrid 2026/27 Home Shirt",
-    views: ["/home/showcase/real-madrid-2026-27-home/front.webp", "/home/showcase/real-madrid-2026-27-home/back.webp"],
-  },
-  {
-    // An unbranded 3D-rendered test shirt (24 frames, one every 15°) so the
-    // full 360° drag can be tried before the real turntable photos exist.
-    // Not a product: demo-only, never in a production build.
-    id: "test-360",
-    name: "360° test shirt",
-    views: sequence("test-360", 24),
-    demo: true,
-  },
-  {
-    id: "manchester-united-2007-08-home",
-    handle: "manchester-united-2007-08-retro-home-shirt",
-    name: "Manchester United 2007/08 Retro Home Shirt",
-    views: [
-      "/home/showcase/manchester-united-2007-08-home/front.webp",
-      "/home/showcase/manchester-united-2007-08-home/back.webp",
-    ],
-  },
+  { id: "real-madrid-2026-27-home", handle: "real-madrid-2026-27-home-shirt", name: "Real Madrid 2026/27 Home Shirt", views: front("real-madrid-2026-27-home") },
+  { id: "barcelona-2026-27-home", handle: "barcelona-2026-27-home-shirt", name: "Barcelona 2026/27 Home Shirt", views: front("barcelona-2026-27-home") },
+  { id: "manchester-united-2026-27-home", handle: "manchester-united-2026-27-home-shirt", name: "Manchester United 2026/27 Home Shirt", views: front("manchester-united-2026-27-home") },
+  { id: "real-madrid-2026-27-away", handle: "real-madrid-2026-27-away-shirt", name: "Real Madrid 2026/27 Away Shirt", views: front("real-madrid-2026-27-away") },
+  { id: "barcelona-2026-27-away", handle: "barcelona-2026-27-away-shirt", name: "Barcelona 2026/27 Away Shirt", views: front("barcelona-2026-27-away") },
+  { id: "liverpool-2026-27-home", handle: "liverpool-2026-27-home-shirt", name: "Liverpool 2026/27 Home Shirt", views: front("liverpool-2026-27-home") },
+  { id: "barcelona-2026-27-third", handle: "barcelona-2026-27-third-shirt", name: "Barcelona 2026/27 Third Shirt", views: front("barcelona-2026-27-third") },
+  { id: "arsenal-2026-27-home", handle: "arsenal-2026-27-home-shirt", name: "Arsenal 2026/27 Home Shirt", views: front("arsenal-2026-27-home") },
+  { id: "france-2026-home", handle: "france-2026-home-shirt", name: "France 2026 Home Shirt", views: front("france-2026-home") },
+  { id: "bayern-munich-2026-27-away", handle: "bayern-munich-2026-27-away-shirt", name: "Bayern Munich 2026/27 Away Shirt", views: front("bayern-munich-2026-27-away") },
 ];
 
 export const SHOWCASE_SETTINGS = {
@@ -70,14 +65,62 @@ export const SHOWCASE_SETTINGS = {
   degreesPerSecond: 24,
 };
 
-/** The pedestal plate and where the frames sit on it, in the plate's own pixels. */
-export const SHOWCASE_STAGE = {
-  plate: "/home/showcase/plate.webp",
-  width: 1856,
-  height: 2304,
-  frame: { x: 200, y: 300, width: 1456, height: 1460 },
-  /** The original shirt inside the plate: sleeve tips, top, hem, centre (also the pedestal's centre). */
-  shirt: { left: 391, right: 1453, top: 430, bottom: 1737, cx: 922 },
-  /** Width of the soft contact shadow on the pedestal top. */
-  shadowWidth: 760,
+/**
+ * Every frame is the same 1456x1460 canvas (scripts/images/showcase_frames.py):
+ * the hem sits on row 1437, the shirt is centred on x 722, and across the
+ * current frames the widest shirt spans x 136-1308 from row 128 down.
+ */
+const FRAME = { width: 1456, height: 1460, hemY: 1437, cx: 722, left: 136, right: 1308, top: 128 };
+
+export type ShowcaseStage = {
+  /** The film frame the positions are in. */
+  width: number;
+  height: number;
+  /** Where a frame canvas is drawn. */
+  frame: { x: number; y: number; width: number; height: number };
+  /** The shirt's extent on the podium: sleeve tips, collar, hem, centre. */
+  shirt: { left: number; right: number; top: number; bottom: number; cx: number };
+  /** Width of the soft contact shadow on the podium top. */
+  shadowWidth: number;
 };
+
+/** Stands a frame canvas on a podium: its hem on (cx, top), scaled by `scale`. */
+function standOn(width: number, height: number, podium: { cx: number; top: number }, scale: number, shadowWidth: number): ShowcaseStage {
+  return {
+    width,
+    height,
+    frame: {
+      x: podium.cx - FRAME.cx * scale,
+      y: podium.top - FRAME.hemY * scale,
+      width: FRAME.width * scale,
+      height: FRAME.height * scale,
+    },
+    shirt: {
+      left: podium.cx - (FRAME.cx - FRAME.left) * scale,
+      right: podium.cx + (FRAME.right - FRAME.cx) * scale,
+      top: podium.top - (FRAME.hemY - FRAME.top) * scale,
+      bottom: podium.top,
+      cx: podium.cx,
+    },
+    shadowWidth,
+  };
+}
+
+/**
+ * The landscape film's last frame (public/home/hero/podium.webp, 1920x1080):
+ * the podium's top surface is an ellipse centred on (615, 792), ~910 wide, its
+ * back rim at y 735 and its front rim at y 850. The hem lands on that centre.
+ * Scale 0.43 keeps the collar below the overlaid header (banner + header
+ * ~145px) down to a 1280x720 window; the landscape-phone strip enlarges the
+ * shirt with --kv-shirt-scale (globals.css), where no header overlaps it.
+ */
+export const SHOWCASE_STAGE = standOn(1920, 1080, { cx: 615, top: 797 }, 0.43, 470);
+
+/**
+ * The portrait film's last frame (public/home/hero/podium-portrait.webp,
+ * 1080x1920, used on every portrait screen): the podium's top surface is
+ * centred on (525, 1440), ~786 wide, back rim y 1385, front rim y 1495; the
+ * whole top third above the floodlights is empty night, where the header sits.
+ * Scale 0.6 keeps the collar (y 658) clear of the header on a 375x667 phone.
+ */
+export const SHOWCASE_STAGE_PORTRAIT = standOn(1080, 1920, { cx: 525, top: 1442 }, 0.6, 560);

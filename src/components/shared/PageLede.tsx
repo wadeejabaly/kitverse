@@ -5,7 +5,7 @@ import { Breadcrumbs, type Crumb } from "@/components/shared/Breadcrumbs";
  * The page hero every listing and static page opens with (redesign phase 2,
  * 2026-11-09). It used to be a quiet light "lede"; it is now the approved
  * homepage's little sibling: a full-bleed night-stadium band
- * (public/home/stadium.webp, the same Higgsfield plate as the home hero,
+ * (public/home/stadium.webp, the Higgsfield plate the home hero used before the film,
  * mirrored in RTL) with breadcrumbs, the gold eyebrow and rule, a big white
  * headline, the intro and an optional stat line (`children`).
  *
