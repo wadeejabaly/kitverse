@@ -4004,6 +4004,31 @@
       ],
       "teamHe": "אייאקס",
       "titleHe": "חולצת בית רטרו אייאקס 2019/20"
+    },
+    {
+      "handle": "napoli-maradona-1986-87-retro-home-shirt",
+      "title": "Napoli Maradona 1986/87 Retro Home Shirt",
+      "titleAr": "قميص نابولي مارادونا 1986/87 الأساسي ريترو",
+      "team": "Napoli",
+      "teamAr": "نابولي",
+      "kind": "previous",
+      "season": "1986/87",
+      "kit": "Home",
+      "league": "serie-a",
+      "edition": "standard",
+      "image": "/products/napoli-maradona-1986-87-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "napoli-maradona-1986-87-retro-home-shirt",
+      "images": [
+        "/products/napoli-maradona-1986-87-retro-home-shirt-2.jpg"
+      ],
+      "teamHe": "נאפולי",
+      "titleHe": "חולצת בית רטרו נאפולי מראדונה 1986/87",
+      "imagesLongSleeve": [
+        "/products/napoli-maradona-1986-87-retro-home-shirt-long.jpg",
+        "/products/napoli-maradona-1986-87-retro-home-shirt-long-2.jpg"
+      ]
     }
   ]
 }
