@@ -1,0 +1,1 @@
+kitverse intro marker: kept in the browser cache for 30 days (see src/components/hero/intro.ts)

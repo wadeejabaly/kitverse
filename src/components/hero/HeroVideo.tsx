@@ -16,7 +16,8 @@ import { INTRO_SEEN_KEY } from "./intro";
  *
  * A 6.6 s film (public/home/hero/intro.mp4: the crest, the fabric, the number,
  * the floodlights) plays full screen on a visitor's first home page view (then
- * not again for 30 days, see ./intro.ts), with nothing else on screen and
+ * not again for 30 days or until they clear their browser cache, see
+ * ./intro.ts), with nothing else on screen and
  * scrolling locked. It ends on
  * its last frame — the empty podium under the spotlight — and then the site
  * comes in: the header and banner drop in, the copy slides in from the side,
@@ -100,7 +101,7 @@ export async function HeroVideo({ locale }: { locale: string }) {
           <picture>
             <source media="(orientation: portrait)" srcSet={portraitStill} sizes="125vw" />
             {/* getImageProps output (alt=""), art-directed by the <source> above. */}
-            <img {...still} alt="" srcSet={landscapeStill} fetchPriority="high" className="kv-vhero-still" />
+            <img {...still} alt="" srcSet={landscapeStill} loading="eager" fetchPriority="high" className="kv-vhero-still" />
           </picture>
           <video
             className="kv-vhero-video"
@@ -293,8 +294,14 @@ if(window.ResizeObserver){var o=new ResizeObserver(m);for(var i=0;i<c.length;i++
 if(r.hasAttribute('data-kv-intro')){r.removeAttribute('data-kv-intro');s.setAttribute('data-intro','playing');try{window.scrollTo(0,0)}catch(e){}}})()`;
 
 /**
- * Runs once the section is parsed: plays the film if this view has the
- * intro, then hands over to the site (data-intro="done") on the still of its
+ * Runs once the section is parsed. It waits for INTRO_PENDING_SCRIPT's
+ * decision (window.__kvIntro: is the 30-day cache marker missing?) - a
+ * returning visitor's answer comes from the cache in a few ms, then the hero
+ * simply drops back to its end state. If the film plays, it starts only once
+ * the still underneath has been painted (at most 1.5 s): a picture the film
+ * already covers is never painted, and the still is what Chrome counts as the
+ * page's main content (LCP) - measured live 2026-11-12, LCP was 8.7 s when
+ * the film won that race. Then it hands over to the site (data-intro="done") on the still of its
  * last frame, never on the video element: a browser that dropped the film's
  * final frames (a busy phone, a background tab) can be left showing one a
  * few frames early, with the podium a little off the shirt. The film stays up
@@ -306,21 +313,28 @@ if(r.hasAttribute('data-kv-intro')){r.removeAttribute('data-kv-intro');s.setAttr
  * + 2.5 s, a load error, or 15 s in all. Escape skips it.
  */
 const PLAY_SCRIPT = `(function(){var s=document.getElementById('kv-vhero');if(!s||s.getAttribute('data-intro')!=='playing')return;
-var v=s.querySelector('video');var done=false,started=false,stall=0,t0=0,cap=0,safety=0,waitFrom=0,waited=0;
+var v=s.querySelector('video'),im=s.querySelector('.kv-vhero-still');var done=false,started=false,stall=0,t0=0,cap=0,safety=0,waitFrom=0,waited=0;
 function finish(natural){if(done)return;done=true;clearTimeout(t0);clearTimeout(stall);clearTimeout(cap);clearTimeout(safety);removeEventListener('keydown',key);
 try{v.pause()}catch(e){}
 if(!natural){try{v.removeAttribute('src');v.load()}catch(e){}}
-if(natural){var im=s.querySelector('.kv-vhero-still');if(im&&!im.complete){v.setAttribute('data-played','');im.addEventListener('load',function(){v.removeAttribute('data-played')})}}
+if(natural&&im&&!im.complete){v.setAttribute('data-played','');im.addEventListener('load',function(){v.removeAttribute('data-played')})}
 s.setAttribute('data-intro','done');try{localStorage.setItem(${JSON.stringify(INTRO_SEEN_KEY)},String(Date.now()))}catch(e){}}
 function key(e){if(e.key==='Escape')finish(false)}
-if(!v||!v.play){finish(false);return}
+function skip(){s.removeAttribute('data-intro')}
+function start(){if(!v||!v.play){finish(false);return}
 addEventListener('keydown',key);
 v.addEventListener('ended',function(){finish(true)});
 v.addEventListener('playing',function(){clearTimeout(t0);clearTimeout(stall);if(waitFrom){waited+=Date.now()-waitFrom;waitFrom=0}
 if(!started){started=true;cap=setTimeout(function(){finish(false)},((v.duration||7.1)*1000)+2500)}});
 v.addEventListener('waiting',function(){if(!started||done)return;waitFrom=Date.now();clearTimeout(stall);stall=setTimeout(function(){finish(false)},Math.max(0,2000-waited))});
 v.addEventListener('error',function(){finish(false)},true);
-t0=setTimeout(function(){if(!started)finish(false)},3000);safety=setTimeout(function(){finish(false)},15000);
 var tall=window.matchMedia&&matchMedia('(orientation: portrait)').matches;
-v.muted=true;v.defaultMuted=true;v.poster=tall?'/home/hero/intro-portrait-poster.webp':'/home/hero/intro-poster.webp';v.preload='auto';v.src=tall?'/home/hero/intro-portrait.mp4':'/home/hero/intro.mp4';
-try{var p=v.play();if(p&&p.catch)p.catch(function(){finish(false)})}catch(e){finish(false)}})()`;
+v.muted=true;v.defaultMuted=true;v.preload='auto';v.src=tall?'/home/hero/intro-portrait.mp4':'/home/hero/intro.mp4';
+var went=false;function go(){if(went||done)return;went=true;
+t0=setTimeout(function(){if(!started)finish(false)},3000);safety=setTimeout(function(){finish(false)},15000);
+v.poster=tall?'/home/hero/intro-portrait-poster.webp':'/home/hero/intro-poster.webp';
+try{var p=v.play();if(p&&p.catch)p.catch(function(){finish(false)})}catch(e){finish(false)}}
+function afterPaint(){requestAnimationFrame(function(){requestAnimationFrame(go)})}
+if(im&&!im.complete){im.addEventListener('load',afterPaint);im.addEventListener('error',go);setTimeout(go,1500)}else afterPaint()}
+var decided=window.__kvIntro;if(!decided||!decided.then){skip();return}
+decided.then(function(play){if(play)start();else skip()},skip)})()`;

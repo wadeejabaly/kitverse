@@ -17,7 +17,12 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.
 const nextConfig: NextConfig = {
   devIndicators: false, // the dev badge sat on top of the admin bell
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      // The home page intro plays again once this marker is no longer fresh in the browser's
+      // HTTP cache: after 30 days, or when the visitor clears the cache (src/components/hero/intro.ts).
+      { source: "/home/hero/intro-mark.txt", headers: [{ key: "Cache-Control", value: "public, max-age=2592000" }] },
+    ];
   },
   images: {
     // product photos checked by the bot's photo QA live in Supabase storage
