@@ -4,6 +4,7 @@
     "description": "Club and national team football shirts in Fan and Player versions. Clear prices, delivery nationwide."
   },
   "promo": {
+    "cash": "Pay cash on delivery",
     "welcome": "{amount} off your first order of {min} or more — code <c>{code}</c> at checkout",
     "welcomeNoMin": "{amount} off your first order — code <c>{code}</c> at checkout",
     "cta": "Shop now"
@@ -47,6 +48,7 @@
   },
   "home": {
     "hero": {
+      "cashLine": "Pay cash when your order arrives — no card needed",
       "eyebrow": "The Kitverse Collection",
       "titleA": "Your club.",
       "titleB": "Your colors.",

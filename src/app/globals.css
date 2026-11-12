@@ -1414,6 +1414,24 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
   font-size: 16px;
 }
 
+/* "Pay cash when your order arrives" under the hero CTAs (owner request 2026-11-12). */
+.kv-stadium-cash {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid rgb(201 165 92 / 0.45);
+  border-radius: 999px;
+  background: rgb(201 165 92 / 0.1);
+  color: var(--flood-ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.kv-stadium-cash svg {
+  color: var(--flood-gold);
+}
+
 .kv-stadium-link {
   display: inline-flex;
   align-items: center;

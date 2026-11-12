@@ -5,6 +5,8 @@ import { priceFor } from "@/data/pricing";
 import { Price } from "@/components/shared/Money";
 import { InlineScript } from "@/components/shared/InlineScript";
 import { titleFor } from "@/lib/product";
+import { enabledPaymentMethods } from "@/lib/payment-methods";
+import { CashIcon } from "@/components/shared/CashIcon";
 import { SHOWCASE_JERSEYS } from "@/data/showcase";
 import { HeroChromeOffset } from "./HeroChromeOffset";
 import { JerseyShowcase, type ShowcaseItem } from "./JerseyShowcase";
@@ -59,6 +61,7 @@ import { INTRO_RETRY_KEY, INTRO_SEEN_KEY } from "./intro";
  */
 export async function HeroVideo({ locale }: { locale: string }) {
   const t = await getTranslations("home.hero");
+  const cash = enabledPaymentMethods().cash;
 
   // The interactive showcase (src/data/showcase.ts): each shirt's name and
   // link come from the catalogue; a shirt that is off the site links to /shop.
@@ -207,6 +210,18 @@ export async function HeroVideo({ locale }: { locale: string }) {
                 </span>
               </Link>
             </div>
+
+            {/* Cash on delivery (owner request 2026-11-12): said right under the
+              CTAs, only when checkout really offers it. */}
+            {cash ? (
+              <p
+                className="kv-vhero-in kv-stadium-cash mb-8"
+                style={{ "--i": 3 } as React.CSSProperties}
+              >
+                <CashIcon className="h-5 w-5 shrink-0" />
+                {t("cashLine")}
+              </p>
+            ) : null}
 
             {/* The price row: hairline above, three gold glyphs, each with a
               small label over a large blue price (Retro is an invitation,
