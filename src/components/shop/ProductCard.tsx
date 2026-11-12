@@ -40,6 +40,8 @@ export function ProductCard({
   // price whatever the version). From the price list, never hardcoded.
   const price = priceFor(product.season, "S", "fan");
   const inStock = hasPhoto(product.image);
+  // owner request 2026-11-12: a shirt flagged out of stock stays listed, greyed, with no price
+  const soldOut = product.inStock === false;
 
   // Redesign phase 2 (2026-11-09): a white card with a soft studio tile,
   // team eyebrow, bold title, a badge for the line (Retro / National team)
@@ -59,7 +61,7 @@ export function ProductCard({
             height={900}
             priority={priority}
             sizes="(max-width: 640px) 50vw, (max-width: 900px) 33vw, 280px"
-            className="aspect-square h-auto w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+            className={`aspect-square h-auto w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]${soldOut ? " opacity-55 grayscale" : ""}`}
           />
         ) : (
           <span className="mono-eyebrow text-ink-soft">{t("outOfStock")}</span>
@@ -75,10 +77,14 @@ export function ProductCard({
         <span className="kv-pcard-team">{team}</span>
         <h3 className="kv-pcard-title">{title}</h3>
         <div className="kv-pcard-foot">
-          <span>
-            <span className="kv-pcard-from">{t("from")}</span>
-            <Price value={price} className="kv-pcard-price" />
-          </span>
+          {soldOut ? (
+            <span className="mono-eyebrow text-ink-soft">{t("outOfStock")}</span>
+          ) : (
+            <span>
+              <span className="kv-pcard-from">{t("from")}</span>
+              <Price value={price} className="kv-pcard-price" />
+            </span>
+          )}
           <span className="kv-pcard-meta">
             <Season value={shortSeason(product.season)} />
             <br />

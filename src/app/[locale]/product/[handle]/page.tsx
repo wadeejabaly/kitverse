@@ -160,6 +160,10 @@ export default async function ProductPage({
               {title}
             </h1>
 
+            {product.inStock === false ? (
+              // owner request 2026-11-12: out of stock = no options, no add to cart
+              <p className="mono-eyebrow border border-rule px-4 py-3 text-ink-soft">{t("outOfStock")}</p>
+            ) : (
             <ProductForm
               handle={product.handle}
               season={product.season}
@@ -170,6 +174,7 @@ export default async function ProductPage({
               image={product.image}
               title={title}
             />
+            )}
 
             {/* Service strip: facts the shop already states elsewhere
                 (delivery window from the shipping page, cash on delivery

@@ -1,4 +1,5 @@
 import "server-only";
+import { isOutOfStock } from "@/lib/catalog/stock";
 import { patchPieces } from "@/lib/patch-limits";
 import { db, must } from "../db";
 import { currentPriceList } from "../pricing/load";
@@ -51,6 +52,8 @@ export interface NewItem {
 async function prepareItem(it: NewItem): Promise<Result<Omit<ItemRow, "id">>> {
   const p = await getProduct(it.product_id);
   if (!p || p.status === "hidden") return { ok: false, error: "unknown product id - search the catalog first" };
+  // owner request 2026-11-12: an out-of-stock shirt can't be ordered - tell the customer and offer another
+  if (isOutOfStock(p.flags)) return { ok: false, error: "this shirt is OUT OF STOCK right now - tell the customer and suggest a similar shirt" };
   // Owner decision 2026-10-26: every adult shirt also comes in long sleeve (the website sells it for all
   // of them) - a shirt listed only as short sleeve takes its long-sleeve order from that same listing.
   const opt = p.options.find((o) => o.audience === it.audience && o.version === it.version && o.sleeve === it.sleeve)

@@ -41,7 +41,7 @@ export default async function CheckoutPage({
   setRequestLocale(locale);
   const t = await getTranslations("checkout");
 
-  const products: CartProductInfo[] = getVisibleProducts().map((product) => ({
+  const products: CartProductInfo[] = getVisibleProducts().filter((product) => product.inStock !== false).map((product) => ({
     handle: product.handle,
     title: product.title,
     titleAr: product.titleAr,

@@ -416,7 +416,8 @@ export function CheckoutView({
   function orderRequestBody() {
     return JSON.stringify({
       items: items
-        .filter((item) => item.kind === "jersey")
+        // only shirts the page can price (drops an out-of-stock shirt still sitting in an old cart)
+        .filter((item): item is Extract<typeof item, { kind: "jersey" }> => item.kind === "jersey" && byHandle.has(item.handle))
         .map((item) => ({
           handle: item.handle,
           size: item.size,

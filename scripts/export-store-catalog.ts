@@ -6,6 +6,7 @@
  * Runs before every build when the database is reachable; otherwise the committed JSON is used as is.
  *   npm run store:export
  */
+import { OUT_OF_STOCK_FLAG } from "../src/lib/catalog/stock";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
@@ -15,7 +16,7 @@ config({ path: ".env.local", quiet: true });
 
 
 type Row = {
-  id: string; handle: string; title_en: string; title_ar: string | null; title_override: boolean; season: string | null; kit: string; status: string;
+  id: string; handle: string; title_en: string; title_ar: string | null; title_override: boolean; season: string | null; kit: string; status: string; flags: string[] | null;
   primary_image_url: string | null; photo_status: string | null; supplier_cover: string | null;
   team: { id: string; name_en: string; name_ar: string | null; type: "club" | "national"; league_id: string | null };
 };
@@ -50,7 +51,7 @@ async function main() {
   const rows: Row[] = [];
   for (let i = 0; i < handles.length; i += 200) {
     const { data, error } = await db.from("products")
-      .select("id,handle,title_en,title_ar,title_override,season,kit,status,primary_image_url,photo_status,supplier_cover,team:teams(id,name_en,name_ar,type,league_id)")
+      .select("id,handle,title_en,title_ar,title_override,season,kit,status,flags,primary_image_url,photo_status,supplier_cover,team:teams(id,name_en,name_ar,type,league_id)")
       .in("handle", handles.slice(i, i + 200));
     if (error) throw error;
     rows.push(...(data as unknown as Row[]));
@@ -126,6 +127,8 @@ async function main() {
         ? (longRows.length ? { imagesLongSleeve: longRows.map((row) => row.url) } : { imagesLongSleeve: undefined })
         : (real(s) && s.imagesLongSleeve?.length ? { imagesLongSleeve: s.imagesLongSleeve } : {})),
       sourceHash: r?.supplier_cover ?? s.sourceHash,
+      // owner request 2026-11-12: a shirt flagged out of stock stays on the site, marked and not orderable
+      ...(r?.flags?.includes(OUT_OF_STOCK_FLAG) ? { inStock: false } : {}),
       visible: true,
     };
   });

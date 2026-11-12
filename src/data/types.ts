@@ -87,6 +87,8 @@ export interface Product {
    * see ProductForm — ahead of the photos that will back it per shirt).
    */
   imagesLongSleeve?: string[];
+  /** false = shown on the site marked "Out of stock", not orderable (products.flags 'out_of_stock', owner request 2026-11-12). Missing = in stock. */
+  inStock?: boolean;
   sourceHash: string; // supplier provenance
   visible: boolean; // approved review state AND not deduped-away
 }

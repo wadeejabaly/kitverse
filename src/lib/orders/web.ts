@@ -7,6 +7,7 @@ import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { getAccessory, isInStock } from "@/data/accessories";
+import { isOutOfStock } from "@/lib/catalog/stock";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
 import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, type DiscountCode } from "../discounts";
@@ -90,6 +91,7 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   if (accessories.some((x) => x.a && !isInStock(x.a))) return { ok: false, code: "invalid_request", detail: "accessory out of stock" };
   if (!lines.length && !accessories.length) return { ok: false, code: "cart_empty" };
   if (lines.some((l) => !l.p)) return { ok: false, code: "invalid_request", detail: "unknown product" };
+  if (lines.some((l) => isOutOfStock(l.p?.flags))) return { ok: false, code: "invalid_request", detail: "product out of stock" };
   for (const { i } of lines) {
     const { name, number } = splitNameNumber(i.nameNumber);
     const err = validatePrint(name, number);
