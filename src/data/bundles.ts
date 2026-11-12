@@ -29,11 +29,13 @@ export const BUNDLES: Bundle[] = [
     slug: "real-madrid-2026-27",
     team: "real-madrid",
     handles: ["real-madrid-2026-27-home-shirt", "real-madrid-2026-27-away-shirt", "real-madrid-2026-27-third-shirt"],
+    image: "/bundles/real-madrid-2026-27.jpg",
   },
   {
     slug: "barcelona-2026-27",
     team: "barcelona",
     handles: ["barcelona-2026-27-home-shirt", "barcelona-2026-27-away-shirt", "barcelona-2026-27-third-shirt"],
+    image: "/bundles/barcelona-2026-27.jpg",
   },
 ];
 

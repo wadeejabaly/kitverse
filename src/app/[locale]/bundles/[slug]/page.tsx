@@ -58,9 +58,18 @@ export default async function BundlePage({ params }: { params: Promise<{ locale:
       <section className="grid items-start gap-8 pt-6 pb-14 wide:grid-cols-[1.08fr_1fr] wide:gap-14">
         <div className="min-w-0 wide:sticky wide:top-24">
           {bundle.image ? (
-            <div className="relative aspect-square overflow-hidden rounded-[18px] bg-tile">
-              <Image src={bundle.image} alt={title} fill priority sizes="(max-width: 1024px) 100vw, 55vw" className="object-cover" />
-            </div>
+            <>
+              <div className="relative aspect-square overflow-hidden rounded-[18px] bg-tile">
+                <Image src={bundle.image} alt={title} fill priority sizes="(max-width: 1024px) 100vw, 55vw" className="object-cover" />
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-3">
+                {products.map((p) => (
+                  <div key={p.handle} className="relative aspect-square overflow-hidden rounded-[14px] bg-tile">
+                    <Image src={p.image} alt={productTitle(p)} fill sizes="(max-width: 1024px) 33vw, 18vw" className="object-contain" />
+                  </div>
+                ))}
+              </div>
+            </>
           ) : (
             <div className="grid grid-cols-2 gap-3">
               {products.map((p, i) => (
