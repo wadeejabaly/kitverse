@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryDeals, cartTotals, priceLine, round2 } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2 } from "@/data/pricing";
+import { patchPieces } from "@/lib/patch-limits";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
 import { PATCH_PROP_KEYS } from "@/data/patches";
 import { lineKey, useCart } from "@/components/cart/CartProvider";
@@ -332,7 +333,7 @@ export function CheckoutView({
         product,
         priced: priceLine(product.season, item.size, item.version, item.qty, {
           nameNumber: Boolean(item.nameNumber),
-          patchCount: item.patches.length,
+          patchCount: patchPieces(item.patches, isRetroSeason(product.season)),
           sleeve: item.sleeve,
         }),
         key: lineKey(item),

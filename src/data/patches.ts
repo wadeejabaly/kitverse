@@ -62,6 +62,7 @@ const WORLD_CUP_PEACE_ART = "/patches/world-cup-peace.jpg";
 export const PATCH_PROP_KEYS: Record<PatchId, string> = {
   league: "propPatchLeague",
   champions_league: "propPatchChampionsLeague",
+  champions_league_full: "propPatchChampionsLeagueFull",
   europa_league: "propPatchEuropaLeague",
   club_world_cup: "propPatchChampionsLeague",
   coppa_italia: "propPatchCoppaItalia",
@@ -101,6 +102,12 @@ export function patchOptionsFor(product: {
       id: "champions_league",
       image: CHAMPIONS_LEAGUE_ART[teamSlug] ?? CHAMPIONS_LEAGUE_GENERAL,
       labelKey: "patchChampionsLeague",
+    });
+    // owner decision 2026-11-12: the full match version (badges as worn that season), same artwork, goes on alone
+    options.push({
+      id: "champions_league_full",
+      image: CHAMPIONS_LEAGUE_ART[teamSlug] ?? CHAMPIONS_LEAGUE_GENERAL,
+      labelKey: "patchChampionsLeagueFull",
     });
     options.push({ id: "europa_league", image: EUROPA_LEAGUE_ART, labelKey: "patchEuropaLeague" });
     if (product.league === "serie-a") {

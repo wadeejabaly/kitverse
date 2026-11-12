@@ -30,7 +30,7 @@ import type { PatchId } from "./orders/rules";
  */
 
 const PATCH_LABEL_EN: Record<PatchId, string> = {
-  champions_league: "Champions League", europa_league: "Europa League", club_world_cup: "Club World Cup",
+  champions_league: "Champions League", champions_league_full: "Champions League full version (as worn that season)", europa_league: "Europa League", club_world_cup: "Club World Cup",
   league: "League", coppa_italia: "Coppa Italia", world_cup: "World Cup",
   world_cup_peace: "World Cup Peace", world_cup_champions: "World Cup Champions",
 };

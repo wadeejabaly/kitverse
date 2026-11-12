@@ -48,13 +48,16 @@ export async function Header() {
           <BrandBadge size={64} priority />
         </Link>
 
-        <nav className="hidden flex-1 gap-6 text-sm wide:flex">
+        <nav className="hidden flex-1 gap-4 whitespace-nowrap text-sm wide:flex xl:gap-6">
           <HeaderLink href="/shop">{t("shop")}</HeaderLink>
           <HeaderLink href="/shop/national-teams">{t("nationalTeams")}</HeaderLink>
+          <HeaderLink href="/shop/retro">{t("retro")}</HeaderLink>
           <LeaguesMenu leagues={leagues} locale={locale} label={t("leagues")} />
           <HeaderLink href="/accessories">{t("accessories")}</HeaderLink>
-          <HeaderLink href="/size-guide">{t("sizeGuide")}</HeaderLink>
-          <HeaderLink href="/about">{t("about")}</HeaderLink>
+          {/* Retro joined the nav 2026-11-12 (owner request): to keep one line, Size guide and About show
+              from xl up only (both stay in the footer and the phone menu). */}
+          <HeaderLink href="/size-guide" className="hidden xl:inline">{t("sizeGuide")}</HeaderLink>
+          <HeaderLink href="/about" className="hidden xl:inline">{t("about")}</HeaderLink>
           {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain <a>,
               not <Link>, so it never gets a locale prefix it can't resolve. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
@@ -69,7 +72,7 @@ export async function Header() {
             For the same reason hover cannot DIM these (dimming is what
             fails); they take the nav's gold hairline instead, which is
             decoration and costs no text contrast. */}
-        <div className="flex items-center gap-5 text-[13px] text-ink ms-auto wide:ms-0">
+        <div className="flex shrink-0 items-center gap-5 text-[13px] text-ink ms-auto wide:ms-0">
           {/* Redesign 2026-11-09 (reference screenshots): on desktop the
               search reads as a field — glyph plus a placeholder — but it is
               still the same link to the /search page, which owns the real
@@ -80,7 +83,7 @@ export async function Header() {
             className={`${utilityHover} flex items-center gap-2.5`}
           >
             <SearchIcon />
-            <span aria-hidden className="hidden text-ink-soft wide:inline">
+            <span aria-hidden className="hidden whitespace-nowrap text-ink-soft xl:inline">
               {t("searchProducts")}
             </span>
           </Link>
@@ -98,13 +101,13 @@ export async function Header() {
 const utilityHover =
   "border-b border-transparent pb-0.5 transition-colors hover:border-gold";
 
-function HeaderLink({ href, children }: { href: string; children: React.ReactNode }) {
+function HeaderLink({ href, children, className = "" }: { href: string; children: React.ReactNode; className?: string }) {
   return (
     <Link
       href={href}
       // The hover underline is the crest gold — the one place a nav item
       // signals itself. The label stays ink; only the hairline changes.
-      className="border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold"
+      className={`border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold ${className}`}
     >
       {children}
     </Link>
