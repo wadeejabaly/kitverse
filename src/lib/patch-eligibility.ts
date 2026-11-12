@@ -51,3 +51,28 @@ export const UCL_TITLES_BADGE_CLUBS: readonly string[] = ["real-madrid", "ac-mil
 export function hasUclTitlesBadge(teamSlug: string | null | undefined): boolean {
   return !!teamSlug && UCL_TITLES_BADGE_CLUBS.includes(teamSlug);
 }
+
+/**
+ * Current (non-retro) shirts, owner request 2026-11-12 ("Real Madrid only La Liga, the 15 and Europa;
+ * remove the rest from all non-retro, except the Champions League ball with no number - that stays for
+ * the teams with no titles"):
+ *  - the plain Champions League starball only on clubs WITHOUT a titles badge (a club with one wears the
+ *    numbered badge instead);
+ *  - no Respect patch at all.
+ * Retro shirts (season starting 2023 or earlier, the same cutoff as the retro price) keep every option.
+ * An unknown season counts as current.
+ */
+const RETRO_LAST_YEAR = 2023;
+
+export function isRetroPatchSeason(season: string | null | undefined): boolean {
+  const year = season?.match(/\d{4}/)?.[0];
+  return !!year && Number(year) <= RETRO_LAST_YEAR;
+}
+
+export function uclStarballOffered(teamSlug: string | null | undefined, season: string | null | undefined): boolean {
+  return isRetroPatchSeason(season) || !hasUclTitlesBadge(teamSlug);
+}
+
+export function uclRespectOffered(season: string | null | undefined): boolean {
+  return isRetroPatchSeason(season);
+}

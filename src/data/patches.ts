@@ -1,4 +1,4 @@
-import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint } from "@/lib/patch-eligibility";
+import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "@/lib/patch-eligibility";
 import { slugify } from "./slug";
 import type { Kind } from "./types";
 import type { PatchId } from "@/lib/orders/rules";
@@ -108,12 +108,15 @@ export function patchOptionsFor(product: {
     // owner request 2026-11-12 ("remove the all-inclusive"): every Champions League piece on its own, 1 patch
     // each - the starball, the titles badge (trophy with the number of wins, only clubs that have one; it uses
     // the club's numbered artwork) and the Respect patch that sits under it. No more "full version" option.
-    options.push({ id: "champions_league", image: CHAMPIONS_LEAGUE_GENERAL, labelKey: "patchChampionsLeague" });
+    // current shirts (owner request 2026-11-12): starball only for clubs without a titles badge, no Respect
+    if (uclStarballOffered(teamSlug, product.season)) {
+      options.push({ id: "champions_league", image: CHAMPIONS_LEAGUE_GENERAL, labelKey: "patchChampionsLeague" });
+    }
     const titlesArt = CHAMPIONS_LEAGUE_ART[teamSlug];
     if (titlesArt && hasUclTitlesBadge(teamSlug)) {
       options.push({ id: "ucl_titles_badge", image: titlesArt, labelKey: "patchUclTitlesBadge" });
     }
-    options.push({ id: "ucl_respect", image: UCL_RESPECT_ART, labelKey: "patchUclRespect" });
+    if (uclRespectOffered(product.season)) options.push({ id: "ucl_respect", image: UCL_RESPECT_ART, labelKey: "patchUclRespect" });
     options.push({ id: "europa_league", image: EUROPA_LEAGUE_ART, labelKey: "patchEuropaLeague" });
     if (product.league === "serie-a") {
       options.push({ id: "coppa_italia", image: COPPA_ITALIA_ART, labelKey: "patchCoppaItalia" });

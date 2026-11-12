@@ -2,7 +2,7 @@ import type { Product } from "@/data/types";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { FULL_VERSION_PATCH, maxPatches, sleevePatches } from "@/lib/patch-limits";
 import { slugify } from "@/data/slug";
-import { isClubWorldChampionSeason, uclFinalPrint } from "@/lib/patch-eligibility";
+import { isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "@/lib/patch-eligibility";
 
 /**
  * Locale-aware reads of a Product's bilingual fields, plus the small display
@@ -86,7 +86,8 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
   const chest = team.type === "club"
     ? [...new Set(patches)].filter((p) =>
         (p === "club_world_cup" && isClubWorldChampionSeason(teamSlug, product.season)) ||
-        (p === "ucl_final_print" && !!uclFinalPrint(teamSlug, product.season)))
+        (p === "ucl_final_print" && !!uclFinalPrint(teamSlug, product.season)) ||
+        (p === "ucl_respect" && uclRespectOffered(product.season)))
     : [];
   const sleeves = sleevePatches(patches);
   // the Champions League full version goes on the sleeves alone (owner decision 2026-11-12)
@@ -98,6 +99,8 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
     const rule: (typeof PATCHES)[PatchId] | undefined = PATCHES[p];
     if (!rule) continue;
     if (team.type === "club" && !rule.clubs) continue;
+    // current shirts (owner request 2026-11-12): a club with a titles badge takes that, not the plain ball
+    if (p === "champions_league" && team.type === "club" && !uclStarballOffered(teamSlug, product.season)) continue;
     if (team.type === "national" && !rule.nations) continue;
     if (p === "league" && !team.league_id) continue;
     if ("leagues" in rule && rule.leagues && !(rule.leagues as readonly string[]).includes(team.league_id ?? "")) continue;

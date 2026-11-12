@@ -1,6 +1,6 @@
 /** Pure validation rules for order lines and customer details (unit-tested). */
 import { FULL_VERSION_PATCH, maxPatches, sleevePatches } from "../patch-limits";
-import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint } from "../patch-eligibility";
+import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "../patch-eligibility";
 
 export const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"] as const;
 export const KIDS_SIZES = ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28"] as const;
@@ -85,6 +85,9 @@ export function checkPatches(patches: PatchId[], team: { id?: string; type: "clu
   if (team.id && patches.includes("club_world_cup") && !isClubWorldChampionSeason(team.id, season)) return "the FIFA Club World Champions badge only goes on a shirt from a season the club held that title";
   if (patches.includes("ucl_final_print") && !uclFinalPrint(team.id, season)) return "no Champions League final print for this shirt";
   if (team.id && patches.includes("ucl_titles_badge") && !hasUclTitlesBadge(team.id)) return "this club has no Champions League titles badge";
+  // current shirts (owner request 2026-11-12): a club with a titles badge wears that, not the plain ball; no Respect patch
+  if (team.id && season && patches.includes("champions_league") && !uclStarballOffered(team.id, season)) return "on a current shirt this club takes the Champions League titles badge (with the number), not the plain ball";
+  if (season && patches.includes("ucl_respect") && !uclRespectOffered(season)) return "the Respect patch is only on retro shirts";
   const max = maxPatches({ type: team.type, leagueId: team.league_id, season });
   if (sleeves.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
   for (const p of patches) {
