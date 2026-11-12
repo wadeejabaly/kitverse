@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getLeagues, type League } from "@/data/catalog";
-import { localName } from "@/lib/local-name";
+import { buildNav } from "@/lib/nav-data";
+import { DesktopNav } from "@/components/shared/DesktopNav";
 import { BrandBadge } from "@/components/shared/BrandBadge";
 import { CartLink } from "@/components/shared/CartLink";
 import { LocaleToggle } from "@/components/shared/LocaleToggle";
@@ -25,22 +25,29 @@ import { MobileMenu } from "@/components/shared/MobileMenu";
  * The layout is plain flex with logical gaps, so Arabic mirrors it whole
  * without a single direction-specific rule.
  *
- * "Leagues" (2026-10-25): the mockup had this as a flat link straight down to
- * the shop's league filter — fine when the shop was the only place to browse
- * by league, but the owner's "categories in the header" ask treats the
- * leagues themselves as the category list, so <LeaguesMenu/> below reveals
- * them directly, the same data <Footer/> and <MobileMenu/> already read.
+ * Navigation (owner request 2026-11-12): six entries - Shop, National teams, Classics, Leagues,
+ * Accessories, More - with navy/gold dropdowns (<DesktopNav/>) and the same entries as nested
+ * accordions in <MobileMenu/>. Their content comes from src/lib/nav-data.ts (catalogue + existing routes).
  */
 export async function Header() {
   const t = await getTranslations("nav");
+  const tAcc = await getTranslations("accessories");
   const locale = await getLocale();
-  const leagues = getLeagues();
+  // the six entries + their dropdowns, all from the existing catalogue and routes (src/lib/nav-data.ts)
+  const entries = buildNav(locale, {
+    shop: t("shop"), nationalTeams: t("nationalTeams"), retro: t("retro"), leagues: t("leagues"), accessories: t("accessories"), more: t("more"),
+    allNationalTeams: t("allNationalTeams"), allClassics: t("allClassics"), classicsByLeague: t("classicsByLeague"), classicsTeams: t("classicsTeams"),
+    allAccessories: t("allAccessories"), keychains: tAcc("keychainsLabel"), scarves: tAcc("scarvesLabel"),
+    sizeGuide: t("sizeGuide"), trackOrder: t("trackOrder"), about: t("about"), contact: t("contact"),
+  });
 
   return (
     // data-kv-chrome: measured and hidden by the home page video hero (HeroVideo.tsx).
     <header data-kv-chrome className="header-glass header-accent sticky top-0 z-40">
-      <div className="mx-auto flex w-full max-w-page items-center gap-6 px-6 py-5 wide:gap-10">
-        <MobileMenu leagues={leagues} />
+      {/* Header layout (owner request 2026-11-12): crest at the inline start (far right in Arabic), the six
+          entries centred, search / language / bag at the inline end. `relative` anchors the wide dropdowns. */}
+      <div className="relative mx-auto flex w-full max-w-page items-center gap-6 px-6 py-5 nav:py-3">
+        <MobileMenu entries={entries} />
 
         {/* The crest alone. Nothing else names the link, so the badge keeps
             its alt and becomes the link's accessible name. Sized at 2x the
@@ -49,45 +56,23 @@ export async function Header() {
           <BrandBadge size={64} priority />
         </Link>
 
-        <nav className="hidden flex-1 gap-6 text-sm wide:flex">
-          <HeaderLink href="/shop">{t("shop")}</HeaderLink>
-          <HeaderLink href="/shop/national-teams">{t("nationalTeams")}</HeaderLink>
-          <LeaguesMenu leagues={leagues} locale={locale} label={t("leagues")} />
-          <HeaderLink href="/accessories">{t("accessories")}</HeaderLink>
-          <HeaderLink href="/size-guide">{t("sizeGuide")}</HeaderLink>
-          <HeaderLink href="/about">{t("about")}</HeaderLink>
-          {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain <a>,
-              not <Link>, so it never gets a locale prefix it can't resolve. */}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
-          <a href="/o/track" className="border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold">
-            {t("trackOrder")}
-          </a>
-        </nav>
+        <DesktopNav entries={entries} label={t("menuBrowse")} />
 
-        {/* Utility row. Ink, not ink-soft: see the note above — over a
-            translucent header ink-soft measures 3.1:1 against a dark shirt
-            passing beneath, and 3.5:1 against a white tile in dark mode.
-            For the same reason hover cannot DIM these (dimming is what
-            fails); they take the nav's gold hairline instead, which is
-            decoration and costs no text contrast. */}
-        <div className="flex items-center gap-5 text-[13px] text-ink ms-auto wide:ms-0">
-          {/* Redesign 2026-11-09 (reference screenshots): on desktop the
-              search reads as a field — glyph plus a placeholder — but it is
-              still the same link to the /search page, which owns the real
-              input. Phones keep the bare glyph for room. */}
-          <Link
-            href="/search"
-            aria-label={t("search")}
-            className={`${utilityHover} flex items-center gap-2.5`}
-          >
+        {/* Utility row. Ink, not ink-soft: over a translucent header ink-soft measures 3.1:1 against a
+            dark shirt passing beneath. Hover takes the gold hairline instead of dimming. */}
+        <div className="ms-auto flex shrink-0 items-center gap-5 text-[13px] text-ink nav:ms-0 nav:gap-4 xl:gap-5">
+          {/* Search reads as a field on wide screens (glyph + placeholder) but is the same link to /search,
+              which owns the real input. Narrower screens keep the bare glyph. */}
+          <Link href="/search" aria-label={t("search")} className={`${utilityHover} flex items-center gap-2.5`}>
             <SearchIcon />
-            <span aria-hidden className="hidden text-ink-soft wide:inline">
+            <span aria-hidden className="hidden whitespace-nowrap text-ink-soft xl:inline">
               {t("searchProducts")}
             </span>
           </Link>
-          <span aria-hidden className="hidden h-5 w-px bg-rule wide:block" />
+          <span aria-hidden className="hidden h-5 w-px bg-rule nav:block" />
           <CartLink className={utilityHover} />
-          <span aria-hidden className="hidden h-5 w-px bg-rule wide:block" />
+          <span aria-hidden className="hidden h-5 w-px bg-rule nav:block" />
+          {/* last = the far left in Arabic, exactly as on the phone header the owner wants kept */}
           <LocaleToggle className={utilityHover} />
         </div>
       </div>
@@ -98,19 +83,6 @@ export async function Header() {
 /** The utility row's hover: the nav's gold hairline, not a colour change. */
 const utilityHover =
   "border-b border-transparent pb-0.5 transition-colors hover:border-gold";
-
-function HeaderLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      // The hover underline is the crest gold — the one place a nav item
-      // signals itself. The label stays ink; only the hairline changes.
-      className="border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold"
-    >
-      {children}
-    </Link>
-  );
-}
 
 /** The one icon in the header — drawn, not a font or an image request. */
 function SearchIcon() {
@@ -127,91 +99,6 @@ function SearchIcon() {
     >
       <circle cx="7" cy="7" r="4.6" />
       <path d="M10.4 10.4 14 14" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-/**
- * "Leagues" as a category dropdown, not just a link.
- *
- * Pure CSS (group-hover / group-focus-within) — no client component, no
- * JS state, nothing to hydrate — in keeping with how little of this header
- * is interactive JS to begin with (<MobileMenu/> is the one exception, and
- * that overlay genuinely needs state). Hover reveals it with a mouse;
- * group-focus-within reveals it the same way for keyboard focus, since
- * focus lands inside the panel the moment Tab reaches one of its links —
- * so a keyboard user never needs a separate "open" keystroke, and it closes
- * itself the moment focus (or the pointer) leaves the group.
- *
- * The trigger still navigates to the shop's own league filter (`#league`)
- * on a plain click/Enter — the panel is an accelerator to a specific
- * league, not the only way to reach any of them.
- */
-function LeaguesMenu({
-  leagues,
-  locale,
-  label,
-}: {
-  leagues: League[];
-  locale: string;
-  label: string;
-}) {
-  if (leagues.length === 0) {
-    return <HeaderLink href="/shop#league">{label}</HeaderLink>;
-  }
-
-  return (
-    <div className="group relative">
-      <Link
-        href="/shop#league"
-        className="flex items-center gap-1 border-b border-transparent pb-1 font-bold text-ink transition-colors hover:border-gold group-focus-within:border-gold"
-      >
-        {label}
-        <ChevronIcon className="transition-transform duration-200 ease-out group-hover:-rotate-180 group-focus-within:-rotate-180" />
-      </Link>
-
-      {/* Flush against the header's own bottom edge, flat and opaque — the
-          site's hairline-and-fill vocabulary (border-rule, bg-ground), not a
-          soft-UI card: no radius (see the sitewide radius:0 law) and no
-          shadow, just a border, the same way <MobileMenu/>'s overlay and
-          every product tile already read. Five leagues today, one column —
-          revisit a multi-column layout if the catalog ever outgrows it. */}
-      <div
-        role="menu"
-        aria-label={label}
-        className="invisible absolute start-0 top-full z-50 flex w-max min-w-44 flex-col border border-rule bg-ground p-2 opacity-0 transition-[opacity,visibility] duration-150 ease-out group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
-      >
-        {leagues.map((league) => (
-          <Link
-            key={league.slug}
-            href={`/shop/${league.slug}`}
-            role="menuitem"
-            className="px-4 py-2 text-[13px] whitespace-nowrap text-ink-soft transition-colors hover:bg-tile hover:text-ink"
-          >
-            {localName(league, locale)}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/** The dropdown's one affordance that isn't a link — rotates open on hover
-    or focus, the same transition every other hover state in this header
-    uses, so it reads as part of the same system rather than a new one. */
-function ChevronIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      width="10"
-      height="10"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      aria-hidden
-      className={className}
-    >
-      <path d="M3.5 6 8 10.5 12.5 6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

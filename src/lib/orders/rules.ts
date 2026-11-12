@@ -1,5 +1,5 @@
 /** Pure validation rules for order lines and customer details (unit-tested). */
-import { maxPatches } from "../patch-limits";
+import { FULL_VERSION_PATCH, maxPatches } from "../patch-limits";
 
 export const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"] as const;
 export const KIDS_SIZES = ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28"] as const;
@@ -41,6 +41,9 @@ export function validatePrint(name?: string | null, number?: string | null): str
 
 export const PATCHES = {
   champions_league: { label_ar: "شارة دوري الأبطال", clubs: true, nations: false },
+  // owner decision 2026-11-12: the badges as worn in the Champions League that season (may include the titles badge
+  // and a sponsor patch). Alone on the shirt; priced as 3 patches on retro, 2 on current (src/lib/patch-limits.ts).
+  champions_league_full: { label_ar: "شارات دوري الأبطال كاملة (نسخة المباريات)", clubs: true, nations: false },
   europa_league: { label_ar: "شارة الدوري الأوروبي", clubs: true, nations: false },
   club_world_cup: { label_ar: "شارة كأس العالم للأندية", clubs: true, nations: false },
   league: { label_ar: "شارة الدوري", clubs: true, nations: false },
@@ -67,6 +70,7 @@ export type PatchId = keyof typeof PATCHES;
  */
 export function checkPatches(patches: PatchId[], team: { type: "club" | "national"; league_id: string | null }, season?: string | null): string | null {
   // owner decision 2026-11-10: La Liga 2025/26 + 2026/27 shirts take only 1 (src/lib/patch-limits.ts)
+  if (patches.includes(FULL_VERSION_PATCH) && patches.length > 1) return "the Champions League full version goes on the shirt alone - no other patch with it";
   const max = maxPatches({ type: team.type, leagueId: team.league_id, season });
   if (patches.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
   for (const p of patches) {

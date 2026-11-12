@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { accessoryDeals, cartTotals, priceLine, round2 } from "@/data/pricing";
+import { accessoryDeals, cartTotals, isRetroSeason, priceLine, round2 } from "@/data/pricing";
+import { patchPieces } from "@/lib/patch-limits";
 import { accessoryHref } from "@/data/accessories";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
 import type { AccessoryCategory } from "@/data/types";
@@ -85,7 +86,7 @@ export function CartView({
       if (!product) return null;
       const priced = priceLine(product.season, item.size, item.version, item.qty, {
         nameNumber: Boolean(item.nameNumber),
-        patchCount: item.patches.length,
+        patchCount: patchPieces(item.patches, isRetroSeason(product.season)),
         sleeve: item.sleeve,
       });
       return { item, product, priced, key: lineKey(item) };

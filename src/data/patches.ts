@@ -62,6 +62,7 @@ const WORLD_CUP_PEACE_ART = "/patches/world-cup-peace.jpg";
 export const PATCH_PROP_KEYS: Record<PatchId, string> = {
   league: "propPatchLeague",
   champions_league: "propPatchChampionsLeague",
+  champions_league_full: "propPatchChampionsLeagueFull",
   europa_league: "propPatchEuropaLeague",
   club_world_cup: "propPatchChampionsLeague",
   coppa_italia: "propPatchCoppaItalia",
@@ -102,6 +103,12 @@ export function patchOptionsFor(product: {
       image: CHAMPIONS_LEAGUE_ART[teamSlug] ?? CHAMPIONS_LEAGUE_GENERAL,
       labelKey: "patchChampionsLeague",
     });
+    // owner decision 2026-11-12: the full match version (badges as worn that season), same artwork, goes on alone
+    options.push({
+      id: "champions_league_full",
+      image: CHAMPIONS_LEAGUE_ART[teamSlug] ?? CHAMPIONS_LEAGUE_GENERAL,
+      labelKey: "patchChampionsLeagueFull",
+    });
     options.push({ id: "europa_league", image: EUROPA_LEAGUE_ART, labelKey: "patchEuropaLeague" });
     if (product.league === "serie-a") {
       options.push({ id: "coppa_italia", image: COPPA_ITALIA_ART, labelKey: "patchCoppaItalia" });
@@ -116,4 +123,35 @@ export function patchOptionsFor(product: {
     ];
   }
   return [];
+}
+
+/**
+ * The patch NAME the supplier sheet writes for each id (owner request 2026-11-12: "just write the patch
+ * name"). `league` gets the league's own name, e.g. "Premier League patch".
+ */
+export function patchSupplierName(id: PatchId, leagueId: string | null): string {
+  switch (id) {
+    case "league": {
+      const league = leagueId ? leagueId.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") : "League";
+      return `${league} patch`;
+    }
+    case "champions_league":
+      return "Champions League";
+    case "champions_league_full":
+      return "Champions League FULL SET + sponsor";
+    case "europa_league":
+      return "Europa League";
+    case "club_world_cup":
+      return "Club World Cup";
+    case "coppa_italia":
+      return "Coppa Italia";
+    case "world_cup":
+      return "World Cup";
+    case "world_cup_peace":
+      return "World Cup Peace";
+    case "world_cup_champions":
+      return "World Cup Champions";
+    default:
+      return String(id);
+  }
 }

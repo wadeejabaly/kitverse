@@ -1,6 +1,6 @@
 import type { Product } from "@/data/types";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
-import { maxPatches } from "@/lib/patch-limits";
+import { FULL_VERSION_PATCH, maxPatches } from "@/lib/patch-limits";
 
 /**
  * Locale-aware reads of a Product's bilingual fields, plus the small display
@@ -78,6 +78,8 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
         : null;
   if (!team) return [];
   const max = maxPatches({ type: team.type, leagueId: team.league_id, season: product.season });
+  // the Champions League full version goes on the shirt alone (owner decision 2026-11-12)
+  if (team.type === "club" && patches.includes(FULL_VERSION_PATCH as PatchId)) return [FULL_VERSION_PATCH as PatchId];
   const seen = new Set<PatchId>();
   const valid: PatchId[] = [];
   for (const p of patches) {

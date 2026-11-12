@@ -1,4 +1,5 @@
 import "server-only";
+import { patchPieces } from "@/lib/patch-limits";
 import { db, must } from "../db";
 import { currentPriceList } from "../pricing/load";
 import { quote, type CartItem, type Quote } from "../pricing/engine";
@@ -127,7 +128,7 @@ export async function requote(order: OrderRow): Promise<Quote> {
     cart.push({
       key: i.id, title: p.title_ar ?? p.title_en, audience: i.audience, version: i.version, sleeve: i.sleeve, era: p.era,
       kitWithShorts: p.is_kit_with_shorts, size: i.size, qty: i.qty, printNameNumber: !!(i.print_name || i.print_number),
-      patches: i.patches.length,
+      patches: patchPieces(i.patches, p.era === "retro"), // full version = 2-3 patches (owner decision 2026-11-12)
     });
   }
   const adj = must(await db().from("adjustments").select("reason,amount").eq("order_id", order.id), "adjustments") as { reason: string; amount: number }[];
