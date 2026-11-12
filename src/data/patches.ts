@@ -126,42 +126,32 @@ export function patchOptionsFor(product: {
 }
 
 /**
- * The artwork for one patch id on a given club/national shirt, for the SUPPLIER sheet (owner request
- * 2026-11-12: the Chinese supplier reads pictures, not words). Same images as the storefront picker;
- * null when we have no art for it (e.g. a league patch for a league without artwork, club_world_cup),
- * in which case the sheet falls back to a few words.
+ * The patch NAME the supplier sheet writes for each id (owner request 2026-11-12: "just write the patch
+ * name"). `league` gets the league's own name, e.g. "Premier League patch".
  */
-export function patchArt(id: PatchId, shirt: { teamSlug: string | null; leagueId: string | null }): string | null {
+export function patchSupplierName(id: PatchId, leagueId: string | null): string {
   switch (id) {
-    case "league":
-      return (shirt.leagueId && LEAGUE_ART[shirt.leagueId]) || null;
+    case "league": {
+      const league = leagueId ? leagueId.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ") : "League";
+      return `${league} patch`;
+    }
     case "champions_league":
+      return "Champions League";
     case "champions_league_full":
-      return (shirt.teamSlug && CHAMPIONS_LEAGUE_ART[shirt.teamSlug]) || CHAMPIONS_LEAGUE_GENERAL;
+      return "Champions League FULL SET + sponsor";
     case "europa_league":
-      return EUROPA_LEAGUE_ART;
+      return "Europa League";
+    case "club_world_cup":
+      return "Club World Cup";
     case "coppa_italia":
-      return COPPA_ITALIA_ART;
+      return "Coppa Italia";
     case "world_cup":
-      return WORLD_CUP_ART;
-    case "world_cup_champions":
-      return WORLD_CUP_CHAMPIONS_ART;
+      return "World Cup";
     case "world_cup_peace":
-      return WORLD_CUP_PEACE_ART;
+      return "World Cup Peace";
+    case "world_cup_champions":
+      return "World Cup Champions";
     default:
-      return null;
+      return String(id);
   }
 }
-
-/** A few English words for the supplier when a patch has no picture, or needs a hint next to it. */
-export const PATCH_SUPPLIER_WORDS: Record<PatchId, string> = {
-  league: "LEAGUE PATCH",
-  champions_league: "UCL",
-  champions_league_full: "UCL FULL SET + SPONSOR",
-  europa_league: "UEL",
-  club_world_cup: "CLUB WORLD CUP",
-  coppa_italia: "COPPA ITALIA",
-  world_cup: "WORLD CUP",
-  world_cup_peace: "WORLD CUP PEACE",
-  world_cup_champions: "WORLD CUP CHAMPIONS",
-};
