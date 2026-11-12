@@ -4,19 +4,23 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
-import { EMPTY_COSTS, PAY_METHODS, parseCosts, parseExpenses, shekelsToAgorot, type Costs } from "@/lib/profit/costs";
+import { ILS_FIELDS, PAY_METHODS, SUPPLIER_FIELDS, parseCosts, parseExpenses, shekelsToAgorot } from "@/lib/profit/costs";
 
 /** Admin Profit (owner request 2026-11-13): the owner's own costs and other expenses, in bot_settings. */
 
 export type ProfitFormState = { ok: boolean; message: string };
 
-const COST_FIELDS = (Object.keys(EMPTY_COSTS) as (keyof Costs)[]).filter((k) => k !== "fees") as Exclude<keyof Costs, "fees">[];
-
 export async function saveCosts(_prev: ProfitFormState, form: FormData): Promise<ProfitFormState> {
   const staff = await requireStaff();
   const value: Record<string, unknown> = { fees: {} };
-  for (const k of COST_FIELDS) {
-    const a = shekelsToAgorot(String(form.get(k) ?? ""));
+  value.supplierCurrency = form.get("supplierCurrency") === "USD" ? "USD" : "ILS";
+  const rate = Number(String(form.get("usdRate") ?? "").replace(",", ".").trim() || "0");
+  if (!Number.isFinite(rate) || rate < 0 || rate > 20) return { ok: false, message: "The dollar rate is shekels per dollar, e.g. 3.20." };
+  value.usdRate = rate;
+  if (value.supplierCurrency === "USD" && !rate) return { ok: false, message: "Write the dollar rate (shekels per dollar), e.g. 3.20." };
+  // the same "45.50" parser for both: it gives the amount in cents/agorot
+  for (const k of [...SUPPLIER_FIELDS, ...ILS_FIELDS]) {
+    const a = shekelsToAgorot(String(form.get(k) ?? "").replace("$", ""));
     if (a === null) return { ok: false, message: `"${String(form.get(k))}" isn't an amount - write it like 45 or 45.50.` };
     value[k] = a;
   }

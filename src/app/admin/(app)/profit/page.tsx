@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AlertTriangle, Megaphone, Package, PiggyBank, Receipt, Scale, ShoppingBag, TrendingUp, Wallet } from "lucide-react";
 import { db } from "@/lib/db";
 import { isRetroSeason } from "@/data/pricing";
+import priceList from "@/data/price-list.json";
 import { israelDayEnd, israelDayStart } from "@/lib/time";
 import { missingCosts, orderProfit, parseCosts, parseExpenses, type OrderForProfit, type OrderProfit } from "@/lib/profit/costs";
 import { adSpend } from "@/lib/profit/meta-ads";
@@ -48,10 +49,14 @@ function period(key: string, today: string): { since: string; until: string; lab
 type OrderRow = {
   id: string; number: number; status: string; total: number; subtotal: number; delivery_fee: number; discount_total: number;
   payment_method: string | null; payment_status: string; gift_boxes: number | null; confirmed_at: string; customer_id: string;
+  quote: { delivery?: { zoneId?: string } | null } | null;
   address: { full_name?: string; town?: string } | null;
   customer: { ig_user_id: string | null; full_name: string | null; display_name: string | null; ig_username: string | null } | null;
 };
-type ItemRow = { order_id: string; qty: number; version: string; sleeve: string; print_name: string | null; print_number: string | null; patches: string[] | null; box: boolean; product: { season: string | null; era: string | null } | null };
+type ItemRow = { order_id: string; qty: number; version: string; sleeve: string; size: string; audience: string; print_name: string | null; print_number: string | null; patches: string[] | null; box: boolean; product: { season: string | null; era: string | null; is_kit_with_shorts: boolean | null } | null };
+
+/** The north zone's delivery fee (agorot) - tells an order without a recorded zone apart (older orders). */
+const NORTH_FEE = Math.round(((priceList as { delivery?: { zones?: { id: string; fee: number }[] } }).delivery?.zones?.find((z) => z.id === "north")?.fee ?? 0) * 100);
 
 async function inChunks<T>(ids: string[], load: (chunk: string[]) => PromiseLike<{ data: unknown; error: { message: string } | null }>): Promise<T[]> {
   const out: T[] = [];
@@ -72,7 +77,7 @@ export default async function ProfitPage({ searchParams }: PageProps<"/admin/pro
   const [settings, ordersRes, ads] = await Promise.all([
     db().from("bot_settings").select("key,value").in("key", ["profit_costs", "profit_expenses"]),
     db().from("orders")
-      .select("id,number,status,total,subtotal,delivery_fee,discount_total,payment_method,payment_status,gift_boxes,confirmed_at,customer_id,address,customer:customers(ig_user_id,full_name,display_name,ig_username)")
+      .select("id,number,status,total,subtotal,delivery_fee,discount_total,payment_method,payment_status,gift_boxes,confirmed_at,customer_id,address,quote,customer:customers(ig_user_id,full_name,display_name,ig_username)")
       .not("confirmed_at", "is", null).neq("status", "cancelled").gte("confirmed_at", startIso(since)).lte("confirmed_at", endIso(until))
       .order("confirmed_at", { ascending: false }).limit(5000),
     adSpend(since, until),
@@ -87,7 +92,7 @@ export default async function ProfitPage({ searchParams }: PageProps<"/admin/pro
   const orders = ((ordersRes.data ?? []) as unknown as OrderRow[]).filter((o) => !o.customer?.ig_user_id?.startsWith("sim:"));
   const ids = orders.map((o) => o.id);
   const [items, accessories] = await Promise.all([
-    inChunks<ItemRow>(ids, (c) => db().from("order_items").select("order_id,qty,version,sleeve,print_name,print_number,patches,box,product:products(season,era)").in("order_id", c)),
+    inChunks<ItemRow>(ids, (c) => db().from("order_items").select("order_id,qty,version,sleeve,size,audience,print_name,print_number,patches,box,product:products(season,era,is_kit_with_shorts)").in("order_id", c)),
     inChunks<{ order_id: string; category: string; qty: number }>(ids, (c) => db().from("order_accessories").select("order_id,category,qty").in("order_id", c)),
   ]);
 
@@ -95,8 +100,9 @@ export default async function ProfitPage({ searchParams }: PageProps<"/admin/pro
     const input: OrderForProfit = {
       id: o.id, number: o.number, total: o.total, subtotal: o.subtotal, delivery_fee: o.delivery_fee, discount_total: o.discount_total,
       payment_method: o.payment_method, gift_boxes: o.gift_boxes ?? 0,
+      zone: o.quote?.delivery?.zoneId ?? (NORTH_FEE && o.delivery_fee === NORTH_FEE ? "north" : null),
       items: items.filter((i) => i.order_id === o.id).map((i) => ({
-        qty: i.qty, version: i.version, sleeve: i.sleeve,
+        qty: i.qty, version: i.version, sleeve: i.sleeve, size: i.size, audience: i.audience, set: !!i.product?.is_kit_with_shorts,
         retro: i.product?.era === "retro" || (!!i.product?.season && isRetroSeason(i.product.season)),
         print: !!(i.print_name || i.print_number), patches: (i.patches ?? []).length, box: i.box,
       })),

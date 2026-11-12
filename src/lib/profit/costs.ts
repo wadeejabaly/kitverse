@@ -22,30 +22,51 @@ export interface Fee {
 }
 
 export interface Costs {
-  /** supplier price of one shirt, agorot */
+  /**
+   * The currency the SUPPLIER fields below are in (owner's sheet 2026-11-13 is in US dollars), and the
+   * shekels per dollar used to convert them. Supplier fields are in that currency's cents.
+   */
+  supplierCurrency: "ILS" | "USD";
+  usdRate: number;
+  // ---- supplier prices (in supplierCurrency, cents) ----
+  /** one shirt */
   shirtFan: number;
   shirtPlayer: number;
   shirtRetro: number;
-  /** extra the supplier charges for long sleeve, per shirt */
+  /** extra for long sleeve, per shirt */
   longSleeveExtra: number;
+  /** extra for 3XL / 4XL, per shirt */
+  bigSizeExtra: number;
+  /** a kids set (shirt + shorts) */
+  kidsSet: number;
+  /** an adult set (shirt + shorts) */
+  adultSet: number;
   /** printing a name + number, per shirt */
   nameNumber: number;
   /** one patch */
   patch: number;
+  /** shipping from the supplier to Israel, per shirt */
+  supplierShippingPerShirt: number;
+  // ---- in shekels (agorot) ----
   giftBox: number;
   keychain: number;
   scarf: number;
-  /** shipping from the supplier to Israel, per shirt */
-  supplierShippingPerShirt: number;
-  /** what the courier charges to deliver one order to the customer */
-  deliveryPerOrder: number;
+  /** what the courier charges to deliver one order, north zone / every other zone */
+  deliveryNorth: number;
+  deliveryOther: number;
   /** payment / collection fees by payment method */
   fees: Record<PayMethod, Fee>;
 }
 
+/** Fields priced by the supplier (converted with usdRate when supplierCurrency is USD). */
+export const SUPPLIER_FIELDS = ["shirtFan", "shirtPlayer", "shirtRetro", "longSleeveExtra", "bigSizeExtra", "kidsSet", "adultSet", "nameNumber", "patch", "supplierShippingPerShirt"] as const;
+/** Fields always in shekels. */
+export const ILS_FIELDS = ["giftBox", "scarf", "keychain", "deliveryNorth", "deliveryOther"] as const;
+
 export const EMPTY_COSTS: Costs = {
-  shirtFan: 0, shirtPlayer: 0, shirtRetro: 0, longSleeveExtra: 0, nameNumber: 0, patch: 0, giftBox: 0, keychain: 0, scarf: 0,
-  supplierShippingPerShirt: 0, deliveryPerOrder: 0,
+  supplierCurrency: "ILS", usdRate: 0,
+  shirtFan: 0, shirtPlayer: 0, shirtRetro: 0, longSleeveExtra: 0, bigSizeExtra: 0, kidsSet: 0, adultSet: 0, nameNumber: 0, patch: 0, supplierShippingPerShirt: 0,
+  giftBox: 0, keychain: 0, scarf: 0, deliveryNorth: 0, deliveryOther: 0,
   fees: { cod: { pct: 0, fixed: 0 }, bit_personal: { pct: 0, fixed: 0 }, paypal_me: { pct: 0, fixed: 0 }, paypal: { pct: 0, fixed: 0 }, bit: { pct: 0, fixed: 0 } },
 };
 
@@ -55,7 +76,11 @@ const num = (v: unknown) => (typeof v === "number" && Number.isFinite(v) && v >=
 export function parseCosts(value: unknown): Costs {
   const v = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
   const out: Costs = { ...EMPTY_COSTS, fees: { ...EMPTY_COSTS.fees } };
-  for (const k of Object.keys(EMPTY_COSTS) as (keyof Costs)[]) if (k !== "fees") (out[k] as number) = Math.round(num(v[k]));
+  for (const k of [...SUPPLIER_FIELDS, ...ILS_FIELDS]) out[k] = Math.round(num(v[k]));
+  // the first version had one delivery cost for every zone
+  if (!v.deliveryNorth && !v.deliveryOther && num(v.deliveryPerOrder)) out.deliveryNorth = out.deliveryOther = Math.round(num(v.deliveryPerOrder));
+  out.supplierCurrency = v.supplierCurrency === "USD" ? "USD" : "ILS";
+  out.usdRate = Math.min(20, num(v.usdRate));
   const fees = (v.fees && typeof v.fees === "object" ? v.fees : {}) as Record<string, { pct?: unknown; fixed?: unknown } | undefined>;
   for (const m of PAY_METHODS) out.fees[m] = { pct: Math.min(100, num(fees[m]?.pct)), fixed: Math.round(num(fees[m]?.fixed)) };
   return out;
@@ -68,7 +93,8 @@ export function missingCosts(c: Costs): string[] {
   if (!c.shirtPlayer) out.push("player shirt");
   if (!c.shirtRetro) out.push("retro shirt");
   if (!c.supplierShippingPerShirt) out.push("shipping from the supplier");
-  if (!c.deliveryPerOrder) out.push("delivery to the customer");
+  if (!c.deliveryNorth || !c.deliveryOther) out.push("delivery to the customer");
+  if (c.supplierCurrency === "USD" && !c.usdRate) out.push("dollar rate");
   return out;
 }
 
@@ -81,7 +107,9 @@ export interface OrderForProfit {
   discount_total: number;
   payment_method: string | null;
   gift_boxes: number;
-  items: { qty: number; version: string; sleeve: string; retro: boolean; print: boolean; patches: number; box: boolean }[];
+  /** delivery zone id from the order's quote ("north", "center", ...), null when unknown */
+  zone: string | null;
+  items: { qty: number; version: string; sleeve: string; retro: boolean; print: boolean; patches: number; box: boolean; size?: string; audience?: string; set?: boolean }[];
   accessories: { category: string; qty: number }[];
 }
 
@@ -103,19 +131,25 @@ export interface OrderProfit {
 
 /** Profit of one order before ads and other expenses. */
 export function orderProfit(o: OrderForProfit, c: Costs): OrderProfit {
+  // supplier prices -> agorot
+  const rate = c.supplierCurrency === "USD" ? c.usdRate : 1;
+  const sup = (cents: number) => Math.round(cents * rate);
   let shirts = 0, productCost = 0, customisationCost = 0, extrasCost = 0;
   for (const it of o.items) {
     const q = Math.max(0, it.qty);
     shirts += q;
-    const base = it.retro ? c.shirtRetro : it.version === "player" ? c.shirtPlayer : c.shirtFan;
-    productCost += q * (base + (it.sleeve === "long" ? c.longSleeveExtra : 0));
-    customisationCost += q * ((it.print ? c.nameNumber : 0) + it.patches * c.patch);
+    const base = it.audience === "kids" ? c.kidsSet || c.shirtFan
+      : it.set ? c.adultSet || c.shirtFan
+      : it.retro ? c.shirtRetro : it.version === "player" ? c.shirtPlayer : c.shirtFan;
+    const big = it.size === "3XL" || it.size === "4XL" ? c.bigSizeExtra : 0;
+    productCost += q * sup(base + (it.sleeve === "long" ? c.longSleeveExtra : 0) + big);
+    customisationCost += q * sup((it.print ? c.nameNumber : 0) + it.patches * c.patch);
     if (it.box) extrasCost += q * c.giftBox;
   }
   extrasCost += Math.max(0, o.gift_boxes) * c.giftBox;
   for (const a of o.accessories) extrasCost += Math.max(0, a.qty) * (a.category === "scarf" ? c.scarf : a.category === "keychain" ? c.keychain : 0);
-  const supplierShipping = shirts * c.supplierShippingPerShirt;
-  const delivery = c.deliveryPerOrder;
+  const supplierShipping = shirts * sup(c.supplierShippingPerShirt);
+  const delivery = o.zone === "north" ? c.deliveryNorth : c.deliveryOther;
   const fee = c.fees[(o.payment_method ?? "cod") as PayMethod] ?? { pct: 0, fixed: 0 };
   const paymentFee = Math.round((o.total * fee.pct) / 100) + fee.fixed;
   const totalCost = productCost + customisationCost + extrasCost + supplierShipping + delivery + paymentFee;
