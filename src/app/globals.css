@@ -201,6 +201,11 @@
      theoretical: it is why `sm:grid-cols-3 wide:grid-cols-4` rendered the home
      listing 3-up on a 1280px desktop. 56.25rem is the same 900px. */
   --breakpoint-wide: 56.25rem;
+  /* Component breakpoints (owner request 2026-11-12, "responsive optimization"): the header shows its
+     full six-entry nav from `nav` (1024px - below that the entries would squeeze), and the homepage
+     hero goes side by side from `hero` (768px), so a resized laptop window keeps the desktop hero. */
+  --breakpoint-hero: 48rem;
+  --breakpoint-nav: 64rem;
 
   /* Radius 0 is a design decision, not a default — flatten every scale step
      so a stray rounded-* utility cannot soften a corner. */
@@ -1050,7 +1055,7 @@ h2 {
 
 /* Phones: the shirt stacks above the text, so the reading side is the
    whole lower half — darken it evenly instead of by side. */
-@media (width < 56.25rem) {
+@media (width < 48rem) {
   .kv-stadium-shade {
     background: linear-gradient(180deg, rgb(5 9 24 / 0.2) 0%, rgb(5 9 24 / 0.55) 45%, rgb(5 9 24 / 0.85) 75%, var(--flood-ground) 100%);
   }
@@ -1171,7 +1176,7 @@ h2 {
   border-inline-start: 1px solid rgb(255 255 255 / 0.14);
 }
 
-@media (width >= 56.25rem) {
+@media (width >= 80rem) {
   .kv-stadium-meta {
     flex-wrap: nowrap;
   }
@@ -1218,6 +1223,16 @@ h2 {
   }
   .kv-stadium-meta-price {
     font-size: 1.2rem;
+  }
+}
+
+/* Side-by-side hero on a laptop/tablet (768-1279px, owner request 2026-11-12): the price row wraps
+   in the narrower text column, so - as on a phone - the wrapped items drop their dividers. */
+@media (width >= 48rem) and (width < 80rem) {
+  .kv-stadium-meta-item,
+  .kv-stadium-meta-item + .kv-stadium-meta-item {
+    padding-inline: 0 1.5rem;
+    border-inline-start: 0;
   }
 }
 
@@ -1347,7 +1362,7 @@ h2 {
   gap: 0.35rem;
   text-transform: uppercase;
 }
-@media (width < 56.25rem) {
+@media (width < 48rem) {
   .kv-showcase-arrow {
     width: 2.15rem;
     height: 2.15rem;
@@ -1385,7 +1400,7 @@ h2 {
   }
 }
 
-@media (width >= 56.25rem) {
+@media (width >= 64rem) {
   .kv-stadium-badge {
     display: flex;
   }
@@ -2294,4 +2309,284 @@ h2 {
   font-size: 12px;
   font-weight: 700;
 }
+}
+
+/* ---------------------------------------------------------------------------
+   Header navigation (owner request 2026-11-12): six entries, navy dropdowns
+   with subtle gold accents. Colours are the homepage's own --flood-* tokens
+   (navy ground, gold, flood ink) - nothing new. Radius 0 like the rest of the
+   storefront; motion is opacity + a 6px slide, off for reduced motion.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .kv-nav-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 0.7rem;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--ink);
+    transition: color 160ms ease;
+  }
+  .kv-nav-trigger::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0.7rem;
+    bottom: 0.2rem;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .kv-nav-trigger:hover::after,
+  .kv-nav-trigger:focus-visible::after,
+  .kv-nav-trigger[aria-expanded="true"]::after,
+  .kv-nav-trigger[data-active]::after {
+    transform: scaleX(1);
+  }
+  .kv-nav-chevron {
+    opacity: 0.6;
+    transition: transform 220ms ease, opacity 160ms ease;
+  }
+  .kv-nav-trigger[aria-expanded="true"] .kv-nav-chevron {
+    transform: rotate(-180deg);
+    opacity: 1;
+  }
+
+  /* The drop wrapper: mega panels span the header row, compact ones hang under their trigger.
+     padding-top is a transparent bridge so the pointer never "leaves" on its way down. */
+  .kv-nav-drop {
+    position: absolute;
+    top: 100%;
+    z-index: 50;
+    padding-top: 0.25rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 220ms;
+  }
+  .kv-nav-drop[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    transition: opacity 180ms ease, transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s;
+  }
+  .kv-nav-drop[data-layout="mega"] {
+    inset-inline: 1.5rem;
+  }
+  .kv-nav-drop[data-layout="compact"] {
+    inset-inline-start: 0;
+    min-width: 15rem;
+  }
+
+  .kv-nav-panel {
+    background: var(--flood-ground);
+    color: var(--flood-ink);
+    border: 1px solid rgb(201 165 92 / 0.18);
+    border-top: 2px solid var(--flood-gold);
+    box-shadow: 0 28px 60px -24px rgb(10 16 36 / 0.55);
+    padding: 1.5rem 1.75rem 1.25rem;
+    max-height: min(70vh, 34rem);
+    overflow-y: auto;
+  }
+  .kv-nav-drop[data-layout="compact"] .kv-nav-panel {
+    padding: 1rem 1.25rem 0.9rem;
+  }
+
+  .kv-nav-columns {
+    display: grid;
+    gap: 1.25rem 2rem;
+    grid-template-columns: repeat(var(--kv-cols, 1), minmax(0, 1fr));
+  }
+  .kv-nav-columns[data-count="2"] { --kv-cols: 2; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+  .kv-nav-columns[data-count="3"] { --kv-cols: 3; }
+  .kv-nav-columns[data-count="4"] { --kv-cols: 4; }
+  .kv-nav-columns[data-count="5"] { --kv-cols: 5; }
+  .kv-nav-columns[data-count="6"] { --kv-cols: 6; }
+
+  .kv-nav-heading {
+    display: block;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid rgb(201 165 92 / 0.22);
+    color: var(--flood-gold);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .kv-nav-heading-link {
+    transition: color 160ms ease;
+  }
+  .kv-nav-heading-link:hover,
+  .kv-nav-heading-link:focus-visible {
+    color: var(--flood-ink);
+  }
+
+  .kv-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .kv-nav-list[data-flow] {
+    display: block;
+    columns: var(--kv-flow, 1);
+    column-gap: 2rem;
+  }
+  .kv-nav-list[data-flow] > li {
+    break-inside: avoid;
+  }
+
+  .kv-nav-link {
+    display: inline-block;
+    padding: 0.3rem 0;
+    font-size: 14px;
+    color: var(--flood-ink-soft);
+    transition: color 160ms ease, transform 200ms ease;
+  }
+  .kv-nav-link:hover,
+  .kv-nav-link:focus-visible {
+    color: var(--flood-ink);
+    transform: translateX(3px);
+  }
+  [dir="rtl"] .kv-nav-link:hover,
+  [dir="rtl"] .kv-nav-link:focus-visible {
+    transform: translateX(-3px);
+  }
+
+  .kv-nav-cta-row {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgb(201 165 92 / 0.18);
+  }
+  .kv-nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--flood-gold);
+    font-size: 13px;
+    font-weight: 700;
+    transition: color 160ms ease;
+  }
+  .kv-nav-cta:hover,
+  .kv-nav-cta:focus-visible {
+    color: var(--flood-ink);
+  }
+  .kv-nav-cta-arrow {
+    transition: transform 200ms ease;
+  }
+  [dir="ltr"] .kv-nav-cta-arrow {
+    transform: scaleX(-1);
+  }
+  [dir="rtl"] .kv-nav-cta:hover .kv-nav-cta-arrow {
+    transform: translateX(-3px);
+  }
+  [dir="ltr"] .kv-nav-cta:hover .kv-nav-cta-arrow {
+    transform: scaleX(-1) translateX(-3px);
+  }
+
+  /* Phone menu (same navy/gold vocabulary): accordion rows. */
+  .kv-mnav {
+    background: var(--flood-ground);
+    color: var(--flood-ink);
+  }
+  .kv-mnav-row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: start;
+    color: var(--flood-ink);
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    transition: color 160ms ease;
+  }
+  .kv-mnav-row:hover,
+  .kv-mnav-row[aria-expanded="true"] {
+    color: var(--flood-gold);
+  }
+  .kv-mnav-row .kv-nav-chevron {
+    width: 14px;
+    height: 14px;
+  }
+  .kv-mnav-row[aria-expanded="true"] .kv-nav-chevron {
+    transform: rotate(-180deg);
+    opacity: 1;
+  }
+  .kv-mnav-sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .kv-mnav-sub[data-open="true"] {
+    grid-template-rows: 1fr;
+  }
+  .kv-mnav-sub > div {
+    overflow: hidden;
+  }
+  .kv-mnav-sublink {
+    display: block;
+    padding: 0.5rem 0;
+    font-size: 15px;
+    color: var(--flood-ink-soft);
+    transition: color 160ms ease;
+  }
+  .kv-mnav-sublink:hover {
+    color: var(--flood-ink);
+  }
+  .kv-mnav-subrow {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: start;
+    color: var(--flood-ink);
+  }
+  .kv-mnav-subrow[aria-expanded="true"] {
+    color: var(--flood-gold);
+  }
+  .kv-mnav-subrow[aria-expanded="true"] .kv-nav-chevron {
+    transform: rotate(-180deg);
+  }
+  .kv-mnav-label {
+    display: block;
+    margin: 0.75rem 0 0.25rem;
+    color: var(--flood-gold);
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-nav-drop,
+  .kv-nav-drop[data-open="true"],
+  .kv-nav-trigger::after,
+  .kv-nav-link,
+  .kv-mnav-sub {
+    transition: none;
+  }
+  .kv-nav-drop { transform: none; }
+  .kv-nav-link:hover,
+  [dir="rtl"] .kv-nav-link:hover { transform: none; }
+}
+
+/* Phone menu slides in from the inline start (the right in Arabic) - owner request 2026-11-12. */
+@keyframes kv-mnav-in {
+  from { opacity: 0; transform: translateX(var(--kv-mnav-from, -24px)); }
+  to { opacity: 1; transform: none; }
+}
+[dir="rtl"] .kv-mnav-enter { --kv-mnav-from: 24px; }
+.kv-mnav-enter { animation: kv-mnav-in 280ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .kv-mnav-enter { animation: none; }
 }

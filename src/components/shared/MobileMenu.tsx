@@ -1,35 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { BrandBadge } from "@/components/shared/BrandBadge";
 import { CartLink } from "@/components/shared/CartLink";
 import { LocaleToggle } from "@/components/shared/LocaleToggle";
-import type { League } from "@/data/catalog";
-import { localName } from "@/lib/local-name";
+import type { NavColumn, NavEntry, NavLink } from "@/lib/nav-data";
 
 /**
- * Below 900px the nav collapses to a hamburger that opens a full-screen menu.
- *
- * The overlay is new to this wave — the mockup has no mobile state — so it is
- * built from the same vocabulary as everything else: the page ground, hairline
- * rules, mono eyebrows for the group labels (Latin only; the globals rule
- * neutralises them in Arabic), and large quiet links. No new colours, no new
- * shapes, no new radius.
- *
- * The trigger is positioned with logical properties, so it sits at the inline
- * start in English and mirrors in Arabic without a second rule.
+ * Below 900px the nav collapses to a hamburger that opens a full-screen menu (owner request
+ * 2026-11-12): the same six entries as the desktop header, each category an expandable row, and the
+ * leagues nested one level further (league -> its clubs). Navy + gold like the desktop dropdowns
+ * (.kv-mnav* in globals.css). Search and the bag stay in the header bar itself, so they are one tap
+ * away without opening the menu; they are repeated at the bottom of the menu too.
  */
-export function MobileMenu({ leagues }: { leagues: League[] }) {
+export function MobileMenu({ entries }: { entries: NavEntry[] }) {
+  const viewAll = useTranslations("nav")("viewAll");
   const t = useTranslations("nav");
-  const tShop = useTranslations("shop");
-  const locale = useLocale();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  // A navigation closes the menu: the overlay is a route picker, and leaving
-  // it open over the new page would trap the reader.
+  // A navigation closes the menu: the overlay is a route picker.
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -56,7 +49,7 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
         onClick={() => setOpen(true)}
         aria-label={t("openMenu")}
         aria-expanded={open}
-        className="-ms-2 flex h-9 w-9 shrink-0 flex-col justify-center gap-[5px] ps-2 wide:hidden"
+        className="-ms-2 flex h-9 w-9 shrink-0 flex-col justify-center gap-[5px] ps-2 nav:hidden"
       >
         <span aria-hidden className="block h-px w-5 bg-ink" />
         <span aria-hidden className="block h-px w-5 bg-ink" />
@@ -64,63 +57,57 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
       </button>
 
       {open ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={t("menuBrowse")}
-          className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ground"
-        >
-          <div className="flex items-center justify-between border-b border-rule px-6 py-5">
-            {/* The crest alone, exactly as the header behind it, so the
-                overlay reads as the same site rather than a second surface. */}
-            <BrandBadge size={32} />
+        <div role="dialog" aria-modal="true" aria-label={t("menuBrowse")} className="kv-mnav kv-mnav-enter fixed inset-0 z-50 flex flex-col overflow-y-auto">
+          <div className="flex items-center justify-between border-b border-[rgb(201_165_92_/_0.25)] px-6 py-4">
+            <BrandBadge size={44} />
             <button
               type="button"
               onClick={() => setOpen(false)}
               aria-label={t("closeMenu")}
-              className="text-sm text-ink-soft transition-colors hover:text-ink"
+              className="grid h-10 w-10 place-items-center text-[var(--flood-ink)] transition-colors hover:text-[var(--flood-gold)]"
             >
-              {t("closeMenu")}
+              <svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" strokeLinecap="round" />
+              </svg>
             </button>
           </div>
 
-          <nav className="flex flex-col px-6 pb-16">
-            <MenuGroup label={t("menuBrowse")}>
-              <MenuLink href="/shop">{t("shop")}</MenuLink>
-              <MenuLink href="/shop/national-teams">{t("nationalTeams")}</MenuLink>
-              <MenuLink href="/shop/new-season">{tShop("kinds.current")}</MenuLink>
-              <MenuLink href="/shop/last-season">{tShop("kinds.previous")}</MenuLink>
-              <MenuLink href="/shop/retro">{t("retro")}</MenuLink>
-              <MenuLink href="/accessories">{t("accessories")}</MenuLink>
-            </MenuGroup>
+          <nav aria-label={t("menuBrowse")} className="flex flex-1 flex-col px-6 pb-8">
+            {entries.map((entry) =>
+              entry.panel ? (
+                <div key={entry.id}>
+                  <button
+                    type="button"
+                    className="kv-mnav-row"
+                    aria-expanded={expanded === entry.id}
+                    onClick={() => setExpanded(expanded === entry.id ? null : entry.id)}
+                  >
+                    <span>{entry.label}</span>
+                    <Chevron />
+                  </button>
+                  <div className="kv-mnav-sub" data-open={expanded === entry.id}>
+                    <div>
+                      <div className="pb-3 pt-1">
+                        {entry.panel.cta ? (
+                          <ItemLink link={entry.panel.cta} className="kv-mnav-sublink font-bold !text-[var(--flood-gold)]" />
+                        ) : null}
+                        {entry.panel.columns.map((column, index) => (
+                          <MobileColumn key={index} column={column} viewAll={viewAll} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link key={entry.id} href={entry.href ?? "/"} className="kv-mnav-row">
+                  {entry.label}
+                </Link>
+              ),
+            )}
 
-            {leagues.length > 0 ? (
-              <MenuGroup label={t("leagues")}>
-                {leagues.map((league) => (
-                  <MenuLink key={league.slug} href={`/shop/${league.slug}`}>
-                    {localName(league, locale)}
-                  </MenuLink>
-                ))}
-              </MenuGroup>
-            ) : null}
-
-            <MenuGroup label={t("menuHelp")}>
-              <MenuLink href="/help">{t("help")}</MenuLink>
-              <MenuLink href="/size-guide">{t("sizeGuide")}</MenuLink>
-              <MenuLink href="/shipping">{t("shippingOnly")}</MenuLink>
-              <MenuLink href="/returns">{t("returns")}</MenuLink>
-              <MenuLink href="/about">{t("about")}</MenuLink>
-              <MenuLink href="/contact">{t("contact")}</MenuLink>
-              {/* /o/track lives outside the [locale] route tree (see Footer.tsx's note) - a plain
-                  <a>, not <MenuLink>/<Link>, so it never gets a locale prefix it can't resolve. */}
-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- outside this root layout, so this is a full page load anyway */}
-              <a href="/o/track" className="text-xl font-bold transition-colors hover:text-ink-soft">
-                {t("trackOrder")}
-              </a>
-            </MenuGroup>
-
-            <div className="flex items-center justify-between gap-6 border-t border-rule pt-6 text-sm text-ink-soft">
-              <Link href="/search" className="transition-colors hover:text-ink">
+            {/* Search, bag and language once more at the bottom, on a light strip so they keep their usual look. */}
+            <div className="mt-8 flex items-center justify-between gap-6 bg-ground px-4 py-4 text-sm text-ink">
+              <Link href="/search" className="font-bold transition-colors hover:text-ink-soft">
                 {t("search")}
               </Link>
               <CartLink />
@@ -133,25 +120,61 @@ export function MobileMenu({ leagues }: { leagues: League[] }) {
   );
 }
 
-function MenuGroup({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+/** A league column (heading with a link) becomes a nested expandable row; anything else lists its links. */
+function MobileColumn({ column, viewAll }: { column: NavColumn; viewAll: string }) {
+  const [open, setOpen] = useState(false);
+  const heading = column.heading;
+  if (heading?.href) {
+    return (
+      <div>
+        <button type="button" className="kv-mnav-subrow" aria-expanded={open} onClick={() => setOpen(!open)}>
+          <span>{heading.label}</span>
+          <Chevron />
+        </button>
+        <div className="kv-mnav-sub" data-open={open}>
+          <div>
+            <div className="ps-4 pb-2">
+              <ItemLink link={{ href: heading.href, label: viewAll }} className="kv-mnav-sublink font-bold !text-[var(--flood-gold)]" />
+              {column.links.map((link) => (
+                <ItemLink key={link.href} link={link} className="kv-mnav-sublink" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
-    <div className="border-b border-rule py-7">
-      <span className="mono-eyebrow mb-4 block text-ink-soft">{label}</span>
-      <div className="flex flex-col gap-4">{children}</div>
+    <div>
+      {heading ? <span className="kv-mnav-label">{heading.label}</span> : null}
+      <div className={column.flow ? "grid grid-cols-2 gap-x-6" : ""}>
+        {column.links.map((link) => (
+          <ItemLink key={link.href} link={link} className="kv-mnav-sublink" />
+        ))}
+      </div>
     </div>
   );
 }
 
-function MenuLink({ href, children }: { href: string; children: React.ReactNode }) {
+function ItemLink({ link, className }: { link: NavLink; className: string }) {
+  if (link.plain) {
+    return (
+      <a href={link.href} className={className}>
+        {link.label}
+      </a>
+    );
+  }
   return (
-    <Link href={href} className="text-xl font-bold transition-colors hover:text-ink-soft">
-      {children}
+    <Link href={link.href} className={className}>
+      {link.label}
     </Link>
+  );
+}
+
+function Chevron() {
+  return (
+    <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden className="kv-nav-chevron">
+      <path d="M3.5 6 8 10.5 12.5 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

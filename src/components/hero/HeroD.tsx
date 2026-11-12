@@ -88,7 +88,7 @@ export async function HeroD({
       {/* The stadium signage — the brand name on an ad board behind the
           shirt, as in the reference. Not translated, as a hoarding wouldn't
           be. Desktop only: on a phone it would sit behind the headline. */}
-      <div aria-hidden className="kv-flood-watermark kv-stadium-watermark hidden wide:flex">
+      <div aria-hidden className="kv-flood-watermark kv-stadium-watermark hidden hero:flex">
         <span>
           KITVERSE
           <br />
@@ -97,8 +97,8 @@ export async function HeroD({
       </div>
 
       <Wrap className="relative">
-        <div className="grid items-center gap-6 pt-2 pb-10 wide:min-h-[min(calc(100svh-105px),760px)] wide:grid-cols-[1fr_1fr] wide:gap-10 wide:py-12">
-          <div className="order-2 wide:order-none">
+        <div className="grid items-center gap-6 pt-2 pb-10 hero:min-h-[min(calc(100svh-105px),760px)] hero:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:grid-cols-[1fr_1fr] hero:gap-10 hero:py-12">
+          <div className="order-2 hero:order-none">
             <span className="mono-eyebrow kv-flood-eyebrow kv-flood-eyebrow-rule">
               {t("eyebrow")}
             </span>
@@ -178,7 +178,7 @@ export async function HeroD({
           {/* The shirt on its pedestal, plus the new-season card. On a phone
               the shirt stacks ABOVE the text (order-1) at a size that keeps
               the headline close to the fold. */}
-          <div className="relative order-1 mx-auto w-full max-w-[min(64vw,300px)] wide:order-none wide:max-w-[560px]">
+          <div className="relative order-1 mx-auto w-full max-w-[min(64vw,300px)] hero:order-none hero:max-w-[560px]">
             <Parallax speed={0.14}>
               <JerseyShowcase
                 items={showcase}
