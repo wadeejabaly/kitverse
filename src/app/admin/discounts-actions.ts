@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
+import { env } from "@/lib/env";
+
+/** The site banner (PromoBanner) reads src/data/promo.json, written from the active codes at build time - so any code change rebuilds the site (~2 min). */
+async function kickDeploy() {
+  const hook = env().VERCEL_DEPLOY_HOOK_URL;
+  if (hook) await fetch(hook, { method: "POST" }).catch((e) => console.error("deploy hook failed", (e as Error).message));
+}
 
 const CODE_RE = /^[A-Z0-9_-]{3,24}$/;
 
@@ -70,6 +77,7 @@ export async function createDiscountCode(form: FormData) {
     return bad(ins.error.code === "23505" ? `A code "${code}" already exists` : "Couldn't save that code");
   }
   await db().from("audit_log").insert({ actor: staff.id, action: "discount_code.create", entity: "discount_codes", entity_id: code, after: { kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt, stackable, first_order_only: firstOrderOnly } });
+  await kickDeploy();
   revalidatePath("/admin/discounts");
   redirect("/admin/discounts?saved=1");
 }
@@ -81,6 +89,7 @@ export async function setDiscountCodeActive(form: FormData) {
   const active = form.get("active") === "1";
   must(await db().from("discount_codes").update({ active }).eq("code", code).select("code"), "toggle code");
   await db().from("audit_log").insert({ actor: staff.id, action: active ? "discount_code.resume" : "discount_code.pause", entity: "discount_codes", entity_id: code });
+  await kickDeploy();
   revalidatePath("/admin/discounts");
 }
 
@@ -90,5 +99,6 @@ export async function deleteDiscountCode(form: FormData) {
   const code = z.string().min(1).parse(form.get("code"));
   must(await db().from("discount_codes").delete().eq("code", code).select("code"), "delete code");
   await db().from("audit_log").insert({ actor: staff.id, action: "discount_code.delete", entity: "discount_codes", entity_id: code });
+  await kickDeploy();
   revalidatePath("/admin/discounts");
 }
