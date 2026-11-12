@@ -38,9 +38,9 @@ const Detail = z.object({
 
 async function teamFor(productId: string) {
   const row = must(
-    await db().from("products").select("season,team:teams(type,league_id)").eq("id", productId).single(),
+    await db().from("products").select("season,team:teams(id,type,league_id)").eq("id", productId).single(),
     "product team",
-  ) as unknown as { season: string | null; team: { type: "club" | "national"; league_id: string | null } };
+  ) as unknown as { season: string | null; team: { id: string; type: "club" | "national"; league_id: string | null } };
   return row;
 }
 

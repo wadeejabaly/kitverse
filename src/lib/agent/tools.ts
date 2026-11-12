@@ -40,7 +40,7 @@ const Audience = z.enum(["adult", "women", "kids"]);
 const Version = z.enum(["fan", "player"]);
 const Sleeve = z.enum(["short", "long"]);
 const Kit = z.enum(["Home", "Away", "Third", "Fourth", "Goalkeeper", "Special", "Unstated"]);
-const Patch = z.enum(["champions_league", "champions_league_full", "europa_league", "club_world_cup", "league", "coppa_italia", "world_cup", "world_cup_peace", "world_cup_champions"]);
+const Patch = z.enum(["champions_league", "ucl_titles_badge", "ucl_respect", "ucl_final_print", "europa_league", "club_world_cup", "league", "coppa_italia", "world_cup", "world_cup_peace", "world_cup_champions"]);
 
 const ils = (agorot: number) => agorot / 100;
 function quoteView(q: Awaited<ReturnType<typeof requote>>) {
@@ -128,7 +128,7 @@ export const TOOLS = [
       product_id: z.string(), audience: Audience, version: Version, sleeve: Sleeve, size: z.string(),
       qty: z.number().int().min(1).max(50).default(1),
       print_name: z.string().nullish(), print_number: z.string().nullish(),
-      patches: z.array(Patch).default([]).describe("champions_league = the plain Champions League patch. champions_league_full = the full match version (badges as worn that season, may include the titles badge + sponsor patch); it goes on the shirt alone and is charged as 3 patches on retro shirts, 2 on current ones"), box: z.boolean().default(false).describe("gift box for this shirt (34.99 each, any team)"),
+      patches: z.array(Patch).default([]).describe("Every patch is its own piece, 1 patch each (owner 2026-11-12, no all-inclusive set): champions_league = the Champions League starball; ucl_titles_badge = the trophy badge with the number of wins (only Real Madrid, Milan, Bayern, Liverpool, Barcelona, Ajax); ucl_respect = the Respect patch under it; club_world_cup = the gold FIFA Club World Champions badge (chest, only seasons the club held the title); ucl_final_print = a Champions League final match print (chest, only listed finals e.g. Real Madrid 2016/17 Cardiff). Sleeves take up to 2 patches (La Liga 2025/26+2026/27: 1); the chest extras and Respect don't count toward that"), box: z.boolean().default(false).describe("gift box for this shirt (34.99 each, any team)"),
     }),
     run: async (ctx, i) => {
       const o = await order(ctx);

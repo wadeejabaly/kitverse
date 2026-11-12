@@ -45,7 +45,7 @@ describe("patches", () => {
   it("flags odd ones for the owner", () => {
     expect(checkPatches(["world_cup"], club)).toMatch(/national/);
     expect(checkPatches(["league"], nation)).toMatch(/clubs/);
-    expect(checkPatches(["champions_league", "league", "club_world_cup"], club)).toMatch(/2/);
+    expect(checkPatches(["champions_league", "league", "europa_league"], club)).toMatch(/2/);
   });
   it("a national-team shirt can carry all 3 World Cup patches at once", () => {
     expect(checkPatches(["world_cup", "world_cup_peace", "world_cup_champions"], nation)).toBeNull();

@@ -1,6 +1,8 @@
 import type { Product } from "@/data/types";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
-import { FULL_VERSION_PATCH, maxPatches } from "@/lib/patch-limits";
+import { FULL_VERSION_PATCH, maxPatches, sleevePatches } from "@/lib/patch-limits";
+import { slugify } from "@/data/slug";
+import { isClubWorldChampionSeason, uclFinalPrint } from "@/lib/patch-eligibility";
 
 /**
  * Locale-aware reads of a Product's bilingual fields, plus the small display
@@ -78,11 +80,20 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
         : null;
   if (!team) return [];
   const max = maxPatches({ type: team.type, leagueId: team.league_id, season: product.season });
-  // the Champions League full version goes on the shirt alone (owner decision 2026-11-12)
-  if (team.type === "club" && patches.includes(FULL_VERSION_PATCH as PatchId)) return [FULL_VERSION_PATCH as PatchId];
+  // the chest extras (owner request 2026-11-12): the gold FIFA champions badge and a final print, only on
+  // the shirts src/lib/patch-eligibility.ts lists; they don't take a sleeve, so they sit outside the cap
+  const teamSlug = slugify(product.team);
+  const chest = team.type === "club"
+    ? [...new Set(patches)].filter((p) =>
+        (p === "club_world_cup" && isClubWorldChampionSeason(teamSlug, product.season)) ||
+        (p === "ucl_final_print" && !!uclFinalPrint(teamSlug, product.season)))
+    : [];
+  const sleeves = sleevePatches(patches);
+  // the Champions League full version goes on the sleeves alone (owner decision 2026-11-12)
+  if (team.type === "club" && sleeves.includes(FULL_VERSION_PATCH as PatchId)) return [FULL_VERSION_PATCH as PatchId, ...chest];
   const seen = new Set<PatchId>();
   const valid: PatchId[] = [];
-  for (const p of patches) {
+  for (const p of sleeves) {
     if (valid.length >= max || seen.has(p)) continue;
     const rule: (typeof PATCHES)[PatchId] | undefined = PATCHES[p];
     if (!rule) continue;
@@ -93,5 +104,5 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
     seen.add(p);
     valid.push(p);
   }
-  return valid;
+  return [...valid, ...chest];
 }

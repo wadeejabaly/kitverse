@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ADDONS, SIZES, SLEEVES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
-import { FULL_VERSION_PATCH, fullVersionPieces, patchPieces } from "@/lib/patch-limits";
+import { CHEST_PATCHES, FULL_VERSION_PATCH, fullVersionPieces, patchPieces, sleevePatches } from "@/lib/patch-limits";
 import type { Kind, PatchId, Size, Version } from "@/data/types";
 import { maxPatchesFor, patchOptionsFor } from "@/data/patches";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
@@ -66,7 +66,7 @@ export function ProductForm({
   const { add, count: cartCount } = useCart();
   const retro = isRetroSeason(season);
 
-  const patchOptions = patchOptionsFor({ league, kind, team });
+  const patchOptions = patchOptionsFor({ league, kind, team, season });
   const maxPatches = maxPatchesFor({ league, kind, season });
 
   const [size, setSize] = useState<Size>("M");
@@ -95,12 +95,17 @@ export function ProductForm({
   function togglePatch(id: PatchId) {
     setPatches((current) => {
       if (current.includes(id)) return current.filter((p) => p !== id);
-      // the Champions League full version goes on the shirt alone (owner decision 2026-11-12): picking it, or
-      // picking anything while it is on, swaps
-      if (id === FULL_VERSION_PATCH || current.includes(FULL_VERSION_PATCH as PatchId)) return [id];
+      // chest extras (gold FIFA badge, final print - owner request 2026-11-12) don't take a sleeve: they
+      // just add, alongside anything else
+      if (CHEST_PATCHES.includes(id)) return [...current, id];
+      const chest = current.filter((p) => CHEST_PATCHES.includes(p));
+      const sleeves = sleevePatches(current);
+      // the Champions League full version goes on the sleeves alone (owner decision 2026-11-12): picking it,
+      // or picking another sleeve patch while it is on, swaps the sleeve patches (the chest extras stay)
+      if (id === FULL_VERSION_PATCH || sleeves.includes(FULL_VERSION_PATCH as PatchId)) return [id, ...chest];
       // a one-patch shirt (La Liga 2025/26 + 2026/27, owner decision 2026-11-10): picking another swaps it
-      if (maxPatches === 1) return [id];
-      if (current.length >= maxPatches) return current;
+      if (maxPatches === 1) return [id, ...chest];
+      if (sleeves.length >= maxPatches) return current;
       return [...current, id];
     });
   }
@@ -269,7 +274,7 @@ export function ProductForm({
           <div className="flex flex-wrap gap-2.5">
             {patchOptions.map((option) => {
               const selected = patches.includes(option.id);
-              const disabled = maxPatches > 1 && !selected && patches.length >= maxPatches && option.id !== FULL_VERSION_PATCH && !patches.includes(FULL_VERSION_PATCH as PatchId);
+              const disabled = maxPatches > 1 && !selected && !CHEST_PATCHES.includes(option.id) && sleevePatches(patches).length >= maxPatches && option.id !== FULL_VERSION_PATCH && !patches.includes(FULL_VERSION_PATCH as PatchId);
               return (
                 <button
                   key={option.id}
@@ -323,7 +328,7 @@ export function ProductForm({
           {patches.includes(FULL_VERSION_PATCH as PatchId) ? (
             <p className="mt-1 text-xs text-ink-soft">{t("patchFullHint", { count: fullVersionPieces(retro) })}</p>
           ) : null}
-          {maxPatches > 1 && patches.length >= maxPatches && !patches.includes(FULL_VERSION_PATCH as PatchId) ? (
+          {maxPatches > 1 && sleevePatches(patches).length >= maxPatches && !patches.includes(FULL_VERSION_PATCH as PatchId) ? (
             <p className="mt-1 text-xs text-ink-soft">
               {t("patchMaxHint", { max: maxPatches })}
             </p>
@@ -444,10 +449,17 @@ function patchLabel(id: PatchId, leagueName: string | null, t: (key: string, val
       return t("patchWorldCupChampions");
     case "world_cup_peace":
       return t("patchWorldCupPeace");
+    case "club_world_cup":
+      return t("patchClubWorldChampions");
+    case "ucl_final_print":
+      return t("patchFinalPrint");
+    case "ucl_titles_badge":
+      return t("patchUclTitlesBadge");
+    case "ucl_respect":
+      return t("patchUclRespect");
     case "champions_league_full":
       return t("patchChampionsLeagueFull");
     case "champions_league":
-    case "club_world_cup":
     default:
       return t("patchChampionsLeague");
   }

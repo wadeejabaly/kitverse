@@ -1,3 +1,4 @@
+import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint } from "@/lib/patch-eligibility";
 import { slugify } from "./slug";
 import type { Kind } from "./types";
 import type { PatchId } from "@/lib/orders/rules";
@@ -24,6 +25,8 @@ export interface PatchOption {
  * owner supplied art for; every other club gets the general design) — one
  * patch CONCEPT, swapped artwork, not several options.
  */
+const CLUB_WORLD_CHAMPIONS_ART = "/patches/club-world-champions.jpg";
+const UCL_RESPECT_ART = "/patches/ucl-respect.jpg";
 const CHAMPIONS_LEAGUE_ART: Record<string, string> = {
   "ac-milan": "/patches/champions-league-ac-milan.jpg",
   "ajax": "/patches/champions-league-ajax.jpg",
@@ -64,7 +67,10 @@ export const PATCH_PROP_KEYS: Record<PatchId, string> = {
   champions_league: "propPatchChampionsLeague",
   champions_league_full: "propPatchChampionsLeagueFull",
   europa_league: "propPatchEuropaLeague",
-  club_world_cup: "propPatchChampionsLeague",
+  club_world_cup: "propPatchClubWorldChampions",
+  ucl_final_print: "propPatchFinalPrint",
+  ucl_titles_badge: "propPatchUclTitlesBadge",
+  ucl_respect: "propPatchUclRespect",
   coppa_italia: "propPatchCoppaItalia",
   world_cup: "propPatchWorldCup",
   world_cup_peace: "propPatchWorldCupPeace",
@@ -92,27 +98,32 @@ export function patchOptionsFor(product: {
   league: string | null;
   kind: Kind;
   team: string;
+  season?: string | null;
 }): PatchOption[] {
   if (product.league !== null) {
     const options: PatchOption[] = [];
     const leagueArt = LEAGUE_ART[product.league];
     if (leagueArt) options.push({ id: "league", image: leagueArt, labelKey: "patchLeague" });
     const teamSlug = slugify(product.team);
-    options.push({
-      id: "champions_league",
-      image: CHAMPIONS_LEAGUE_ART[teamSlug] ?? CHAMPIONS_LEAGUE_GENERAL,
-      labelKey: "patchChampionsLeague",
-    });
-    // owner decision 2026-11-12: the full match version (badges as worn that season), same artwork, goes on alone
-    options.push({
-      id: "champions_league_full",
-      image: CHAMPIONS_LEAGUE_ART[teamSlug] ?? CHAMPIONS_LEAGUE_GENERAL,
-      labelKey: "patchChampionsLeagueFull",
-    });
+    // owner request 2026-11-12 ("remove the all-inclusive"): every Champions League piece on its own, 1 patch
+    // each - the starball, the titles badge (trophy with the number of wins, only clubs that have one; it uses
+    // the club's numbered artwork) and the Respect patch that sits under it. No more "full version" option.
+    options.push({ id: "champions_league", image: CHAMPIONS_LEAGUE_GENERAL, labelKey: "patchChampionsLeague" });
+    const titlesArt = CHAMPIONS_LEAGUE_ART[teamSlug];
+    if (titlesArt && hasUclTitlesBadge(teamSlug)) {
+      options.push({ id: "ucl_titles_badge", image: titlesArt, labelKey: "patchUclTitlesBadge" });
+    }
+    options.push({ id: "ucl_respect", image: UCL_RESPECT_ART, labelKey: "patchUclRespect" });
     options.push({ id: "europa_league", image: EUROPA_LEAGUE_ART, labelKey: "patchEuropaLeague" });
     if (product.league === "serie-a") {
       options.push({ id: "coppa_italia", image: COPPA_ITALIA_ART, labelKey: "patchCoppaItalia" });
     }
+    // chest extras (owner request 2026-11-12): only the seasons src/lib/patch-eligibility.ts lists
+    if (isClubWorldChampionSeason(teamSlug, product.season)) {
+      options.push({ id: "club_world_cup", image: CLUB_WORLD_CHAMPIONS_ART, labelKey: "patchClubWorldChampions" });
+    }
+    const finalPrint = uclFinalPrint(teamSlug, product.season);
+    if (finalPrint) options.push({ id: "ucl_final_print", image: finalPrint.image, labelKey: "patchFinalPrint" });
     return options;
   }
   if (product.kind === "national") {
@@ -142,7 +153,13 @@ export function patchSupplierName(id: PatchId, leagueId: string | null): string 
     case "europa_league":
       return "Europa League";
     case "club_world_cup":
-      return "Club World Cup";
+      return "FIFA Club World Champions badge (gold, chest)";
+    case "ucl_final_print":
+      return "Champions League FINAL match print (chest)";
+    case "ucl_titles_badge":
+      return "Champions League TITLES badge (number of wins)";
+    case "ucl_respect":
+      return "RESPECT patch (under titles badge)";
     case "coppa_italia":
       return "Coppa Italia";
     case "world_cup":

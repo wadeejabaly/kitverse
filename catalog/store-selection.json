@@ -4029,6 +4029,31 @@
         "/products/napoli-maradona-1986-87-retro-home-shirt-long.jpg",
         "/products/napoli-maradona-1986-87-retro-home-shirt-long-2.jpg"
       ]
+    },
+    {
+      "handle": "real-madrid-2016-17-retro-away-shirt",
+      "title": "Real Madrid 2016/17 Retro Away Shirt",
+      "titleAr": "قميص ريال مدريد 2016/17 الاحتياطي ريترو",
+      "team": "Real Madrid",
+      "teamAr": "ريال مدريد",
+      "kind": "previous",
+      "season": "2016/17",
+      "kit": "Away",
+      "league": "la-liga",
+      "edition": "standard",
+      "image": "/products/real-madrid-2016-17-retro-away-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "real-madrid-2016-17-retro-away-shirt",
+      "images": [
+        "/products/real-madrid-2016-17-retro-away-shirt-2.jpg"
+      ],
+      "teamHe": "ריאל מדריד",
+      "titleHe": "חולצת חוץ רטרו ריאל מדריד 2016/17",
+      "imagesLongSleeve": [
+        "/products/real-madrid-2016-17-retro-away-shirt-long.jpg",
+        "/products/real-madrid-2016-17-retro-away-shirt-long-2.jpg"
+      ]
     }
   ]
 }

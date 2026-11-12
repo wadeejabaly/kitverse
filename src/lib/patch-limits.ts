@@ -26,6 +26,22 @@ export const ONE_PATCH_SEASONS: Record<string, readonly string[]> = {
  */
 export const FULL_VERSION_PATCH = "champions_league_full";
 
+/**
+ * Chest extras (owner request 2026-11-12, Real Madrid 2016/17 away "plus all these possible patches"):
+ * the gold FIFA Club World Champions badge and a Champions League final match print sit on the CHEST,
+ * not a sleeve - so they don't count toward the sleeve cap below and they DO combine with the
+ * Champions League full version (whose "alone" rule is about the sleeves). Each is priced as 1 patch.
+ * Which shirts may carry them: src/lib/patch-eligibility.ts.
+ */
+export const CHEST_PATCHES: readonly string[] = ["club_world_cup", "ucl_final_print", "ucl_respect"];
+// (ucl_respect is not on the chest - it sits UNDER the titles badge on the same sleeve - but likewise
+// doesn't take a sleeve slot of its own, so it lives in this list too.)
+
+/** The patches that take a sleeve (everything but the chest extras) - what the cap and the "alone" rule count. */
+export function sleevePatches<T extends string>(patches: readonly T[]): T[] {
+  return patches.filter((p) => !CHEST_PATCHES.includes(p));
+}
+
 /** How many patches the full version is priced as. `retro` = the same retro signal the shirt's own price uses. */
 export function fullVersionPieces(retro: boolean): number {
   return retro ? 3 : 2;

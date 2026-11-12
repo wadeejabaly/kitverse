@@ -1,5 +1,6 @@
 /** Pure validation rules for order lines and customer details (unit-tested). */
-import { FULL_VERSION_PATCH, maxPatches } from "../patch-limits";
+import { FULL_VERSION_PATCH, maxPatches, sleevePatches } from "../patch-limits";
+import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint } from "../patch-eligibility";
 
 export const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"] as const;
 export const KIDS_SIZES = ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28"] as const;
@@ -46,6 +47,13 @@ export const PATCHES = {
   champions_league_full: { label_ar: "شارات دوري الأبطال كاملة (نسخة المباريات)", clubs: true, nations: false },
   europa_league: { label_ar: "شارة الدوري الأوروبي", clubs: true, nations: false },
   club_world_cup: { label_ar: "شارة كأس العالم للأندية", clubs: true, nations: false },
+  // owner request 2026-11-12: the Champions League final match-details print (chest) - only for the finals
+  // listed in src/lib/patch-eligibility.ts (e.g. Real Madrid 2016/17 "FINAL CARDIFF 2017")
+  // owner request 2026-11-12 ("remove the all-inclusive, every piece on its own"): the Champions League
+  // titles badge (trophy with the number of wins - only clubs that have one) and the Respect patch under it
+  ucl_titles_badge: { label_ar: "شارة عدد ألقاب دوري الأبطال", clubs: true, nations: false },
+  ucl_respect: { label_ar: "شارة Respect تحت شارة الأبطال", clubs: true, nations: false },
+  ucl_final_print: { label_ar: "طباعة نهائي دوري الأبطال على الصدر", clubs: true, nations: false },
   league: { label_ar: "شارة الدوري", clubs: true, nations: false },
   // Coppa Italia (added 2026-10-26, the patch-picker ask): a real competition
   // restriction, not just a storefront display limit - an Italian cup patch
@@ -68,11 +76,17 @@ export type PatchId = keyof typeof PATCHES;
  * badge plus the Peace and Champions badges, all three at once if the
  * customer wants them).
  */
-export function checkPatches(patches: PatchId[], team: { type: "club" | "national"; league_id: string | null }, season?: string | null): string | null {
-  // owner decision 2026-11-10: La Liga 2025/26 + 2026/27 shirts take only 1 (src/lib/patch-limits.ts)
-  if (patches.includes(FULL_VERSION_PATCH) && patches.length > 1) return "the Champions League full version goes on the shirt alone - no other patch with it";
+export function checkPatches(patches: PatchId[], team: { id?: string; type: "club" | "national"; league_id: string | null }, season?: string | null): string | null {
+  // owner decision 2026-11-10: La Liga 2025/26 + 2026/27 shirts take only 1 (src/lib/patch-limits.ts).
+  // The chest extras (gold FIFA badge, final print) don't take a sleeve, so they're outside the cap and
+  // the full version's "alone" rule (owner request 2026-11-12).
+  const sleeves = sleevePatches(patches);
+  if (sleeves.includes(FULL_VERSION_PATCH) && sleeves.length > 1) return "the Champions League full version goes on the sleeves alone - only the chest extras (FIFA champions badge, final print) can go with it";
+  if (team.id && patches.includes("club_world_cup") && !isClubWorldChampionSeason(team.id, season)) return "the FIFA Club World Champions badge only goes on a shirt from a season the club held that title";
+  if (patches.includes("ucl_final_print") && !uclFinalPrint(team.id, season)) return "no Champions League final print for this shirt";
+  if (team.id && patches.includes("ucl_titles_badge") && !hasUclTitlesBadge(team.id)) return "this club has no Champions League titles badge";
   const max = maxPatches({ type: team.type, leagueId: team.league_id, season });
-  if (patches.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
+  if (sleeves.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
   for (const p of patches) {
     const rule = PATCHES[p];
     if (!rule) return `unknown patch ${p}`;
