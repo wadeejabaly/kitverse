@@ -14,6 +14,9 @@
  * 2G-class or under 3 Mbps (Chrome on Android reports it; Safari doesn't)
  * (those visitors get the end state, the podium still, straight away).
  *
+ * `?intro` in the address always plays it (for checking it), and a visit whose
+ * autoplay was refused leaves INTRO_RETRY_KEY so the next one plays.
+ *
  * The cache lookup is asynchronous, so the decision is a promise
  * (window.__kvIntro) that HeroVideo's play script waits on; until then the
  * page is held in the intro's look (a cache hit answers in a few ms).
@@ -25,6 +28,13 @@
  * hidden.
  */
 export const INTRO_SEEN_KEY = "kv-intro-seen";
+
+/**
+ * Set when the browser refused to autoplay the film (iPhone Low Power Mode
+ * blocks autoplay in every iOS browser): the visit fetched the cache marker
+ * but never showed the film, so the next visit plays regardless of it.
+ */
+export const INTRO_RETRY_KEY = "kv-intro-retry";
 
 /** How long a visitor goes without the film after seeing it. */
 export const INTRO_EVERY_MS = 30 * 24 * 60 * 60 * 1000;
@@ -41,14 +51,16 @@ export const INTRO_MARK_URL = "/home/hero/intro-mark.txt";
 
 export const INTRO_PENDING_SCRIPT = `(function(){try{
 if(!/^\\/(en|he)?\\/?$/.test(location.pathname))return;
+var force=/[?&]intro(=|&|$)/.test(location.search),retry=false;try{retry=localStorage.getItem(${JSON.stringify(INTRO_RETRY_KEY)})==='1'}catch(e){}
+if(!force){
 if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-var c=navigator.connection;if(c&&(c.saveData||/2g/.test(c.effectiveType||'')||(c.downlink&&c.downlink<3)))return;
+var c=navigator.connection;if(c&&(c.saveData||/2g/.test(c.effectiveType||'')||(c.downlink&&c.downlink<3)))return}
 if(!window.fetch||!window.Promise||!window.performance)return;
 var r=document.documentElement;r.setAttribute('data-kv-intro','');
 document.addEventListener('DOMContentLoaded',function(){r.removeAttribute('data-kv-intro')});
 function byMemory(){try{return Date.now()-(+localStorage.getItem(${JSON.stringify(INTRO_SEEN_KEY)})||0)>=${INTRO_EVERY_MS}}catch(e){return false}}
 var url=new URL(${JSON.stringify(INTRO_MARK_URL)},location.href).href;
-window.__kvIntro=fetch(url,{credentials:'omit'}).then(function(res){return res.text().then(function(){
+window.__kvIntro=(force||retry)?Promise.resolve(true):fetch(url,{credentials:'omit'}).then(function(res){return res.text().then(function(){
 var e=performance.getEntriesByName(url).pop();
 if(e&&typeof e.transferSize==='number'&&e.decodedBodySize>0)return e.transferSize>0;
 return byMemory()})},function(){return false});

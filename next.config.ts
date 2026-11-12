@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
       // The home page intro plays again once this marker is no longer fresh in the browser's
       // HTTP cache: after 30 days, or when the visitor clears the cache (src/components/hero/intro.ts).
       { source: "/home/hero/intro-mark.txt", headers: [{ key: "Cache-Control", value: "public, max-age=2592000" }] },
+      // The hero's film, posters and podium stills: a week in the browser cache (replaced files get
+      // new names). Uncached, the still is revalidated on every visit and Chrome's LCP ignores it.
+      { source: "/home/hero/:file(.*\\.(?:webp|mp4))", headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }] },
     ];
   },
   images: {

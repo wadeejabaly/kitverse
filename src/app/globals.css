@@ -911,6 +911,7 @@ h2 {
 
 /* The box is the film's own 16:9, so `cover` crops nothing. */
 .kv-vhero-still,
+.kv-vhero-poster,
 .kv-vhero-video {
   position: absolute;
   inset: 0;
@@ -922,12 +923,20 @@ h2 {
 /* The film only shows while it plays. It always ends on the still (the
    same last frame, decoded exactly), which the shirt is aligned to;
    [data-played] keeps the film up only while that still is still loading. */
-.kv-vhero-video {
+.kv-vhero-video,
+.kv-vhero-poster {
   display: none;
-  /* Opaque until its poster / first frame arrives, so the still underneath
-     (painted from the start, which is what counts as the page's main content
-     for LCP) never shows through early. */
-  background: #02031d;
+}
+
+/* While the intro decides and plays, the ending (the still) stays hidden. The
+   film's first frame shows as an image under the film until it has a frame
+   of its own (data-film, set once the film is starting). */
+.kv-vhero[data-intro="playing"] .kv-vhero-still {
+  visibility: hidden;
+}
+
+.kv-vhero[data-intro="playing"][data-film] .kv-vhero-poster {
+  display: block;
 }
 
 .kv-vhero[data-intro="playing"] .kv-vhero-video,

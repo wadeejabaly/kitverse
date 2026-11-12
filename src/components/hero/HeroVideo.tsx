@@ -1,4 +1,3 @@
-import { getImageProps } from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getProduct } from "@/data/catalog";
@@ -9,7 +8,7 @@ import { titleFor } from "@/lib/product";
 import { SHOWCASE_JERSEYS } from "@/data/showcase";
 import { HeroChromeOffset } from "./HeroChromeOffset";
 import { JerseyShowcase, type ShowcaseItem } from "./JerseyShowcase";
-import { INTRO_SEEN_KEY } from "./intro";
+import { INTRO_RETRY_KEY, INTRO_SEEN_KEY } from "./intro";
 
 /**
  * THE VIDEO HERO — the home page hero (owner request 2026-11-11).
@@ -76,16 +75,6 @@ export async function HeroVideo({ locale }: { locale: string }) {
     };
   });
 
-  // The film's last frame per orientation (art direction: the browser fetches
-  // only the one its <source> picks). fetchPriority, not preload: preloading
-  // would fetch both.
-  const {
-    props: { srcSet: portraitStill },
-  } = getImageProps({ src: "/home/hero/podium-portrait.webp", alt: "", width: 1080, height: 1920, sizes: "125vw" });
-  const {
-    props: { srcSet: landscapeStill, ...still },
-  } = getImageProps({ src: "/home/hero/podium.webp", alt: "", width: 1920, height: 1080, sizes: "(min-width: 900px) 100vw, 200vw" });
-
   // "From" prices exactly as the cards state them: smallest size, non-retro.
   const fanFrom = priceFor("2026/27", "S", "fan");
   const playerFrom = priceFor("2026/27", "S", "player");
@@ -98,10 +87,23 @@ export async function HeroVideo({ locale }: { locale: string }) {
       <div className="kv-vhero-stagewrap">
         <div className="kv-vhero-stage">
           {/* The film's last frame: the hero whenever the film isn't playing, including after it ends. */}
+          {/* The film's last frame (podium.webp / podium-portrait.webp): the hero
+              whenever the film isn't playing, including after it ends. Plain
+              files, not the image optimizer: they are already small, cached a
+              week (next.config.ts), and Chrome counts them as the page's main
+              content (the optimizer's revalidated responses report 0 bytes,
+              which Chrome's LCP skips - measured live 2026-11-12). */}
           <picture>
-            <source media="(orientation: portrait)" srcSet={portraitStill} sizes="125vw" />
-            {/* getImageProps output (alt=""), art-directed by the <source> above. */}
-            <img {...still} alt="" srcSet={landscapeStill} loading="eager" fetchPriority="high" className="kv-vhero-still" />
+            <source media="(orientation: portrait)" srcSet="/home/hero/podium-portrait.webp" width={1080} height={1920} />
+            <img src="/home/hero/podium.webp" alt="" width={1920} height={1080} fetchPriority="high" decoding="async" className="kv-vhero-still" />
+          </picture>
+          {/* The film's first frame, shown while it loads (lazy + hidden, so a
+              view without the film never downloads it). The film is drawn over
+              it once it has a frame; this is what the page's main content is
+              on an intro view. */}
+          <picture>
+            <source media="(orientation: portrait)" srcSet="/home/hero/intro-portrait-poster.webp" width={720} height={1280} />
+            <img src="/home/hero/intro-poster.webp" alt="" width={1280} height={720} loading="lazy" decoding="async" className="kv-vhero-poster" />
           </picture>
           <video
             className="kv-vhero-video"
@@ -297,11 +299,10 @@ if(r.hasAttribute('data-kv-intro')){r.removeAttribute('data-kv-intro');s.setAttr
  * Runs once the section is parsed. It waits for INTRO_PENDING_SCRIPT's
  * decision (window.__kvIntro: is the 30-day cache marker missing?) - a
  * returning visitor's answer comes from the cache in a few ms, then the hero
- * simply drops back to its end state. If the film plays, it starts only once
- * the still underneath has been painted (at most 1.5 s): a picture the film
- * already covers is never painted, and the still is what Chrome counts as the
- * page's main content (LCP) - measured live 2026-11-12, LCP was 8.7 s when
- * the film won that race. Then it hands over to the site (data-intro="done") on the still of its
+ * simply drops back to its end state. While the film loads, its first frame
+ * shows as a plain image (data-film). If the browser refuses to autoplay
+ * (iPhone Low Power Mode blocks it in every iOS browser), INTRO_RETRY_KEY
+ * makes the next visit try again. Then it hands over to the site (data-intro="done") on the still of its
  * last frame, never on the video element: a browser that dropped the film's
  * final frames (a busy phone, a background tab) can be left showing one a
  * few frames early, with the podium a little off the shirt. The film stays up
@@ -314,27 +315,24 @@ if(r.hasAttribute('data-kv-intro')){r.removeAttribute('data-kv-intro');s.setAttr
  */
 const PLAY_SCRIPT = `(function(){var s=document.getElementById('kv-vhero');if(!s||s.getAttribute('data-intro')!=='playing')return;
 var v=s.querySelector('video'),im=s.querySelector('.kv-vhero-still');var done=false,started=false,stall=0,t0=0,cap=0,safety=0,waitFrom=0,waited=0;
+function mem(k,val){try{val===null?localStorage.removeItem(k):localStorage.setItem(k,val)}catch(e){}}
 function finish(natural){if(done)return;done=true;clearTimeout(t0);clearTimeout(stall);clearTimeout(cap);clearTimeout(safety);removeEventListener('keydown',key);
 try{v.pause()}catch(e){}
 if(!natural){try{v.removeAttribute('src');v.load()}catch(e){}}
-if(natural&&im&&!im.complete){v.setAttribute('data-played','');im.addEventListener('load',function(){v.removeAttribute('data-played')})}
-s.setAttribute('data-intro','done');try{localStorage.setItem(${JSON.stringify(INTRO_SEEN_KEY)},String(Date.now()))}catch(e){}}
+if(natural){mem(${JSON.stringify(INTRO_RETRY_KEY)},null);if(im&&!im.complete){v.setAttribute('data-played','');im.addEventListener('load',function(){v.removeAttribute('data-played')})}}
+s.removeAttribute('data-film');s.setAttribute('data-intro','done');mem(${JSON.stringify(INTRO_SEEN_KEY)},String(Date.now()))}
 function key(e){if(e.key==='Escape')finish(false)}
 function skip(){s.removeAttribute('data-intro')}
 function start(){if(!v||!v.play){finish(false);return}
-addEventListener('keydown',key);
+s.setAttribute('data-film','');addEventListener('keydown',key);
 v.addEventListener('ended',function(){finish(true)});
 v.addEventListener('playing',function(){clearTimeout(t0);clearTimeout(stall);if(waitFrom){waited+=Date.now()-waitFrom;waitFrom=0}
 if(!started){started=true;cap=setTimeout(function(){finish(false)},((v.duration||7.1)*1000)+2500)}});
 v.addEventListener('waiting',function(){if(!started||done)return;waitFrom=Date.now();clearTimeout(stall);stall=setTimeout(function(){finish(false)},Math.max(0,2000-waited))});
 v.addEventListener('error',function(){finish(false)},true);
+t0=setTimeout(function(){if(!started)finish(false)},3000);safety=setTimeout(function(){finish(false)},15000);
 var tall=window.matchMedia&&matchMedia('(orientation: portrait)').matches;
 v.muted=true;v.defaultMuted=true;v.preload='auto';v.src=tall?'/home/hero/intro-portrait.mp4':'/home/hero/intro.mp4';
-var went=false;function go(){if(went||done)return;went=true;
-t0=setTimeout(function(){if(!started)finish(false)},3000);safety=setTimeout(function(){finish(false)},15000);
-v.poster=tall?'/home/hero/intro-portrait-poster.webp':'/home/hero/intro-poster.webp';
-try{var p=v.play();if(p&&p.catch)p.catch(function(){finish(false)})}catch(e){finish(false)}}
-function afterPaint(){requestAnimationFrame(function(){requestAnimationFrame(go)})}
-if(im&&!im.complete){im.addEventListener('load',afterPaint);im.addEventListener('error',go);setTimeout(go,1500)}else afterPaint()}
+try{var p=v.play();if(p&&p.catch)p.catch(function(err){if(err&&err.name==='NotAllowedError')mem(${JSON.stringify(INTRO_RETRY_KEY)},'1');finish(false)})}catch(e){finish(false)}}
 var decided=window.__kvIntro;if(!decided||!decided.then){skip();return}
 decided.then(function(play){if(play)start();else skip()},skip)})()`;
