@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { SIZES, SLEEVES, VERSIONS } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, SIZES, SLEEVES, VERSIONS } from "@/data/pricing";
 import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Sleeve, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { PATCHES } from "@/lib/orders/rules";
@@ -41,6 +41,8 @@ import { trackAddToCart } from "@/lib/analytics/track";
  */
 
 const STORAGE_KEY = "kitverse-cart-v1";
+/** How many gift boxes the shopper wants (a bundle adds one; checkout's gift-box picker reads and changes it). Just a count - never a price. */
+const GIFT_BOX_KEY = "kitverse-giftbox-v1";
 const MAX_QTY = 10;
 
 interface CartContextValue {
@@ -53,6 +55,9 @@ interface CartContextValue {
   remove: (key: string) => void;
   updateQty: (key: string, qty: number) => void;
   clear: () => void;
+  /** Gift boxes for the order (checkout's picker and the bundle page share it). */
+  giftBoxes: number;
+  setGiftBoxes: (qty: number) => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -166,11 +171,13 @@ function parseStoredCart(raw: string | null): CartItem[] {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [giftBoxes, setGiftBoxesState] = useState(0);
 
   // Read once on mount — never during render, which would break hydration.
   useEffect(() => {
     try {
       setItems(parseStoredCart(window.localStorage.getItem(STORAGE_KEY)));
+      setGiftBoxesState(clampGiftBoxes(Number(window.localStorage.getItem(GIFT_BOX_KEY))));
     } catch {
       // Private mode / storage disabled: the cart simply stays in memory.
     }
@@ -188,9 +195,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, hydrated]);
 
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(GIFT_BOX_KEY, String(giftBoxes));
+    } catch {
+      // as above
+    }
+  }, [giftBoxes, hydrated]);
+
   // Another tab changed the cart: keep this one in step.
   useEffect(() => {
     function onStorage(event: StorageEvent) {
+      if (event.key === GIFT_BOX_KEY) setGiftBoxesState(clampGiftBoxes(Number(event.newValue)));
       if (event.key !== STORAGE_KEY) return;
       setItems(parseStoredCart(event.newValue));
     }
@@ -227,7 +244,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   }, []);
 
-  const clear = useCallback(() => setItems([]), []);
+  const clear = useCallback(() => {
+    setItems([]);
+    setGiftBoxesState(0);
+  }, []);
+
+  const setGiftBoxes = useCallback((qty: number) => setGiftBoxesState(clampGiftBoxes(qty)), []);
 
   const value = useMemo<CartContextValue>(
     () => ({
@@ -238,11 +260,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       remove,
       updateQty,
       clear,
+      // an empty cart has no gift box to wrap anything in
+      giftBoxes: items.length ? giftBoxes : 0,
+      setGiftBoxes,
     }),
-    [items, hydrated, add, remove, updateQty, clear],
+    [items, hydrated, add, remove, updateQty, clear, giftBoxes, setGiftBoxes],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+}
+
+function clampGiftBoxes(qty: number): number {
+  return Number.isFinite(qty) ? Math.min(GIFT_BOX_MAX_QTY, Math.max(0, Math.floor(qty))) : 0;
 }
 
 export function useCart(): CartContextValue {

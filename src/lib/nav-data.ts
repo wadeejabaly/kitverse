@@ -122,7 +122,7 @@ export function classicsMenu(locale: string, labels: { nationalTeams: string }):
 export interface NavLabels {
   shop: string; nationalTeams: string; retro: string; leagues: string; accessories: string; more: string;
   allNationalTeams: string; allClassics: string; classicsByLeague: string; classicsTeams: string; allAccessories: string;
-  keychains: string; scarves: string; sizeGuide: string; trackOrder: string; about: string; contact: string;
+  keychains: string; scarves: string; bundles: string; sizeGuide: string; trackOrder: string; about: string; contact: string;
 }
 
 /** The six header entries in the owner's order: Shop, National teams, Classics, Leagues, Accessories, More. */
@@ -155,10 +155,11 @@ export function buildNav(locale: string, t: NavLabels): NavEntry[] {
       },
     },
     {
-      id: "more", label: t.more, match: ["/size-guide", "/about", "/contact"],
+      id: "more", label: t.more, match: ["/bundles", "/size-guide", "/about", "/contact"],
       panel: {
         layout: "compact",
         columns: [{ links: [
+          { href: "/bundles", label: t.bundles },
           { href: "/size-guide", label: t.sizeGuide },
           { href: "/o/track", label: t.trackOrder, plain: true },
           { href: "/about", label: t.about },

@@ -13,6 +13,7 @@ import { FilterGroup, FilterCheckbox } from "@/components/shop/FilterRail";
 import { MobileFilters } from "@/components/shop/MobileFilters";
 import { SortSelect } from "@/components/shop/SortSelect";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
+import { BundleTeaser } from "@/components/bundle/BundleTeaser";
 import { Season } from "@/components/shared/Money";
 import { collectionParams, resolveCollection, type Collection } from "@/lib/collections";
 import { allParams, collectionHref, parseSort, shopHref, toggled } from "@/lib/shop-href";
@@ -208,6 +209,7 @@ export default async function CollectionPage({
         ) : null}
 
         <div className="min-w-0">
+          {collection.type === "team" ? <BundleTeaser locale={locale} team={slug} className="mb-6" /> : null}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             {/* Strings, not numbers — see the identical note on /shop. */}
             <span className="text-[14px] font-semibold text-ink">

@@ -37,7 +37,7 @@ export async function Header() {
   const entries = buildNav(locale, {
     shop: t("shop"), nationalTeams: t("nationalTeams"), retro: t("retro"), leagues: t("leagues"), accessories: t("accessories"), more: t("more"),
     allNationalTeams: t("allNationalTeams"), allClassics: t("allClassics"), classicsByLeague: t("classicsByLeague"), classicsTeams: t("classicsTeams"),
-    allAccessories: t("allAccessories"), keychains: tAcc("keychainsLabel"), scarves: tAcc("scarvesLabel"),
+    allAccessories: t("allAccessories"), keychains: tAcc("keychainsLabel"), scarves: tAcc("scarvesLabel"), bundles: t("bundles"),
     sizeGuide: t("sizeGuide"), trackOrder: t("trackOrder"), about: t("about"), contact: t("contact"),
   });
 

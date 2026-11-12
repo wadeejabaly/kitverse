@@ -163,7 +163,9 @@ export function CheckoutView({
   const [errorReason, setErrorReason] = useState<string | null>(null);
   // The gift-box add-on (owner decision 2026-10-23): a per-ORDER quantity,
   // not a per-shirt flag — 0 means no box at all.
-  const [giftBoxQty, setGiftBoxQty] = useState(0);
+  // Kept in the cart (owner request 2026-11-12) so a bundle page can add its box and it is still
+  // picked here; the shopper can change it as before.
+  const { giftBoxes: giftBoxQty, setGiftBoxes: setGiftBoxQty } = useCart();
 
   // Discount codes (owner feature 2026-10-26): typed and checked here purely
   // as a preview, same posture as the city check below — the order itself is

@@ -42,7 +42,8 @@
     "help": "Help Center",
     "contact": "Contact",
     "returns": "Returns & refunds",
-    "shippingOnly": "Shipping"
+    "shippingOnly": "Shipping",
+    "bundles": "Bundles"
   },
   "home": {
     "hero": {
@@ -927,5 +928,23 @@
     "chooseFile": "Choose image",
     "changeFile": "Change",
     "noFile": "No image chosen"
+  },
+  "bundle": {
+    "eyebrow": "Bundles",
+    "listTitle": "Bundles",
+    "listIntro": "A club's three new shirts together - home, away and third, player version, each customised your way.",
+    "title": "{team} 2026/27 bundle",
+    "intro": "Home, away and third shirts, player version. Pick the size, name and number and patches for each shirt, and add a gift box for the set.",
+    "threeShirts": "3 shirts",
+    "shirtN": "Shirt {n}",
+    "giftBoxLegend": "Gift box",
+    "giftBoxToggle": "Add a gift box for the bundle",
+    "total": "Bundle total",
+    "totalNote": "Delivery is added at checkout.",
+    "addBundle": "Add the bundle to cart",
+    "added": "Bundle added to your cart",
+    "teaserEyebrow": "Bundle",
+    "teaserBody": "Home, away and third together, each customised",
+    "viewBundle": "View bundle"
   }
 }

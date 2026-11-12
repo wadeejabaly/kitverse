@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ADDONS, SIZES, SLEEVES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
-import { CHEST_PATCHES, FULL_VERSION_PATCH, fullVersionPieces, patchPieces, sleevePatches } from "@/lib/patch-limits";
+import { CHEST_PATCHES, FULL_VERSION_PATCH, fullVersionPieces, patchPieces, sleevePatches, togglePatchIn } from "@/lib/patch-limits";
 import type { Kind, PatchId, Size, Version } from "@/data/types";
 import { maxPatchesFor, patchOptionsFor } from "@/data/patches";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
@@ -93,21 +93,7 @@ export function ProductForm({
     patchesTotal(pieces);
 
   function togglePatch(id: PatchId) {
-    setPatches((current) => {
-      if (current.includes(id)) return current.filter((p) => p !== id);
-      // chest extras (gold FIFA badge, final print - owner request 2026-11-12) don't take a sleeve: they
-      // just add, alongside anything else
-      if (CHEST_PATCHES.includes(id)) return [...current, id];
-      const chest = current.filter((p) => CHEST_PATCHES.includes(p));
-      const sleeves = sleevePatches(current);
-      // the Champions League full version goes on the sleeves alone (owner decision 2026-11-12): picking it,
-      // or picking another sleeve patch while it is on, swaps the sleeve patches (the chest extras stay)
-      if (id === FULL_VERSION_PATCH || sleeves.includes(FULL_VERSION_PATCH as PatchId)) return [id, ...chest];
-      // a one-patch shirt (La Liga 2025/26 + 2026/27, owner decision 2026-11-10): picking another swaps it
-      if (maxPatches === 1) return [id, ...chest];
-      if (sleeves.length >= maxPatches) return current;
-      return [...current, id];
-    });
+    setPatches((current) => togglePatchIn(current, id, maxPatches));
   }
 
   // The confirmation is a moment, not a state: it clears itself so the page
@@ -435,7 +421,7 @@ export function ProductForm({
 
 /** option.id → its display label. A literal switch (not a dynamic t() key)
  *  so every call site stays statically checkable against the message files. */
-function patchLabel(id: PatchId, leagueName: string | null, t: (key: string, values?: Record<string, string | number>) => string): string {
+export function patchLabel(id: PatchId, leagueName: string | null, t: (key: string, values?: Record<string, string | number>) => string): string {
   switch (id) {
     case "league":
       return t("patchLeague", { league: leagueName ?? "" });
@@ -466,7 +452,7 @@ function patchLabel(id: PatchId, leagueName: string | null, t: (key: string, val
 }
 
 /** The mockup's `.opt` control: hairline box, chip fill when pressed. */
-function OptionButton({
+export function OptionButton({
   pressed,
   onClick,
   children,

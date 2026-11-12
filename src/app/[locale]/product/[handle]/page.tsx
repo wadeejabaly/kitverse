@@ -8,6 +8,7 @@ import { isRetroSeason, priceFor } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductForm } from "@/components/product/ProductForm";
+import { BundleTeaser } from "@/components/bundle/BundleTeaser";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductSleeveProvider } from "@/components/product/ProductSleeveContext";
 import { ProductGrid } from "@/components/shop/ProductCard";
@@ -175,6 +176,8 @@ export default async function ProductPage({
               title={title}
             />
             )}
+
+            <BundleTeaser locale={locale} handle={product.handle} className="mt-7" />
 
             {/* Service strip: facts the shop already states elsewhere
                 (delivery window from the shipping page, cash on delivery

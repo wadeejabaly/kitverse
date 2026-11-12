@@ -59,3 +59,19 @@ export function maxPatches(shirt: { type: "club" | "national" | null; leagueId: 
   if (shirt.leagueId && season && ONE_PATCH_SEASONS[shirt.leagueId]?.includes(season)) return 1;
   return 2;
 }
+
+/**
+ * Tapping a patch in a picker (the product page and the bundle page share this): unpicks it, or picks it
+ * within the cap - chest extras just add; the legacy full version, or a one-patch shirt, swaps the
+ * sleeve patches; a full shirt ignores the tap.
+ */
+export function togglePatchIn<T extends string>(current: readonly T[], id: T, max: number): T[] {
+  if (current.includes(id)) return current.filter((p) => p !== id);
+  if (CHEST_PATCHES.includes(id)) return [...current, id];
+  const chest = current.filter((p) => CHEST_PATCHES.includes(p));
+  const sleeves = sleevePatches(current);
+  if (id === FULL_VERSION_PATCH || sleeves.includes(FULL_VERSION_PATCH as T)) return [id, ...chest];
+  if (max === 1) return [id, ...chest];
+  if (sleeves.length >= max) return [...current];
+  return [...current, id];
+}
