@@ -1,5 +1,5 @@
 /** Pure validation rules for order lines and customer details (unit-tested). */
-import { FULL_VERSION_PATCH, maxPatches, sleevePatches } from "../patch-limits";
+import { FULL_VERSION_PATCH, allowedPatchesFor, maxPatches, sleevePatches } from "../patch-limits";
 import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "../patch-eligibility";
 
 export const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"] as const;
@@ -76,7 +76,10 @@ export type PatchId = keyof typeof PATCHES;
  * badge plus the Peace and Champions badges, all three at once if the
  * customer wants them).
  */
-export function checkPatches(patches: PatchId[], team: { id?: string; type: "club" | "national"; league_id: string | null }, season?: string | null): string | null {
+export function checkPatches(patches: PatchId[], team: { id?: string; type: "club" | "national"; league_id: string | null }, season?: string | null, handle?: string | null): string | null {
+  // shirts with their own patch list (src/lib/patch-limits.ts PRODUCT_PATCHES, owner decisions 2026-11-12)
+  const only = allowedPatchesFor(handle);
+  if (only && patches.some((p) => !only.includes(p))) return only.length ? `this shirt only takes: ${only.join(", ")}` : "no patches on this shirt";
   // owner decision 2026-11-10: La Liga 2025/26 + 2026/27 shirts take only 1 (src/lib/patch-limits.ts).
   // The chest extras (gold FIFA badge, final print) don't take a sleeve, so they're outside the cap and
   // the full version's "alone" rule (owner request 2026-11-12).
@@ -88,7 +91,7 @@ export function checkPatches(patches: PatchId[], team: { id?: string; type: "clu
   // current shirts (owner request 2026-11-12): a club with a titles badge wears that, not the plain ball; no Respect patch
   if (team.id && season && patches.includes("champions_league") && !uclStarballOffered(team.id, season)) return "on a current shirt this club takes the Champions League titles badge (with the number), not the plain ball";
   if (season && patches.includes("ucl_respect") && !uclRespectOffered(season)) return "the Respect patch is only on retro shirts";
-  const max = maxPatches({ type: team.type, leagueId: team.league_id, season });
+  const max = maxPatches({ type: team.type, leagueId: team.league_id, season, handle });
   if (sleeves.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
   for (const p of patches) {
     const rule = PATCHES[p];

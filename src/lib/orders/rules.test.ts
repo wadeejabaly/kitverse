@@ -84,3 +84,21 @@ describe("patch cap: La Liga 2025/26 + 2026/27 take only 1 (owner decision 2026-
     expect(checkPatches(["world_cup", "world_cup_peace", "world_cup_champions"], { type: "national", league_id: null }, "2026")).toBeNull();
   });
 });
+
+describe("no-patch shirts (owner decision 2026-11-12: Barcelona 1992 retro home)", () => {
+  const laLiga = { type: "club" as const, league_id: "la-liga" };
+  it("refuses any patch on that shirt, but not on other Barcelona retro shirts", () => {
+    expect(checkPatches(["league"], laLiga, "1992", "barcelona-1992-retro-home-shirt")).toBe("no patches on this shirt");
+    expect(checkPatches([], laLiga, "1992", "barcelona-1992-retro-home-shirt")).toBeNull();
+    expect(checkPatches(["league", "champions_league"], laLiga, "2005", "barcelona-2005-retro-home-shirt")).toBeNull();
+  });
+});
+
+describe("product patch lists (owner decision 2026-11-12: Barcelona 2008/09 retro home)", () => {
+  const laLiga = { type: "club" as const, league_id: "la-liga" };
+  const h = "barcelona-2008-retro-home-shirt";
+  it("allows the old La Liga patch and the Champions League ball, nothing else", () => {
+    expect(checkPatches(["league", "champions_league"], laLiga, "2008", h)).toBeNull();
+    expect(checkPatches(["europa_league"], laLiga, "2008", h)).toMatch(/only takes/);
+  });
+});

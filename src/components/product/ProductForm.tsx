@@ -66,8 +66,8 @@ export function ProductForm({
   const { add, count: cartCount } = useCart();
   const retro = isRetroSeason(season);
 
-  const patchOptions = patchOptionsFor({ league, kind, team, season });
-  const maxPatches = maxPatchesFor({ league, kind, season });
+  const patchOptions = patchOptionsFor({ league, kind, team, season, handle });
+  const maxPatches = maxPatchesFor({ league, kind, season, handle });
 
   const [size, setSize] = useState<Size>("M");
   const [version, setVersion] = useState<Version>("fan");

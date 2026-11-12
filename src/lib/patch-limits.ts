@@ -52,7 +52,28 @@ export function patchPieces(patches: readonly string[], retro: boolean): number 
   return patches.reduce((n, p) => n + (p === FULL_VERSION_PATCH ? fullVersionPieces(retro) : 1), 0);
 }
 
-export function maxPatches(shirt: { type: "club" | "national" | null; leagueId: string | null; season: string | null | undefined }): number {
+/**
+ * Shirts that only take specific patches, by product handle (the website and
+ * the database use the same handle for these). An empty list = no patches.
+ * The storefront picker, the website order check and the bot all read this.
+ * Owner decisions 2026-11-12:
+ *  - Barcelona 1992 retro home: "no patches to add";
+ *  - Barcelona 2008/09 retro home: the old La Liga (LFP) patch and the
+ *    Champions League ball only (period art in src/data/patches.ts).
+ */
+export const PRODUCT_PATCHES: Readonly<Record<string, readonly string[]>> = {
+  "barcelona-1992-retro-home-shirt": [],
+  "barcelona-2008-retro-home-shirt": ["league", "champions_league"],
+};
+
+/** The only patch ids a product may carry, or null when the normal team rules apply. */
+export function allowedPatchesFor(handle: string | null | undefined): readonly string[] | null {
+  return handle && Object.hasOwn(PRODUCT_PATCHES, handle) ? PRODUCT_PATCHES[handle] : null;
+}
+
+export function maxPatches(shirt: { type: "club" | "national" | null; leagueId: string | null; season: string | null | undefined; handle?: string | null }): number {
+  const only = allowedPatchesFor(shirt.handle);
+  if (only) return Math.min(sleevePatches(only).length, maxPatches({ ...shirt, handle: null }));
   if (shirt.type === "national") return 3;
   if (shirt.type !== "club") return 0;
   const season = normalizeSeason(shirt.season);

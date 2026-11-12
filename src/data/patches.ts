@@ -2,7 +2,7 @@ import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint, uclRespect
 import { slugify } from "./slug";
 import type { Kind } from "./types";
 import type { PatchId } from "@/lib/orders/rules";
-import { maxPatches } from "@/lib/patch-limits";
+import { allowedPatchesFor, maxPatches } from "@/lib/patch-limits";
 
 /**
  * The storefront's patch picker (owner ask 2026-10-26): a small photo per
@@ -49,6 +49,21 @@ const LEAGUE_ART: Record<string, string> = {
   "serie-a": "/patches/league-serie-a.jpg",
 };
 
+/**
+ * Period-correct artwork for a product with its own patch list
+ * (PRODUCT_PATCHES in src/lib/patch-limits.ts): Barcelona 2008/09 wore the
+ * old LFP league badge and the plain Champions League starball.
+ * `null` = no photo yet: the picker leaves that option out (the bot can still
+ * take it over Instagram). The old LFP badge photo is still to come from the
+ * owner - add it as public/patches/league-la-liga-lfp.jpg and set it here.
+ */
+const PRODUCT_PATCH_ART: Record<string, Partial<Record<PatchId, string | null>>> = {
+  "barcelona-2008-retro-home-shirt": {
+    league: null,
+    champions_league: CHAMPIONS_LEAGUE_GENERAL,
+  },
+};
+
 const EUROPA_LEAGUE_ART = "/patches/europa-league.jpg";
 const COPPA_ITALIA_ART = "/patches/coppa-italia.jpg";
 const WORLD_CUP_ART = "/patches/world-cup.jpg";
@@ -82,8 +97,9 @@ export const PATCH_PROP_KEYS: Record<PatchId, string> = {
  * to 3 - except La Liga 2025/26 and 2026/27, only 1. Same rule as
  * checkPatches() / sanitizePatches(): src/lib/patch-limits.ts.
  */
-export function maxPatchesFor(product: { league: string | null; kind: Kind; season?: string | null }): number {
+export function maxPatchesFor(product: { league: string | null; kind: Kind; season?: string | null; handle?: string | null }): number {
   return maxPatches({
+    handle: product.handle,
     type: product.league !== null ? "club" : product.kind === "national" ? "national" : null,
     leagueId: product.league,
     season: product.season,
@@ -99,7 +115,15 @@ export function patchOptionsFor(product: {
   kind: Kind;
   team: string;
   season?: string | null;
+  handle?: string | null;
 }): PatchOption[] {
+  const only = allowedPatchesFor(product.handle);
+  if (only) {
+    const art = PRODUCT_PATCH_ART[product.handle ?? ""] ?? {};
+    return patchOptionsFor({ ...product, handle: null })
+      .filter((o) => only.includes(o.id) && art[o.id] !== null)
+      .map((o) => (art[o.id] ? { ...o, image: art[o.id]! } : o));
+  }
   if (product.league !== null) {
     const options: PatchOption[] = [];
     const leagueArt = LEAGUE_ART[product.league];

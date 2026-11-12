@@ -1,6 +1,6 @@
 import type { Product } from "@/data/types";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
-import { FULL_VERSION_PATCH, maxPatches, sleevePatches } from "@/lib/patch-limits";
+import { FULL_VERSION_PATCH, allowedPatchesFor, maxPatches, sleevePatches } from "@/lib/patch-limits";
 import { slugify } from "@/data/slug";
 import { isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "@/lib/patch-eligibility";
 
@@ -72,6 +72,9 @@ export function sanitizeNameNumber(input: string): string {
  * src/data/patches.ts's `patchOptionsFor()` already limits the UI to.
  */
 export function sanitizePatches(patches: PatchId[], product: Product): PatchId[] {
+  // shirts with their own patch list (src/lib/patch-limits.ts PRODUCT_PATCHES, owner decisions 2026-11-12)
+  const only = allowedPatchesFor(product.handle);
+  if (only) patches = patches.filter((p) => only.includes(p));
   const team =
     product.league !== null
       ? { type: "club" as const, league_id: product.league }
@@ -79,7 +82,7 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
         ? { type: "national" as const, league_id: null as string | null }
         : null;
   if (!team) return [];
-  const max = maxPatches({ type: team.type, leagueId: team.league_id, season: product.season });
+  const max = maxPatches({ type: team.type, leagueId: team.league_id, season: product.season, handle: product.handle });
   // the chest extras (owner request 2026-11-12): the gold FIFA champions badge and a final print, only on
   // the shirts src/lib/patch-eligibility.ts lists; they don't take a sleeve, so they sit outside the cap
   const teamSlug = slugify(product.team);

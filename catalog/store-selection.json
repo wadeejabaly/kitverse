@@ -3890,6 +3890,80 @@
       ]
     },
     {
+      "handle": "barcelona-2008-retro-home-shirt",
+      "title": "Barcelona 2008/09 Retro Home Shirt",
+      "titleAr": "قميص برشلونة 2008/09 الأساسي ريترو",
+      "team": "Barcelona",
+      "teamAr": "برشلونة",
+      "kind": "previous",
+      "season": "2008/09",
+      "kit": "Home",
+      "league": "la-liga",
+      "edition": "standard",
+      "image": "/products/barcelona-2008-09-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "barcelona-2008-retro-home-shirt",
+      "images": [
+        "/products/barcelona-2008-09-retro-home-shirt-back.jpg"
+      ],
+      "teamHe": "ברצלונה",
+      "titleHe": "חולצת בית רטרו ברצלונה 2008/09",
+      "imagesLongSleeve": [
+        "/products/barcelona-2008-09-retro-home-shirt-long.jpg",
+        "/products/barcelona-2008-09-retro-home-shirt-long-back.jpg"
+      ]
+    },
+    {
+      "handle": "barcelona-2010-retro-home-shirt",
+      "title": "Barcelona 2010/11 Retro Home Shirt",
+      "titleAr": "قميص برشلونة 2010/11 الأساسي ريترو",
+      "team": "Barcelona",
+      "teamAr": "برشلونة",
+      "kind": "previous",
+      "season": "2010/11",
+      "kit": "Home",
+      "league": "la-liga",
+      "edition": "standard",
+      "image": "/products/barcelona-2010-11-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "barcelona-2010-retro-home-shirt",
+      "images": [
+        "/products/barcelona-2010-11-retro-home-shirt-back.jpg"
+      ],
+      "teamHe": "ברצלונה",
+      "titleHe": "חולצת בית רטרו ברצלונה 2010/11",
+      "imagesLongSleeve": [
+        "/products/barcelona-2010-11-retro-home-shirt-long.jpg",
+        "/products/barcelona-2010-11-retro-home-shirt-long-back.jpg"
+      ]
+    },
+    {
+      "handle": "barcelona-1992-retro-home-shirt",
+      "title": "Barcelona 1992 Retro Home Shirt",
+      "titleAr": "قميص برشلونة 1992 الأساسي ريترو",
+      "team": "Barcelona",
+      "teamAr": "برشلونة",
+      "kind": "previous",
+      "season": "1992",
+      "kit": "Home",
+      "league": "la-liga",
+      "edition": "standard",
+      "image": "/products/barcelona-1992-retro-home-shirt.jpg",
+      "sourceHash": "owner-retro",
+      "visible": true,
+      "productHandle": "barcelona-1992-retro-home-shirt",
+      "images": [
+        "/products/barcelona-1992-retro-home-shirt-2.jpg"
+      ],
+      "teamHe": "ברצלונה",
+      "titleHe": "חולצת בית רטרו ברצלונה 1992",
+      "imagesLongSleeve": [
+        "/products/barcelona-1992-retro-home-shirt-long.jpg"
+      ]
+    },
+    {
       "handle": "manchester-united-2007-08-retro-home-shirt",
       "title": "Manchester United 2007/08 Retro Home Shirt",
       "titleAr": "قميص مانشستر يونايتد 2007/08 الأساسي ريترو",
