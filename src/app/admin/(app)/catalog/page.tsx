@@ -1,17 +1,18 @@
 import Link from "next/link";
-import { ImageOff, ArrowRight, Layers, Shirt, Store, MessagesSquare } from "lucide-react";
+import { ImageOff, ArrowRight, Layers, Shirt, Store, MessagesSquare, PackageCheck, Plus } from "lucide-react";
 import { db } from "@/lib/db";
 import catalog from "@/data/catalog.json";
 import collections from "@/data/collections.json";
-import { PageHeader, Card, Stat, SectionTitle } from "../../ui";
+import { PageHeader, Card, Stat, SectionTitle, button } from "../../ui";
 
 export const dynamic = "force-dynamic";
 
 type WebShirt = { handle: string; team: string; kind: string; league: string | null; image: string };
 
 /**
- * What the website sells: Wadeea's hand-picked list (catalog/store-selection.json), exported into
- * src/data/catalog.json on every deploy. Read-only - the list itself changes in code, not here.
+ * What the website sells: Wadeea's hand-picked list (catalog/store-selection.json) plus the shirts added
+ * with "Add shirt" (./new, owner request 2026-11-12), exported into src/data/catalog.json on every deploy.
+ * "Stock" (./stock) switches any of them in/out of stock.
  */
 export default async function Catalog() {
   const shirts = (catalog as { products: WebShirt[] }).products;
@@ -32,7 +33,15 @@ export default async function Catalog() {
 
   return (
     <>
-      <PageHeader eyebrow="Catalog" title="Products" subtitle="The shirts on the website - Wadeea's hand-picked list. The bot can also sell any other shirt the supplier has." />
+      <PageHeader
+        eyebrow="Catalog"
+        title="Products"
+        subtitle="The shirts on the website - Wadeea's hand-picked list plus the shirts you add here. The bot can also sell any other shirt the supplier has."
+        actions={<>
+          <Link href="/admin/catalog/stock" className={button.ghost}><PackageCheck className="h-4 w-4" /> Stock</Link>
+          <Link href="/admin/catalog/new" className={button.primary}><Plus className="h-4 w-4" /> Add shirt</Link>
+        </>}
+      />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="On the website" value={shirts.length} icon={Store} />
         <Stat label="Teams" value={new Set(shirts.map((s) => s.team)).size} icon={Layers} />

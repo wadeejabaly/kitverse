@@ -10,3 +10,10 @@ export const OUT_OF_STOCK_FLAG = "out_of_stock";
 export function isOutOfStock(flags: readonly string[] | null | undefined): boolean {
   return !!flags?.includes(OUT_OF_STOCK_FLAG);
 }
+
+/**
+ * A shirt added in admin "Add shirt" (owner request 2026-11-12): it is on the website because of this
+ * flag (scripts/export-store-catalog.ts adds every flagged, non-hidden product), not because of
+ * catalog/store-selection.json, which only a code change can edit.
+ */
+export const SITE_LISTED_FLAG = "site_listed";

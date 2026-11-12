@@ -6,7 +6,7 @@
  * Runs before every build when the database is reachable; otherwise the committed JSON is used as is.
  *   npm run store:export
  */
-import { OUT_OF_STOCK_FLAG } from "../src/lib/catalog/stock";
+import { OUT_OF_STOCK_FLAG, SITE_LISTED_FLAG } from "../src/lib/catalog/stock";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
@@ -47,6 +47,42 @@ async function main() {
 
   // the website shows exactly the hand-picked selection (catalog/store-selection.json), in its order
   const selection = (JSON.parse(readFileSync("catalog/store-selection.json", "utf8")) as { products: (Product & { productHandle?: string })[] }).products;
+
+  // Shirts added in admin "Add shirt" (owner request 2026-11-12) live only in the database, flagged
+  // SITE_LISTED_FLAG - the admin can't edit this committed file. Each becomes a selection entry here
+  // (names from the database, which admin wrote in the one shirt-name format; team names from
+  // catalog/store-collections.json like every other entry), placed FIRST so new arrivals lead the shop.
+  // Its photos come from product_images below, the same as any shirt the admin uploaded photos for.
+  {
+    const inSelection = new Set(selection.map((s) => s.productHandle ?? s.handle));
+    const collectionTeams = new Map(
+      (JSON.parse(readFileSync("catalog/store-collections.json", "utf8")) as { teams: { slug: string; name: string; nameAr: string; nameHe?: string }[] }).teams.map((t) => [t.slug, t]),
+    );
+    const { data, error } = await db.from("products")
+      .select("handle,title_en,title_ar,title_he,season,kit,status,team:teams(id,name_en,name_ar,name_he,type,league_id)")
+      .contains("flags", [SITE_LISTED_FLAG]).neq("status", "hidden").order("created_at", { ascending: false });
+    if (error) throw error;
+    type Listed = { handle: string; title_en: string; title_ar: string | null; title_he: string | null; season: string | null; kit: string; team: { id: string; name_en: string; name_ar: string | null; name_he: string | null; type: "club" | "national"; league_id: string | null } };
+    const added = ((data ?? []) as unknown as Listed[])
+      .filter((r) => !inSelection.has(r.handle) && r.season && ["Home", "Away", "Third"].includes(r.kit))
+      .map((r): Product & { productHandle?: string } => {
+        const t = collectionTeams.get(r.team.id);
+        return {
+          handle: r.handle,
+          title: r.title_en, titleAr: r.title_ar ?? r.title_en, titleHe: r.title_he ?? r.title_en,
+          team: t?.name ?? r.team.name_en, teamAr: t?.nameAr ?? r.team.name_ar ?? r.team.name_en, teamHe: t?.nameHe ?? r.team.name_he ?? r.team.name_en,
+          kind: r.team.type === "national" ? "national" : r.season === "2026/27" ? "current" : "previous",
+          season: r.season!, kit: r.kit as Product["kit"],
+          league: r.team.type === "national" ? null : r.team.league_id,
+          edition: "standard",
+          image: "/products/_placeholder.jpg", // replaced by the database photo below
+          sourceHash: "admin",
+          visible: true,
+        };
+      });
+    selection.unshift(...added);
+    if (added.length) console.log(`store:export + ${added.length} shirt(s) added in admin`);
+  }
   const handles = selection.map((s) => s.productHandle ?? s.handle);
   const rows: Row[] = [];
   for (let i = 0; i < handles.length; i += 200) {
