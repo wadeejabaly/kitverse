@@ -39,14 +39,14 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
         <SectionTitle action={b.tracking_number && tracking ? (
           <form action={checkTrackingNow}><input type="hidden" name="batchId" value={id} /><SubmitButton bare className={button.subtle}><RefreshCw className="h-3.5 w-3.5" /> Check now</SubmitButton></form>
         ) : null}><span className="inline-flex items-center gap-2"><Truck className="h-4 w-4" /> Shipment tracking</span></SectionTitle>
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+        <div className={tracking ? "grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]" : "grid max-w-2xl gap-5"}>
           <div className="grid content-start gap-4">
             <TrackingNumberForm batchId={id} current={b.tracking_number} />
             <p className="text-xs text-muted">{tracking
               ? "Saving the number moves the orders to “being packed and sent”. Junhe tracking is then checked every 3 hours; when it shows delivered to you, the orders go out for delivery."
               : "Saving the number moves the orders to “being packed and sent”. When the parcel reaches you, press “I received this shipment” - the orders go out for delivery and are marked delivered 3 days later."}</p>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
-              <dt className="text-muted">Tracking</dt><dd>{b.tracking_status ? <Badge tone={TRACK_TONE[b.tracking_status] ?? "neutral"}>{TRACK_LABEL[b.tracking_status] ?? b.tracking_status}</Badge> : <span className="text-muted">-</span>}</dd>
+              {tracking ? <><dt className="text-muted">Tracking</dt><dd>{b.tracking_status ? <Badge tone={TRACK_TONE[b.tracking_status] ?? "neutral"}>{TRACK_LABEL[b.tracking_status] ?? b.tracking_status}</Badge> : <span className="text-muted">-</span>}</dd></> : null}
               <dt className="text-muted">Left the supplier</dt><dd>{when(b.shipped_at)}</dd>
               <dt className="text-muted">You received it</dt><dd>{when(b.received_at)}</dd>
               <dt className="text-muted">Marked delivered</dt><dd>{deliveredOn ? when(deliveredOn.toISOString()) : <span className="text-muted">{DELIVERED_AFTER_DAYS} days after you receive it</span>}</dd>
@@ -59,7 +59,7 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
             ) : null}
             <p className="text-xs text-muted">Customers only see “preparing for production”, “being packed and sent to our warehouse for a quality check”, “being delivered (24-72 hours)” and “delivered”, with an estimated arrival date - never the tracking number or Junhe.</p>
           </div>
-          <div>
+          {tracking ? <div>
             <div className="mb-2 text-sm font-medium text-ink-2">Tracking events</div>
             {events.length ? (
               <ol className="relative grid gap-3 border-s border-line-2 ps-4">
@@ -72,7 +72,7 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
                 ))}
               </ol>
             ) : <p className="text-sm text-muted">{b.tracking_number ? "No events yet." : "Add the tracking number once the supplier ships."}</p>}
-          </div>
+          </div> : null}
         </div>
       </Card>
       <Card padded={false} className="overflow-x-auto">
