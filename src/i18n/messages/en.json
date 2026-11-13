@@ -652,7 +652,16 @@
     "payBitPersonalButton": "Pay with Bit",
     "payPalMe": "Pay with PayPal",
     "payPalMeNote": "We save your order, then the next page has a button that opens our PayPal.Me with the amount filled in. We confirm your payment by hand, usually within a few hours.",
-    "payPalMeButton": "Pay with PayPal"
+    "payPalMeButton": "Pay with PayPal",
+    "picksTitle": "Picks for your shirts",
+    "picksHint": "Matching extras for the teams in your order.",
+    "picksAdd": "Add",
+    "picksAddLabel": "Add {item} to the order",
+    "picksPopupTitle": "Complete your look",
+    "picksPopupHint": "Matching extras for the shirts you picked.",
+    "picksAdded": "Added",
+    "picksContinue": "Continue to checkout",
+    "picksClose": "Close"
   },
   "thankYou": {
     "eyebrow": "Order placed",

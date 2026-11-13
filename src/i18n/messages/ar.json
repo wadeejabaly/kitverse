@@ -652,7 +652,16 @@
     "payBitPersonalButton": "ادفع بـ Bit",
     "payPalMe": "ادفع بـ PayPal",
     "payPalMeNote": "منسجّل طلبك، وبالصفحة الجاية في زر بيفتح PayPal.Me تبعنا والمبلغ معبّى. منأكّد الدفع يدويًا، عادةً خلال كم ساعة.",
-    "payPalMeButton": "ادفع بـ PayPal"
+    "payPalMeButton": "ادفع بـ PayPal",
+    "picksTitle": "إضافات لقمصانك",
+    "picksHint": "إكسسوارات بتناسب الفرق اللي بطلبك.",
+    "picksAdd": "أضف",
+    "picksAddLabel": "أضف {item} للطلب",
+    "picksPopupTitle": "كمّل اللوك",
+    "picksPopupHint": "إكسسوارات بتناسب القمصان اللي اخترتها.",
+    "picksAdded": "انضاف",
+    "picksContinue": "كمّل للدفع",
+    "picksClose": "إغلاق"
   },
   "thankYou": {
     "eyebrow": "تم الطلب",

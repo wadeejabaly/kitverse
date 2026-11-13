@@ -17,6 +17,7 @@ import { CityCombobox } from "@/components/checkout/CityCombobox";
 import type { TownOption } from "@/data/localities";
 import { trackCheckoutStart } from "@/lib/analytics/track";
 import { BitMark } from "@/components/checkout/BitMark";
+import { AccessoryPicks } from "@/components/checkout/AccessoryPicks";
 import type { ManualMethod } from "@/lib/manual-pay-core";
 
 /**
@@ -790,6 +791,13 @@ export function CheckoutView({
             </li>
           ))}
         </ul>
+
+        <AccessoryPicks
+          shirts={lines.map(({ item, product }) => ({ team: product.team, qty: item.qty }))}
+          accessories={accessories}
+          inCart={accessoryLines.map(({ accessory }) => accessory)}
+          locale={locale}
+        />
 
         {/* Gift box (owner decision 2026-10-23) — one per order, but
             quantity-selectable, since a single box can hold more than one

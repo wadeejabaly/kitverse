@@ -48,6 +48,7 @@ export default async function CheckoutPage({
     titleHe: product.titleHe,
     season: product.season,
     image: product.image,
+    team: product.team,
   }));
 
   const accessories: CartAccessoryInfo[] = getOrderableAccessories().map((accessory) => ({

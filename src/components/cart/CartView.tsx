@@ -20,6 +20,8 @@ export interface CartProductInfo {
   titleHe?: string;
   season: string;
   image: string;
+  /** English team name (catalog `team`) - checkout uses it to suggest that team's scarf/keychain */
+  team?: string;
 }
 
 /**

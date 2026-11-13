@@ -652,7 +652,16 @@
     "payBitPersonalButton": "תשלום ב-Bit",
     "payPalMe": "תשלום ב-PayPal",
     "payPalMeNote": "נשמור את ההזמנה, ובעמוד הבא יש כפתור שפותח את ה-PayPal.Me שלנו עם הסכום מולא מראש. אנחנו מאשרים את התשלום ידנית, בדרך כלל תוך כמה שעות.",
-    "payPalMeButton": "תשלום ב-PayPal"
+    "payPalMeButton": "תשלום ב-PayPal",
+    "picksTitle": "תוספות לחולצות שלך",
+    "picksHint": "אביזרים שמתאימים לקבוצות בהזמנה שלך.",
+    "picksAdd": "הוסף",
+    "picksAddLabel": "הוסף {item} להזמנה",
+    "picksPopupTitle": "השלימו את הלוק",
+    "picksPopupHint": "אביזרים שמתאימים לחולצות שבחרתם.",
+    "picksAdded": "נוסף",
+    "picksContinue": "המשך לתשלום",
+    "picksClose": "סגירה"
   },
   "thankYou": {
     "eyebrow": "ההזמנה בוצעה",
