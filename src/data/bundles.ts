@@ -37,6 +37,18 @@ export const BUNDLES: Bundle[] = [
     handles: ["barcelona-2026-27-home-shirt", "barcelona-2026-27-away-shirt", "barcelona-2026-27-third-shirt"],
     image: "/bundles/barcelona-2026-27.jpg",
   },
+  {
+    slug: "manchester-united-2026-27",
+    team: "manchester-united",
+    handles: ["manchester-united-2026-27-home-shirt", "manchester-united-2026-27-away-shirt", "manchester-united-2026-27-third-shirt"],
+    image: "/bundles/manchester-united-2026-27.jpg",
+  },
+  {
+    slug: "manchester-city-2026-27",
+    team: "manchester-city",
+    handles: ["manchester-city-2026-27-home-shirt", "manchester-city-2026-27-away-shirt", "manchester-city-2026-27-third-shirt"],
+    image: "/bundles/manchester-city-2026-27.jpg",
+  },
 ];
 
 /** A bundle with its three shirts, or null when any of them is off the site or out of stock - a bundle is all three or nothing. */
