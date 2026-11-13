@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { getLeagues, getVisibleProducts, localName } from "@/data/catalog";
 import { ADDONS, priceFor } from "@/data/pricing";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
+import { HomeBundles } from "@/components/home/HomeBundles";
 import { HeroVideo } from "@/components/hero/HeroVideo";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductGrid } from "@/components/shop/ProductCard";
@@ -78,6 +79,10 @@ export default async function HomePage({
           flush against the hero's bottom edge, not as a margined page
           section like everything below it. */}
       <CategoryGrid />
+
+      {/* ─────────── BUNDLES (temporary promotion, owner request 2026-11-13) ───────────
+          Real Madrid + Barcelona 2026/27 bundles - see HomeBundles.tsx. Remove this line to take it down. */}
+      <HomeBundles locale={locale} />
 
       {/* ─────────── NEW IN ───────────
           The products are the idea, so the section carries no headline of its
