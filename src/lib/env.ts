@@ -20,6 +20,8 @@ const Env = z.object({
   META_AD_ACCOUNT_ID: z.string().optional().default(""),
   META_ADS_ACCESS_TOKEN: z.string().optional().default(""),
   META_GRAPH_VERSION: z.string().default("v24.0"),
+  // 17TRACK tracking API (src/lib/tracking/track17.ts) - reads the Junhe shipments of supplier batches; optional
+  TRACK17_API_KEY: z.string().optional().default(""),
   ELEVENLABS_API_KEY: z.string().optional().default(""),
   OPENAI_API_KEY: z.string().optional().default(""),
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional().default(""),

@@ -10,6 +10,7 @@ import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { sendOrderWhatsAppAlerts } from "@/lib/notify-whatsapp";
 import { rejectManualPayment, verifyManualPayment } from "@/lib/orders/manual-pay";
 import { formatIls, parseIlsToAgorot } from "@/lib/manual-pay-core";
+import { markBatchReceived, syncBatchTracking } from "@/lib/tracking/shipments";
 
 const StatusChange = z.object({
   orderId: z.string().uuid(),
@@ -71,6 +72,46 @@ export async function markBatchSent(form: FormData) {
   const id = z.string().uuid().parse(form.get("batchId"));
   must(await db().from("supplier_batches").update({ status: "sent", sent_at: new Date().toISOString() }).eq("id", id).select("id"), "batch sent");
   revalidatePath(`/admin/orders/batches/${id}`);
+}
+
+// ---- shipment tracking (owner request 2026-11-13, src/lib/tracking/shipments.ts) ----
+
+export type TrackingFormState = { ok: boolean; message: string };
+
+/** Save (or change) the Junhe tracking number of a batch, then read it once right away. */
+export async function saveTrackingNumber(_prev: TrackingFormState, form: FormData): Promise<TrackingFormState> {
+  const staff = await requireStaff();
+  const id = z.string().uuid().parse(form.get("batchId"));
+  const number = String(form.get("trackingNumber") ?? "").replace(/\s+/g, "").toUpperCase();
+  if (!/^[A-Z0-9-]{5,50}$/.test(number)) return { ok: false, message: "A tracking number is 5-50 letters or digits." };
+  const b = must(await db().from("supplier_batches").select("tracking_number").eq("id", id).single(), "batch") as { tracking_number: string | null };
+  if (b.tracking_number !== number) {
+    must(await db().from("supplier_batches").update({ tracking_number: number, tracking_registered: false, tracking_status: null, tracking_events: [], tracking_error: null, tracking_checked_at: null }).eq("id", id).select("id"), "save tracking");
+    await db().from("audit_log").insert({ actor: staff.id, action: "batch.tracking_number", entity: "supplier_batches", entity_id: id, after: { tracking_number: number } });
+  }
+  const result = await syncBatchTracking(id);
+  revalidatePath(`/admin/orders/batches/${id}`);
+  revalidatePath("/admin/orders");
+  return { ok: true, message: `Saved. ${result}` };
+}
+
+/** "Check now" on the batch page. */
+export async function checkTrackingNow(form: FormData) {
+  await requireStaff();
+  const id = z.string().uuid().parse(form.get("batchId"));
+  await syncBatchTracking(id);
+  revalidatePath(`/admin/orders/batches/${id}`);
+  revalidatePath("/admin/orders");
+}
+
+/** "I received this shipment" - the same step tracking takes when Junhe shows it delivered. */
+export async function markShipmentReceived(form: FormData) {
+  const staff = await requireStaff();
+  const id = z.string().uuid().parse(form.get("batchId"));
+  await markBatchReceived(id, new Date(), "marked by the owner");
+  await db().from("audit_log").insert({ actor: staff.id, action: "batch.received", entity: "supplier_batches", entity_id: id });
+  revalidatePath(`/admin/orders/batches/${id}`);
+  revalidatePath("/admin/orders");
 }
 
 /**

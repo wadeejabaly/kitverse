@@ -249,8 +249,8 @@ export const TOOLS = [
     run: async (ctx) => {
       const rows = await customerOrders(ctx.customerId) as { number: number; status: string; total: number; confirmed_at: string | null }[];
       return { orders: rows.map((r) => ({ order_number: r.number, status: r.status, total_ils: ils(r.total), confirmed_at: r.confirmed_at })),
-        status_meaning: { confirmed: "received, being prepared", in_supplier_batch: "ordered from the factory", produced: "made, on the way to our warehouse",
-          at_warehouse: "arrived at our warehouse", with_courier: "with the delivery company - they call a day before", delivered: "delivered", issue: "has a problem - the owner is handling it" } };
+        status_meaning: { confirmed: "received, being prepared", in_supplier_batch: "preparing for production", produced: "being packed and sent to our warehouse for a quality check",
+          at_warehouse: "arrived at our warehouse", with_courier: "being delivered - arrives within 24-72 hours, the courier calls before", delivered: "delivered", issue: "has a problem - the owner is handling it" } };
     },
   }),
 

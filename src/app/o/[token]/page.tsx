@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { readOrderToken } from "@/lib/orders/link";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { getAccessory } from "@/data/accessories";
+import { estimatedArrival } from "@/lib/orders/eta";
 
 export const dynamic = "force-dynamic";
 
@@ -21,12 +22,17 @@ type Product = { id: string; title_ar: string | null; title_en: string; primary_
 const ils = (agorot: number) => `${(agorot / 100).toLocaleString("en-US")}₪`;
 
 // customer's view of the order lifecycle
+// (owner wording 2026-11-13; shipments are tracked: produced = shipped from the supplier,
+// with_courier = the owner received it and it reaches the customer in 24-72 hours)
 const STEPS = [
-  { label: "تأكدت", statuses: ["confirmed", "paid"] },
-  { label: "بالمصنع", statuses: ["in_supplier_batch", "produced"] },
-  { label: "بالطريق", statuses: ["at_warehouse", "with_courier"] },
-  { label: "وصلت", statuses: ["delivered"] },
+  { label: "تأكدت", statuses: ["confirmed", "paid"], line: "تأكدت طلبيتك" },
+  { label: "تحضير للإنتاج", statuses: ["in_supplier_batch"], line: "طلبيتك عم تتحضّر للإنتاج" },
+  { label: "تغليف وفحص", statuses: ["produced", "at_warehouse"], line: "طلبيتك عم تتغلّف وتنبعت لمخزننا لفحص الجودة" },
+  { label: "بالتوصيل", statuses: ["with_courier"], line: "طلبيتك بالتوصيل · بتوصلك خلال 24-72 ساعة" },
+  { label: "وصلت", statuses: ["delivered"], line: "وصلت طلبيتك" },
 ];
+/** "2026-11-29" -> "29 نوفمبر" */
+const arDay = (ymd: string) => new Date(`${ymd}T00:00:00Z`).toLocaleDateString("ar-EG-u-nu-latn", { timeZone: "UTC", day: "numeric", month: "long" });
 const CONFIRMED = STEPS.flatMap((s) => s.statuses);
 
 export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
@@ -58,6 +64,11 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
   const nameAddon = q?.lines.flatMap((l) => l.addons).filter((a) => a.id === "name_number").reduce((s, a) => s + a.amount, 0) ?? 0;
   const otherAddons = q?.lines.flatMap((l) => l.addons).filter((a) => a.id !== "name_number").reduce((s, a) => s + a.amount, 0) ?? 0;
   const shirtsOnly = (q?.itemsTotal ?? 0) - nameAddon - otherAddons;
+  // estimated arrival (owner request 2026-11-13): a date, not "10-20 days"; out for delivery counts from when it went out
+  const outForDeliveryAt = o.status === "with_courier"
+    ? ((await db().from("order_events").select("created_at").eq("order_id", o.id).eq("to_status", "with_courier").order("created_at", { ascending: false }).limit(1).maybeSingle()).data?.created_at as string | undefined) ?? null
+    : null;
+  const eta = estimatedArrival({ status: o.status, confirmedAt: o.confirmed_at ?? o.created_at, outForDeliveryAt });
   const date = new Date(o.confirmed_at ?? o.created_at).toLocaleDateString("ar-EG-u-nu-latn", { timeZone: "Asia/Jerusalem", day: "numeric", month: "long" });
 
   return (
@@ -71,7 +82,7 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
         <h1 className="text-[26px] font-bold leading-tight">{confirmed ? "طلبيتك" : pendingOwnerApproval ? "استلمنا طلبيتك" : "ملخص الطلبية"}</h1>
         <p className="text-sm text-muted">
           {confirmed
-            ? `تأكدت ${date} · 10-20 يوم عمل انشالله (لا يشمل جمعة وسبت)`
+            ? o.status === "delivered" ? `تأكدت ${date} · وصلت 🎉` : `تأكدت ${date}`
             : pendingOwnerApproval
               ? "عم نراجعها ومنأكدلك خلال وقت قصير"
               : "لما تتأكد من كلشي، ثبت الطلبية معنا بالشات"}
@@ -79,7 +90,17 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
       </section>
 
       {confirmed ? (
-        <ol className="grid grid-cols-4 gap-1.5" aria-label="حالة الطلبية">
+        <>
+        {eta ? (
+          <div className="rounded-xl bg-pitch/[0.06] px-4 py-3 ring-1 ring-pitch/15">
+            {stepIndex >= 0 ? <div className="text-[13px] font-semibold text-pitch">{STEPS[stepIndex].line}</div> : null}
+            <div className="mt-1 text-xs text-muted">الوصول المتوقع</div>
+            <div className="text-[17px] font-bold">
+              {eta.kind === "window" ? (eta.from === eta.to ? arDay(eta.from) : `${arDay(eta.from)} – ${arDay(eta.to)}`) : "بالأيام القريبة انشالله"}
+            </div>
+          </div>
+        ) : null}
+        <ol className="grid grid-cols-5 gap-1.5" aria-label="حالة الطلبية">
           {STEPS.map((s, i) => {
             const done = i <= stepIndex;
             return (
@@ -92,6 +113,7 @@ export default async function OrderPage({ params }: PageProps<"/o/[token]">) {
             );
           })}
         </ol>
+        </>
       ) : null}
 
       <section className="flex flex-col divide-y divide-line border-y border-line">

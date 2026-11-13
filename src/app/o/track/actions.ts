@@ -13,7 +13,7 @@ export interface TrackState { error?: string; orders?: { number: number; status:
 const STATUS_LABEL: Record<string, string> = {
   draft: "قيد التجهيز", quoted: "قيد التجهيز", awaiting_details: "قيد التجهيز",
   awaiting_confirmation: "بانتظار التأكيد", awaiting_payment_verification: "بانتظار تأكيد الدفع", confirmed: "تأكدت", paid: "تأكدت",
-  in_supplier_batch: "بالمصنع", produced: "بالمصنع", at_warehouse: "بالطريق", with_courier: "بالطريق",
+  in_supplier_batch: "تحضير للإنتاج", produced: "تغليف وفحص الجودة", at_warehouse: "تغليف وفحص الجودة", with_courier: "بالتوصيل (24-72 ساعة)",
   delivered: "وصلت", issue: "في مشكلة، راسلنا",
 };
 const ils = (agorot: number) => `${(agorot / 100).toLocaleString("en-US")}₪`;

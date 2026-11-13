@@ -66,7 +66,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
   }
   const awaitingManual = !!manual && (manual.state === "awaiting_payment" || manual.state === "awaiting_verification" || manual.state === "needs_resubmit");
   const stLabel = o.status === "awaiting_payment_verification" ? `Awaiting ${o.payment_method === "bit_personal" ? "Bit" : "PayPal"} payment verification` : st.label;
-  const msgLabels: Record<string, string> = { produced: "Produced", at_warehouse: "At warehouse", with_courier: "With courier" };
+  const msgLabels: Record<string, string> = { produced: "Shipped", at_warehouse: "At warehouse", with_courier: "Out for delivery" };
 
   return (
     <>
@@ -204,9 +204,9 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
 const STEPS = [
   { key: "confirmed", label: "Confirmed", statuses: ["confirmed", "paid"] },
   { key: "in_supplier_batch", label: "At supplier", statuses: ["in_supplier_batch"] },
-  { key: "produced", label: "Produced", statuses: ["produced"] },
+  { key: "produced", label: "Shipped", statuses: ["produced"] },
   { key: "at_warehouse", label: "At warehouse", statuses: ["at_warehouse"] },
-  { key: "with_courier", label: "With courier", statuses: ["with_courier"] },
+  { key: "with_courier", label: "Out for delivery", statuses: ["with_courier"] },
   { key: "delivered", label: "Delivered", statuses: ["delivered"] },
 ];
 

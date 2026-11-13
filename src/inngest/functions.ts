@@ -6,6 +6,7 @@ import { notify } from "@/lib/notify";
 import { settings, type SpendLimits } from "@/lib/conversation/limits";
 import { syncInstagramMedia } from "@/lib/channels/media-sync";
 import { runScheduledPosts } from "@/lib/channels/ig-publish";
+import { syncOpenShipments } from "@/lib/tracking/shipments";
 
 /**
  * One bot turn per conversation burst: waits for the customer to stop typing (5s, max 20s),
@@ -124,4 +125,13 @@ export const igAutopost = inngest.createFunction(
   async ({ step }) => step.run("publish-due", () => runScheduledPosts()),
 );
 
-export const functions = [conversationTurn, quoteFollowup, approvalDecided, approvalReminder, spendWatch, mediaSync, igAutopost];
+/**
+ * Every 3 hours: read the Junhe tracking of supplier shipments and move their orders on
+ * (on the way -> out for delivery -> delivered 3 days later) - src/lib/tracking/shipments.ts.
+ */
+export const shipmentTracking = inngest.createFunction(
+  { id: "shipment-tracking", triggers: [{ cron: "TZ=Asia/Jerusalem 17 */3 * * *" }], concurrency: [{ limit: 1 }] },
+  async ({ step }) => step.run("sync", () => syncOpenShipments()),
+);
+
+export const functions = [conversationTurn, quoteFollowup, approvalDecided, approvalReminder, spendWatch, mediaSync, igAutopost, shipmentTracking];
