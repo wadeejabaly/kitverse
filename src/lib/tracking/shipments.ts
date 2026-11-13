@@ -8,7 +8,8 @@ import { DELIVERED_AFTER_DAYS, receivedTime, shipmentStage, type TrackResult } f
 /**
  * Supplier-batch shipments (owner request 2026-11-13). The owner types the Junhe tracking number on a
  * batch; this moves the batch's orders forward on their own:
- *   parcel moving            -> orders `in_supplier_batch` become `produced`   (customer: "on the way")
+ *   number saved (the supplier shipped) or parcel moving -> `in_supplier_batch` become `produced`
+ *                                                          (customer: "being packed and sent for a quality check")
  *   Junhe delivered to owner -> orders before `with_courier` become `with_courier` (customer: 24-72 hours)
  *   3 days after that        -> `with_courier` becomes `delivered`
  * Only ever FORWARD and only from the statuses listed: a cancelled / issue / already-further order is
@@ -34,6 +35,14 @@ async function advance(orderIds: string[], from: string[], to: string, note: str
     // same as the owner's manual "Delivered" (orders-actions.ts changeOrderStatus): open the cash collection record
     if (to === "delivered") await db().from("cash_collections").upsert({ order_id: o.id, amount: 0, status: "with_courier" }, { onConflict: "order_id", ignoreDuplicates: true });
   }
+  return moved;
+}
+
+/** The supplier shipped the batch (the owner saved its tracking number, or tracking shows it moving). Idempotent. */
+export async function markBatchShipped(batchId: string, how: string): Promise<number> {
+  await db().from("supplier_batches").update({ shipped_at: new Date().toISOString() }).eq("id", batchId).is("shipped_at", null);
+  const moved = await advance(await batchOrderIds(batchId), SHIPPED_FROM, "produced", `shipped (${how})`);
+  if (moved) await notify({ kind: "shipment.shipped", priority: "quiet", title: `Shipment on the way: ${moved} order${moved === 1 ? "" : "s"}`, link: `/admin/orders/batches/${batchId}` });
   return moved;
 }
 
@@ -79,10 +88,8 @@ export async function syncBatchTracking(batchId: string): Promise<string> {
 
   const stage = shipmentStage(result);
   if (stage === "none" || !result) return "No movement on the tracking yet.";
-  if (!b.shipped_at) await db().from("supplier_batches").update({ shipped_at: now.toISOString() }).eq("id", batchId).is("shipped_at", null);
   if (stage === "shipped") {
-    const moved = await advance(await batchOrderIds(batchId), SHIPPED_FROM, "produced", "shipped (tracking)");
-    if (moved) await notify({ kind: "shipment.shipped", priority: "quiet", title: `Shipment on the way: ${moved} order${moved === 1 ? "" : "s"}`, link: `/admin/orders/batches/${batchId}` });
+    const moved = await markBatchShipped(batchId, "tracking");
     return moved ? `On the way - ${moved} order(s) updated.` : "On the way.";
   }
   const moved = await markBatchReceived(batchId, receivedTime(result, now), "tracking");

@@ -10,7 +10,7 @@ import { queueOutgoing, sendQueued } from "@/lib/conversation/deliver";
 import { sendOrderWhatsAppAlerts } from "@/lib/notify-whatsapp";
 import { rejectManualPayment, verifyManualPayment } from "@/lib/orders/manual-pay";
 import { formatIls, parseIlsToAgorot } from "@/lib/manual-pay-core";
-import { markBatchReceived, syncBatchTracking } from "@/lib/tracking/shipments";
+import { markBatchReceived, markBatchShipped, syncBatchTracking } from "@/lib/tracking/shipments";
 
 const StatusChange = z.object({
   orderId: z.string().uuid(),
@@ -89,10 +89,14 @@ export async function saveTrackingNumber(_prev: TrackingFormState, form: FormDat
     must(await db().from("supplier_batches").update({ tracking_number: number, tracking_registered: false, tracking_status: null, tracking_events: [], tracking_error: null, tracking_checked_at: null }).eq("id", id).select("id"), "save tracking");
     await db().from("audit_log").insert({ actor: staff.id, action: "batch.tracking_number", entity: "supplier_batches", entity_id: id, after: { tracking_number: number } });
   }
+  // a tracking number means the supplier has shipped: the orders move to "being packed and sent" now,
+  // without waiting for tracking (owner 2026-11-13: no tracking account needed)
+  const shipped = await markBatchShipped(id, "tracking number saved");
   const result = await syncBatchTracking(id);
   revalidatePath(`/admin/orders/batches/${id}`);
   revalidatePath("/admin/orders");
-  return { ok: true, message: `Saved. ${result}` };
+  const tracked = result.startsWith("Automatic tracking is off") ? "Press “I received this shipment” when it reaches you." : result;
+  return { ok: true, message: `Saved${shipped ? ` - ${shipped} order(s) now “being packed and sent”` : ""}. ${tracked}` };
 }
 
 /** "Check now" on the batch page. */

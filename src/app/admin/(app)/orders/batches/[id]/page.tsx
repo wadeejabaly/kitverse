@@ -42,7 +42,9 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <div className="grid content-start gap-4">
             <TrackingNumberForm batchId={id} current={b.tracking_number} />
-            {!tracking ? <p className="text-xs text-amber">Automatic tracking is off until the 17TRACK key (TRACK17_API_KEY) is added. You can still use “I received this shipment”.</p> : null}
+            <p className="text-xs text-muted">{tracking
+              ? "Saving the number moves the orders to “being packed and sent”. Junhe tracking is then checked every 3 hours; when it shows delivered to you, the orders go out for delivery."
+              : "Saving the number moves the orders to “being packed and sent”. When the parcel reaches you, press “I received this shipment” - the orders go out for delivery and are marked delivered 3 days later."}</p>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
               <dt className="text-muted">Tracking</dt><dd>{b.tracking_status ? <Badge tone={TRACK_TONE[b.tracking_status] ?? "neutral"}>{TRACK_LABEL[b.tracking_status] ?? b.tracking_status}</Badge> : <span className="text-muted">-</span>}</dd>
               <dt className="text-muted">Left the supplier</dt><dd>{when(b.shipped_at)}</dd>
