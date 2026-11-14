@@ -191,13 +191,14 @@ async function main() {
   const nowIso = new Date().toISOString();
   type CodeRow = { code: string; kind: "percent" | "fixed"; value: number; min_order: number; starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number };
   const welcome = ((codes ?? []) as CodeRow[]).find((c) => (!c.starts_at || c.starts_at <= nowIso) && (!c.ends_at || c.ends_at > nowIso) && (c.max_uses == null || c.used_count < c.max_uses));
+  // Single-use codes (e.g. the Monday riddle prize, owner 2026-11-14) never become the banner: max_uses must be empty.
   // A dated sale code (owner request 2026-11-12, Black Friday): the next active code that is for everyone
   // (not first-order-only) and has both a start and an end date, still running or still to come. The
   // banner swaps to it in the browser between those dates (PromoBanner/PromoSwitch), so it appears and
   // disappears on time without a deploy.
   const { data: saleCodes, error: se } = await db.from("discount_codes")
     .select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count")
-    .eq("active", true).eq("first_order_only", false).not("starts_at", "is", null).not("ends_at", "is", null)
+    .eq("active", true).eq("first_order_only", false).not("starts_at", "is", null).not("ends_at", "is", null).is("max_uses", null)
     .gt("ends_at", nowIso).order("starts_at", { ascending: true }).limit(1);
   if (se) throw se;
   const sale = ((saleCodes ?? []) as CodeRow[])[0];

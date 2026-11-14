@@ -19,6 +19,12 @@ import schedule from "@/data/ig-schedule.json";
  * NOT retried (that could double-post) - the owner gets an alert and can delete the row to retry.
  * Items more than 3 hours late are skipped, never posted out of date. Pause everything with
  * bot_settings `ig_autopost` = {"paused": true}.
+ *
+ * Poll stories (owner request 2026-11-14): Instagram's API cannot add stickers (polls, links...) to a
+ * story, so an item with `poll` is NOT auto-published. At its time the owner gets a push alert that
+ * opens /admin/stories, where he saves the image, copies the question/answers and posts it from the
+ * Instagram app with the poll sticker (~20 s). Its bot_settings row records "owner_poll" then
+ * "posted_by_owner" / "skipped".
  */
 export interface ScheduledPost {
   id: string;
@@ -26,7 +32,11 @@ export interface ScheduledPost {
   kind: "post" | "story";
   image: string; // site path, e.g. /campaign/daily/nov13-ar-1-post.jpg
   caption?: string;
+  /** VS stories: the owner adds this as Instagram's poll sticker by hand (the API can't). */
+  poll?: { question: string; options: [string, string] };
 }
+
+export const SCHEDULE = schedule as ScheduledPost[];
 
 const LATE_LIMIT_MS = 3 * 60 * 60 * 1000;
 const base = () => `https://graph.instagram.com/${env().IG_GRAPH_VERSION}`;
@@ -76,11 +86,23 @@ export async function runScheduledPosts(now = new Date()) {
   if ((await settings<{ paused?: boolean }>("ig_autopost", {})).paused) return { skipped: "paused" };
 
   const results: Record<string, string> = {};
-  for (const item of dueItems(schedule as ScheduledPost[], now)) {
+  for (const item of dueItems(SCHEDULE, now)) {
     const key = `ig_post:${item.id}`;
     // claim: the primary key makes this a one-time insert
     const claim = await db().from("bot_settings").insert({ key, value: { status: "publishing", at: new Date().toISOString() } });
     if (claim.error) continue; // already claimed (posted, failed or in progress)
+    if (item.poll) {
+      await db().from("bot_settings").update({ value: { status: "owner_poll", at: new Date().toISOString() } }).eq("key", key);
+      await notify({
+        kind: `ig.poll_story.${item.id}`,
+        priority: "normal",
+        title: "Story with a poll - post it now",
+        body: `${item.poll.question} (${item.poll.options.join(" / ")}). Tap to open the picture and the poll text.`,
+        link: `/admin/stories#${item.id}`,
+      }).catch(() => {});
+      results[item.id] = "owner_poll";
+      continue;
+    }
     try {
       const mediaId = await publishOne(item);
       await db().from("bot_settings").update({ value: { status: "published", media_id: mediaId, at: new Date().toISOString() } }).eq("key", key);

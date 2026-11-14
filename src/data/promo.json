@@ -6,11 +6,11 @@
     "minOrder": 300
   },
   "sale": {
-    "code": "BLACKFRIDAY20",
+    "code": "BLACKFRIDAY15",
     "kind": "percent",
-    "value": 20,
+    "value": 15,
     "minOrder": 0,
-    "startsAt": "2026-11-23T22:00:00+00:00",
+    "startsAt": "2026-11-19T22:00:00+00:00",
     "endsAt": "2026-11-30T22:00:00+00:00"
   }
 }
