@@ -108,7 +108,7 @@
     "id": "riddle-20261116-ar",
     "at": "2026-11-16T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov16-riddle-henry-ar.jpg"
+    "image": "/campaign/riddle/nov16-riddle-owen-ar.jpg"
   },
   {
     "id": "nov16-ar-1-post",
@@ -139,7 +139,7 @@
     "id": "answer-20261117-ar",
     "at": "2026-11-17T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov17-answer-henry-ar.jpg"
+    "image": "/campaign/riddle/nov17-answer-owen-ar.jpg"
   },
   {
     "id": "nov17-ar-1-post",
@@ -295,7 +295,7 @@
     "id": "riddle-20261123-ar",
     "at": "2026-11-23T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov23-riddle-beckham-ar.jpg"
+    "image": "/campaign/riddle/nov23-riddle-crespo-ar.jpg"
   },
   {
     "id": "nov23-ar-1-post",
@@ -326,7 +326,7 @@
     "id": "answer-20261124-ar",
     "at": "2026-11-24T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov24-answer-beckham-ar.jpg"
+    "image": "/campaign/riddle/nov24-answer-crespo-ar.jpg"
   },
   {
     "id": "nov24-ar-1-post",
@@ -482,7 +482,7 @@
     "id": "riddle-20261130-ar",
     "at": "2026-11-30T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov30-riddle-kaka-ar.jpg"
+    "image": "/campaign/riddle/nov30-riddle-seedorf-ar.jpg"
   },
   {
     "id": "nov30-ar-1-post",
@@ -501,42 +501,42 @@
     "id": "answer-20261201-ar",
     "at": "2026-12-01T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec01-answer-kaka-ar.jpg"
+    "image": "/campaign/riddle/dec01-answer-seedorf-ar.jpg"
   },
   {
     "id": "riddle-20261207-ar",
     "at": "2026-12-07T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec07-riddle-suarez-ar.jpg"
+    "image": "/campaign/riddle/dec07-riddle-forlan-ar.jpg"
   },
   {
     "id": "answer-20261208-ar",
     "at": "2026-12-08T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec08-answer-suarez-ar.jpg"
+    "image": "/campaign/riddle/dec08-answer-forlan-ar.jpg"
   },
   {
     "id": "riddle-20261214-ar",
     "at": "2026-12-14T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec14-riddle-figo-ar.jpg"
+    "image": "/campaign/riddle/dec14-riddle-anelka-ar.jpg"
   },
   {
     "id": "answer-20261215-ar",
     "at": "2026-12-15T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec15-answer-figo-ar.jpg"
+    "image": "/campaign/riddle/dec15-answer-anelka-ar.jpg"
   },
   {
     "id": "riddle-20261221-ar",
     "at": "2026-12-21T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec21-riddle-dimaria-ar.jpg"
+    "image": "/campaign/riddle/dec21-riddle-etoo-ar.jpg"
   },
   {
     "id": "answer-20261222-ar",
     "at": "2026-12-22T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec22-answer-dimaria-ar.jpg"
+    "image": "/campaign/riddle/dec22-answer-etoo-ar.jpg"
   }
 ]
