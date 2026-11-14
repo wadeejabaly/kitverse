@@ -199,31 +199,31 @@
         "id": "north",
         "name_ar": "الشمال (لحد كفر قرع)",
         "fee": 50,
-        "days": "7-14"
+        "days": "10-20"
       },
       {
         "id": "center",
         "name_ar": "باقي المناطق",
         "fee": 70,
-        "days": "7-14"
+        "days": "10-20"
       },
       {
         "id": "negev",
         "name_ar": "باقي المناطق",
         "fee": 70,
-        "days": "up to 20"
+        "days": "10-20"
       },
       {
         "id": "jerusalem",
         "name_ar": "باقي المناطق",
         "fee": 70,
-        "days": "up to 20"
+        "days": "10-20"
       },
       {
         "id": "jer_ws_eilat",
         "name_ar": "باقي المناطق",
         "fee": 70,
-        "days": "up to 20"
+        "days": "10-20"
       }
     ],
     "days_excluded": "Fri + Sat"

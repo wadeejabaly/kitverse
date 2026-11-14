@@ -73,7 +73,7 @@ export default async function ApprovalPage({ params, searchParams }: PageProps<"
                       </label>
                     ) : null}
                     <label className="flex flex-col gap-1.5 text-sm font-medium">Note for the bot <span className="text-xs font-normal text-muted">Optional - e.g. price, model, when it arrives. The bot tells the customer.</span>
-                      <input name="note" className={input} dir="auto" placeholder={isAvail ? "e.g. available, player version, 7-14 days" : "e.g. ok, 20₪ off this time"} />
+                      <input name="note" className={input} dir="auto" placeholder={isAvail ? "e.g. available, player version, 10-20 days" : "e.g. ok, 20₪ off this time"} />
                     </label>
                   </>
                 )}

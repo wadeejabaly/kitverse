@@ -208,31 +208,31 @@
         "id": "north",
         "name_ar": "الشمال وضواحيه",
         "fee": 50,
-        "days": "7-14"
+        "days": "10-20"
       },
       {
         "id": "center",
         "name_ar": "المركز",
         "fee": 60,
-        "days": "7-14"
+        "days": "10-20"
       },
       {
         "id": "negev",
         "name_ar": "النقب",
         "fee": 70,
-        "days": "up to 20"
+        "days": "10-20"
       },
       {
         "id": "jerusalem",
         "name_ar": "القدس وضواحيها",
         "fee": 70,
-        "days": "up to 20"
+        "days": "10-20"
       },
       {
         "id": "jer_ws_eilat",
         "name_ar": "الضفة وإيلات",
         "fee": 100,
-        "days": "up to 20"
+        "days": "10-20"
       }
     ],
     "days_excluded": "Fri + Sat"
