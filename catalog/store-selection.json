@@ -162,6 +162,69 @@
       ]
     },
     {
+      "handle": "al-nassr-2026-27-home-shirt",
+      "title": "Al Nassr 2026/27 Home Shirt",
+      "titleAr": "قميص النصر 2026/27 الأساسي",
+      "team": "Al Nassr",
+      "teamAr": "النصر",
+      "kind": "current",
+      "season": "2026/27",
+      "kit": "Home",
+      "league": "saudi-pro-league",
+      "edition": "standard",
+      "image": "/products/al-nassr-2026-27-home-shirt.jpg",
+      "sourceHash": "owner-photo",
+      "visible": true,
+      "productHandle": "al-nassr-2026-27-home-shirt",
+      "images": [
+        "/products/al-nassr-2026-27-home-shirt-back.jpg"
+      ],
+      "teamHe": "אל נאסר",
+      "titleHe": "חולצת בית אל נאסר 2026/27"
+    },
+    {
+      "handle": "al-nassr-2026-27-away-shirt",
+      "title": "Al Nassr 2026/27 Away Shirt",
+      "titleAr": "قميص النصر 2026/27 الاحتياطي",
+      "team": "Al Nassr",
+      "teamAr": "النصر",
+      "kind": "current",
+      "season": "2026/27",
+      "kit": "Away",
+      "league": "saudi-pro-league",
+      "edition": "standard",
+      "image": "/products/al-nassr-2026-27-away-shirt.jpg",
+      "sourceHash": "owner-photo",
+      "visible": true,
+      "productHandle": "al-nassr-2026-27-away-shirt",
+      "images": [
+        "/products/al-nassr-2026-27-away-shirt-back.jpg"
+      ],
+      "teamHe": "אל נאסר",
+      "titleHe": "חולצת חוץ אל נאסר 2026/27"
+    },
+    {
+      "handle": "al-nassr-2026-27-third-shirt",
+      "title": "Al Nassr 2026/27 Third Shirt",
+      "titleAr": "قميص النصر 2026/27 الثالث",
+      "team": "Al Nassr",
+      "teamAr": "النصر",
+      "kind": "current",
+      "season": "2026/27",
+      "kit": "Third",
+      "league": "saudi-pro-league",
+      "edition": "standard",
+      "image": "/products/al-nassr-2026-27-third-shirt.jpg",
+      "sourceHash": "owner-photo",
+      "visible": true,
+      "productHandle": "al-nassr-2026-27-third-shirt",
+      "images": [
+        "/products/al-nassr-2026-27-third-shirt-back.jpg"
+      ],
+      "teamHe": "אל נאסר",
+      "titleHe": "חולצת שלישית אל נאסר 2026/27"
+    },
+    {
       "handle": "liverpool-2026-27-home-shirt",
       "title": "Liverpool 2026/27 Home Shirt",
       "titleAr": "قميص ليفربول 2026/27 الأساسي",
