@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useConsent } from "@/components/providers/ConsentProvider";
 
@@ -12,8 +13,24 @@ import { useConsent } from "@/components/providers/ConsentProvider";
 export function ConsentBanner() {
   const t = useTranslations("consent");
   const { consent, ready, settingsOpen, accept, decline } = useConsent();
+  const ref = useRef<HTMLElement>(null);
 
   const visible = ready && (consent === "unknown" || settingsOpen);
+
+  // The card is fixed over the bottom of the screen, so the page reserves its height at the end
+  // (--kv-consent-h, globals.css): the footer can still be scrolled clear of it and every footer link
+  // (About, Contact...) stays clickable (owner report 2026-11-14: "About" couldn't be clicked in Arabic).
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = ref.current;
+    if (!visible || !el) { root.style.removeProperty("--kv-consent-h"); return; }
+    const set = () => root.style.setProperty("--kv-consent-h", `${Math.ceil(el.getBoundingClientRect().height)}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    return () => { ro.disconnect(); root.style.removeProperty("--kv-consent-h"); };
+  }, [visible]);
+
   if (!visible) return null;
 
   // Equal size and equal ease of click either way — see the component's own
@@ -34,6 +51,7 @@ export function ConsentBanner() {
   return (
     <aside
       // Held back while the home page film plays (globals.css, THE VIDEO HERO).
+      ref={ref}
       data-consent-banner
       role="region"
       aria-label={t("settingsTitle")}

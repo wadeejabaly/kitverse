@@ -1183,6 +1183,18 @@ html:has(.kv-vhero[data-intro="playing"]) [data-consent-banner] {
   display: none;
 }
 
+/* The cookie card must never sit on top of something the shopper is trying to tap (owner report
+   2026-11-14: "About" couldn't be clicked in Arabic): the page reserves the card's height at its end
+   (ConsentBanner sets --kv-consent-h) so the footer scrolls clear of it, and the card steps aside
+   while the phone menu is open. */
+body {
+  padding-bottom: var(--kv-consent-h, 0px);
+}
+
+html:has(.kv-mnav) [data-consent-banner] {
+  display: none;
+}
+
 /* Both: visibility keeps the copy and arrows out of the tab order, opacity
    covers the showcase's current frame, which sets `visibility: visible`
    inline and would otherwise show through a hidden parent. */
