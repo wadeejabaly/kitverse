@@ -47,6 +47,8 @@ const LEAGUE_ART: Record<string, string> = {
   "la-liga": "/patches/league-la-liga.jpg",
   "premier-league": "/patches/league-premier-league.jpg",
   "serie-a": "/patches/league-serie-a.jpg",
+  // owner's artwork 2026-11-13 (Al Nassr shirts)
+  "saudi-pro-league": "/patches/league-saudi-pro-league.jpg",
 };
 
 /**
