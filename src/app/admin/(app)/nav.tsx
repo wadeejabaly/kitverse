@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   LayoutDashboard, ClipboardCheck, MessagesSquare, Package, Images, ImageOff, FlaskConical, Settings2, Bell, Layers, Truck, Percent,
-  BarChart3, PiggyBank, Vote, Warehouse, Users, Boxes, PanelLeftClose, PanelLeftOpen, Menu, X,
+  BarChart3, PiggyBank, Warehouse, Users, Boxes, PanelLeftClose, PanelLeftOpen, Menu, X,
 } from "lucide-react";
 import { cx, Wordmark } from "../ui";
 
@@ -43,7 +43,6 @@ const SECTIONS: { title?: string; items: Item[] }[] = [
       { href: "/admin/inbox", label: "Inbox", icon: MessagesSquare },
       { href: "/admin/approvals", label: "Approvals", icon: ClipboardCheck },
       { href: "/admin/media", label: "Posts", icon: Images },
-      { href: "/admin/stories", label: "Poll stories", icon: Vote },
       { href: "/admin/test-chat", label: "Test bot", icon: FlaskConical },
     ],
   },
