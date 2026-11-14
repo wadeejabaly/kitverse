@@ -30,6 +30,7 @@ export function WhatsAppCard({ phone, options, suggested, defaultLang }: { phone
   };
 
   return (
+    <div id="whatsapp" className="scroll-mt-24">
     <Card>
       <SectionTitle><span className="inline-flex items-center gap-2"><MessageCircle className="h-3.5 w-3.5" /> Message on WhatsApp</span></SectionTitle>
       <div className="mb-3 flex flex-wrap gap-1.5">
@@ -58,5 +59,6 @@ export function WhatsAppCard({ phone, options, suggested, defaultLang }: { phone
       </div>
       <p className="mt-2 text-[11px] text-muted">Opens the chat with the message written - you press Send. On iPhone with both WhatsApp apps, pick “Open in WhatsApp Business” if it opens the normal one (or paste the copied text there).</p>
     </Card>
+    </div>
   );
 }

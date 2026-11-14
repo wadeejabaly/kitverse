@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink, Check, X, User, CreditCard, Shirt } from "lucide-react";
+import { ArrowLeft, MessageCircle, MessagesSquare, Phone, MapPin, ExternalLink, Check, X, User, CreditCard, Shirt } from "lucide-react";
 import { db } from "@/lib/db";
 import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
 import { orderLink, orderToken } from "@/lib/orders/link";
@@ -95,6 +95,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
       <PageHeader eyebrow={o.source === "website" ? "Website order" : "Instagram order"} title={`Order #${o.number}`}
         subtitle={<span className="mt-1 inline-flex flex-wrap items-center gap-2"><Badge tone={st.tone}>{stLabel}</Badge><Badge tone={o.payment_status === "paid" ? "green" : "neutral"}>{payLabel(o.payment_method, o.payment_status, true)}</Badge><span>{ils(o.total)} · placed {ilTime(o.created_at)}</span></span>}
         actions={<>
+          {wa ? <a href="#whatsapp" className={button.whatsapp}><MessageCircle className="h-4 w-4" /> WhatsApp</a> : null}
           <a href={`/o/${orderToken(o.id)}`} target="_blank" rel="noreferrer" className={button.ghost}><ExternalLink className="h-4 w-4" /> Customer page</a>
           {o.conversation_id ? <Link href={`/admin/inbox/${o.conversation_id}`} className={button.ghost}><MessagesSquare className="h-4 w-4" /> Chat</Link> : null}
           {o.status !== "cancelled" && !awaitingOk ? <CancelOrderButton orderId={o.id} number={o.number} /> : null}
