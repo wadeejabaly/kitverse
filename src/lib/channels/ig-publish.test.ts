@@ -26,6 +26,13 @@ describe("scheduled Instagram posts", () => {
       if (i.kind === "post") expect(i.caption?.length).toBeGreaterThan(20);
       expect(existsSync(`public${i.image}`)).toBe(true);
       expect(Number.isNaN(Date.parse(i.at))).toBe(false);
+      if (i.poll) {
+        // the owner posts these by hand (the API can't add a poll sticker): only stories, a question and two different answers
+        expect(i.kind).toBe("story");
+        expect(i.poll.question.length).toBeGreaterThan(2);
+        expect(i.poll.options).toHaveLength(2);
+        expect(i.poll.options[0]).not.toBe(i.poll.options[1]);
+      }
     }
   });
 });
