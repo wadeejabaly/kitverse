@@ -9,6 +9,7 @@ import { ConsentProvider } from "@/components/providers/ConsentProvider";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { ConsentBanner } from "@/components/shared/ConsentBanner";
+import { LanguagePicker } from "@/components/shared/LanguagePicker";
 import { PageViewTracker } from "@/components/providers/PageViewTracker";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
@@ -119,6 +120,8 @@ export default async function LocaleLayout({
               <Footer />
             </CartProvider>
             <ConsentBanner />
+            {/* First visit: "which language?" (owner request 2026-11-14), after the home intro. */}
+            <LanguagePicker />
           </ConsentProvider>
         </NextIntlClientProvider>
       </body>

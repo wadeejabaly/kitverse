@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/config";
 import { cn } from "@/lib/utils";
+import { rememberLocale } from "./LanguagePicker";
 
 /** Message key under "nav" for each locale's own-language name, e.g. t(LOCALE_LABEL_KEYS.he). */
 const LOCALE_LABEL_KEYS: Record<string, string> = {
@@ -107,7 +108,7 @@ export function LocaleToggle({ className }: { className?: string }) {
               lang={other}
               hrefLang={other}
               role="menuitem"
-              onClick={() => setOpen(false)}
+              onClick={() => { rememberLocale(other); setOpen(false); }}
               className="px-4 py-2 text-[13px] whitespace-nowrap text-ink-soft transition-colors hover:bg-tile hover:text-ink"
             >
               {t(LOCALE_LABEL_KEYS[other] ?? other)}

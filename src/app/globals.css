@@ -2791,3 +2791,25 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
 @media (prefers-reduced-motion: reduce) {
   .kv-mnav-enter { animation: none; }
 }
+
+/* ── FIRST-VISIT LANGUAGE PICKER (owner request 2026-11-14, src/components/shared/LanguagePicker.tsx) ── */
+.kv-langpick{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%}
+.kv-langpick[open]{display:grid;place-items:center}
+.kv-langpick::backdrop{background:rgba(5,8,26,.72);backdrop-filter:blur(6px)}
+.kv-langpick-panel{position:relative;width:min(420px,calc(100vw - 32px));padding:28px 22px 22px;border-radius:22px;text-align:center;color:var(--flood-ink);
+  background:radial-gradient(120% 80% at 50% 0%,#1a2f6b 0%,var(--flood-ground) 60%);border:1px solid rgba(201,165,92,.45);
+  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04) inset;animation:kv-langpick-in .35s ease-out}
+@keyframes kv-langpick-in{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.kv-langpick-panel{animation:none}}
+.kv-langpick-badge{width:72px;height:72px;margin:0 auto 10px;filter:drop-shadow(0 0 18px rgba(47,107,255,.55))}
+.kv-langpick-title{display:flex;flex-direction:column;gap:2px;font-weight:700;font-size:20px;line-height:1.3}
+.kv-langpick-title span+span{font-size:15px;font-weight:600;color:var(--flood-ink-soft)}
+.kv-langpick-list{display:grid;gap:10px;margin:20px 0 14px}
+.kv-langpick-opt{width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 16px;border-radius:14px;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:var(--flood-ink);transition:background .15s,border-color .15s,transform .15s}
+.kv-langpick-opt:hover,.kv-langpick-opt:focus-visible{background:var(--flood-blue);border-color:var(--flood-blue-2);transform:translateY(-1px);outline:none}
+.kv-langpick-opt[aria-current="true"]{border-color:var(--flood-gold)}
+.kv-langpick-label{font-size:22px;font-weight:700;line-height:1.2}
+.kv-langpick-hint{font-size:13px;color:var(--flood-ink-soft)}
+.kv-langpick-opt:hover .kv-langpick-hint,.kv-langpick-opt:focus-visible .kv-langpick-hint{color:#dfe7ff}
+.kv-langpick-note{display:flex;flex-direction:column;gap:1px;font-size:12px;color:var(--flood-ink-soft)}
