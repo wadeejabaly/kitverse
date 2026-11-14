@@ -84,7 +84,12 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
     wa = {
       phone: waPhone(a.phone),
       lang: waLangFor(a.full_name),
-      options: kinds.map(([kind, label]) => ({ kind, label, text: { ar: waMessage(kind, "ar", waOrder), he: waMessage(kind, "he", waOrder), en: waMessage(kind, "en", waOrder) } })),
+      // the order-page link opens in the message's language (owner request 2026-11-14)
+      options: kinds.map(([kind, label]) => ({ kind, label, text: {
+        ar: waMessage(kind, "ar", { ...waOrder, link: `${waOrder.link}?l=ar` }),
+        he: waMessage(kind, "he", { ...waOrder, link: `${waOrder.link}?l=he` }),
+        en: waMessage(kind, "en", { ...waOrder, link: `${waOrder.link}?l=en` }),
+      } })),
     };
   }
   const msgLabels: Record<string, string> = { produced: "Shipped", at_warehouse: "At warehouse", with_courier: "Out for delivery" };
