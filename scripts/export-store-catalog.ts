@@ -168,7 +168,11 @@ async function main() {
       visible: true,
     };
   });
-  const { leagues, teams } = JSON.parse(readFileSync("catalog/store-collections.json", "utf8"));
+  const collections = JSON.parse(readFileSync("catalog/store-collections.json", "utf8")) as { leagues: { slug: string }[]; teams: unknown[] };
+  // only leagues with at least one shirt on the site (owner 2026-11-13: the Saudi Pro League is listed
+  // ahead of its Al Nassr shirts - it must not show as an empty menu heading / page until they are live)
+  const leagues = collections.leagues.filter((l) => products.some((p) => p.league === l.slug));
+  const { teams } = collections;
 
   // the price list the bot uses (published, else the latest draft) - the site shows the same numbers
   const { data: pl, error: pe } = await db.from("price_list_versions").select("data,status,version").in("status", ["published", "draft"])

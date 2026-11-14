@@ -29,6 +29,12 @@
       "name": "Ligue 1",
       "nameAr": "الدوري الفرنسي",
       "nameHe": "הליגה הצרפתית"
+    },
+    {
+      "slug": "saudi-pro-league",
+      "name": "Saudi Pro League",
+      "nameAr": "الدوري السعودي",
+      "nameHe": "הליגה הסעודית"
     }
   ],
   "teams": [
@@ -703,6 +709,13 @@
       "nameAr": "وست هام يونايتد",
       "kind": "club",
       "nameHe": "ווסט האם יונייטד"
+    },
+    {
+      "slug": "al-nassr",
+      "name": "Al Nassr",
+      "nameAr": "النصر",
+      "kind": "club",
+      "nameHe": "אל נאסר"
     }
   ]
 }

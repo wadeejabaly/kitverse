@@ -48,7 +48,7 @@ export interface NavEntry {
 }
 
 /** The order the owner listed the leagues in; any other league follows. */
-const LEAGUE_ORDER = ["premier-league", "la-liga", "serie-a", "bundesliga", "ligue-1"];
+const LEAGUE_ORDER = ["premier-league", "la-liga", "serie-a", "bundesliga", "ligue-1", "saudi-pro-league"];
 
 const teamBySlug = () => new Map(getTeams().map((team) => [team.slug, team]));
 
