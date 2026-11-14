@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 
 const when = (iso: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jerusalem", weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
 
-type State = "now" | "upcoming" | "posted" | "skipped" | "missed";
-const BADGE: Record<State, [string, Tone]> = { now: ["Post it now", "amber"], upcoming: ["Upcoming", "neutral"], posted: ["Posted", "green"], skipped: ["Skipped", "neutral"], missed: ["Missed", "red"] };
+type State = "now" | "upcoming" | "posted" | "auto" | "skipped" | "missed";
+const BADGE: Record<State, [string, Tone]> = { now: ["Post it now", "amber"], upcoming: ["Upcoming", "neutral"], posted: ["Posted", "green"], auto: ["Went up without a poll", "neutral"], skipped: ["Skipped", "neutral"], missed: ["Missed", "red"] };
 
 /**
  * Poll stories (owner request 2026-11-14). Instagram's API can't put a poll sticker on a story, so these
@@ -27,11 +27,11 @@ export default async function Stories() {
   const items = polls.map((p) => {
     const s = rows.get(`ig_post:${p.id}`)?.status;
     const at = Date.parse(p.at);
-    const state: State = s === "posted_by_owner" ? "posted" : s === "skipped" ? "skipped"
+    const state: State = s === "posted_by_owner" ? "posted" : s === "published" ? "auto" : s === "skipped" ? "skipped"
       : at > now ? "upcoming" : now - at <= 24 * 3600_000 ? "now" : "missed";
     return { ...p, state };
   });
-  const order: State[] = ["now", "upcoming", "missed", "posted", "skipped"];
+  const order: State[] = ["now", "upcoming", "missed", "posted", "auto", "skipped"];
   items.sort((a, b) => order.indexOf(a.state) - order.indexOf(b.state) || (a.state === "upcoming" ? Date.parse(a.at) - Date.parse(b.at) : Date.parse(b.at) - Date.parse(a.at)));
   const shown = items.filter((i) => i.state !== "upcoming" || Date.parse(i.at) - now < 7 * 24 * 3600_000);
 
@@ -64,7 +64,7 @@ export default async function Stories() {
                   </div>
                   <form action={markPollStory} className="flex flex-wrap gap-2">
                     <input type="hidden" name="id" value={s.id} />
-                    {s.state === "posted" || s.state === "skipped"
+                    {s.state === "auto" ? null : s.state === "posted" || s.state === "skipped"
                       ? <SubmitButton bare name="status" value="reset" className="rounded-xl border border-line-2 px-3 py-2 text-sm text-muted">Undo</SubmitButton>
                       : <>
                           <SubmitButton bare name="status" value="posted_by_owner" className="rounded-xl bg-green px-3 py-2 text-sm font-semibold text-white">I posted it</SubmitButton>
