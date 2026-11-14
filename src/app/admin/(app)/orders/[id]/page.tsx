@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, MessagesSquare, Phone, MapPin, ExternalLink, Check, X, User, CreditCard, Shirt } from "lucide-react";
 import { db } from "@/lib/db";
 import { STATUS_MESSAGE, batchLines } from "@/lib/orders/admin";
-import { orderToken } from "@/lib/orders/link";
+import { orderLink, orderToken } from "@/lib/orders/link";
+import { estimatedArrival } from "@/lib/orders/eta";
+import { waKindFor, waLangFor, waMessage, waPhone, type WaKind, type WaLang } from "@/lib/orders/whatsapp-text";
+import { WhatsAppCard, type WaOption } from "./whatsapp-card";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { approveWebOrder, changeOrderStatus, declineWebOrder } from "../../../orders-actions";
 import { PageHeader, Card, Badge, SectionTitle, button, input, ORDER_STATUS, ilTime, payLabel, ils, KV, cx } from "../../../ui";
@@ -66,6 +69,24 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
   }
   const awaitingManual = !!manual && (manual.state === "awaiting_payment" || manual.state === "awaiting_verification" || manual.state === "needs_resubmit");
   const stLabel = o.status === "awaiting_payment_verification" ? `Awaiting ${o.payment_method === "bit_personal" ? "Bit" : "PayPal"} payment verification` : st.label;
+  // WhatsApp update to the buyer, sent by the owner from his own WhatsApp Business (owner request 2026-11-14)
+  const waSuggested = o.status === "cancelled" ? null : waKindFor(o.status);
+  let wa: { phone: string | null; options: WaOption[]; lang: WaLang } | null = null;
+  if (waSuggested) {
+    const outAt = [...events].reverse().find((e) => e.to_status === "with_courier")?.created_at ?? null;
+    const eta = estimatedArrival({ status: o.status, confirmedAt: o.confirmed_at ?? o.created_at, outForDeliveryAt: outAt });
+    const waOrder = {
+      name: a.full_name ?? null, number: o.number, link: orderLink(o.id),
+      eta: eta?.kind === "window" ? { from: eta.from, to: eta.to } : eta?.kind === "soon" ? ("soon" as const) : null,
+      codAmount: (o.payment_method ?? "cod") === "cod" && o.payment_status !== "paid" ? `₪${formatIls(o.total)}` : null,
+    };
+    const kinds: [WaKind, string][] = [["thanks", "Thanks + tracking"], ["packed", "Being packed"], ["out_for_delivery", "Out for delivery"], ["delivered", "Delivered"]];
+    wa = {
+      phone: waPhone(a.phone),
+      lang: waLangFor(a.full_name),
+      options: kinds.map(([kind, label]) => ({ kind, label, text: { ar: waMessage(kind, "ar", waOrder), he: waMessage(kind, "he", waOrder), en: waMessage(kind, "en", waOrder) } })),
+    };
+  }
   const msgLabels: Record<string, string> = { produced: "Shipped", at_warehouse: "At warehouse", with_courier: "Out for delivery" };
 
   return (
@@ -151,6 +172,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               <div className="flex items-start gap-2 text-ink-2" dir="auto"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted" />{[a.town, a.street, a.house_number, a.landmark].filter(Boolean).join("، ")}</div>
             </div>
           </Card>
+          {wa ? <WhatsAppCard phone={wa.phone} options={wa.options} suggested={waSuggested} defaultLang={wa.lang} /> : null}
           <Card>
             <SectionTitle><span className="inline-flex items-center gap-2"><CreditCard className="h-3.5 w-3.5" /> Payment</span></SectionTitle>
             <div className="divide-y divide-line">

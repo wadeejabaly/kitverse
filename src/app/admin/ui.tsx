@@ -122,6 +122,7 @@ export const button = {
   ghost: `${btnBase} border border-line-2 bg-raised/40 text-ink hover:border-pitch/40 hover:bg-raised`,
   danger: `${btnBase} border border-red/35 bg-red-soft/40 text-red hover:bg-red-soft`,
   subtle: `${btnBase} px-2.5 text-muted hover:bg-raised hover:text-ink`,
+  whatsapp: `${btnBase} bg-[#1f9d55] text-white hover:bg-[#18864a]`,
 };
 
 export const input = "w-full rounded-xl border border-line-2 bg-raised/60 px-3 py-2 text-sm text-ink placeholder:text-muted/70 outline-none transition-colors focus:border-pitch focus:bg-raised focus:ring-2 focus:ring-pitch/20";
