@@ -43,6 +43,12 @@
     "image": "/campaign/daily/nov14-ar-3-story.jpg"
   },
   {
+    "id": "riddle-20261114-ar",
+    "at": "2026-11-14T18:15:00+02:00",
+    "kind": "story",
+    "image": "/campaign/riddle/nov14-riddle-zlatan-ar.jpg"
+  },
+  {
     "id": "nov14-ar-1-post",
     "at": "2026-11-14T20:00:00+02:00",
     "kind": "post",
@@ -66,6 +72,12 @@
     "at": "2026-11-15T16:00:00+02:00",
     "kind": "story",
     "image": "/campaign/daily/nov15-ar-3-story.jpg"
+  },
+  {
+    "id": "answer-20261115-ar",
+    "at": "2026-11-15T19:00:00+02:00",
+    "kind": "story",
+    "image": "/campaign/riddle/nov15-answer-zlatan-ar.jpg"
   },
   {
     "id": "nov15-ar-1-post",
@@ -96,7 +108,7 @@
     "id": "riddle-20261116-ar",
     "at": "2026-11-16T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov16-riddle-zlatan-ar.jpg"
+    "image": "/campaign/riddle/nov16-riddle-henry-ar.jpg"
   },
   {
     "id": "nov16-ar-1-post",
@@ -127,7 +139,7 @@
     "id": "answer-20261117-ar",
     "at": "2026-11-17T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov17-answer-zlatan-ar.jpg"
+    "image": "/campaign/riddle/nov17-answer-henry-ar.jpg"
   },
   {
     "id": "nov17-ar-1-post",
@@ -283,7 +295,7 @@
     "id": "riddle-20261123-ar",
     "at": "2026-11-23T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov23-riddle-henry-ar.jpg"
+    "image": "/campaign/riddle/nov23-riddle-beckham-ar.jpg"
   },
   {
     "id": "nov23-ar-1-post",
@@ -314,7 +326,7 @@
     "id": "answer-20261124-ar",
     "at": "2026-11-24T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov24-answer-henry-ar.jpg"
+    "image": "/campaign/riddle/nov24-answer-beckham-ar.jpg"
   },
   {
     "id": "nov24-ar-1-post",
@@ -470,7 +482,7 @@
     "id": "riddle-20261130-ar",
     "at": "2026-11-30T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/nov30-riddle-beckham-ar.jpg"
+    "image": "/campaign/riddle/nov30-riddle-kaka-ar.jpg"
   },
   {
     "id": "nov30-ar-1-post",
@@ -489,54 +501,42 @@
     "id": "answer-20261201-ar",
     "at": "2026-12-01T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec01-answer-beckham-ar.jpg"
+    "image": "/campaign/riddle/dec01-answer-kaka-ar.jpg"
   },
   {
     "id": "riddle-20261207-ar",
     "at": "2026-12-07T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec07-riddle-kaka-ar.jpg"
+    "image": "/campaign/riddle/dec07-riddle-suarez-ar.jpg"
   },
   {
     "id": "answer-20261208-ar",
     "at": "2026-12-08T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec08-answer-kaka-ar.jpg"
+    "image": "/campaign/riddle/dec08-answer-suarez-ar.jpg"
   },
   {
     "id": "riddle-20261214-ar",
     "at": "2026-12-14T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec14-riddle-suarez-ar.jpg"
+    "image": "/campaign/riddle/dec14-riddle-figo-ar.jpg"
   },
   {
     "id": "answer-20261215-ar",
     "at": "2026-12-15T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec15-answer-suarez-ar.jpg"
+    "image": "/campaign/riddle/dec15-answer-figo-ar.jpg"
   },
   {
     "id": "riddle-20261221-ar",
     "at": "2026-12-21T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec21-riddle-figo-ar.jpg"
+    "image": "/campaign/riddle/dec21-riddle-dimaria-ar.jpg"
   },
   {
     "id": "answer-20261222-ar",
     "at": "2026-12-22T19:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/riddle/dec22-answer-figo-ar.jpg"
-  },
-  {
-    "id": "riddle-20261228-ar",
-    "at": "2026-12-28T19:00:00+02:00",
-    "kind": "story",
-    "image": "/campaign/riddle/dec28-riddle-dimaria-ar.jpg"
-  },
-  {
-    "id": "answer-20261229-ar",
-    "at": "2026-12-29T19:00:00+02:00",
-    "kind": "story",
-    "image": "/campaign/riddle/dec29-answer-dimaria-ar.jpg"
+    "image": "/campaign/riddle/dec22-answer-dimaria-ar.jpg"
   }
 ]
