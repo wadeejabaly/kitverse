@@ -993,8 +993,11 @@ h2 {
     --kv-shirt-scale: 1;
     --kv-pop-delay: 300ms;
     display: block;
-    height: max(100svh, 36rem);
-    min-height: 0;
+    /* At least the screen; taller when the copy needs it (a short laptop
+       window, the taller Arabic/Hebrew lines, the Black Friday column), so
+       nothing ends up under the category cards. */
+    height: auto;
+    min-height: max(100svh, 36rem);
     padding-bottom: 0;
     background: rgb(1 1 33); /* the film's right edge, exactly: wide screens continue it */
   }
@@ -1040,10 +1043,12 @@ h2 {
   /* Over the whole hero but click-through: only the column takes pointers,
      so the shirt and its arrows stay usable underneath. */
   .kv-vhero-copy {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    min-height: max(100svh, 36rem);
     margin: 0;
+    /* the bottom clears the category cards, which overlap the hero by 1.75rem */
     padding-top: var(--kv-chrome-h, 0px);
+    padding-bottom: 3.5rem;
     display: flex;
     align-items: center;
     pointer-events: none;
