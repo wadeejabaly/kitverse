@@ -428,7 +428,8 @@
     "kit": {
       "Home": "Home",
       "Away": "Away",
-      "Third": "Third"
+      "Third": "Third",
+      "Fourth": "Fourth"
     },
     "serviceDelivery": "Delivery in 10–20 working days",
     "servicePayment": "Pay with {methods}",

@@ -428,7 +428,8 @@
     "kit": {
       "Home": "בית",
       "Away": "חוץ",
-      "Third": "שלישית"
+      "Third": "שלישית",
+      "Fourth": "רביעית"
     },
     "serviceDelivery": "משלוח תוך 10–20 ימי עסקים",
     "servicePayment": "תשלום: {methods}",

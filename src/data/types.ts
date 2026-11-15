@@ -10,7 +10,7 @@ import type { PatchId } from "@/lib/orders/rules";
 export type { PatchId };
 
 export type Kind = "national" | "current" | "previous";
-export type Kit = "Home" | "Away" | "Third";
+export type Kit = "Home" | "Away" | "Third" | "Fourth";
 export type AdultSize = "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "4XL";
 /** Kids kit sizes (owner's supplier chart 2026-11-15): 16 = XXS, age 3-4 ... 28 = 2XL, age 12-13. */
 export type KidsSize = "16" | "18" | "20" | "22" | "24" | "26" | "28";

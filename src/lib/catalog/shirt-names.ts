@@ -12,11 +12,11 @@ import { slugify } from "@/data/slug";
  * The handle (URL) is the English name as a slug, e.g. barcelona-2005-06-retro-home-shirt.
  */
 
-export const SHIRT_KITS = ["Home", "Away", "Third"] as const;
+export const SHIRT_KITS = ["Home", "Away", "Third", "Fourth"] as const;
 export type ShirtKit = (typeof SHIRT_KITS)[number];
 
-const KIT_AR: Record<ShirtKit, string> = { Home: "الأساسي", Away: "الاحتياطي", Third: "الثالث" };
-const KIT_HE: Record<ShirtKit, string> = { Home: "בית", Away: "חוץ", Third: "שלישית" };
+const KIT_AR: Record<ShirtKit, string> = { Home: "الأساسي", Away: "الاحتياطي", Third: "الثالث", Fourth: "الرابع" };
+const KIT_HE: Record<ShirtKit, string> = { Home: "בית", Away: "חוץ", Third: "שלישית", Fourth: "רביעית" };
 
 /** What is being sold (owner request 2026-11-15): a shirt, a full adult kit (shirt + shorts) or a kids kit. */
 export const PRODUCT_TYPES = ["shirt", "kit", "kids_kit"] as const;

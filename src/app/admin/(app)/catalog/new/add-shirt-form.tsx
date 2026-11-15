@@ -19,7 +19,7 @@ export interface TeamChoice {
   aliases: string[];
 }
 
-const KIT_LABEL: Record<ShirtKit, string> = { Home: "Home", Away: "Away", Third: "Third" };
+const KIT_LABEL: Record<ShirtKit, string> = { Home: "Home", Away: "Away", Third: "Third", Fourth: "Fourth" };
 const TYPE_LABEL: Record<ProductType, string> = { shirt: "Shirt", kit: "Full kit (adult)", kids_kit: "Kids kit" };
 
 /**

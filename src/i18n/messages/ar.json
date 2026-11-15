@@ -428,7 +428,8 @@
     "kit": {
       "Home": "أساسي",
       "Away": "احتياطي",
-      "Third": "ثالث"
+      "Third": "ثالث",
+      "Fourth": "رابع"
     },
     "serviceDelivery": "التوصيل خلال 10–20 يوم عمل",
     "servicePayment": "الدفع: {methods}",

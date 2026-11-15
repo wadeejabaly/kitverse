@@ -431,6 +431,13 @@
       "nameHe": "נאפולי"
     },
     {
+      "slug": "como",
+      "name": "Como",
+      "nameAr": "كومو",
+      "kind": "club",
+      "nameHe": "קומו"
+    },
+    {
       "slug": "netherlands",
       "name": "Netherlands",
       "nameAr": "هولندا",
