@@ -25,6 +25,7 @@ export interface CartItem {
   printNameNumber?: boolean;   // name and/or number printed
   patches?: number;            // number of patches on this shirt
   boxAddonId?: string;         // e.g. 'box_real' (per order, counted once per id)
+  bundle?: boolean;            // part of a club bundle (owner 2026-11-15: bundles keep their own price, 330 for 3 player shirts)
 }
 
 export interface Adjustment { label: string; amount: number /* agorot, positive = discount */ }
@@ -33,7 +34,7 @@ export interface QuoteInput {
   items: CartItem[];
   zoneId?: string | null;      // delivery zone; null = not known yet
   adjustments?: Adjustment[];  // approved discounts / discount codes (already validated)
-  orderAddons?: { id: string; qty: number }[]; // per-order extras with a quantity (e.g. gift boxes)
+  orderAddons?: { id: string; qty: number; bundleQty?: number }[]; // per-order extras with a quantity (e.g. gift boxes); bundleQty of them inside complete bundles
   now?: Date;
 }
 
@@ -73,6 +74,17 @@ const fmt = (agorot: number) => {
 };
 
 function groupFor(item: CartItem, groups: PriceGroup[]): PriceGroup {
+  // A bundle shirt (owner request 2026-11-15) is priced by a `bundle: true` group when one matches it,
+  // otherwise like any other shirt; an ordinary shirt never takes a bundle group.
+  if (item.bundle) {
+    const own = groups.filter((g) => g.match.bundle);
+    if (own.length) {
+      try {
+        return groupFor({ ...item, bundle: false }, own.map((g) => ({ ...g, match: { ...g.match, bundle: undefined } })));
+      } catch { /* no bundle group fits this shirt: normal price below */ }
+    }
+  }
+  groups = groups.filter((g) => !g.match.bundle);
   // kits (shirt + shorts) first, then the most specific matching group
   const isAdultKit = !!item.kitWithShorts && item.audience !== "kids"; // kids items are always kits
   const candidates = groups.filter((g) => {
@@ -172,8 +184,11 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
     const a = addon(x.id);
     if (!a || a.per !== "order") throw new PricingError(`unknown order add-on ${x.id}`);
     if (!Number.isInteger(x.qty) || x.qty < 0 || x.qty > 50) throw new PricingError(`bad qty for ${x.id}`);
-    const cheap = pairedCount(a.paired_price, x.qty, shirtCount, now);
-    const amount = cheap * A(a.paired_price?.price ?? a.price) + (x.qty - cheap) * A(a.price);
+    // units inside complete bundles take the add-on's bundle_price (owner request 2026-11-15); the rest as before
+    const inBundle = Math.min(x.qty, Math.max(0, Math.floor(x.bundleQty ?? 0)));
+    const rest = x.qty - inBundle;
+    const cheap = pairedCount(a.paired_price, rest, shirtCount, now);
+    const amount = inBundle * A(a.bundle_price ?? a.price) + cheap * A(a.paired_price?.price ?? a.price) + (rest - cheap) * A(a.price);
     orderAddons.push({ id: a.id, label: x.qty > 1 ? `${a.name_ar} ×${x.qty}` : a.name_ar, amount });
   }
 

@@ -72,9 +72,9 @@ const CartContext = createContext<CartContextValue | null>(null);
  * same keychain twice just grows its qty.
  */
 export function lineKey(item: CartItem): string {
-  if (item.kind === "accessory") return `accessory|${item.handle}`;
+  if (item.kind === "accessory") return `accessory|${item.handle}${item.bundle ? `|${item.bundle}` : ""}`;
   const patches = [...item.patches].sort().join("+");
-  return ["jersey", item.handle, item.size, item.version, item.sleeve, item.nameNumber ?? "", patches].join("|");
+  return ["jersey", item.handle, item.size, item.version, item.sleeve, item.nameNumber ?? "", patches, item.bundle ?? ""].join("|");
 }
 
 const SIZE_SET = new Set<string>(ALL_SIZES); // adult sizes + kids kit sizes (2026-11-15)
@@ -126,6 +126,7 @@ function parseJerseyEntry(value: Record<string, unknown>): JerseyCartItem | null
     patches,
     qty,
     ...(nameNumber ? { nameNumber } : {}),
+    ...(typeof value.bundle === "string" && /^[a-z0-9-]{1,60}$/.test(value.bundle) ? { bundle: value.bundle } : {}),
   };
 }
 
@@ -133,7 +134,7 @@ function parseAccessoryEntry(value: Record<string, unknown>): AccessoryCartItem 
   if (typeof value.handle !== "string" || value.handle === "") return null;
   const qtyRaw = typeof value.qty === "number" ? Math.floor(value.qty) : 1;
   const qty = Math.min(MAX_QTY, Math.max(1, qtyRaw));
-  return { kind: "accessory", handle: value.handle, qty };
+  return { kind: "accessory", handle: value.handle, qty, ...(typeof value.bundle === "string" && /^[a-z0-9-]{1,60}$/.test(value.bundle) ? { bundle: value.bundle } : {}) };
 }
 
 /**

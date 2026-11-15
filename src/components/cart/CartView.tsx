@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { accessoryDeals, cartTotals, isRetroSeason, priceLine, round2 } from "@/data/pricing";
+import { accessoryBundlePrice, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2 } from "@/data/pricing";
+import { completeBundles } from "@/data/bundle-defs";
+import { slugify } from "@/data/slug";
 import { patchPieces } from "@/lib/patch-limits";
 import { accessoryHref } from "@/data/accessories";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
@@ -83,6 +85,15 @@ export function CartView({
   const byHandle = new Map(products.map((product) => [product.handle, product]));
   const byAccessoryHandle = new Map(accessories.map((accessory) => [accessory.handle, accessory]));
 
+  // bundle prices only for COMPLETE bundles - the same rule the server applies (owner request 2026-11-15)
+  const okBundles = completeBundles(
+    items.filter((item) => item.kind === "jersey"),
+    items.filter((item) => item.kind === "accessory"),
+    (handle) => {
+      const a = byAccessoryHandle.get(handle);
+      return a ? { team: slugify(a.team), category: a.category } : undefined;
+    },
+  );
   const lines = items
     .filter((item) => item.kind === "jersey")
     .map((item) => {
@@ -93,6 +104,7 @@ export function CartView({
         nameNumber: Boolean(item.nameNumber),
         patchCount: patchPieces(item.patches, isRetroSeason(product.season)),
         sleeve: item.sleeve,
+        bundle: !!item.bundle && okBundles.has(item.bundle),
       });
       return { item, product, priced, key: lineKey(item) };
     })
@@ -106,9 +118,9 @@ export function CartView({
       const accessory = byAccessoryHandle.get(item.handle);
       if (!accessory) return null;
       const priced = {
-        unitPrice: accessory.price,
+        unitPrice: unitOf(item, accessory, okBundles),
         qty: item.qty,
-        lineTotal: round2(accessory.price * item.qty),
+        lineTotal: round2(unitOf(item, accessory, okBundles) * item.qty),
       };
       return { item, accessory, priced, key: lineKey(item) };
     })
@@ -120,7 +132,8 @@ export function CartView({
   ]);
   // "cheaper with a shirt" accessory deals (scarf ₪40 with a shirt, owner request 2026-11-10) - same rule as the server engine
   const deals = accessoryDeals(
-    accessoryLines.map((line) => ({ category: line.accessory.category, qty: line.item.qty })),
+    // fan-bundle accessories already have their bundle price, no extra deal on them
+    accessoryLines.filter((line) => !(line.item.bundle && okBundles.has(line.item.bundle))).map((line) => ({ category: line.accessory.category, qty: line.item.qty })),
     lines.reduce((n, line) => n + line.item.qty, 0),
   );
   const dealSaving = round2(deals.reduce((s, d) => s + d.saving, 0));
@@ -402,4 +415,9 @@ function StepperButton({
       {children}
     </button>
   );
+}
+
+/** A fan-bundle accessory costs its bundle price (owner request 2026-11-15), any other its list price. */
+function unitOf(item: { bundle?: string }, accessory: { category: string; price: number }, ok: Set<string>): number {
+  return item.bundle && ok.has(item.bundle) ? (accessoryBundlePrice(accessory.category) ?? accessory.price) : accessory.price;
 }

@@ -51,6 +51,8 @@ export const CheckoutItemSchema = z.object({
   // Clamped rather than rejected server-side; the bound here is a sanity
   // ceiling so an absurd number never reaches the clamp.
   qty: z.number().int().min(1).max(1000),
+  // Club bundle slug (owner 2026-11-15): the server only honours it for a complete bundle (web.ts).
+  bundle: z.string().regex(/^[a-z0-9-]{1,60}$/).optional(),
 });
 
 export type CheckoutItemInput = z.infer<typeof CheckoutItemSchema>;
@@ -100,6 +102,8 @@ export type CustomerInput = z.infer<typeof CustomerSchema>;
 export const CheckoutAccessorySchema = z.object({
   handle: z.string().min(1).max(80).regex(/^[a-z0-9-]+$/),
   qty: z.number().int().min(1).max(10),
+  // fan bundle slug (owner 2026-11-15): honoured only when the bundle is complete (web.ts)
+  bundle: z.string().regex(/^[a-z0-9-]{1,60}$/).optional(),
 });
 
 export const CreateOrderRequestSchema = z.object({

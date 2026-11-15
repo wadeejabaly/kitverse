@@ -113,6 +113,8 @@ export interface JerseyCartItem {
   /** Zero or more patches, cheapest-tier-first order not required — price is by count, not identity. */
   patches: PatchId[];
   qty: number; // 1..10
+  /** Club bundle slug when the line was added as part of a /bundles bundle (owner 2026-11-15: bundles keep their own price). */
+  bundle?: string;
 }
 
 /**
@@ -125,6 +127,8 @@ export interface AccessoryCartItem {
   kind: "accessory";
   handle: string;
   qty: number; // 1..10
+  /** Fan bundle slug when added as part of a fan bundle (owner 2026-11-15). */
+  bundle?: string;
 }
 
 /**

@@ -6,7 +6,9 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2, roundUpShekel } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryBundlePrice, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2, roundUpShekel } from "@/data/pricing";
+import { completeBundles } from "@/data/bundle-defs";
+import { slugify } from "@/data/slug";
 import { patchPieces } from "@/lib/patch-limits";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
 import { PATCH_PROP_KEYS } from "@/data/patches";
@@ -341,6 +343,15 @@ export function CheckoutView({
 
   // Same skip rule as the cart: a line whose handle is no longer an approved
   // product cannot be priced honestly, so it is not shown and not charged for.
+  // bundle prices only for COMPLETE bundles - the same rule the server applies (owner request 2026-11-15)
+  const okBundles = completeBundles(
+    items.filter((item) => item.kind === "jersey"),
+    items.filter((item) => item.kind === "accessory"),
+    (handle) => {
+      const a = byAccessoryHandle.get(handle);
+      return a ? { team: slugify(a.team), category: a.category } : undefined;
+    },
+  );
   const lines = items
     .filter((item) => item.kind === "jersey")
     .map((item) => {
@@ -354,6 +365,7 @@ export function CheckoutView({
           nameNumber: Boolean(item.nameNumber),
           patchCount: patchPieces(item.patches, isRetroSeason(product.season)),
           sleeve: item.sleeve,
+          bundle: !!item.bundle && okBundles.has(item.bundle),
         }),
         key: lineKey(item),
       };
@@ -370,9 +382,9 @@ export function CheckoutView({
         item,
         accessory,
         priced: {
-          unitPrice: accessory.price,
+          unitPrice: unitOf(item, accessory, okBundles),
           qty: item.qty,
-          lineTotal: round2(accessory.price * item.qty),
+          lineTotal: round2(unitOf(item, accessory, okBundles) * item.qty),
         },
         key: lineKey(item),
       };
@@ -398,7 +410,8 @@ export function CheckoutView({
   // "cheaper with a shirt" accessory deals (scarf ₪40 with a shirt, owner request 2026-11-10): the
   // same rule the server engine applies, part of the items figure codes are measured against
   const deals = accessoryDeals(
-    accessoryLines.map((line) => ({ category: line.accessory.category, qty: line.item.qty })),
+    // fan-bundle accessories already have their bundle price, no extra deal on them
+    accessoryLines.filter((line) => !(line.item.bundle && okBundles.has(line.item.bundle))).map((line) => ({ category: line.accessory.category, qty: line.item.qty })),
     lines.reduce((n, line) => n + line.item.qty, 0),
   );
   const dealSaving = round2(deals.reduce((s, d) => s + d.saving, 0));
@@ -446,11 +459,12 @@ export function CheckoutView({
           patches: item.patches,
           qty: item.qty,
           ...(item.nameNumber ? { nameNumber: item.nameNumber } : {}),
+          ...(item.bundle ? { bundle: item.bundle } : {}),
         })),
       // accessories are really ordered now (owner request 2026-11-10): handle + qty only, priced on the server
       accessories: items
         .filter((item) => item.kind === "accessory" && byAccessoryHandle.has(item.handle))
-        .map((item) => ({ handle: item.handle, qty: item.qty })),
+        .map((item) => ({ handle: item.handle, qty: item.qty, ...(item.bundle ? { bundle: item.bundle } : {}) })),
       customer: parsed.success ? parsed.data : null,
       locale,
       giftBoxQty,
@@ -1204,4 +1218,9 @@ function Field({
       ) : null}
     </div>
   );
+}
+
+/** A fan-bundle accessory costs its bundle price (owner request 2026-11-15), any other its list price. */
+function unitOf(item: { bundle?: string }, accessory: { category: string; price: number }, ok: Set<string>): number {
+  return item.bundle && ok.has(item.bundle) ? (accessoryBundlePrice(accessory.category) ?? accessory.price) : accessory.price;
 }

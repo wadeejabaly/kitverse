@@ -58,7 +58,8 @@
       "price": 18,
       "source": "website",
       "name_ar": "ميدالية",
-      "name_en": "Keychain"
+      "name_en": "Keychain",
+      "bundle_price": 15
     },
     {
       "id": "scarf",
@@ -72,7 +73,8 @@
         "per_shirt": 1,
         "starts_at": "2026-11-09T22:00:00.000Z",
         "ends_at": "2026-11-10T22:00:00.000Z"
-      }
+      },
+      "bundle_price": 45
     }
   ],
   "groups": [
@@ -204,6 +206,64 @@
       },
       "name_ar": "طقم الكبار نسخة اللاعبين",
       "name_en": "Adult kit, player version (shirt + shorts)"
+    },
+    {
+      "id": "bundle_fan",
+      "name_en": "Fan version in a bundle",
+      "name_ar": "نسخة المشجعين ضمن البكج",
+      "price": 95,
+      "match": {
+        "era": "current",
+        "sleeve": "short",
+        "version": "fan",
+        "audience": [
+          "adult"
+        ],
+        "bundle": true
+      },
+      "source": "owner request 2026-11-15 (bundles keep the old prices)"
+    },
+    {
+      "id": "bundle_fan_long",
+      "name_en": "Fan version, long sleeve, in a bundle",
+      "name_ar": "نسخة المشجعين بأكمام طويلة ضمن البكج",
+      "price": 105,
+      "match": {
+        "era": "current",
+        "sleeve": "long",
+        "version": "fan",
+        "bundle": true
+      },
+      "source": "owner request 2026-11-15"
+    },
+    {
+      "id": "bundle_player",
+      "name_en": "Player version in a bundle",
+      "name_ar": "نسخة اللاعبين ضمن البكج",
+      "price": 110,
+      "match": {
+        "era": "current",
+        "sleeve": "short",
+        "version": "player",
+        "audience": [
+          "adult"
+        ],
+        "bundle": true
+      },
+      "source": "owner request 2026-11-15 (club bundle stays 330)"
+    },
+    {
+      "id": "bundle_player_long",
+      "name_en": "Player version, long sleeve, in a bundle",
+      "name_ar": "نسخة اللاعبين بأكمام طويلة ضمن البكج",
+      "price": 120,
+      "match": {
+        "era": "current",
+        "sleeve": "long",
+        "version": "player",
+        "bundle": true
+      },
+      "source": "owner request 2026-11-15"
     }
   ],
   "offers": [

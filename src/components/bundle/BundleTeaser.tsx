@@ -15,7 +15,7 @@ export async function BundleTeaser({ locale, team, handle, className = "" }: { l
   const { bundle, products } = found;
   const t = await getTranslations({ locale, namespace: "bundle" });
   const teamName = locale === "ar" ? products[0].teamAr : locale === "he" ? products[0].teamHe || products[0].team : products[0].team;
-  const total = products.reduce((s, p) => s + priceFor(p.season, "M", BUNDLE_VERSION), 0);
+  const total = products.reduce((s, p) => s + priceFor(p.season, "M", BUNDLE_VERSION, "short", undefined, true), 0);
 
   return (
     <Link href={`/bundles/${bundle.slug}`} className={`group flex items-center gap-4 rounded-[14px] border border-rule bg-tile p-3 pe-5 transition-colors hover:border-ink ${className}`}>

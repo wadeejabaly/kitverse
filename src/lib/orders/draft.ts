@@ -21,7 +21,7 @@ export interface OrderRow {
 export interface ItemRow {
   id: string; product_id: string | null; description: string | null; audience: "adult" | "women" | "kids";
   version: "fan" | "player"; sleeve: "short" | "long"; size: string; qty: number; print_name: string | null;
-  print_number: string | null; patches: string[]; box: boolean;
+  print_number: string | null; patches: string[]; box: boolean; bundle?: string | null;
 }
 
 export async function openOrder(conversationId: string): Promise<OrderRow | null> {
@@ -132,16 +132,21 @@ export async function requote(order: OrderRow): Promise<Quote> {
       key: i.id, title: p.title_ar ?? p.title_en, audience: i.audience, version: i.version, sleeve: i.sleeve, era: p.era,
       kitWithShorts: p.is_kit_with_shorts, size: i.size, qty: i.qty, printNameNumber: !!(i.print_name || i.print_number),
       patches: patchPieces(i.patches, p.era === "retro"), // full version = 2-3 patches (owner decision 2026-11-12)
+      bundle: !!i.bundle, // a complete bundle's shirt (owner 2026-11-15), checked when the order was written
     });
   }
   const adj = must(await db().from("adjustments").select("reason,amount").eq("order_id", order.id), "adjustments") as { reason: string; amount: number }[];
   const boxes = items.filter((i) => i.box).reduce((n, i) => n + i.qty, 0) + (order.gift_boxes ?? 0); // boxed shirts + boxes ordered on the website
   // accessories (keychains, scarves - owner request 2026-11-10): priced as the price list's per-order add-on for their category
-  const acc = must(await db().from("order_accessories").select("category,qty").eq("order_id", order.id), "order accessories") as { category: string; qty: number }[];
+  const acc = must(await db().from("order_accessories").select("category,qty,bundle").eq("order_id", order.id), "order accessories") as { category: string; qty: number; bundle: string | null }[];
   const accQty = new Map<string, number>();
-  for (const a of acc) accQty.set(a.category, (accQty.get(a.category) ?? 0) + a.qty);
+  const accBundle = new Map<string, number>(); // units inside complete fan bundles (owner 2026-11-15)
+  for (const a of acc) {
+    accQty.set(a.category, (accQty.get(a.category) ?? 0) + a.qty);
+    if (a.bundle) accBundle.set(a.category, (accBundle.get(a.category) ?? 0) + a.qty);
+  }
   const q = quote(list.data, { items: cart, zoneId: order.zone_id, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
-    orderAddons: [...(boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : []), ...[...accQty].map(([id, qty]) => ({ id, qty: Math.min(qty, 50) }))] });
+    orderAddons: [...(boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : []), ...[...accQty].map(([id, qty]) => ({ id, qty: Math.min(qty, 50), bundleQty: accBundle.get(id) ?? 0 }))] });
   const status = order.status === "draft" && (cart.length || acc.length) ? "quoted" : order.status;
   must(await db().from("orders").update({
     quote: q, subtotal: q.itemsTotal, discount_total: q.discountTotal, delivery_fee: q.delivery?.fee ?? 0, total: q.total,

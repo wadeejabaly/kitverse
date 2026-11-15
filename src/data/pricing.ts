@@ -137,17 +137,27 @@ const ADULT_KIT_PRICE = groupPrice("adult_kit");
 const ADULT_KIT_PLAYER_PRICE = groupPrice("adult_kit_player") || ADULT_KIT_PRICE;
 const KIDS_KIT_PRICE = groupPrice("kids_kit");
 
+/** Club bundles keep their own price (owner request 2026-11-15: "keep them as 330") - the `bundle_player` / `bundle_player_long` groups in admin Pricing; without them a bundle shirt costs the normal player price. */
+const BUNDLE_PLAYER_PRICE = groupPrice("bundle_player") || PLAYER_PRICE;
+const BUNDLE_PLAYER_LONG_PRICE = groupPrice("bundle_player_long") || PLAYER_LONG_PRICE;
+const BUNDLE_FAN_PRICE = groupPrice("bundle_fan") || FAN_PRICE;
+const BUNDLE_FAN_LONG_PRICE = groupPrice("bundle_fan_long") || FAN_LONG_PRICE;
+
 /**
  * Base price + size surcharge for a jersey identified by its season, the
  * shopper's fan/player choice, and sleeve length. Retro seasons ignore
  * `version` — there is one Retro price (short or long), not a Retro-Fan and
  * a Retro-Player.
  */
-export function priceFor(season: string, size: Size, version: Version, sleeve: Sleeve = "short", set?: ProductSet): number {
+export function priceFor(season: string, size: Size, version: Version, sleeve: Sleeve = "short", set?: ProductSet, bundle = false): number {
   // kits are short sleeve only; kids kits are one price (fan), adult kits fan/player + the 3XL/4XL surcharge
   if (set === "kids_kit") return KIDS_KIT_PRICE;
   if (set === "kit") return (version === "player" ? ADULT_KIT_PLAYER_PRICE : ADULT_KIT_PRICE) + sizeSurcharge(size);
   const long = sleeve === "long";
+  if (bundle && !isRetroSeason(season)) {
+    const b = version === "player" ? (long ? BUNDLE_PLAYER_LONG_PRICE : BUNDLE_PLAYER_PRICE) : long ? BUNDLE_FAN_LONG_PRICE : BUNDLE_FAN_PRICE;
+    return b + sizeSurcharge(size);
+  }
   const base = isRetroSeason(season)
     ? (long ? RETRO_LONG_PRICE : RETRO_PRICE)
     : version === "player"
@@ -253,10 +263,10 @@ export function priceLine(
   size: Size,
   version: Version,
   qty: number,
-  addons: { nameNumber?: boolean; patchCount?: number; sleeve?: Sleeve; set?: ProductSet } = {},
+  addons: { nameNumber?: boolean; patchCount?: number; sleeve?: Sleeve; set?: ProductSet; bundle?: boolean } = {},
 ): PricedLine {
   const unitPrice = round2(
-    priceFor(season, size, version, addons.sleeve ?? "short", addons.set) +
+    priceFor(season, size, version, addons.sleeve ?? "short", addons.set, addons.bundle) +
       (addons.nameNumber ? ADDONS.nameNumber : 0) +
       patchesTotal(addons.patchCount ?? 0),
   );
@@ -331,6 +341,12 @@ export function giftBoxTotalFor(qty: number): number {
 export function accessoryListPrice(category: string): number | null {
   const a = pl.addons.find((x) => x.id === category);
   return a ? a.price : null;
+}
+
+/** An accessory's price inside a fan bundle (owner request 2026-11-15: keychain 15, scarf 45), else its list price. */
+export function accessoryBundlePrice(category: string): number | null {
+  const a = pl.addons.find((x) => x.id === category) as { price: number; bundle_price?: number } | undefined;
+  return a ? (a.bundle_price ?? a.price) : null;
 }
 
 /** The "cheaper with a shirt" deal on an accessory category, when one is on right now (scarf ₪40 with a shirt, 2026-11-10). */

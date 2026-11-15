@@ -7,6 +7,7 @@ import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { getAccessory, isInStock } from "@/data/accessories";
+import { completeBundles } from "@/data/bundles";
 import { KIDS_KIT_FLAG, isOutOfStock } from "@/lib/catalog/stock";
 import { KIDS_SIZES, SIZES } from "@/data/pricing";
 import { sanitizePatches } from "../product";
@@ -84,10 +85,19 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   const handles = [...new Set(req.items.map((i) => i.handle))];
   const products = must(await db().from("products").select("id,handle,title_en,status,flags,is_kit_with_shorts").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string; flags: string[]; is_kit_with_shorts: boolean }[];
   const lines = req.items.map((i) => ({ i, p: products.find((p) => p.handle === i.handle && p.status !== "hidden") }));
-  // accessories (owner request 2026-11-10): only real, visible ones; quantities of the same handle are merged
-  const accessoryQty = new Map<string, number>();
-  for (const a of req.accessories ?? []) accessoryQty.set(a.handle, Math.min(10, (accessoryQty.get(a.handle) ?? 0) + a.qty));
-  const accessories = [...accessoryQty].map(([handle, qty]) => ({ a: getAccessory(handle), handle, qty }));
+  // Bundles (owner request 2026-11-15): a line keeps its bundle tag (and so the bundle price) only when
+  // the whole bundle is on the order - checked here from the catalogue, never taken from the browser.
+  const bundlesOk = completeBundles(req.items, req.accessories ?? []);
+  const bundleOf = (slug: string | undefined) => (slug && bundlesOk.has(slug) ? slug : null);
+  // accessories (owner request 2026-11-10): only real, visible ones; quantities of the same handle (and bundle) are merged
+  const accessoryQty = new Map<string, { handle: string; bundle: string | null; qty: number }>();
+  for (const a of req.accessories ?? []) {
+    const bundle = bundleOf(a.bundle);
+    const key = `${a.handle}|${bundle ?? ""}`;
+    const prev = accessoryQty.get(key);
+    accessoryQty.set(key, { handle: a.handle, bundle, qty: Math.min(10, (prev?.qty ?? 0) + a.qty) });
+  }
+  const accessories = [...accessoryQty.values()].map(({ handle, bundle, qty }) => ({ a: getAccessory(handle), handle, bundle, qty }));
   if (accessories.some((x) => !x.a || !x.a.visible)) return { ok: false, code: "invalid_request", detail: "unknown accessory" };
   if (accessories.some((x) => x.a && !isInStock(x.a))) return { ok: false, code: "invalid_request", detail: "accessory out of stock" };
   if (!lines.length && !accessories.length) return { ok: false, code: "cart_empty" };
@@ -136,11 +146,11 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
       const patches = store ? sanitizePatches(i.patches, store) : [];
       const kids = !!p!.flags?.includes(KIDS_KIT_FLAG);
       const kit = kids || p!.is_kit_with_shorts; // kits: short sleeve only; kids kits: fan version (requote() prices them from these)
-      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: kids ? "kids" : "adult", version: kids ? "fan" : i.version, sleeve: kit ? "short" : i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
+      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: kids ? "kids" : "adult", version: kids ? "fan" : i.version, sleeve: kit ? "short" : i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches, bundle: kit ? null : bundleOf(i.bundle) };
     })).select("id"), "web items");
     if (accessories.length) {
-      must(await db().from("order_accessories").insert(accessories.map(({ a, handle, qty }) => ({
-        order_id: order.id, handle, category: a!.category, qty,
+      must(await db().from("order_accessories").insert(accessories.map(({ a, handle, qty, bundle }) => ({
+        order_id: order.id, handle, category: a!.category, qty, bundle,
         title: `${a!.team} ${a!.category === "scarf" ? "Scarf" : "Keychain"}${a!.variant ? ` - ${a!.variant}` : ""}`,
       }))).select("id"), "web accessories");
     }

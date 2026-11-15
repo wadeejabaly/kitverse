@@ -111,6 +111,17 @@ describe("tiered patch pricing (owner decision 2026-10-26)", () => {
 });
 
 describe("order add-ons, discounts, delivery", () => {
+  it("bundle shirts take a bundle group, ordinary shirts never do (owner request 2026-11-15)", () => {
+    const withBundle = { ...list, groups: [...list.groups, { id: "bundle_player", name_en: "b", name_ar: "b", price: 100, match: { era: "current" as const, sleeve: "short" as const, version: "player" as const, bundle: true } }] };
+    const plain = quote(withBundle, { items: [shirt()] });
+    const inBundle = quote(withBundle, { items: [shirt({ bundle: true })] });
+    expect(plain.lines[0].groupId).not.toBe("bundle_player");
+    expect(inBundle.lines[0].groupId).toBe("bundle_player");
+    expect(inBundle.lines[0].unitPrice).toBe(ILS(100));
+    // no bundle group in the list: a bundle shirt costs the normal price
+    expect(quote(list, { items: [shirt({ bundle: true })] }).lines[0].unitPrice).toBe(plain.lines[0].unitPrice);
+  });
+
   it("rounds the total UP to a whole shekel (owner request 2026-11-15)", () => {
     const q = quote(list, { items: [shirt({ patches: 1 })], adjustments: [{ label: "x", amount: 1234 }], zoneId: "north" });
     const exact = q.itemsTotal - q.discountTotal + (q.delivery?.fee ?? 0);

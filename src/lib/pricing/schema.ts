@@ -14,6 +14,8 @@ export const PriceGroup = z.object({
     era: z.enum(["current", "retro"]).optional(),
     audience: z.array(Audience).optional(),
     kit_with_shorts: z.boolean().optional(),
+    /** Owner request 2026-11-15: the club-bundle price groups (a shirt bought as part of a /bundles bundle). */
+    bundle: z.boolean().optional(),
   }),
   source: z.string().optional(),
 });
@@ -25,6 +27,8 @@ export const Addon = z.object({
   price: z.number().nonnegative(),
   per: z.enum(["shirt", "patch", "order"]),
   team_id: z.string().optional(),   // team-specific add-ons (gift boxes)
+  /** Price of one unit bought inside a complete fan bundle (owner request 2026-11-15: keychain 15, scarf 45). */
+  bundle_price: z.number().nonnegative().optional(),
   /**
    * Tiered per-unit pricing (owner decision 2026-10-26, the patch picker
    * ask): when set, the Nth unit of this addon on one line costs

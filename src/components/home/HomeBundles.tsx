@@ -40,7 +40,8 @@ export async function HomeBundles({ locale }: { locale: string }) {
         <Reveal stagger={90} className="grid gap-5 sm:grid-cols-2">
           {bundles.map(({ bundle, products }, i) => {
             const team = bundleTeam(products[0], locale);
-            const total = products.reduce((s, p) => s + priceFor(p.season, "M", BUNDLE_VERSION), 0);
+            const total = products.reduce((s, p) => s + priceFor(p.season, "M", BUNDLE_VERSION, "short", undefined, true), 0);
+            const full = products.reduce((s, p) => s + priceFor(p.season, "M", BUNDLE_VERSION), 0);
             return (
               <Link key={bundle.slug} href={`/bundles/${bundle.slug}`} className="kv-pcard group">
                 <span className="kv-pcard-media">
@@ -59,7 +60,14 @@ export async function HomeBundles({ locale }: { locale: string }) {
                   <span className="kv-pcard-team">{t("threeShirts")}</span>
                   <span className="kv-pcard-title text-[17px]">{t("title", { team })}</span>
                   <span className="mt-1 flex items-center justify-between gap-3">
-                    <span className="kv-pcard-price"><Price value={total} /></span>
+                    <span className="kv-pcard-price flex flex-wrap items-baseline gap-2">
+                      <Price value={total} />
+                      {full > total ? (
+                        <span className="text-[12.5px] font-bold text-[#14713d]">
+                          {t("youSave")} <Price value={full - total} />
+                        </span>
+                      ) : null}
+                    </span>
                     <span className="btn !px-4 !py-2 text-[13px]">{t("viewBundle")}</span>
                   </span>
                 </span>

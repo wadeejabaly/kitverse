@@ -993,7 +993,20 @@
     "added": "Bundle added to your cart",
     "teaserEyebrow": "Bundle",
     "teaserBody": "Home, away and third together, each customised",
-    "viewBundle": "View bundle"
+    "viewBundle": "View bundle",
+    "separately": "Separately:",
+    "youSave": "You save",
+    "fanTitle": "{team} fan bundle",
+    "fanIntro": "A shirt of your choice (home, away or third) + keychain + scarf, at the bundle price.",
+    "fanListTitle": "Fan bundles",
+    "fanListIntro": "A shirt + keychain + scarf of your team, for less than buying them separately.",
+    "fanChip": "Shirt + keychain + scarf",
+    "pickShirt": "Pick the shirt",
+    "theShirt": "The shirt",
+    "pickScarf": "Pick the scarf",
+    "keychain": "Keychain",
+    "scarf": "Scarf",
+    "clubListTitle": "Club bundles (3 shirts)"
   },
   "kits": {
     "eyebrow": "Full kits",
