@@ -10,12 +10,10 @@ import { useEffect, useState } from "react";
 export function BfCountdown({
   to,
   label,
-  live,
   units,
 }: {
   to: string;
   label: string;
-  live: string;
   units: { days: string; hours: string; minutes: string; seconds: string };
 }) {
   const target = Date.parse(to);
@@ -50,10 +48,6 @@ export function BfCountdown({
           </span>
         ))}
       </div>
-      <span className="kv-bf-countdown-live">
-        <span aria-hidden className="kv-bf-dot" />
-        {live}
-      </span>
     </div>
   );
 }

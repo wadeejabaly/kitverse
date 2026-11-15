@@ -261,7 +261,6 @@ export async function HeroVideo({ locale, blackFriday = false }: { locale: strin
                 <BfCountdown
                   to={SALE_COUNTDOWN_TO}
                   label={tb("countdownLabel")}
-                  live={tb("countdownLive")}
                   units={{ days: tb("days"), hours: tb("hours"), minutes: tb("minutes"), seconds: tb("seconds") }}
                 />
               </div>

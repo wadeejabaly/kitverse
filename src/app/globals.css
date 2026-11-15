@@ -2985,29 +2985,6 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
   font-size: 11px;
   font-weight: 600;
 }
-.kv-bf-countdown-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-}
-.kv-bf-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #2bdc6a;
-  box-shadow: 0 0 0 0 rgb(43 220 106 / 0.6);
-  animation: kv-bf-pulse 1.6s ease-out infinite;
-}
-@keyframes kv-bf-pulse {
-  70% { box-shadow: 0 0 0 8px rgb(43 220 106 / 0); }
-  100% { box-shadow: 0 0 0 0 rgb(43 220 106 / 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .kv-bf-dot { animation: none; }
-}
 
 /* the black top strip */
 .kv-bf-strip {
