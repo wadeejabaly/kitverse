@@ -135,6 +135,7 @@ export const FUTURE_PRICES = {
 /** Full kits (shirt + shorts, owner request 2026-11-15) - the `adult_kit` / `adult_kit_player` / `kids_kit` groups in admin Pricing. */
 const ADULT_KIT_PRICE = groupPrice("adult_kit");
 const ADULT_KIT_PLAYER_PRICE = groupPrice("adult_kit_player") || ADULT_KIT_PRICE;
+const ADULT_KIT_RETRO_PRICE = groupPrice("adult_kit_retro") || ADULT_KIT_PRICE;
 const KIDS_KIT_PRICE = groupPrice("kids_kit");
 
 /**
@@ -146,7 +147,11 @@ const KIDS_KIT_PRICE = groupPrice("kids_kit");
 export function priceFor(season: string, size: Size, version: Version, sleeve: Sleeve = "short", set?: ProductSet): number {
   // kits are short sleeve only; kids kits are one price (fan), adult kits fan/player + the 3XL/4XL surcharge
   if (set === "kids_kit") return KIDS_KIT_PRICE;
-  if (set === "kit") return (version === "player" ? ADULT_KIT_PLAYER_PRICE : ADULT_KIT_PRICE) + sizeSurcharge(size);
+  if (set === "kit") {
+    // retro kits have one price (no fan/player split); current kits: fan or player
+    const kit = isRetroSeason(season) ? ADULT_KIT_RETRO_PRICE : version === "player" ? ADULT_KIT_PLAYER_PRICE : ADULT_KIT_PRICE;
+    return kit + sizeSurcharge(size);
+  }
   const long = sleeve === "long";
   const base = isRetroSeason(season)
     ? (long ? RETRO_LONG_PRICE : RETRO_PRICE)
