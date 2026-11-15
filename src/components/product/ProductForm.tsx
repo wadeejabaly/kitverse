@@ -136,7 +136,7 @@ export function ProductForm({
         <legend className="kv-legend">
           <span>{t("size")}</span>
           <Link
-            href="/size-guide"
+            href={`/size-guide#${kids ? "kids" : version}`}
             className="text-[13px] font-semibold tracking-normal normal-case text-[#1f5cff] underline-offset-4 hover:underline"
           >
             {t("sizeGuideLink")}

@@ -31,6 +31,7 @@ const MAX_WEIGHT = 160;
 export function SizeHelper({
   initialVersion = "fan",
   onPick,
+  startOpen = false,
 }: {
   /** Which cut to assume until the shopper says otherwise — pass the buy
    *  box's current fan/player pick so the helper starts in step with it. */
@@ -38,9 +39,11 @@ export function SizeHelper({
   /** When given, shows a "use this size" button that writes the result back
    *  into the caller's own size state. */
   onPick?: (size: Size) => void;
+  /** Open from the start with no show/hide link (the size guide's "find your size" card). */
+  startOpen?: boolean;
 }) {
   const t = useTranslations("product");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [version, setVersion] = useState<Version>(initialVersion);
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
@@ -61,13 +64,15 @@ export function SizeHelper({
 
   return (
     <div className="mt-2.5">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="text-xs text-ink underline underline-offset-4"
-      >
-        {open ? t("sizeHelperHide") : t("sizeHelperOpen")}
-      </button>
+      {startOpen ? null : (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="text-xs text-ink underline underline-offset-4"
+        >
+          {open ? t("sizeHelperHide") : t("sizeHelperOpen")}
+        </button>
+      )}
 
       {open ? (
         <div className="mt-3 max-w-sm border border-rule bg-field p-3.5">

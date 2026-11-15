@@ -3080,3 +3080,127 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
 .kv-claim-no{padding:11px 16px;border-radius:12px;border:1px solid rgb(255 255 255 / .2);color:rgb(255 255 255 / .8);font-size:14px;font-weight:600;cursor:pointer;background:transparent}
 .kv-claim-no:hover{background:rgb(255 255 255 / .06)}
 .kv-claim-note{margin-top:12px;font-size:12px;line-height:1.5;color:rgb(255 255 255 / .6)}
+
+/* ==== SIZE GUIDE (redesign 2026-11-15, owner: "all the measurements") ====
+   src/app/[locale]/size-guide/page.tsx + src/components/size/MeasureChart.tsx */
+.kv-sg-nav {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 1.1rem 0 0.2rem;
+}
+.kv-sg-nav::-webkit-scrollbar { display: none; }
+.kv-sg-nav a {
+  flex: none;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--tile);
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: border-color 160ms ease-out, background-color 160ms ease-out;
+}
+.kv-sg-nav a:hover { border-color: #1f5cff; background: color-mix(in srgb, #1f5cff 7%, var(--tile)); }
+
+.kv-sg-section { scroll-margin-top: 7rem; }
+
+.kv-sg-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.kv-sg-fit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--flood-ground);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.kv-sg-fit[data-tone="slim"] { background: #1f5cff; }
+.kv-sg-fit[data-tone="kids"] { background: #c9a55c; color: #0a1024; }
+
+.kv-measure-side { background: color-mix(in srgb, var(--chip) 45%, var(--tile)); }
+.kv-measure-figure { width: 100%; max-width: 260px; margin-inline: auto; height: auto; }
+.kv-measure-chip {
+  min-width: 2.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 9px;
+  border: 1.5px solid var(--rule);
+  background: var(--tile);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  transition: border-color 140ms ease-out, background-color 140ms ease-out, color 140ms ease-out;
+}
+.kv-measure-chip:hover { border-color: var(--ink); }
+.kv-measure-chip[aria-pressed="true"] { background: var(--flood-ground); border-color: var(--flood-ground); color: #fff; }
+
+.kv-measure-table { font-size: 13.5px; }
+.kv-measure-table th,
+.kv-measure-table td { padding: 0.7rem 0.7rem; text-align: center; }
+.kv-measure-table th:first-child,
+.kv-measure-table td:first-child {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  text-align: start;
+}
+.kv-measure-table th:first-child,
+.kv-measure-table th:last-child { border-radius: 0; }
+.kv-measure-table td:first-child { background: var(--tile); box-shadow: inset -1px 0 0 var(--rule); }
+[dir="rtl"] .kv-measure-table td:first-child { box-shadow: inset 1px 0 0 var(--rule); }
+.kv-measure-table tbody tr { cursor: pointer; }
+.kv-measure-table tbody tr:nth-child(even) td,
+.kv-measure-table tbody tr:nth-child(even) td:first-child { background: color-mix(in srgb, var(--chip) 55%, var(--tile)); }
+.kv-measure-table tbody tr[aria-selected="true"] td,
+.kv-measure-table tbody tr[aria-selected="true"] td:first-child {
+  background: color-mix(in srgb, #1f5cff 11%, var(--tile));
+}
+.kv-measure-table tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 3px 0 0 #1f5cff; }
+[dir="rtl"] .kv-measure-table tbody tr[aria-selected="true"] td:first-child { box-shadow: inset -3px 0 0 #1f5cff; }
+.kv-measure-size {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-weight: 800;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.kv-measure-table th.kv-measure-fit { background: color-mix(in srgb, var(--flood-ground) 82%, #1f5cff); }
+.kv-measure-table td.kv-measure-fit { color: var(--ink-soft); }
+.kv-measure-table .kv-measure-fit-first { border-inline-start: 2px solid color-mix(in srgb, #1f5cff 35%, transparent); }
+
+.kv-sg-compare {
+  display: grid;
+  gap: 0.75rem;
+}
+@media (min-width: 40rem) { .kv-sg-compare { grid-template-columns: 1fr 1fr; } }
+
+.kv-sg-step-num {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--flood-ground);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  flex: none;
+}
+
+.kv-sg-cta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: radial-gradient(120% 140% at 100% 0%, #1b2f6e 0%, var(--flood-ground) 55%);
+  color: #fff;
+}

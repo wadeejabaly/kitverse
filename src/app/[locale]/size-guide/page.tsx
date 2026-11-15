@@ -1,187 +1,269 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Figure } from "@/components/shared/Money";
 import { KIDS_SIZE_CHART, sizeSurcharge } from "@/data/pricing";
+import { FAN_CHART, PLAYER_CHART, PLAYER_NARROWER_CM, SHORTS_CHART, type Range } from "@/data/size-charts";
 import { KidsSizeHelper } from "@/components/product/KidsSizeHelper";
-import { PageLede, Wrap } from "@/components/shared/PageLede";
-import { Link } from "@/i18n/navigation";
-import { Icon } from "@/components/shared/Info";
-import { alternatesFor } from "@/lib/site";
 import { SizeHelper } from "@/components/product/SizeHelper";
+import { MeasureChart, type ChartColumn, type ChartRow } from "@/components/size/MeasureChart";
+import { PageLede, Wrap } from "@/components/shared/PageLede";
+import { Icon, INSTAGRAM_URL } from "@/components/shared/Info";
+import { Link } from "@/i18n/navigation";
+import { alternatesFor } from "@/lib/site";
 
 /**
- * Measurements as supplied, S through 4XL. Centimetres, and the European size
- * each one actually fits — the shirts run about a size small, and saying so
- * plainly prevents most of the returns.
+ * Size guide (full redesign, owner request 2026-11-15: "redesign the size page, all of it, do it well" +
+ * "I want all the measurements, for the adults too"). Every number is the supplier's own chart
+ * (src/data/size-charts.ts, KIDS_SIZE_CHART) - nothing estimated except the kids weights (marked there).
+ * Order: jump links -> both size finders -> Fan -> Player -> full-kit shorts -> kids kits -> how to
+ * measure -> questions -> help. Anchors #fan #player #kits #kids are linked from product pages.
  */
-const ROWS = [
-  { size: "S", chest: 96, length: 68, fits: "XS–S" },
-  { size: "M", chest: 102, length: 70, fits: "S–M" },
-  { size: "L", chest: 108, length: 72, fits: "M–L" },
-  { size: "XL", chest: 114, length: 74, fits: "L–XL" },
-  { size: "XXL", chest: 120, length: 76, fits: "XL–XXL" },
-  { size: "3XL", chest: 126, length: 78, fits: "XXL–3XL" },
-  { size: "4XL", chest: 132, length: 80, fits: "3XL–4XL" },
-] as const;
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "sizeGuide" });
-  return {
-    title: t("title"),
-    description: t("metaDescription"),
-    alternates: alternatesFor(locale, "/size-guide"),
-  };
+  return { title: t("title"), description: t("metaDescription"), alternates: alternatesFor(locale, "/size-guide") };
 }
 
-export default async function SizeGuidePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+const cm = (v: number | null) => (v == null ? null : `${v}`);
+const range = (r: Range | null) => (r ? `${r[0]}-${r[1]}` : null);
+
+export default async function SizeGuidePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("sizeGuide");
 
-  // Redesign phase 2 (2026-11-09): navy-headed table on a white card, a
-  // "how to measure" diagram beside it, the size finder, and the notes.
-  // The measurements are the same verified ROWS as before. Kids sizes (2026-11-15): the owner's
-  // supplier chart (KIDS_SIZE_CHART in src/data/pricing.ts) + the kids calculator, for the kids kits.
+  const chartLabels = { size: t("colSize"), pick: t("pickSize"), na: t("noMeasure"), tapHint: t("tapHint") };
+
+  const fanCols: ChartColumn[] = [
+    { key: "chest", label: t("mChest"), measure: "chest", mark: "A" },
+    { key: "length", label: t("mLength"), measure: "length", mark: "B" },
+    { key: "sleeve", label: t("mSleeveShort"), measure: "sleeve", mark: "C" },
+    { key: "cuff", label: t("mCuff"), measure: "cuff", mark: "D" },
+    { key: "sleeveLong", label: t("mSleeveLong") },
+    { key: "height", label: t("fHeight"), fit: true },
+    { key: "weight", label: t("fWeight"), fit: true },
+  ];
+  // the long sleeve is a measurement with no line on the drawing (same as C, on a long-sleeve shirt)
+  const fanRows: ChartRow[] = FAN_CHART.map((r) => ({
+    size: r.size,
+    cells: { chest: cm(r.chest), length: cm(r.length), sleeve: cm(r.sleeve), cuff: cm(r.cuff), sleeveLong: cm(r.sleeveLong), height: range(r.height), weight: range(r.weight) },
+  }));
+
+  const playerCols: ChartColumn[] = [
+    { key: "chest", label: t("mChest"), measure: "chest", mark: "A" },
+    { key: "length", label: t("mLength"), measure: "length", mark: "B" },
+    { key: "sleeve", label: t("mSleeve"), measure: "sleeve", mark: "C" },
+    { key: "shoulder", label: t("mShoulder"), measure: "shoulder", mark: "D" },
+    { key: "height", label: t("fHeight"), fit: true },
+    { key: "weight", label: t("fWeight"), fit: true },
+  ];
+  const playerRows: ChartRow[] = PLAYER_CHART.map((r) => ({
+    size: r.size,
+    cells: { chest: cm(r.chest), length: cm(r.length), sleeve: cm(r.sleeve), shoulder: cm(r.shoulder), height: range(r.height), weight: range(r.weight) },
+  }));
+
+  const shortsCols: ChartColumn[] = [
+    { key: "waist", label: t("mWaist"), measure: "waist", mark: "A" },
+    { key: "length", label: t("mShortsLength"), measure: "shortsLength", mark: "B" },
+    { key: "height", label: t("fHeight"), fit: true },
+    { key: "weight", label: t("fWeight"), fit: true },
+  ];
+  const shortsRows: ChartRow[] = SHORTS_CHART.map((r) => ({
+    size: r.size,
+    cells: { waist: cm(r.waist), length: cm(r.length), height: range(r.height), weight: range(r.weight) },
+  }));
+
+  const kidsCols: ChartColumn[] = [
+    { key: "chest", label: t("mChest"), measure: "chest", mark: "A" },
+    { key: "length", label: t("mLength"), measure: "length", mark: "B" },
+    { key: "waist", label: t("mWaistKids"), measure: "waist", mark: "C" },
+    { key: "shorts", label: t("mShortsLength"), measure: "shortsLength", mark: "D" },
+    { key: "age", label: t("fAge"), fit: true },
+    { key: "height", label: t("fHeight"), fit: true },
+    { key: "weight", label: t("fWeightKids"), fit: true },
+  ];
+  const kidsRows: ChartRow[] = KIDS_SIZE_CHART.map((r) => ({
+    size: r.size,
+    sub: r.letter,
+    cells: { chest: cm(r.halfBust), length: cm(r.length), waist: range(r.halfWaist), shorts: cm(r.shortsLength), age: range(r.age), height: range(r.height), weight: range(r.weight) },
+  }));
+
+  const nav = [
+    ["finder", t("navFinder")],
+    ["fan", t("navFan")],
+    ["player", t("navPlayer")],
+    ["kits", t("navKits")],
+    ["kids", t("navKids")],
+    ["measure", t("navMeasure")],
+    ["faq", t("navFaq")],
+  ] as const;
+
+  const faq = [
+    ["faqBetweenQ", "faqBetweenA"],
+    ["faqFanPlayerQ", "faqFanPlayerA"],
+    ["faqLongQ", "faqLongA"],
+    ["faqBigQ", "faqBigA"],
+    ["faqRetroQ", "faqRetroA"],
+    ["faqKidsQ", "faqKidsA"],
+  ] as const;
+
   return (
     <Wrap>
-      <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")} />
+      <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")}>
+        <span className="kv-chip !border-white/25 !bg-white/10 !text-white">{t("chipSupplier")}</span>
+        <span className="kv-chip !border-white/25 !bg-white/10 !text-white">{t("chipRange")}</span>
+        <span className="kv-chip !border-white/25 !bg-white/10 !text-white">{t("chipTolerance")}</span>
+      </PageLede>
 
-      <div className="grid gap-6 py-10 wide:grid-cols-[1.35fr_1fr] wide:gap-8 wide:py-14">
-        <section className="kv-panel min-w-0 overflow-hidden">
-          <div className="flex items-center justify-between gap-4 px-5 pt-5 pb-4 sm:px-6">
-            <h2 className="text-[18px] font-extrabold">{t("adultTitle")}</h2>
-            <span className="rounded-full bg-chip px-3 py-1 text-[12px] font-semibold text-ink-soft">{t("unit")}</span>
+      <nav aria-label={t("navLabel")} className="kv-sg-nav">
+        {nav.map(([id, label]) => (
+          <a key={id} href={`#${id}`}>{label}</a>
+        ))}
+      </nav>
+
+      <div className="flex flex-col gap-12 py-8 wide:gap-16 wide:py-12">
+        {/* 1. the two size finders */}
+        <section id="finder" className="kv-sg-section grid gap-5 wide:grid-cols-2">
+          <div className="kv-panel flex flex-col p-5 sm:p-6">
+            <div className="flex gap-4">
+              <span className="kv-icon-tile"><Icon name="shirt" /></span>
+              <div className="min-w-0">
+                <h2 className="text-[18px] font-extrabold">{t("finderAdultTitle")}</h2>
+                <p className="mt-1 text-[14px] text-ink-soft">{t("finderAdultBody")}</p>
+              </div>
+            </div>
+            <SizeHelper startOpen />
           </div>
-          {/* The table scrolls inside its own container so the page body
-              never scrolls sideways on a phone. */}
-          <div className="overflow-x-auto px-5 pb-5 sm:px-6">
-            <table className="kv-table min-w-[420px]">
-              <thead>
-                <tr>
-                  <th>{t("colSize")}</th>
-                  <th>{t("colChest")}</th>
-                  <th>{t("colLength")}</th>
-                  <th>{t("colFits")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ROWS.map((row) => (
-                  <tr key={row.size}>
-                    <td>
-                      <span className="latin tabular">{row.size}</span>
-                    </td>
-                    <td>
-                      <Figure>{row.chest}</Figure>
-                    </td>
-                    <td>
-                      <Figure>{row.length}</Figure>
-                    </td>
-                    <td>
-                      <span className="latin tabular">{row.fits}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex flex-col gap-2 border-t border-rule bg-chip/50 px-5 py-4 text-[13.5px] text-ink-soft sm:px-6">
-            <p>{t("note")}</p>
-            <p className="font-semibold text-ink">
-              {t("surcharge", { xl3: `₪${sizeSurcharge("3XL")}`, xl4: `₪${sizeSurcharge("4XL")}` })}
-            </p>
+          <div className="kv-panel flex flex-col p-5 sm:p-6">
+            <div className="flex gap-4">
+              <span className="kv-icon-tile"><Icon name="star" /></span>
+              <div className="min-w-0">
+                <h2 className="text-[18px] font-extrabold">{t("finderKidsTitle")}</h2>
+                <p className="mt-1 text-[14px] text-ink-soft">{t("finderKidsBody")}</p>
+              </div>
+            </div>
+            <KidsSizeHelper startOpen />
           </div>
         </section>
 
-        <div className="flex min-w-0 flex-col gap-6">
-          <section className="kv-panel p-6">
-            <h2 className="mb-4 text-[18px] font-extrabold">{t("measureTitle")}</h2>
-            <div className="grid grid-cols-[120px_1fr] items-center gap-5">
-              {/* A plain diagram: chest across under the arms, length from the
-                  shoulder's highest point to the hem — exactly what `note`
-                  describes. */}
-              <svg viewBox="0 0 120 130" aria-hidden className="w-full text-ink">
-                <path
-                  d="M38 10 14 24l10 18 12-7v82h48V35l12 7 10-18-24-14c-3 6-10 10-22 10s-19-4-22-10Z"
-                  fill="var(--chip)"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-                <path d="M38 48h44" stroke="#1f5cff" strokeWidth="2" strokeLinecap="round" />
-                <path d="m41 45-3 3 3 3M79 45l3 3-3 3" stroke="#1f5cff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M100 12v105" stroke="#c9a55c" strokeWidth="2" strokeLinecap="round" />
-                <path d="m97 15 3-3 3 3M97 114l3 3 3-3" stroke="#c9a55c" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <ul className="flex flex-col gap-3 text-[14px]">
-                <li className="flex gap-2.5">
-                  <span className="mt-1.5 h-0.5 w-4 shrink-0 bg-[#1f5cff]" />
-                  <span>
-                    <strong className="block">{t("chestLabel")}</strong>
-                    <span className="text-ink-soft">{t("chestHow")}</span>
-                  </span>
-                </li>
-                <li className="flex gap-2.5">
-                  <span className="mt-1.5 h-0.5 w-4 shrink-0 bg-[#c9a55c]" />
-                  <span>
-                    <strong className="block">{t("lengthLabel")}</strong>
-                    <span className="text-ink-soft">{t("lengthHow")}</span>
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </section>
+        {/* 2. fan */}
+        <section id="fan" className="kv-sg-section">
+          <div className="kv-sg-head">
+            <h2 className="kv-section-title">{t("fanTitle")}</h2>
+            <span className="kv-sg-fit">{t("fanFit")}</span>
+          </div>
+          <p className="mb-5 max-w-[68ch] text-[15px] text-ink-soft">{t("fanBody")}</p>
+          <div className="kv-panel overflow-hidden">
+            <MeasureChart columns={fanCols} rows={fanRows} figure="shirt" defaultSize="L" labels={chartLabels} />
+          </div>
+          <p className="mt-3 text-[13.5px] font-semibold text-ink">
+            {t("surcharge", { xl3: `₪${sizeSurcharge("3XL")}`, xl4: `₪${sizeSurcharge("4XL")}` })}
+          </p>
+        </section>
 
-          <section className="kv-panel p-6">
-            <h2 className="mb-1 text-[18px] font-extrabold">{t("finderTitle")}</h2>
-            {/* No `onPick` here — this page has no size selection of its own
-                to write a result into, unlike the one in the product buy box. */}
-            <SizeHelper />
-          </section>
-
-          {/* kids kits (owner requests 2026-11-15): the supplier's chart + the height & weight calculator.
-              Header row (icon + text) then the table and calculator at the card's full width, so neither
-              can run out of the card on a narrow column. */}
-          <section id="kids" className="kv-panel scroll-mt-28 p-6">
-            <div className="flex gap-4">
-              <span className="kv-icon-tile">
-                <Icon name="star" />
-              </span>
-              <div className="min-w-0">
-                <h2 className="mb-1 text-[16px] font-extrabold">{t("youthTitle")}</h2>
-                <p className="text-[14px] text-ink-soft">{t("youthBody")}</p>
-              </div>
+        {/* 3. player */}
+        <section id="player" className="kv-sg-section">
+          <div className="kv-sg-head">
+            <h2 className="kv-section-title">{t("playerTitle")}</h2>
+            <span className="kv-sg-fit" data-tone="slim">{t("playerFit")}</span>
+          </div>
+          <p className="mb-5 max-w-[68ch] text-[15px] text-ink-soft">{t("playerBody", { cm: PLAYER_NARROWER_CM })}</p>
+          <div className="kv-sg-compare mb-5">
+            <div className="kv-panel flex gap-3 p-4">
+              <span className="kv-sg-fit h-fit">{t("navFan")}</span>
+              <p className="text-[14px] text-ink-soft">{t("compareFan")}</p>
             </div>
-            <div className="mt-4 overflow-x-auto">
-              <table className="kv-table w-full text-center text-[13px]">
-                <thead><tr><th>{t("kidsSize")}</th><th>{t("kidsAge")}</th><th>{t("kidsHeight")}</th><th>{t("kidsWeight")}</th></tr></thead>
-                <tbody>
-                  {KIDS_SIZE_CHART.map((r) => (
-                    <tr key={r.size}>
-                      <td className="latin tabular whitespace-nowrap font-bold">{r.size} <span className="font-normal text-ink-soft">({r.letter})</span></td>
-                      <td className="tabular whitespace-nowrap">{r.age[0]}-{r.age[1]}</td>
-                      <td className="tabular whitespace-nowrap">{r.height[0]}-{r.height[1]}</td>
-                      <td className="tabular whitespace-nowrap">{r.weight[0]}-{r.weight[1]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="kv-panel flex gap-3 p-4">
+              <span className="kv-sg-fit h-fit" data-tone="slim">{t("navPlayer")}</span>
+              <p className="text-[14px] text-ink-soft">{t("comparePlayer", { cm: PLAYER_NARROWER_CM })}</p>
             </div>
-            <KidsSizeHelper startOpen />
-          </section>
+          </div>
+          <div className="kv-panel overflow-hidden">
+            <MeasureChart columns={playerCols} rows={playerRows} figure="shirt" defaultSize="L" labels={chartLabels} />
+          </div>
+        </section>
 
-          <Link href="/shop" className="btn w-full">
-            {t("shopCta")}
-          </Link>
-        </div>
+        {/* 4. adult full kits: the shorts */}
+        <section id="kits" className="kv-sg-section">
+          <div className="kv-sg-head">
+            <h2 className="kv-section-title">{t("kitsTitle")}</h2>
+          </div>
+          <p className="mb-5 max-w-[68ch] text-[15px] text-ink-soft">{t("kitsBody")}</p>
+          <div className="kv-panel overflow-hidden">
+            <MeasureChart columns={shortsCols} rows={shortsRows} figure="shorts" defaultSize="L" labels={chartLabels} />
+          </div>
+        </section>
+
+        {/* 5. kids kits (anchor #kids is linked from /kids-kits) */}
+        <section id="kids" className="kv-sg-section">
+          <div className="kv-sg-head">
+            <h2 className="kv-section-title">{t("kidsTitle")}</h2>
+            <span className="kv-sg-fit" data-tone="kids">{t("kidsFit")}</span>
+          </div>
+          <p className="mb-5 max-w-[68ch] text-[15px] text-ink-soft">{t("kidsBody")}</p>
+          <div className="kv-panel overflow-hidden">
+            <MeasureChart columns={kidsCols} rows={kidsRows} figure="kit" defaultSize="22" labels={chartLabels} />
+          </div>
+          <p className="mt-3 text-[12.5px] text-ink-soft">{t("kidsWeightNote")}</p>
+        </section>
+
+        {/* 6. how to measure */}
+        <section id="measure" className="kv-sg-section">
+          <h2 className="kv-section-title mb-5">{t("measureTitle")}</h2>
+          <ol className="grid gap-4 wide:grid-cols-3">
+            {(["step1", "step2", "step3"] as const).map((k, i) => (
+              <li key={k} className="kv-panel flex gap-3.5 p-5">
+                <span className="kv-sg-step-num latin">{i + 1}</span>
+                <div className="min-w-0">
+                  <h3 className="text-[15.5px] font-extrabold">{t(`${k}Title`)}</h3>
+                  <p className="mt-1 text-[14px] text-ink-soft">{t(`${k}Body`)}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <ul className="mt-4 grid gap-2.5 text-[14px] sm:grid-cols-2">
+            {(["howChest", "howLength", "howSleeve", "howWaist"] as const).map((k) => (
+              <li key={k} className="flex gap-2.5">
+                <span className="mt-[7px] size-1.5 shrink-0 rounded-full bg-[#1f5cff]" />
+                <span className="text-ink-soft">{t(k)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* 7. questions */}
+        <section id="faq" className="kv-sg-section">
+          <h2 className="kv-section-title mb-2">{t("faqTitle")}</h2>
+          <div className="kv-panel px-5 sm:px-6">
+            {faq.map(([q, a], i) => (
+              <details key={q} className="kv-acc" open={i === 0}>
+                <summary>
+                  {t(q)}
+                  <span aria-hidden className="kv-acc-icon"><span /><span /></span>
+                </summary>
+                <p className="max-w-[68ch] pb-4 text-[14.5px] text-ink-soft">
+                  {t(a, { xl3: `₪${sizeSurcharge("3XL")}`, xl4: `₪${sizeSurcharge("4XL")}`, cm: PLAYER_NARROWER_CM })}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        {/* 8. still not sure */}
+        <section className="kv-sg-cta flex flex-col gap-5 p-6 sm:p-8 wide:flex-row wide:items-center wide:justify-between">
+          <div className="max-w-[56ch]">
+            <h2 className="text-[22px] font-extrabold">{t("ctaTitle")}</h2>
+            <p className="mt-2 text-[15px] text-white/75">{t("ctaBody")}</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="btn">
+              <span aria-hidden className="inline-flex size-5 [&_svg]:size-5"><Icon name="chat" /></span>
+              {t("ctaInstagram")}
+            </a>
+            <Link href="/shop" className="inline-flex items-center rounded-[10px] border border-white/30 px-5 py-3 text-[14px] font-bold text-white hover:bg-white/10">
+              {t("shopCta")}
+            </Link>
+          </div>
+        </section>
       </div>
     </Wrap>
   );
