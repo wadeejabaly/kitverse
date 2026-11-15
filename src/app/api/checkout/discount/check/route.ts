@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   const lookup = await findActiveDiscountCode(parsed.data.code);
   if (!lookup.ok) return NextResponse.json({ ok: false, reason: lookup.reason });
 
-  const { kind, value, min_order, stackable, first_order_only } = lookup.row;
+  const { kind, value, min_order, stackable, first_order_only, applies_to } = lookup.row;
   return NextResponse.json({
     ok: true,
     kind,
@@ -34,5 +34,7 @@ export async function POST(req: NextRequest) {
     stackable,
     // Shown next to the applied code; the real check (by phone) happens when the order is placed.
     firstOrderOnly: first_order_only === true,
+    // owner 2026-11-15: a "shirts" code is only taken off the shirts' and kits' own price
+    appliesTo: applies_to === "shirts" ? "shirts" : "order",
   });
 }

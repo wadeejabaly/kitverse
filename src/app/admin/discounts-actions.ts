@@ -69,9 +69,10 @@ export async function createDiscountCode(form: FormData) {
 
   const stackable = form.get("stackable") === "on";
   const firstOrderOnly = form.get("firstOrderOnly") === "on";
+  const appliesTo = form.get("shirtsOnly") === "on" ? "shirts" : "order";
 
   const ins = await db().from("discount_codes").insert({
-    code, kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt, active: true, stackable, first_order_only: firstOrderOnly,
+    code, kind: kind.data, value, min_order: minOrder, max_uses: maxUses, starts_at: startsAt, ends_at: endsAt, active: true, stackable, first_order_only: firstOrderOnly, applies_to: appliesTo,
   }).select("code");
   if (ins.error) {
     return bad(ins.error.code === "23505" ? `A code "${code}" already exists` : "Couldn't save that code");

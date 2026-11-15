@@ -12,7 +12,7 @@ import { KIDS_KIT_FLAG, isOutOfStock } from "@/lib/catalog/stock";
 import { KIDS_SIZES, SIZES } from "@/data/pricing";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
-import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, type DiscountCode } from "../discounts";
+import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, shirtsSubtotal, type DiscountCode } from "../discounts";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
@@ -167,7 +167,7 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
         return { ok: false, code: "invalid_discount_code", detail: "min_order" };
       }
       for (const d of discounts) {
-        const amount = discountAmount(d, q.itemsTotal);
+        const amount = discountAmount(d, q.itemsTotal, shirtsSubtotal(q));
         if (amount <= 0) continue;
         // cash orders claim the use now; online ones only when the payment settles (settleOnlinePayment)
         if (opts.claimCodes && !(await recordDiscountCodeUse(d.code))) {

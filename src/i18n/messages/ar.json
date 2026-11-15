@@ -10,9 +10,9 @@
     "cta": "تسوق الآن",
     "sale": "خصم {amount} على كل الموقع — الكود <c>{code}</c> عند الدفع",
     "saleMin": "خصم {amount} على الطلبيات من {min} وما فوق، بالموقع بس — الكود <c>{code}</c> عند الدفع",
-    "saleStrip": "خصم {amount} على الطلبات من {min} وما فوق <s>|</s> الكود <c>{code}</c> · بالموقع بس!",
+    "saleStrip": "خصم {amount} على القمصان بالطلبات من {min} وما فوق <s>|</s> الكود <c>{code}</c> · بالموقع بس!",
     "claimTitle": "بدك تستلم خصم {amount}؟",
-    "claimBodyMin": "خصم Black Friday {amount} على الطلبات من {min} وما فوق، بالموقع بس.",
+    "claimBodyMin": "خصم Black Friday {amount} على القمصان والأطقم، بالطلبات من {min} وما فوق، بالموقع بس.",
     "claimBody": "خصم Black Friday {amount} على كل الموقع.",
     "claimYes": "نعم، بدي الخصم",
     "claimNo": "لا شكرًا",
@@ -146,7 +146,7 @@
       "eyebrow": "KITVERSE JERSEYS",
       "title": "Black Friday",
       "discount": "خصم {amount}",
-      "minLine": "على الطلبات من {min} وما فوق",
+      "minLine": "على القمصان بالطلبات من {min} وما فوق",
       "sub": "اكتشف أضخم تشكيلة من قمصان الأندية والمنتخبات، الكلاسيكية والحديثة، بجودة عالية وتصاميم مميزة.",
       "autoNote": "الخصم بيتطبّق لحاله بصفحة الدفع",
       "countdownLabel": "العدّ التنازلي لـ Black Friday",
@@ -703,7 +703,8 @@
     "picksPopupHint": "إكسسوارات بتناسب القمصان اللي اخترتها.",
     "picksAdded": "انضاف",
     "picksContinue": "كمّل للدفع",
-    "picksClose": "إغلاق"
+    "picksClose": "إغلاق",
+    "discountShirtsOnly": "على سعر القمصان والأطقم بس (مش على الاسم والرقم، الشارات أو الإكسسوارات)"
   },
   "thankYou": {
     "eyebrow": "تم الطلب",

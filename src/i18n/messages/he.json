@@ -10,9 +10,9 @@
     "cta": "לחנות",
     "sale": "{amount} הנחה על כל האתר — קוד <c>{code}</c> בקופה",
     "saleMin": "{amount} הנחה על הזמנות מ־{min} ומעלה, רק באתר — קוד <c>{code}</c> בקופה",
-    "saleStrip": "{amount} הנחה על הזמנות מ־{min} ומעלה <s>|</s> קוד <c>{code}</c> · רק באתר!",
+    "saleStrip": "{amount} הנחה על החולצות בהזמנות מ־{min} ומעלה <s>|</s> קוד <c>{code}</c> · רק באתר!",
     "claimTitle": "רוצים לקבל {amount} הנחה?",
-    "claimBodyMin": "הנחת Black Friday של {amount} על הזמנות מ־{min} ומעלה, רק באתר.",
+    "claimBodyMin": "הנחת Black Friday של {amount} על החולצות והערכות, בהזמנות מ־{min} ומעלה, רק באתר.",
     "claimBody": "הנחת Black Friday של {amount} על כל האתר.",
     "claimYes": "כן, אני רוצה",
     "claimNo": "לא תודה",
@@ -146,7 +146,7 @@
       "eyebrow": "KITVERSE JERSEYS",
       "title": "Black Friday",
       "discount": "{amount} הנחה",
-      "minLine": "על הזמנות מ־{min} ומעלה",
+      "minLine": "על החולצות בהזמנות מ־{min} ומעלה",
       "sub": "הקולקציה הגדולה של חולצות מועדונים ונבחרות, קלאסיות וחדשות, באיכות גבוהה ובעיצובים מיוחדים.",
       "autoNote": "ההנחה נכנסת אוטומטית בקופה",
       "countdownLabel": "ספירה לאחור ל־Black Friday",
@@ -703,7 +703,8 @@
     "picksPopupHint": "אביזרים שמתאימים לחולצות שבחרתם.",
     "picksAdded": "נוסף",
     "picksContinue": "המשך לתשלום",
-    "picksClose": "סגירה"
+    "picksClose": "סגירה",
+    "discountShirtsOnly": "רק על מחיר החולצות והערכות (לא על שם ומספר, פאצ'ים או אביזרים)"
   },
   "thankYou": {
     "eyebrow": "ההזמנה בוצעה",

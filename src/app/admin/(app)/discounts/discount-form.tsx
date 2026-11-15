@@ -45,6 +45,10 @@ export function DiscountForm() {
         <input type="checkbox" name="firstOrderOnly" className="h-4 w-4 accent-[var(--pitch)]" />
         First order only (checked by phone number)
       </label>
+      <label className="flex items-end gap-2 text-sm text-ink">
+        <input type="checkbox" name="shirtsOnly" className="h-4 w-4 accent-[var(--pitch)]" />
+        Only off shirts &amp; kits (not names, patches, gift box, accessories)
+      </label>
       <div className="flex items-end">
         <SubmitButton bare className={cx(button.primary, "w-full")}>Create code</SubmitButton>
       </div>

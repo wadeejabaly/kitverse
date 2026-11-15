@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryBundlePrice, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2, roundUpShekel } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryBundlePrice, accessoryDeals, cartTotals, isRetroSeason, priceFor, priceLine, round2, roundUpShekel } from "@/data/pricing";
 import { completeBundles } from "@/data/bundle-defs";
 import { slugify } from "@/data/slug";
 import { patchPieces } from "@/lib/patch-limits";
@@ -105,7 +105,7 @@ const MAX_DISCOUNT_CODES = 5;
  *  One that checks out but doesn't yet meet its own minimum order stays in
  *  this list rather than being dropped, so it kicks in on its own the
  *  moment the cart grows enough — see discountQualifies below. */
-type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean };
+type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean; appliesTo: "order" | "shirts" };
 
 /** What the discount-code input is doing right now. */
 type DiscountCheck =
@@ -268,7 +268,7 @@ export function CheckoutView({
         body: JSON.stringify({ code }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown }
+        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown; appliesTo?: unknown }
         | null;
       if (data?.ok && (data.kind === "percent" || data.kind === "fixed") && typeof data.value === "number") {
         const next: AppliedDiscount = {
@@ -276,6 +276,7 @@ export function CheckoutView({
           minOrder: typeof data.minOrder === "number" ? data.minOrder : 0,
           stackable: data.stackable === true,
           firstOrderOnly: data.firstOrderOnly === true,
+          appliesTo: data.appliesTo === "shirts" ? "shirts" : "order",
         };
         // Same rule the server enforces (src/lib/discounts.ts
         // codesCanCombine): more than one code only works when EVERY one of
@@ -419,7 +420,13 @@ export function CheckoutView({
   const dealSaving = round2(deals.reduce((s, d) => s + d.saving, 0));
   const itemsSubtotal = round2(totals.subtotal + totals.giftBox - dealSaving);
   const qualifyingDiscounts = appliedDiscounts.filter((d) => itemsSubtotal >= d.minOrder);
-  const perCodeAmount = (d: AppliedDiscount) => round2(d.kind === "percent" ? (itemsSubtotal * d.value) / 100 : d.value);
+  // a "shirts" code (owner request 2026-11-15) is taken off the shirts' and kits' own price only - with the
+  // 3XL/4XL size price, never names, patches, gift boxes or accessories - same as the server (discountAmount)
+  const shirtsBase = round2(lines.reduce((s, line) => s + priceFor(line.product.season, line.item.size, line.item.version, line.item.sleeve, line.product.set, !!line.item.bundle && okBundles.has(line.item.bundle)) * line.item.qty, 0));
+  const perCodeAmount = (d: AppliedDiscount) => {
+    const base = d.appliesTo === "shirts" ? Math.min(shirtsBase, itemsSubtotal) : itemsSubtotal;
+    return round2(Math.min(base, d.kind === "percent" ? (base * d.value) / 100 : d.value));
+  };
   const discountAmount = Math.min(itemsSubtotal, round2(qualifyingDiscounts.reduce((sum, d) => sum + perCodeAmount(d), 0)));
   // rounded UP to a whole shekel, like the order itself (owner request 2026-11-15)
   const grandTotal = roundUpShekel(round2(totals.total - dealSaving - discountAmount));
@@ -879,6 +886,7 @@ export function CheckoutView({
                   <span className="flex flex-col">
                     <span dir="ltr" className="latin font-medium">{d.code}</span>
                     {d.firstOrderOnly ? <span className="text-xs text-ink-soft">{t("discountFirstOrderOnly")}</span> : null}
+                    {d.appliesTo === "shirts" ? <span className="text-xs text-ink-soft">{t("discountShirtsOnly")}</span> : null}
                   </span>
                   <button type="button" className="text-xs text-ink-soft underline underline-offset-4" onClick={() => removeDiscountCode(d.code)}>
                     {t("discountRemove")}

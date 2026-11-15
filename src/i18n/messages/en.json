@@ -10,9 +10,9 @@
     "cta": "Shop now",
     "sale": "{amount} off everything — code <c>{code}</c> at checkout",
     "saleMin": "{amount} off orders of {min} or more, online only — code <c>{code}</c> at checkout",
-    "saleStrip": "{amount} off orders of {min} or more <s>|</s> code <c>{code}</c> · online only!",
+    "saleStrip": "{amount} off shirts on orders of {min} or more <s>|</s> code <c>{code}</c> · online only!",
     "claimTitle": "Claim {amount} off?",
-    "claimBodyMin": "Black Friday: {amount} off orders of {min} or more, online only.",
+    "claimBodyMin": "Black Friday: {amount} off shirts and kits on orders of {min} or more, online only.",
     "claimBody": "Black Friday: {amount} off everything.",
     "claimYes": "Yes, claim it",
     "claimNo": "No thanks",
@@ -146,7 +146,7 @@
       "eyebrow": "KITVERSE JERSEYS",
       "title": "Black Friday",
       "discount": "{amount} OFF",
-      "minLine": "on orders of {min} or more",
+      "minLine": "off shirts on orders of {min}+",
       "sub": "The biggest range of club and national-team shirts, classic and current, in great quality and standout designs.",
       "autoNote": "Applied automatically at checkout",
       "countdownLabel": "Countdown to Black Friday",
@@ -703,7 +703,8 @@
     "picksPopupHint": "Matching extras for the shirts you picked.",
     "picksAdded": "Added",
     "picksContinue": "Continue to checkout",
-    "picksClose": "Close"
+    "picksClose": "Close",
+    "discountShirtsOnly": "On the shirts and kits only (not names, patches or accessories)"
   },
   "thankYou": {
     "eyebrow": "Order placed",

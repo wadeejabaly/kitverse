@@ -33,6 +33,8 @@ export type DiscountCode = {
   // Owner request 2026-11-10 ("30 shekels off your first order from 300"):
   // only for a shopper whose phone has no earlier real order.
   first_order_only: boolean;
+  /** Owner request 2026-11-15: what the code is taken off - "order" (items total) or "shirts" (shirt/kit price only). */
+  applies_to?: "order" | "shirts";
   created_at: string;
 };
 
@@ -87,11 +89,26 @@ export async function hasEarlierOrder(phone: string): Promise<boolean> {
   return (r.data ?? []).length > 0;
 }
 
-/** The agorot amount a code is worth against a given items subtotal (0 if the subtotal doesn't meet min_order). Never exceeds the subtotal. */
-export function discountAmount(row: Pick<DiscountCode, "kind" | "value" | "min_order">, itemsSubtotalAgorot: number): number {
+/**
+ * The agorot amount a code is worth (0 if the items subtotal doesn't meet min_order). The minimum is
+ * always measured on the whole items subtotal; the cut is taken off that subtotal, or - for a code with
+ * applies_to "shirts" (owner request 2026-11-15) - off the shirts' and kits' own price only
+ * (`shirtsSubtotalAgorot`: no names, patches, gift boxes or accessories). Never exceeds what it's taken off.
+ */
+export function discountAmount(
+  row: Pick<DiscountCode, "kind" | "value" | "min_order"> & { applies_to?: string | null },
+  itemsSubtotalAgorot: number,
+  shirtsSubtotalAgorot: number = itemsSubtotalAgorot,
+): number {
   if (itemsSubtotalAgorot < row.min_order) return 0;
-  const raw = row.kind === "percent" ? Math.round((itemsSubtotalAgorot * row.value) / 100) : row.value;
-  return Math.max(0, Math.min(raw, itemsSubtotalAgorot));
+  const base = row.applies_to === "shirts" ? Math.min(shirtsSubtotalAgorot, itemsSubtotalAgorot) : itemsSubtotalAgorot;
+  const raw = row.kind === "percent" ? Math.round((base * row.value) / 100) : row.value;
+  return Math.max(0, Math.min(raw, base));
+}
+
+/** The shirts' and kits' own price in a quote (agorot): unit price + its 3XL/4XL size price, times qty - no names or patches. */
+export function shirtsSubtotal(q: { lines: { unitPrice: number; qty: number; addons: { id: string; amount: number }[] }[] }): number {
+  return q.lines.reduce((s, l) => s + (l.unitPrice + l.addons.filter((a) => a.id.startsWith("size_")).reduce((x, a) => x + a.amount, 0)) * l.qty, 0);
 }
 
 /**
