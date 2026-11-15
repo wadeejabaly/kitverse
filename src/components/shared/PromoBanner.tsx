@@ -90,7 +90,9 @@ export async function PromoBanner() {
       className="relative z-40 block border-b border-[#2f6bff]/40 bg-[#05081a] px-4 py-2.5 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
     >
       <span className="latin me-2 font-extrabold tracking-[0.12em] text-[#7fa6ff]">BLACK FRIDAY</span>
-      {t.rich("sale", { amount: amountOf(sale), code: sale.code, c: strong })}
+      {sale.minOrder > 0
+        ? t.rich("saleMin", { amount: amountOf(sale), min: `₪${sale.minOrder}`, code: sale.code, c: strong })
+        : t.rich("sale", { amount: amountOf(sale), code: sale.code, c: strong })}
       {cash ? <span className="mx-2 opacity-60">·</span> : null}
       {cashNote}
       {cta}

@@ -8,7 +8,8 @@
     "welcome": "{amount} off your first order of {min} or more — code <c>{code}</c> at checkout",
     "welcomeNoMin": "{amount} off your first order — code <c>{code}</c> at checkout",
     "cta": "Shop now",
-    "sale": "{amount} off everything — code <c>{code}</c> at checkout"
+    "sale": "{amount} off everything — code <c>{code}</c> at checkout",
+    "saleMin": "{amount} off orders of {min} or more, online only — code <c>{code}</c> at checkout"
   },
   "nav": {
     "home": "Home",
