@@ -9,8 +9,10 @@ import { defineRouting } from "next-intl/routing";
  *   `/he` — many of the same Israeli shoppers read Hebrew, and several data
  *   files (localities, the DB schema's `*_he` columns) were already built
  *   anticipating it.
- * - localeDetection is false on purpose: browser language NEVER overrides the
- *   store's market. The site opens in Arabic whatever the browser reports.
+ * - localeDetection stays false (next-intl's own detection is off). Instead, owner
+ *   request 2026-11-16: on a browser's FIRST visit src/proxy.ts sends it to the
+ *   phone's language once (ar -> Arabic, en -> English, he/anything else -> Hebrew,
+ *   `src/lib/phone-locale.ts`) and sets NEXT_LOCALE; after that the URL is respected.
  */
 export const routing = defineRouting({
   locales: ["ar", "en", "he"],
