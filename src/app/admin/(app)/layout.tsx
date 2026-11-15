@@ -7,6 +7,7 @@ import { setBotOn, signOut } from "../actions";
 import { Avatar, Wordmark, cx } from "../ui";
 import { Sidebar, MobileNav, TabBar, BellLink } from "./nav";
 import PushButton from "./push-button";
+import { MarkOwnerDevice } from "./mark-owner-device";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,7 @@ export default async function AppShell({ children }: { children: React.ReactNode
 
   return (
     <div className="flex min-h-dvh">
+      <MarkOwnerDevice />
       <Sidebar badges={badges} initialCollapsed={collapsed} footer={footer} />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-line bg-void/80 px-4 backdrop-blur-xl lg:h-[72px] lg:px-8">

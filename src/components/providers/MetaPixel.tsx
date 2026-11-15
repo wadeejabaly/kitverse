@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useConsent } from "@/components/providers/ConsentProvider";
 import { META_PIXEL_ID, pixel } from "@/lib/analytics/meta-pixel";
+import { isOwnerDevice } from "@/lib/analytics/owner-device";
 
 /**
  * Loads Meta's pixel script once the visitor has ACCEPTED cookies (never before, never on
@@ -16,7 +17,7 @@ export function MetaPixel() {
   const loaded = useRef(false);
 
   useEffect(() => {
-    if (!META_PIXEL_ID || consent !== "accepted" || loaded.current) return;
+    if (!META_PIXEL_ID || consent !== "accepted" || loaded.current || isOwnerDevice()) return;
     loaded.current = true;
     // Meta's standard base code, unminified: a queue stub until fbevents.js arrives.
     /* eslint-disable @typescript-eslint/no-explicit-any */

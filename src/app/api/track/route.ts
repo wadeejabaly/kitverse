@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
+import { OWNER_COOKIE } from "@/lib/analytics/owner-device";
 
 /**
  * Public, unauthenticated event sink for the storefront's own first-party traffic log
@@ -45,6 +46,8 @@ function geoFromHeaders(req: NextRequest): { country: string | null; countryRegi
 
 export async function POST(req: NextRequest) {
   if (!fromOurSite(req)) return NextResponse.json({ ok: true }); // quietly ignored
+  // the owner's own devices (marked by opening the admin) never count - owner request 2026-11-16
+  if (req.cookies.get(OWNER_COOKIE)?.value === "1") return NextResponse.json({ ok: true });
   const raw = await req.text();
   if (raw.length > 2000) return NextResponse.json({ ok: false }, { status: 413 });
   let body: unknown;

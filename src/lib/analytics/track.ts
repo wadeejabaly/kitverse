@@ -12,6 +12,8 @@
  * "500 pageviews" apart from "80 different people looked at 500 pages".
  */
 
+import { isOwnerDevice } from "@/lib/analytics/owner-device";
+
 const SESSION_KEY = "kv_sid";
 
 let cachedSessionId: string | null = null;
@@ -41,6 +43,7 @@ function sessionId(): string {
 type EventType = "page_view" | "add_to_cart" | "checkout_start";
 
 function send(type: EventType, extra: Record<string, string | undefined> = {}) {
+  if (isOwnerDevice()) return; // the owner's own browsing never counts
   try {
     const body = JSON.stringify({ type, sessionId: sessionId(), ...extra });
     if (typeof navigator.sendBeacon === "function") {
