@@ -9,7 +9,7 @@
     "code": "BLACKFRIDAY15",
     "kind": "percent",
     "value": 15,
-    "minOrder": 350,
+    "minOrder": 0,
     "startsAt": "2026-11-15T10:00:00+00:00",
     "endsAt": "2026-11-30T22:00:00+00:00"
   }

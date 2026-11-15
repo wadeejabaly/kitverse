@@ -172,7 +172,17 @@ export async function HeroVideo({ locale, blackFriday = false }: { locale: strin
                     </svg>
                     <span>{tb("minLine", { min: `\u2066₪${bf.minOrder}\u2069` })}</span>
                   </p>
-                ) : null}
+                ) : (
+                  // owner 2026-11-15: "make it on any amount" - no minimum, the pill says what it's on
+                  <p className="kv-bf-min kv-vhero-in" style={{ "--i": 2 } as React.CSSProperties}>
+                    <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5 shrink-0">
+                      <path d="M3 4h2l2.4 10.2a1.5 1.5 0 0 0 1.5 1.1h8.6a1.5 1.5 0 0 0 1.4-1l2.1-6.3H6.2" strokeLinecap="round" strokeLinejoin="round" />
+                      <circle cx="9.5" cy="19" r="1.3" />
+                      <circle cx="17" cy="19" r="1.3" />
+                    </svg>
+                    <span>{tb("allLine")}</span>
+                  </p>
+                )}
               </>
             ) : (
               // Three authored lines: white, white, electric blue. Each rises out
