@@ -20,6 +20,7 @@ import { CustomerSchema, type CheckoutErrorCode } from "@/lib/checkout";
 import { CityCombobox } from "@/components/checkout/CityCombobox";
 import type { TownOption } from "@/data/localities";
 import { trackCheckoutStart } from "@/lib/analytics/track";
+import { pixel } from "@/lib/analytics/meta-pixel";
 import { BitMark } from "@/components/checkout/BitMark";
 import { AccessoryPicks } from "@/components/checkout/AccessoryPicks";
 import type { ManualMethod } from "@/lib/manual-pay-core";
@@ -431,6 +432,14 @@ export function CheckoutView({
   // rounded UP to a whole shekel, like the order itself (owner request 2026-11-15)
   const grandTotal = roundUpShekel(round2(totals.total - dealSaving - discountAmount));
 
+  // Meta Pixel InitiateCheckout: once per visit to this page, as soon as the cart has loaded.
+  const pixelCheckoutSent = useRef(false);
+  useEffect(() => {
+    if (!hydrated || pixelCheckoutSent.current || items.length === 0) return;
+    pixelCheckoutSent.current = true;
+    pixel.initiateCheckout(grandTotal, items.reduce((n, i) => n + i.qty, 0));
+  }, [hydrated, items, grandTotal]);
+
   const parsed = CustomerSchema.safeParse({
     ...values,
     notes: values.notes.trim() === "" ? undefined : values.notes,
@@ -510,6 +519,7 @@ export function CheckoutView({
         // cart, then hand over — so an emptied cart never flashes an "your
         // cart is empty" screen at someone who has just ordered.
         setPhase("done");
+        pixel.purchase(grandTotal, payload.reference, items.map((i) => i.handle));
         clear();
         const token = typeof payload.token === "string" ? payload.token : "";
         router.push(
@@ -596,6 +606,7 @@ export function CheckoutView({
       if (response.ok && typeof payload?.token === "string") {
         // the order exists now: empty the cart (a second "Pay" can't make a second order) and go to its pay page
         setPhase("done");
+        pixel.purchase(grandTotal, attemptId.current ?? payload.token, items.map((i) => i.handle));
         clear();
         router.push(`/checkout/pay?t=${encodeURIComponent(payload.token)}`);
         return;

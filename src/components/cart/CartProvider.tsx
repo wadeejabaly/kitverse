@@ -13,6 +13,7 @@ import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Sleeve, Size
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { PATCHES } from "@/lib/orders/rules";
 import { trackAddToCart } from "@/lib/analytics/track";
+import { pixel } from "@/lib/analytics/meta-pixel";
 
 /**
  * The cart: client-side only, persisted to localStorage, prices never stored.
@@ -221,6 +222,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     // Every add-to-cart on the site goes through this one function, jersey or accessory alike -
     // the single chokepoint the admin stats page's "add to cart" count is built on.
     trackAddToCart(item.handle);
+    pixel.addToCart(item.handle);
     setItems((current) => {
       const existing = current.findIndex((line) => lineKey(line) === key);
       if (existing === -1) {

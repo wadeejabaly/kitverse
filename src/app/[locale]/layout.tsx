@@ -12,6 +12,7 @@ import { ConsentBanner } from "@/components/shared/ConsentBanner";
 import { LanguagePicker } from "@/components/shared/LanguagePicker";
 import { SaleClaim } from "@/components/shared/SaleClaim";
 import { PageViewTracker } from "@/components/providers/PageViewTracker";
+import { MetaPixel } from "@/components/providers/MetaPixel";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
 import { PromoBanner } from "@/components/shared/PromoBanner";
@@ -115,6 +116,8 @@ export default async function LocaleLayout({
                   stats page (owner request 2026-11-03). First-party and session-scoped, see
                   its own docstring for why this doesn't need the consent banner's gate. */}
               <PageViewTracker locale={locale} />
+              {/* Meta Pixel - loads only after "Accept" on the cookie banner (owner 2026-11-15). */}
+              <MetaPixel />
               <PromoBanner />
               <Header />
               <main className="flex grow flex-col">{children}</main>
