@@ -183,7 +183,7 @@
         ],
         "kit_with_shorts": true
       },
-      "price": 170,
+      "price": 160,
       "source": "owner DM price list",
       "history": [
         300,
@@ -194,8 +194,22 @@
       "name_en": "Adult kit (shirt + shorts)"
     },
     {
-      "id": "adult_kit_player",
+      "id": "adult_kit_retro",
       "price": 180,
+      "source": "owner request 2026-11-15",
+      "match": {
+        "audience": [
+          "adult"
+        ],
+        "era": "retro",
+        "kit_with_shorts": true
+      },
+      "name_ar": "طقم الكبار ريترو",
+      "name_en": "Adult kit, retro (shirt + shorts)"
+    },
+    {
+      "id": "adult_kit_player",
+      "price": 170,
       "source": "owner request 2026-11-15",
       "match": {
         "audience": [
