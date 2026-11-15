@@ -147,7 +147,7 @@ export default async function SizeGuidePage({
             <SizeHelper />
           </section>
 
-          <section className="kv-panel flex gap-4 p-6">
+          <section id="kids" className="kv-panel flex scroll-mt-28 gap-4 p-6">
             <span className="kv-icon-tile">
               <Icon name="star" />
             </span>

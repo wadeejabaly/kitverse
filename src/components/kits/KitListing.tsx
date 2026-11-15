@@ -1,11 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { kitProducts } from "@/data/catalog";
-import { KIDS_SIZE_CHART, priceFor } from "@/data/pricing";
+import { priceFor } from "@/data/pricing";
 import type { ProductSet } from "@/data/types";
 import { ProductGrid } from "@/components/shop/ProductCard";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { Price } from "@/components/shared/Money";
-import { KidsSizeHelper } from "@/components/product/KidsSizeHelper";
+import { Link } from "@/i18n/navigation";
 
 /**
  * Full kits (owner request 2026-11-15): /kits (adults) and /kids-kits. Shirt + shorts, priced from the
@@ -31,29 +31,15 @@ export async function KitListing({ locale, set }: { locale: string; set: Product
           <span className="text-ink-soft">{t("custom")}</span>
         </div>
       </section>
+      {/* Kids sizes (owner 2026-11-15: "remove the size chart from here"): the full chart + calculator live
+          on the size guide and the calculator on each kids kit page - here just one line pointing there. */}
       {kids ? (
-        <section className="pt-6">
-          <div className="kv-panel p-4">
-            <h2 className="text-[17px] font-bold">{t("chartTitle")}</h2>
-            <div className="mt-3 overflow-x-auto">
-              <table className="kv-table min-w-[560px] text-center text-[14px]">
-                <thead><tr><th>{t("size")}</th><th>{t("age")}</th><th>{t("height")}</th><th>{t("length")}</th><th>{t("shorts")}</th></tr></thead>
-                <tbody>
-                  {KIDS_SIZE_CHART.map((r) => (
-                    <tr key={r.size}>
-                      <td className="latin tabular font-bold">{r.size} <span className="font-normal text-ink-soft">({r.letter})</span></td>
-                      <td className="tabular">{r.age[0]}-{r.age[1]}</td>
-                      <td className="tabular">{r.height[0]}-{r.height[1]}</td>
-                      <td className="tabular">{r.length}</td>
-                      <td className="tabular">{r.shortsLength}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <KidsSizeHelper startOpen />
-          </div>
-        </section>
+        <p className="pt-4 text-[14px] text-ink-soft">
+          {t("sizeHelp")}{" "}
+          <Link href="/size-guide#kids" className="font-semibold text-[#1f5cff] underline-offset-4 hover:underline">
+            {t("sizeHelpLink")}
+          </Link>
+        </p>
       ) : null}
       <section className="pt-8 pb-[clamp(72px,10vw,120px)]">
         {products.length ? (

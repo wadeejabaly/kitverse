@@ -1019,7 +1019,7 @@
     "adultTitle": "Full kits",
     "kidsTitle": "Kids kits",
     "adultIntro": "Shirt + shorts of this season's kits, in adult sizes S-4XL - fan or player version.",
-    "kidsIntro": "Shirt + shorts for kids aged 3-13, sizes 16-28. Find the right size with the calculator below.",
+    "kidsIntro": "Shirt + shorts for kids aged 3-13, sizes 16-28.",
     "whatsIn": "Shirt + shorts",
     "fanFrom": "From",
     "playerFrom": "Player version",
@@ -1030,6 +1030,8 @@
     "height": "Height (cm)",
     "length": "Shirt length (cm)",
     "shorts": "Shorts length (cm)",
-    "empty": "New kits are on their way. Message us on Instagram and we'll check the kit you want."
+    "empty": "New kits are on their way. Message us on Instagram and we'll check the kit you want.",
+    "sizeHelp": "Not sure about the size?",
+    "sizeHelpLink": "Kids size chart and size calculator"
   }
 }
