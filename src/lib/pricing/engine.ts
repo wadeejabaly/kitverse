@@ -56,7 +56,8 @@ export interface Quote {
   itemsTotal: number;          // shirts + per-shirt add-ons + order add-ons
   discountTotal: number;
   delivery: { zoneId: string; label: string; fee: number; days: string } | null;
-  total: number;               // itemsTotal - discounts + delivery
+  total: number;               // itemsTotal - discounts + delivery, rounded UP to a whole shekel
+  rounding: number;            // agorot added by that rounding (0-99)
   missing: ("zone" | "items")[];
   /** Arabic breakdown in the owner's style, e.g. "300 البلايز / 60 الاسماء / 50 توصيل = 410₪" */
   summaryAr: string;
@@ -189,7 +190,11 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
   const missing: Quote["missing"] = [];
   if (!items.length) missing.push("items");
   if (!delivery) missing.push("zone");
-  const total = itemsTotal - discountTotal + (delivery?.fee ?? 0);
+  const exactTotal = itemsTotal - discountTotal + (delivery?.fee ?? 0);
+  // Owner request 2026-11-15: the total is always rounded UP to a whole shekel (₪323.15 -> ₪324).
+  // Done here, once, so the website checkout, the order record, online payments and the bot all agree.
+  const total = roundUpToShekel(exactTotal);
+  const rounding = total - exactTotal;
 
   // owner-style Arabic summary
   const shirts = lines.reduce((s, l) => s + l.unitPrice * l.qty, 0);
@@ -208,6 +213,11 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
   return {
     lines, orderAddons,
     offer: best ? { id: best.offer.id, label: best.offer.name_ar, eligibleQty: best.eligible.reduce((s, i) => s + i.qty, 0), saving: best.saving } : null,
-    itemsTotal, discountTotal, delivery, total, missing, summaryAr,
+    itemsTotal, discountTotal, delivery, total, rounding, missing, summaryAr,
   };
+}
+
+/** Agorot rounded UP to a whole shekel (owner request 2026-11-15). */
+export function roundUpToShekel(agorot: number): number {
+  return Math.ceil(agorot / 100) * 100;
 }

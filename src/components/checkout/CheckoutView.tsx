@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2 } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryDeals, cartTotals, isRetroSeason, priceLine, round2, roundUpShekel } from "@/data/pricing";
 import { patchPieces } from "@/lib/patch-limits";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
 import { PATCH_PROP_KEYS } from "@/data/patches";
@@ -406,7 +406,8 @@ export function CheckoutView({
   const qualifyingDiscounts = appliedDiscounts.filter((d) => itemsSubtotal >= d.minOrder);
   const perCodeAmount = (d: AppliedDiscount) => round2(d.kind === "percent" ? (itemsSubtotal * d.value) / 100 : d.value);
   const discountAmount = Math.min(itemsSubtotal, round2(qualifyingDiscounts.reduce((sum, d) => sum + perCodeAmount(d), 0)));
-  const grandTotal = round2(totals.total - dealSaving - discountAmount);
+  // rounded UP to a whole shekel, like the order itself (owner request 2026-11-15)
+  const grandTotal = roundUpShekel(round2(totals.total - dealSaving - discountAmount));
 
   const parsed = CustomerSchema.safeParse({
     ...values,

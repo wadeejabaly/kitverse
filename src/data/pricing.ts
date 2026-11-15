@@ -166,6 +166,15 @@ export function priceFor(season: string, size: Size, version: Version, sleeve: S
  * Rounding after every sum/product keeps every displayed and charged figure
  * exact to the cent instead of accumulating drift across a multi-line cart.
  */
+/**
+ * Owner request 2026-11-15: totals are always rounded UP to a whole shekel at checkout, the same
+ * rule as the server engine (roundUpToShekel in src/lib/pricing/engine.ts). Cent-safe: 323.00 stays
+ * 323 even when float math made it 323.0000001.
+ */
+export function roundUpShekel(value: number): number {
+  return Math.ceil(Math.round(value * 100) / 100 - 1e-9);
+}
+
 export function round2(value: number): number {
   return Math.round((value + Number.EPSILON) * 100) / 100;
 }

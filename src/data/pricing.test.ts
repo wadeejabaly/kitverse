@@ -42,16 +42,16 @@ describe("seasonYear + isRetroSeason", () => {
   it("treats an unparseable season as NOT retro, so it never over-charges", () => {
     expect(isRetroSeason("")).toBe(false);
     expect(isRetroSeason("season unknown")).toBe(false);
-    expect(priceFor("season unknown", "M", "fan")).toBe(95);
+    expect(priceFor("season unknown", "M", "fan")).toBe(99);
   });
 });
 
 describe("priceFor — flat ladder by type, no season split for Fan/Player", () => {
-  it("Fan is 95 and Player is 110 at every non-retro season and non-surcharge size", () => {
+  it("Fan is 99 and Player is 115 at every non-retro season and non-surcharge size", () => {
     for (const season of CURRENT_SEASONS) {
       for (const size of NON_SURCHARGE_SIZES) {
-        expect(priceFor(season, size, "fan")).toBe(95);
-        expect(priceFor(season, size, "player")).toBe(110);
+        expect(priceFor(season, size, "fan")).toBe(99);
+        expect(priceFor(season, size, "player")).toBe(115);
       }
     }
   });
@@ -75,28 +75,28 @@ describe("priceFor — long sleeve (owner decision 2026-10-26)", () => {
     }
   });
 
-  it("Fan long sleeve is 105 and Player long sleeve is 120, at every non-retro season", () => {
+  it("Fan long sleeve is 110 and Player long sleeve is 125, at every non-retro season", () => {
     for (const season of CURRENT_SEASONS) {
       for (const size of NON_SURCHARGE_SIZES) {
-        expect(priceFor(season, size, "fan", "long")).toBe(105);
-        expect(priceFor(season, size, "player", "long")).toBe(120);
+        expect(priceFor(season, size, "fan", "long")).toBe(110);
+        expect(priceFor(season, size, "player", "long")).toBe(125);
       }
     }
   });
 
-  it("Retro long sleeve is 145 regardless of fan/player choice, at every retro season", () => {
+  it("Retro long sleeve is 149.99 regardless of fan/player choice, at every retro season", () => {
     for (const season of RETRO_SEASONS) {
       for (const size of NON_SURCHARGE_SIZES) {
-        expect(priceFor(season, size, "fan", "long")).toBe(145);
-        expect(priceFor(season, size, "player", "long")).toBe(145);
+        expect(priceFor(season, size, "fan", "long")).toBe(149.99);
+        expect(priceFor(season, size, "player", "long")).toBe(149.99);
       }
     }
   });
 
   it("still adds the size surcharge on top of a long-sleeve base price", () => {
-    expect(priceFor("2026/27", "3XL", "fan", "long")).toBe(105 + 9);
-    expect(priceFor("2026/27", "4XL", "player", "long")).toBe(120 + 12);
-    expect(priceFor("2022", "3XL", "fan", "long")).toBe(145 + 9);
+    expect(priceFor("2026/27", "3XL", "fan", "long")).toBe(110 + 9);
+    expect(priceFor("2026/27", "4XL", "player", "long")).toBe(125 + 12);
+    expect(priceFor("2022", "3XL", "fan", "long")).toBe(round2(149.99 + 9));
   });
 });
 
@@ -123,10 +123,10 @@ describe("priceFor — 3XL/4XL surcharge", () => {
   });
 
   it("full ladder spot-check", () => {
-    expect(priceFor("2026/27", "S", "fan")).toBe(95);
-    expect(priceFor("2026/27", "S", "player")).toBe(110);
-    expect(priceFor("2026/27", "3XL", "fan")).toBe(104);
-    expect(priceFor("2026/27", "4XL", "player")).toBe(122);
+    expect(priceFor("2026/27", "S", "fan")).toBe(99);
+    expect(priceFor("2026/27", "S", "player")).toBe(115);
+    expect(priceFor("2026/27", "3XL", "fan")).toBe(108);
+    expect(priceFor("2026/27", "4XL", "player")).toBe(127);
     expect(priceFor("2022", "S", "fan")).toBe(135);
     expect(priceFor("2022", "S", "player")).toBe(135);
     expect(priceFor("2022", "3XL", "fan")).toBe(144);
@@ -148,9 +148,9 @@ describe("ADDONS", () => {
   it("exposes the confirmed addon prices", () => {
     // Owner decision: name + number moved from a flat 20 to ₪19.99.
     expect(ADDONS.nameNumber).toBe(19.99);
-    // Owner decision 2026-10-26: the 1st patch on a shirt is ₪12.99 (the
+    // Owner decision 2026-10-26: the 1st patch on a shirt is ₪9.99 (₪12.99 until 2026-11-15) (the
     // 2nd and 3rd are cheaper — see patchesTotal below).
-    expect(ADDONS.patch).toBe(12.99);
+    expect(ADDONS.patch).toBe(9.99);
   });
 });
 
@@ -159,14 +159,14 @@ describe("patchesTotal — tiered by how many patches are on the same shirt", ()
     expect(patchesTotal(0)).toBe(0);
   });
 
-  it("charges ₪12.99 / ₪9.99 / ₪6.99 for the 1st / 2nd / 3rd patch", () => {
-    expect(patchesTotal(1)).toBe(12.99);
-    expect(patchesTotal(2)).toBe(round2(12.99 + 9.99));
-    expect(patchesTotal(3)).toBe(round2(12.99 + 9.99 + 6.99));
+  it("charges ₪9.99 / ₪8.99 / ₪7.99 / ₪6.99 for the 1st / 2nd / 3rd / 4th patch", () => {
+    expect(patchesTotal(1)).toBe(9.99);
+    expect(patchesTotal(2)).toBe(round2(9.99 + 8.99));
+    expect(patchesTotal(3)).toBe(round2(9.99 + 8.99 + 7.99));
   });
 
   it("repeats the last tier for any patch beyond the named ones", () => {
-    expect(patchesTotal(4)).toBe(round2(12.99 + 9.99 + 6.99 + 6.99));
+    expect(patchesTotal(4)).toBe(round2(9.99 + 8.99 + 7.99 + 6.99));
   });
 });
 
@@ -199,32 +199,32 @@ describe("delivery shipping tiers", () => {
 describe("priceLine + cartTotals — addon math and totals", () => {
   it("priceLine with no addons equals priceFor × qty", () => {
     const line = priceLine("2026/27", "M", "fan", 2);
-    expect(line.unitPrice).toBe(95);
-    expect(line.lineTotal).toBe(190);
+    expect(line.unitPrice).toBe(99);
+    expect(line.lineTotal).toBe(198);
   });
 
   it("priceLine adds nameNumber and a patch onto the unit price before multiplying by qty", () => {
     const line = priceLine("2026/27", "M", "fan", 3, { nameNumber: true, patchCount: 1 });
-    expect(line.unitPrice).toBe(round2(95 + 19.99 + 12.99));
-    expect(line.lineTotal).toBe(round2((95 + 19.99 + 12.99) * 3));
+    expect(line.unitPrice).toBe(round2(99 + 19.99 + 9.99));
+    expect(line.lineTotal).toBe(round2((99 + 19.99 + 9.99) * 3));
   });
 
   it("a second patch on the same shirt costs the cheaper 2nd tier, not another 1st-tier charge", () => {
     const two = priceLine("2026/27", "M", "fan", 1, { patchCount: 2 });
-    expect(two.unitPrice).toBe(round2(95 + 12.99 + 9.99));
+    expect(two.unitPrice).toBe(round2(99 + 9.99 + 8.99));
   });
 
   it("a patch count of 0 charges nothing, same as omitting it", () => {
     const withZero = priceLine("2026/27", "M", "fan", 1, { patchCount: 0 });
     const omitted = priceLine("2026/27", "M", "fan", 1);
-    expect(withZero.unitPrice).toBe(95);
+    expect(withZero.unitPrice).toBe(99);
     expect(withZero.unitPrice).toBe(omitted.unitPrice);
   });
 
   it("priceLine respects the size surcharge together with addons", () => {
     const line = priceLine("2026/27", "4XL", "player", 1, { nameNumber: true });
-    // player base 110 + 12 surcharge + 19.99 name&number
-    expect(line.unitPrice).toBe(round2(110 + 12 + 19.99));
+    // player base 115 + 12 surcharge + 19.99 name&number
+    expect(line.unitPrice).toBe(round2(115 + 12 + 19.99));
   });
 
   it("priceLine on a retro season ignores the version argument", () => {
@@ -236,13 +236,13 @@ describe("priceLine + cartTotals — addon math and totals", () => {
 
   it("priceLine charges the long-sleeve price when addons.sleeve is long", () => {
     const line = priceLine("2026/27", "M", "player", 2, { sleeve: "long" });
-    expect(line.unitPrice).toBe(120);
-    expect(line.lineTotal).toBe(240);
+    expect(line.unitPrice).toBe(125);
+    expect(line.lineTotal).toBe(250);
   });
 
   it("priceLine defaults to short sleeve when addons.sleeve is omitted", () => {
     const line = priceLine("2026/27", "M", "player", 1);
-    expect(line.unitPrice).toBe(110);
+    expect(line.unitPrice).toBe(115);
   });
 
   it("cartTotals sums line totals into subtotal and adds the given shipping once", () => {
@@ -252,7 +252,7 @@ describe("priceLine + cartTotals — addon math and totals", () => {
     ];
     const rest = SHIPPING_ILS_BY_TIER.rest;
     const totals = cartTotals(lines, rest);
-    const expectedSubtotal = round2(95 + round2(135 + 12.99) * 2);
+    const expectedSubtotal = round2(99 + round2(135 + 9.99) * 2);
     expect(totals.subtotal).toBe(expectedSubtotal);
     expect(totals.shipping).toBe(rest);
     expect(totals.giftBox).toBe(0);
@@ -271,14 +271,14 @@ describe("priceLine + cartTotals — addon math and totals", () => {
     const totals = cartTotals([priceLine("2026/27", "S", "fan", 1)]);
     expect(totals.shipping).toBe(0);
     expect(totals.giftBox).toBe(0);
-    expect(totals.total).toBe(95);
+    expect(totals.total).toBe(99);
   });
 
   it("cartTotals still charges shipping exactly once for a single-item cart", () => {
     const north = SHIPPING_ILS_BY_TIER.north;
     const totals = cartTotals([priceLine("2026/27", "S", "fan", 1)], north);
     expect(totals.shipping).toBe(north);
-    expect(totals.total).toBe(95 + north);
+    expect(totals.total).toBe(99 + north);
   });
 
   it("cartTotals adds the gift box exactly once, on top of subtotal and shipping", () => {
@@ -289,7 +289,7 @@ describe("priceLine + cartTotals — addon math and totals", () => {
       2,
     );
     expect(totals.giftBox).toBe(round2(GIFT_BOX_PRICE * 2));
-    expect(totals.total).toBe(round2(95 + north + GIFT_BOX_PRICE * 2));
+    expect(totals.total).toBe(round2(99 + north + GIFT_BOX_PRICE * 2));
   });
 });
 

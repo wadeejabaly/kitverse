@@ -111,6 +111,15 @@ describe("tiered patch pricing (owner decision 2026-10-26)", () => {
 });
 
 describe("order add-ons, discounts, delivery", () => {
+  it("rounds the total UP to a whole shekel (owner request 2026-11-15)", () => {
+    const q = quote(list, { items: [shirt({ patches: 1 })], adjustments: [{ label: "x", amount: 1234 }], zoneId: "north" });
+    const exact = q.itemsTotal - q.discountTotal + (q.delivery?.fee ?? 0);
+    expect(q.total % 100).toBe(0);
+    expect(q.total).toBe(Math.ceil(exact / 100) * 100);
+    expect(q.rounding).toBe(q.total - exact);
+    expect(q.rounding).toBeGreaterThan(0);
+  });
+
   it("box is charged once per order", () => {
     const q = quote(list, { items: [shirt({ boxAddonId: "box_real" }), shirt({ boxAddonId: "box_real" }), shirt()] });
     expect(q.orderAddons).toHaveLength(1);

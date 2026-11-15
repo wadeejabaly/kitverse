@@ -17,13 +17,14 @@
     {
       "id": "patch",
       "per": "patch",
-      "price": 12.99,
+      "price": 9.99,
       "source": "website",
       "name_ar": "الرقعة",
       "name_en": "Patch",
       "price_tiers": [
-        12.99,
         9.99,
+        8.99,
+        7.99,
         6.99
       ]
     },
@@ -86,7 +87,7 @@
           "women"
         ]
       },
-      "price": 95,
+      "price": 99,
       "source": "dm",
       "name_ar": "نسخة المشجعين",
       "name_en": "Fan version"
@@ -101,7 +102,7 @@
           "adult"
         ]
       },
-      "price": 110,
+      "price": 115,
       "source": "dm",
       "name_ar": "نسخة اللاعبين",
       "name_en": "Player version"
@@ -127,7 +128,7 @@
         "sleeve": "long",
         "version": "fan"
       },
-      "price": 105,
+      "price": 110,
       "source": "dm",
       "name_ar": "نسخة المشجعين بأكمام طويلة",
       "name_en": "Fan version, long sleeve"
@@ -139,7 +140,7 @@
         "sleeve": "long",
         "version": "player"
       },
-      "price": 120,
+      "price": 125,
       "source": "dm",
       "name_ar": "نسخة اللاعبين بأكمام طويلة",
       "name_en": "Player version, long sleeve"
@@ -150,7 +151,7 @@
         "era": "retro",
         "sleeve": "long"
       },
-      "price": 145,
+      "price": 149.99,
       "source": "website",
       "name_ar": "النسخة الريترو بأكمام طويلة",
       "name_en": "Retro, long sleeve"
