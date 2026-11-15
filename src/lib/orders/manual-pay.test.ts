@@ -22,6 +22,8 @@ vi.mock("../db", () => ({
 vi.mock("../notify", () => ({ notify: async (n: { kind: string; title: string }) => { notices.push(n); } }));
 vi.mock("../discounts", () => ({ recordDiscountCodeUse: async (c: string) => { claimedCodes.push(c); return true; } }));
 vi.mock("./link", () => ({ orderToken: (id: string) => `${id}.sig` }));
+// re-pricing once the payment method is on the order (PayPal fee - the fee math itself is tested in the engine)
+vi.mock("./draft", () => ({ requote: async () => ({ total: 30000 }) }));
 vi.mock("./web", () => ({
   // stands in for the shared website-order writer: one priced order, status "quoted", unpaid
   prepareOrder: async () => {

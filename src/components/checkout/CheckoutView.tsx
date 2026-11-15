@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryBundlePrice, accessoryDeals, cartTotals, isRetroSeason, priceFor, priceLine, round2, roundUpShekel } from "@/data/pricing";
+import { GIFT_BOX_MAX_QTY, GIFT_BOX_PRICE, SHIPPING_ILS_BY_TIER, SHIPPING_LABEL_BY_TIER, accessoryBundlePrice, accessoryDeals, cartTotals, isRetroSeason, priceFor, priceLine, round2, roundUpShekel, PAYPAL_FEE_PCT } from "@/data/pricing";
 import { completeBundles } from "@/data/bundle-defs";
 import { slugify } from "@/data/slug";
 import { patchPieces } from "@/lib/patch-limits";
@@ -1016,7 +1016,7 @@ export function CheckoutView({
 
               {paypalEnabled ? (
                 <div className="rounded-[12px] border border-rule p-4">
-                  <p className="mb-4 text-xs text-ink-soft">{t("payPalNote")}</p>
+                  <p className="mb-4 text-xs text-ink-soft">{PAYPAL_FEE_PCT > 0 ? t("payPalFee", { pct: PAYPAL_FEE_PCT }) : t("payPalNote")}</p>
                   <button
                     type="button"
                     className="btn btn-quiet w-full"
@@ -1054,7 +1054,7 @@ export function CheckoutView({
               {manualMethods.paypalMe ? (
                 <div className="rounded-[12px] border border-rule p-4">
                   <p className="mb-1.5 text-sm font-bold">{t("payPalMe")}</p>
-                  <p className="mb-4 text-xs text-ink-soft">{t("payPalMeNote")}</p>
+                  {PAYPAL_FEE_PCT > 0 ? <p className="mb-4 text-xs text-ink-soft">{t("payPalFee", { pct: PAYPAL_FEE_PCT })}</p> : <div className="mb-4" />}
                   <button
                     type="button"
                     className="btn btn-quiet w-full"

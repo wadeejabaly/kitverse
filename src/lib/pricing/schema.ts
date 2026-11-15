@@ -93,6 +93,8 @@ export const PriceListData = z.object({
   payment: z.object({
     cash_on_delivery: z.boolean(),
     paypal: z.boolean(),
+    /** % added to the total when the customer pays with PayPal (owner 2026-11-15: 5). Edited in admin Pricing. */
+    paypal_fee_pct: z.number().min(0).max(20).optional(),
     deposit: z.object({ enabled: z.boolean() }).passthrough(),
   }),
 }).passthrough();

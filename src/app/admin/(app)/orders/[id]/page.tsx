@@ -23,7 +23,7 @@ export const dynamic = "force-dynamic";
 export default async function OrderPage({ params }: PageProps<"/admin/orders/[id]">) {
   const { id } = await params;
   const o = (await db().from("orders").select("*").eq("id", id).maybeSingle()).data as
-    { id: string; number: number; status: string; source: string; total: number; customer_id: string; created_at: string; confirmed_at: string | null; conversation_id: string | null; payment_method: string | null; payment_status: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string; itemsTotal?: number; discountTotal?: number; delivery?: { fee: number; label?: string } | null; orderAddons?: { label: string; amount: number }[] } | null; returned_to_inventory_at: string | null } | null;
+    { id: string; number: number; status: string; source: string; total: number; customer_id: string; created_at: string; confirmed_at: string | null; conversation_id: string | null; payment_method: string | null; payment_status: string | null; address: Record<string, string | null> | null; quote: { summaryAr?: string; itemsTotal?: number; discountTotal?: number; paymentFee?: number; delivery?: { fee: number; label?: string } | null; orderAddons?: { label: string; amount: number }[] } | null; returned_to_inventory_at: string | null } | null;
   if (!o) notFound();
   const lines = await batchLines([o.id]);
   const pids = [...new Set(lines.map((l) => l.product_id).filter(Boolean))] as string[];
@@ -187,6 +187,7 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
               {o.quote?.itemsTotal != null ? <KV label="Items">{ils(o.quote.itemsTotal)}</KV> : null}
               {o.quote?.discountTotal ? <KV label="Discount"><span className="text-green">-{ils(o.quote.discountTotal)}</span></KV> : null}
               {o.quote?.delivery ? <KV label="Delivery">{ils(o.quote.delivery.fee)}</KV> : null}
+              {o.quote?.paymentFee ? <KV label="PayPal fee">{ils(o.quote.paymentFee)}</KV> : null}
               <KV label="Total"><span className="kv-display text-lg font-bold">{ils(o.total)}</span></KV>
             </div>
           </Card>

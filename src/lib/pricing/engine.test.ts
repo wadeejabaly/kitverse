@@ -131,6 +131,16 @@ describe("order add-ons, discounts, delivery", () => {
     expect(q.rounding).toBeGreaterThan(0);
   });
 
+  it("adds the PayPal fee on the whole order, then rounds up (owner 2026-11-15)", () => {
+    const plain = quote(list, { items: [shirt()], zoneId: "north" });
+    const pp = quote(list, { items: [shirt()], zoneId: "north", paymentFeePct: 5 });
+    const base = plain.itemsTotal - plain.discountTotal + (plain.delivery?.fee ?? 0);
+    expect(plain.paymentFee).toBe(0);
+    expect(pp.paymentFee).toBe(Math.round(base * 0.05));
+    expect(pp.total).toBe(Math.ceil((base + pp.paymentFee) / 100) * 100);
+    expect(() => quote(list, { items: [shirt()], paymentFeePct: 50 })).toThrow();
+  });
+
   it("box is charged once per order", () => {
     const q = quote(list, { items: [shirt({ boxAddonId: "box_real" }), shirt({ boxAddonId: "box_real" }), shirt()] });
     expect(q.orderAddons).toHaveLength(1);

@@ -6,7 +6,7 @@ import { orderReference } from "../checkout";
 import { orderLink, orderToken } from "./link";
 import { prepareOrder, type PrepareFailure } from "./web";
 import type { CreateOrderRequest } from "../checkout";
-import type { OrderRow } from "./draft";
+import { requote, type OrderRow } from "./draft";
 
 /**
  * The PayPal / Bit (PayPlus) half of website checkout — the two rails where
@@ -50,10 +50,13 @@ export async function createPendingOnlineOrder(
 ): Promise<CreatePendingResult> {
   const prepared = await prepareOrder(req, { claimCodes: false }); // a code's use is claimed once the payment settles
   if (!prepared.ok) return prepared;
-  const { order, q } = prepared;
+  const { order } = prepared;
+  // the payment method decides the PayPal fee (owner 2026-11-15), so re-price once it is on the order
+  must(await db().from("orders").update({ payment_method: provider }).eq("id", order.id).select("id"), "online order method");
+  const q = await requote({ ...order, payment_method: provider });
 
   const row = must(
-    await db().from("orders").update({ payment_method: provider, total: q.total }).eq("id", order.id).select("*").single(),
+    await db().from("orders").update({ total: q.total }).eq("id", order.id).select("*").single(),
     "price online order",
   ) as OrderRow;
 

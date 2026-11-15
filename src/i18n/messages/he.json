@@ -763,7 +763,8 @@
     "picksAdded": "נוסף",
     "picksContinue": "המשך לתשלום",
     "picksClose": "סגירה",
-    "discountShirtsOnly": "רק על מחיר החולצות והערכות"
+    "discountShirtsOnly": "רק על מחיר החולצות והערכות",
+    "payPalFee": "חלה עמלת PayPal של {pct}%"
   },
   "thankYou": {
     "eyebrow": "ההזמנה בוצעה",

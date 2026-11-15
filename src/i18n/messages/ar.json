@@ -763,7 +763,8 @@
     "picksAdded": "انضاف",
     "picksContinue": "كمّل للدفع",
     "picksClose": "إغلاق",
-    "discountShirtsOnly": "على سعر القمصان والأطقم"
+    "discountShirtsOnly": "على سعر القمصان والأطقم",
+    "payPalFee": "عمولة PayPal ‏{pct}% بتنضاف"
   },
   "thankYou": {
     "eyebrow": "تم الطلب",

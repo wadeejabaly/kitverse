@@ -23,6 +23,8 @@ function diff(before: PriceListData, after: PriceListData): PriceChange[] {
   compare(before.addons, after.addons, (a) => a.name_en, (a) => (a.price_tiers?.length ? `+₪${a.price_tiers.join(" / ")}` : `+₪${a.price}`));
   compare(before.offers, after.offers, (o) => o.name_en, (o) => (o.active ? `on: ₪${o.unit_price.short}${o.unit_price.long !== undefined ? `/${o.unit_price.long}` : ""} each from ${o.min_qty}` : "off"));
   compare(before.delivery.zones, after.delivery.zones, (z) => `Delivery: ${z.name_ar}`, (z) => `${z.name_ar} · ₪${z.fee} · ${z.days}`);
+  const fee = (l: PriceListData) => `${l.payment.paypal_fee_pct ?? 0}%`;
+  if (fee(before) !== fee(after)) out.push({ what: "PayPal fee", from: fee(before), to: fee(after) });
   return out;
 }
 
@@ -31,6 +33,7 @@ type RawList = {
   addons: { id: string; price: number; per: string; price_tiers?: number[] }[];
   offers: { id: string; active: boolean; min_qty: number; unit_price: { short: number; long?: number } }[];
   delivery: { zones: { id: string; fee: number; days: string; name_ar: string }[] };
+  payment: { paypal_fee_pct?: number };
 };
 
 /**
@@ -74,6 +77,13 @@ export async function savePrices(form: FormData) {
     z.fee = amount(`z:${z.id}:fee`, z.fee, z.id);
     z.days = text(`z:${z.id}:days`, z.days, 20);
     z.name_ar = text(`z:${z.id}:name`, z.name_ar, 60);
+  }
+  // PayPal fee in % (owner 2026-11-15: 5) - added to the total of PayPal orders by the engine
+  const pp = String(form.get("pay:paypal_fee_pct") ?? "").trim().replace(",", ".");
+  if (pp) {
+    const n = Number(pp);
+    if (!Number.isFinite(n) || n < 0 || n > 20) bad.push("PayPal fee");
+    else data.payment.paypal_fee_pct = Math.round(n * 100) / 100;
   }
   if (bad.length) redirect(`/admin/pricing?error=${encodeURIComponent(`Not saved - check these prices: ${bad.join(", ")}`)}`);
 

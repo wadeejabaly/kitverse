@@ -14,7 +14,7 @@ const OPEN = ["draft", "quoted", "awaiting_details", "awaiting_confirmation"] as
 export interface OrderRow {
   id: string; number: number; status: string; customer_id: string; conversation_id: string | null;
   zone_id: string | null; address: Record<string, string | null> | null; total: number; quote: Quote | null;
-  payment_method: "cod" | "paypal" | "bit" | null; payment_status: string; price_list_version_id: string | null; confirmed_at: string | null;
+  payment_method: "cod" | "paypal" | "bit" | "bit_personal" | "paypal_me" | null; payment_status: string; price_list_version_id: string | null; confirmed_at: string | null;
   gift_boxes?: number; source?: "instagram" | "website";
 }
 
@@ -145,7 +145,9 @@ export async function requote(order: OrderRow): Promise<Quote> {
     accQty.set(a.category, (accQty.get(a.category) ?? 0) + a.qty);
     if (a.bundle) accBundle.set(a.category, (accBundle.get(a.category) ?? 0) + a.qty);
   }
-  const q = quote(list.data, { items: cart, zoneId: order.zone_id, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
+  // PayPal orders carry the price list's PayPal fee (owner 2026-11-15) - it follows the order's payment method
+  const paymentFeePct = order.payment_method === "paypal" || order.payment_method === "paypal_me" ? list.data.payment.paypal_fee_pct ?? 0 : 0;
+  const q = quote(list.data, { items: cart, zoneId: order.zone_id, paymentFeePct, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
     orderAddons: [...(boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : []), ...[...accQty].map(([id, qty]) => ({ id, qty: Math.min(qty, 50), bundleQty: accBundle.get(id) ?? 0 }))] });
   const status = order.status === "draft" && (cart.length || acc.length) ? "quoted" : order.status;
   must(await db().from("orders").update({
@@ -191,7 +193,7 @@ export async function confirmOrder(order: OrderRow, paymentMethod: "cod" | "payp
   if (!a.street && !a.landmark) return { ok: false, error: "street + house number (or landmark) missing" };
   const list = await currentPriceList();
   if (paymentMethod === "paypal" && !list.data.payment.paypal) return { ok: false, error: "PayPal is switched off in the price list" };
-  const q = await requote(order);
+  const q = await requote({ ...order, payment_method: paymentMethod }); // PayPal adds its fee (owner 2026-11-15)
   const row = must(await db().from("orders").update({
     status: "confirmed", payment_method: paymentMethod, confirmed_at: new Date().toISOString(), total: q.total,
   }).eq("id", order.id).in("status", OPEN as unknown as string[]).select("*").single(), "confirm order") as OrderRow;

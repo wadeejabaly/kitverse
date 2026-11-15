@@ -8,7 +8,7 @@ import { pairedActive, pairedCount, type PairedPrice } from "@/lib/pricing/paire
  * database by scripts/export-store-catalog.ts), so the website and the Instagram bot always quote
  * the same prices. The server re-prices every order with src/lib/pricing/engine.ts.
  */
-type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number; price_tiers?: number[]; paired_price?: PairedPrice }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] } };
+type PL = { groups: { id: string; price: number }[]; addons: { id: string; price: number; price_tiers?: number[]; paired_price?: PairedPrice }[]; delivery: { zones: { id: string; fee: number; name_ar: string }[] }; payment?: { paypal_fee_pct?: number } };
 const pl = priceList as unknown as PL;
 const groupPrice = (id: string) => pl.groups.find((g) => g.id === id)?.price ?? 0;
 const addonPrice = (id: string) => pl.addons.find((a) => a.id === id)?.price ?? 0;
@@ -229,6 +229,9 @@ export function round2(value: number): number {
  * the shirt changes the price.
  */
 export const ADDONS = { nameNumber: addonPrice("name_number"), patch: addonPrice("patch") } as const;
+
+/** % added to the total when paying with PayPal (owner 2026-11-15; admin Pricing -> Payment). The server adds it (engine). */
+export const PAYPAL_FEE_PCT = pl.payment?.paypal_fee_pct ?? 0;
 
 const PATCH_TIERS = addonTiers("patch");
 

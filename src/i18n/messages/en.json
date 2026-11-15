@@ -763,7 +763,8 @@
     "picksAdded": "Added",
     "picksContinue": "Continue to checkout",
     "picksClose": "Close",
-    "discountShirtsOnly": "On the shirts and kits only"
+    "discountShirtsOnly": "On the shirts and kits only",
+    "payPalFee": "A {pct}% PayPal fee applies."
   },
   "thankYou": {
     "eyebrow": "Order placed",

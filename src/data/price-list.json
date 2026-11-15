@@ -313,7 +313,8 @@
       ],
       "non_refundable": true
     },
-    "cash_on_delivery": true
+    "cash_on_delivery": true,
+    "paypal_fee_pct": 5
   },
   "returns": "14 days from delivery, unworn with tags; printed shirts only if the print is wrong or the shirt is faulty; damage reported with photos within 48h; refund within 5 business days",
   "currency": "ILS",

@@ -35,6 +35,8 @@ export interface QuoteInput {
   zoneId?: string | null;      // delivery zone; null = not known yet
   adjustments?: Adjustment[];  // approved discounts / discount codes (already validated)
   orderAddons?: { id: string; qty: number; bundleQty?: number }[]; // per-order extras with a quantity (e.g. gift boxes); bundleQty of them inside complete bundles
+  /** Payment fee in percent of the order (owner 2026-11-15: 5% when paying with PayPal) - the price list's payment.paypal_fee_pct, passed only for PayPal orders. */
+  paymentFeePct?: number;
   now?: Date;
 }
 
@@ -57,7 +59,8 @@ export interface Quote {
   itemsTotal: number;          // shirts + per-shirt add-ons + order add-ons
   discountTotal: number;
   delivery: { zoneId: string; label: string; fee: number; days: string } | null;
-  total: number;               // itemsTotal - discounts + delivery, rounded UP to a whole shekel
+  paymentFee: number;          // PayPal fee (agorot), 0 for other payment methods
+  total: number;               // itemsTotal - discounts + delivery + payment fee, rounded UP to a whole shekel
   rounding: number;            // agorot added by that rounding (0-99)
   missing: ("zone" | "items")[];
   /** Arabic breakdown in the owner's style, e.g. "300 البلايز / 60 الاسماء / 50 توصيل = 410₪" */
@@ -205,7 +208,11 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
   const missing: Quote["missing"] = [];
   if (!items.length) missing.push("items");
   if (!delivery) missing.push("zone");
-  const exactTotal = itemsTotal - discountTotal + (delivery?.fee ?? 0);
+  const beforeFee = itemsTotal - discountTotal + (delivery?.fee ?? 0);
+  const feePct = input.paymentFeePct ?? 0;
+  if (!Number.isFinite(feePct) || feePct < 0 || feePct > 20) throw new PricingError(`bad payment fee ${feePct}`);
+  const paymentFee = Math.round((beforeFee * feePct) / 100);
+  const exactTotal = beforeFee + paymentFee;
   // Owner request 2026-11-15: the total is always rounded UP to a whole shekel (₪323.15 -> ₪324).
   // Done here, once, so the website checkout, the order record, online payments and the bot all agree.
   const total = roundUpToShekel(exactTotal);
@@ -223,12 +230,13 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
   for (const a of orderAddons) parts.push(`${fmt(a.amount)} ${a.label}`);
   if (discountTotal) parts.push(`-${fmt(discountTotal)} خصم`);
   if (delivery) parts.push(`${fmt(delivery.fee)} توصيل`);
+  if (paymentFee) parts.push(`${fmt(paymentFee)} عمولة PayPal`);
   const summaryAr = `${parts.join(" / ")} = ${fmt(total)}₪${delivery ? " واصل لباب البيت" : " (بدون توصيل)"}`;
 
   return {
     lines, orderAddons,
     offer: best ? { id: best.offer.id, label: best.offer.name_ar, eligibleQty: best.eligible.reduce((s, i) => s + i.qty, 0), saving: best.saving } : null,
-    itemsTotal, discountTotal, delivery, total, rounding, missing, summaryAr,
+    itemsTotal, discountTotal, delivery, paymentFee, total, rounding, missing, summaryAr,
   };
 }
 

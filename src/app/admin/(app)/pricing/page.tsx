@@ -89,6 +89,13 @@ export default async function Pricing({ searchParams }: PageProps<"/admin/pricin
           </div>
         </Card>
 
+        <Card padded={false} className="overflow-hidden">
+          <div className="px-4 pt-4 sm:px-5"><SectionTitle>Payment</SectionTitle></div>
+          <div className="divide-y divide-line border-t border-line">
+            {row("PayPal fee - added to the total when the customer pays with PayPal", money("pay:paypal_fee_pct", p.payment.paypal_fee_pct ?? 0, "%"), "paypal-fee")}
+          </div>
+        </Card>
+
         <div className="flex flex-wrap items-center gap-3">
           <SubmitButton bare className={button.primary}><Save className="h-4 w-4" /> Save prices</SubmitButton>
           <span className="text-xs text-muted">The bot and the website checkout switch to the new prices the moment you save. Totals are always calculated from these numbers, never typed by the bot.</span>

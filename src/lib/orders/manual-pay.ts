@@ -6,6 +6,7 @@ import { recordDiscountCodeUse } from "../discounts";
 import { orderReference, type CreateOrderRequest } from "../checkout";
 import { orderToken } from "./link";
 import { prepareOrder, type PrepareFailure } from "./web";
+import { requote } from "./draft";
 import {
   checkReceivedAmount,
   formatBitPhone,
@@ -105,8 +106,11 @@ export async function startManualOrder(req: CreateOrderRequest, method: ManualMe
 
   const prepared = await prepareOrder(req, { claimCodes: false }); // a code's use is claimed once the owner confirms payment
   if (!prepared.ok) return prepared;
-  const { order, q } = prepared;
-  const row = must(await db().from("orders").update({ payment_method: method, total: q.total }).eq("id", order.id).select("id,number,total").single(), "price manual order") as { id: string; number: number; total: number };
+  const { order } = prepared;
+  // the payment method decides the PayPal fee (owner 2026-11-15), so re-price once it is on the order
+  must(await db().from("orders").update({ payment_method: method }).eq("id", order.id).select("id"), "manual order method");
+  const q = await requote({ ...order, payment_method: method });
+  const row = must(await db().from("orders").update({ total: q.total }).eq("id", order.id).select("id,number,total").single(), "price manual order") as { id: string; number: number; total: number };
 
   const ins = await db().from("payments").insert({ order_id: row.id, provider: method, provider_order_id: attemptId, amount: row.total, status: "pending" }).select("id");
   if (ins.error) {

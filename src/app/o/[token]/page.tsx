@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 type QuoteLine = { key: string; qty: number; title: string; unitPrice: number; groupPrice: number; lineTotal: number; offerId?: string | null; addons: { id: string; label: string; amount: number }[] };
 type Quote = {
-  lines: QuoteLine[]; itemsTotal: number; total: number; discountTotal: number;
+  lines: QuoteLine[]; itemsTotal: number; total: number; discountTotal: number; paymentFee?: number;
   offer?: { label: string; saving: number } | null;
   delivery?: { fee: number; days: string; label: string } | null;
   orderAddons?: { label: string; amount: number }[];
@@ -191,6 +191,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
           {(q.orderAddons ?? []).map((a) => <Row key={a.label} label={a.label} value={ils(a.amount)} />)}
           {q.discountTotal ? <Row label={t.discount} value={`-${ils(q.discountTotal)}`} tone="green" /> : null}
           <Row label={q.delivery ? `${t.delivery} · ${q.delivery.label}` : t.delivery} value={q.delivery ? ils(q.delivery.fee) : "—"} />
+          {q.paymentFee ? <Row label={t.paypalFee} value={ils(q.paymentFee)} /> : null}
           <div className="mt-1 flex items-end justify-between border-t border-ink pt-3">
             <span className="font-semibold">{t.total}</span>
             <span className="flex flex-col items-end">
