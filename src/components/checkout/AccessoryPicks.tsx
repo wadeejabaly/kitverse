@@ -119,8 +119,7 @@ export function AccessoryPicks({ shirts, accessories, inCart, locale }: Props) {
     <>
       {picks.length > 0 ? (
         <div className="border-b border-rule py-5">
-          <p className="kv-legend">{t("picksTitle")}</p>
-          <p className="mb-3 text-xs text-ink-soft">{t("picksHint")}</p>
+          <p className="kv-legend mb-3">{t("picksTitle")}</p>
           <ul className="grid gap-2">{picks.map((a) => card(a, false))}</ul>
         </div>
       ) : null}

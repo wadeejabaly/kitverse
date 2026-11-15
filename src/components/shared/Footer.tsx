@@ -2,7 +2,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getLeagues, localName } from "@/data/catalog";
 import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "./Info";
-import { enabledPaymentMethods } from "@/lib/payment-methods";
 import { BrandBadge } from "./BrandBadge";
 import { CookieSettingsButton } from "./CookieSettingsButton";
 
@@ -18,8 +17,6 @@ export async function Footer() {
   const locale = await getLocale();
   const leagues = getLeagues();
   const year = String(new Date().getFullYear());
-  const pay = enabledPaymentMethods();
-  const anyPay = pay.cash || pay.paypal || pay.bit;
 
   // Redesign phase 2 (2026-11-09): the footer moved onto the homepage's night
   // (--flood-ground) with the hero's blue→gold top rule: the real crest and a
@@ -90,17 +87,8 @@ export async function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-5 border-t border-white/10 pt-6 wide:flex-row wide:items-center wide:justify-between">
-          {/* Only the methods checkout really offers — see payment-methods.ts. */}
-          {anyPay ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="me-1 text-[12.5px]">{t("weAccept")}</span>
-              {pay.bit ? <span className="kv-pay latin">Bit</span> : null}
-              {pay.paypal ? <span className="kv-pay latin">PayPal</span> : null}
-              {pay.cash ? <span className="kv-pay">{t("cashOnDelivery")}</span> : null}
-            </div>
-          ) : (
-            <span />
-          )}
+          {/* the payment-methods row was removed (owner 2026-11-15) */}
+          <span />
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12.5px]">
             <Link href="/privacy">{t("privacy")}</Link>
             <Link href="/terms">{t("terms")}</Link>
