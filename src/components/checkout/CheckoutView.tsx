@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { SALE, saleOn } from "@/lib/sale";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -251,11 +252,11 @@ export function CheckoutView({
     setCityCheck({ status: "found", fee: SHIPPING_ILS_BY_TIER[town.tier], label: SHIPPING_LABEL_BY_TIER[town.tier] });
   }
 
-  async function applyDiscountCode() {
-    const code = discountInput.trim();
+  async function applyDiscountCode(auto?: string) {
+    const code = (auto ?? discountInput).trim();
     if (!code) return;
     const upper = code.toUpperCase();
-    if (appliedDiscounts.some((d) => d.code === upper)) { setDiscountInput(""); return; }
+    if (appliedDiscounts.some((d) => d.code === upper)) { if (!auto) setDiscountInput(""); return; }
     setDiscountCheck({ status: "checking" });
     try {
       const res = await fetch("/api/checkout/discount/check", {
@@ -282,15 +283,29 @@ export function CheckoutView({
           return;
         }
         setAppliedDiscounts(combined);
-        setDiscountInput("");
+        if (!auto) setDiscountInput("");
         setDiscountCheck({ status: "idle" });
-      } else {
+      } else if (!auto) {
         setDiscountCheck({ status: "invalid", reason: "not_found" });
+      } else {
+        setDiscountCheck({ status: "idle" });
       }
     } catch {
-      setDiscountCheck({ status: "invalid", reason: "not_found" });
+      setDiscountCheck(auto ? { status: "idle" } : { status: "invalid", reason: "not_found" });
     }
   }
+
+  // Black Friday (owner request 2026-11-15, "make it available to use"): while the dated sale runs
+  // (src/lib/sale.ts, shopper's clock) its code is put on the order automatically, once per visit.
+  // Below its minimum order the usual "needs a minimum of ₪X" note shows under it; the shopper can
+  // still remove it or use another code instead. The server re-checks it like any typed code.
+  const saleAutoTried = useRef(false);
+  useEffect(() => {
+    if (saleAutoTried.current || !hydrated || !SALE || !saleOn()) return;
+    saleAutoTried.current = true;
+    if (appliedDiscounts.length === 0) void applyDiscountCode(SALE.code);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   function removeDiscountCode(code: string) {
     setAppliedDiscounts((current) => current.filter((d) => d.code !== code));
@@ -867,7 +882,7 @@ export function CheckoutView({
                 type="button"
                 className="btn btn-quiet shrink-0 !px-5"
                 disabled={!discountInput.trim() || discountCheck.status === "checking"}
-                onClick={applyDiscountCode}
+                onClick={() => applyDiscountCode()}
               >
                 {discountCheck.status === "checking" ? t("discountChecking") : t("discountApply")}
               </button>

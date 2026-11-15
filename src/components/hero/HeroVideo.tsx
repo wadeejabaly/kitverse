@@ -11,6 +11,8 @@ import { SHOWCASE_JERSEYS } from "@/data/showcase";
 import { HeroChromeOffset } from "./HeroChromeOffset";
 import { JerseyShowcase, type ShowcaseItem } from "./JerseyShowcase";
 import { INTRO_RETRY_KEY, INTRO_SEEN_KEY } from "./intro";
+import { BfCountdown } from "./BfCountdown";
+import { SALE, SALE_COUNTDOWN_TO, saleAmount } from "@/lib/sale";
 
 /**
  * THE VIDEO HERO — the home page hero (owner request 2026-11-11).
@@ -59,8 +61,14 @@ import { INTRO_RETRY_KEY, INTRO_SEEN_KEY } from "./intro";
  * INTRO_PENDING_SCRIPT (./intro.ts) raises the flag on <html> even earlier,
  * before the header is parsed.
  */
-export async function HeroVideo({ locale }: { locale: string }) {
+export async function HeroVideo({ locale, blackFriday = false }: { locale: string; blackFriday?: boolean }) {
   const t = await getTranslations("home.hero");
+  const tb = await getTranslations("home.bf");
+  // Black Friday version (owner request 2026-11-15): same hero, same shirts on the same podium, but the
+  // red Black Friday scene (public/home/bf/, Higgsfield restyles of podium.webp / podium-portrait.webp,
+  // so SHOWCASE_STAGE still lands every shirt on the podium), no film, and the sale copy + countdown.
+  // The home page picks it while the sale runs (src/lib/sale.ts) and drops back to this hero after.
+  const bf = blackFriday && SALE ? SALE : null;
   const cash = enabledPaymentMethods().cash;
 
   // The interactive showcase (src/data/showcase.ts): each shirt's name and
@@ -83,7 +91,7 @@ export async function HeroVideo({ locale }: { locale: string }) {
   const playerFrom = priceFor("2026/27", "S", "player");
 
   return (
-    <section id="kv-vhero" className="kv-vhero" suppressHydrationWarning>
+    <section id="kv-vhero" className={bf ? "kv-vhero kv-vhero--bf" : "kv-vhero"} suppressHydrationWarning>
       <InlineScript html={START_SCRIPT} />
       <HeroChromeOffset />
 
@@ -97,9 +105,11 @@ export async function HeroVideo({ locale }: { locale: string }) {
               content (the optimizer's revalidated responses report 0 bytes,
               which Chrome's LCP skips - measured live 2026-11-12). */}
           <picture>
-            <source media="(orientation: portrait)" srcSet="/home/hero/podium-portrait.webp" width={1080} height={1920} />
-            <img src="/home/hero/podium.webp" alt="" width={1920} height={1080} fetchPriority="high" decoding="async" className="kv-vhero-still" />
+            <source media="(orientation: portrait)" srcSet={bf ? "/home/bf/podium-portrait.webp" : "/home/hero/podium-portrait.webp"} width={1080} height={1920} />
+            <img src={bf ? "/home/bf/podium.webp" : "/home/hero/podium.webp"} alt="" width={1920} height={1080} fetchPriority="high" decoding="async" className="kv-vhero-still" />
           </picture>
+          {bf ? null : (
+            <>
           {/* The film's first frame, shown while it loads (lazy + hidden, so a
               view without the film never downloads it). The film is drawn over
               it once it has a frame; this is what the page's main content is
@@ -120,6 +130,8 @@ export async function HeroVideo({ locale }: { locale: string }) {
             suppressHydrationWarning
           />
           <span aria-hidden className="kv-vhero-flash" />
+            </>
+          )}
           <JerseyShowcase
             items={showcase}
             priority
@@ -141,30 +153,51 @@ export async function HeroVideo({ locale }: { locale: string }) {
               className="kv-vhero-in mono-eyebrow kv-flood-eyebrow kv-flood-eyebrow-rule"
               style={{ "--i": 0 } as React.CSSProperties}
             >
-              {t("eyebrow")}
+              {bf ? tb("eyebrow") : t("eyebrow")}
             </span>
-            {/* Three authored lines: white, white, electric blue. Each rises out
-              of its own clip box, transform only, since this is the LCP text. */}
-            <h1 className="kv-stadium-display mt-4 mb-5">
-              {(["titleA", "titleB", "titleC"] as const).map((key, index) => (
-                <span key={key} className="line-mask">
-                  <span
-                    className={index === 2 ? "kv-stadium-accent" : undefined}
-                    style={
-                      { "--kv-delay": `${index * 90}ms` } as React.CSSProperties
-                    }
-                  >
-                    {t(key)}
-                    {index < 2 ? " " : null}
+            {bf ? (
+              <>
+                <h1 className="kv-bf-title kv-vhero-in" style={{ "--i": 1 } as React.CSSProperties}>
+                  <img src="/home/bf/lockup.webp" alt={tb("title")} width={960} height={478} decoding="async" className="kv-bf-lockup" />
+                </h1>
+                <p className="kv-bf-discount kv-vhero-in" style={{ "--i": 1 } as React.CSSProperties}>
+                  <span>{tb("discount", { amount: `\u2066${saleAmount(bf)}\u2069` })}</span>
+                </p>
+                {bf.minOrder > 0 ? (
+                  <p className="kv-bf-min kv-vhero-in" style={{ "--i": 2 } as React.CSSProperties}>
+                    <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5 shrink-0">
+                      <path d="M3 4h2l2.4 10.2a1.5 1.5 0 0 0 1.5 1.1h8.6a1.5 1.5 0 0 0 1.4-1l2.1-6.3H6.2" strokeLinecap="round" strokeLinejoin="round" />
+                      <circle cx="9.5" cy="19" r="1.3" />
+                      <circle cx="17" cy="19" r="1.3" />
+                    </svg>
+                    <span>{tb("minLine", { min: `\u2066₪${bf.minOrder}\u2069` })}</span>
+                  </p>
+                ) : null}
+              </>
+            ) : (
+              // Three authored lines: white, white, electric blue. Each rises out
+              // of its own clip box, transform only, since this is the LCP text.
+              <h1 className="kv-stadium-display mt-4 mb-5">
+                {(["titleA", "titleB", "titleC"] as const).map((key, index) => (
+                  <span key={key} className="line-mask">
+                    <span
+                      className={index === 2 ? "kv-stadium-accent" : undefined}
+                      style={
+                        { "--kv-delay": `${index * 90}ms` } as React.CSSProperties
+                      }
+                    >
+                      {t(key)}
+                      {index < 2 ? " " : null}
+                    </span>
                   </span>
-                </span>
-              ))}
-            </h1>
+                ))}
+              </h1>
+            )}
             <p
-              className="kv-vhero-in kv-stadium-sub mb-8 max-w-[40ch]"
+              className={bf ? "kv-vhero-in kv-stadium-sub kv-bf-sub mb-6 max-w-[44ch]" : "kv-vhero-in kv-stadium-sub mb-8 max-w-[40ch]"}
               style={{ "--i": 2 } as React.CSSProperties}
             >
-              {t("sub")}
+              {bf ? tb("sub") : t("sub")}
             </p>
 
             <div
@@ -221,6 +254,17 @@ export async function HeroVideo({ locale }: { locale: string }) {
                 <CashIcon className="h-5 w-5 shrink-0" />
                 {t("cashLine")}
               </p>
+            ) : null}
+
+            {bf ? (
+              <div className="kv-vhero-in mb-8" style={{ "--i": 4 } as React.CSSProperties}>
+                <BfCountdown
+                  to={SALE_COUNTDOWN_TO}
+                  label={tb("countdownLabel")}
+                  live={tb("countdownLive")}
+                  units={{ days: tb("days"), hours: tb("hours"), minutes: tb("minutes"), seconds: tb("seconds") }}
+                />
+              </div>
             ) : null}
 
             {/* The price row: hairline above, three gold glyphs, each with a

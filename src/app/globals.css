@@ -2825,3 +2825,261 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
 .kv-langpick-hint{font-size:13px;color:var(--flood-ink-soft)}
 .kv-langpick-opt:hover .kv-langpick-hint,.kv-langpick-opt:focus-visible .kv-langpick-hint{color:#dfe7ff}
 .kv-langpick-note{display:flex;flex-direction:column;gap:1px;font-size:12px;color:var(--flood-ink-soft)}
+
+/* ============================================================
+   BLACK FRIDAY (owner request 2026-11-15, the owner's mockup)
+   The home hero's Black Friday version (.kv-vhero--bf, HeroVideo
+   blackFriday) and the black top strip (.kv-bf-strip, PromoBanner).
+   Shown only while the sale runs (src/lib/sale.ts); everything here
+   is scoped to those classes, so the normal site is untouched and
+   comes back by itself when the sale ends.
+   ============================================================ */
+.kv-vhero--bf {
+  background: linear-gradient(180deg, #0b0607 0%, #070405 55%, var(--flood-ground) 100%);
+}
+
+@media (orientation: landscape) and (width >= 48rem) {
+  .kv-vhero--bf .kv-vhero-shade {
+    background:
+      linear-gradient(270deg, rgb(6 2 3 / 0.78) 0%, rgb(6 2 3 / 0.45) 32%, transparent 52%),
+      linear-gradient(180deg, transparent 86%, var(--flood-ground) 100%);
+  }
+}
+
+.kv-vhero--bf .kv-flood-eyebrow {
+  color: #e9e9ee;
+  letter-spacing: 0.42em;
+}
+.kv-vhero--bf .kv-flood-eyebrow-rule::after {
+  display: none;
+}
+
+.kv-bf-title {
+  margin: 0.6rem 0 0;
+  line-height: 0;
+}
+.kv-bf-lockup {
+  display: block;
+  width: min(100%, 26rem);
+  height: auto;
+}
+@media (width >= 48rem) and (orientation: landscape) {
+  .kv-bf-lockup { width: clamp(15rem, 24vw, 23rem); }
+  .kv-vhero--bf .kv-bf-sub { font-size: clamp(0.95rem, 1.1vw, 1.08rem); }
+  .kv-vhero--bf .kv-stadium-cash { margin-bottom: 1.25rem; }
+}
+
+/* "خصم 15%" on a red brush stroke */
+.kv-bf-discount {
+  position: relative;
+  display: inline-block;
+  margin: -0.4rem 0 1rem;
+  padding: 0.35rem 2.4rem 0.55rem;
+  isolation: isolate;
+}
+.kv-bf-discount::before {
+  content: "";
+  position: absolute;
+  inset: -12% -6%;
+  z-index: -1;
+  background: url("/home/bf/brush.webp") center / 100% 100% no-repeat;
+}
+.kv-bf-discount span {
+  display: block;
+  color: #fff;
+  font-size: clamp(2.4rem, 4.2vw, 3.7rem);
+  font-weight: 900;
+  line-height: 1;
+  font-style: italic;
+  text-shadow: 0 4px 18px rgb(80 0 0 / 0.55);
+}
+
+/* "on orders of ₪350 or more" pill */
+.kv-bf-min {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.4rem;
+  padding: 0.65rem 1.3rem;
+  border: 2px solid #ff2a2a;
+  border-radius: 16px;
+  background: rgb(20 4 6 / 0.7);
+  box-shadow: 0 0 22px -4px rgb(255 30 30 / 0.65), inset 0 0 14px -6px rgb(255 30 30 / 0.6);
+  color: #fff;
+  font-size: clamp(1.1rem, 1.55vw, 1.45rem);
+  font-weight: 800;
+  transform: skewX(-6deg);
+}
+.kv-bf-min > * {
+  transform: skewX(6deg);
+}
+.kv-bf-min svg {
+  color: #ff3b3b;
+}
+
+.kv-vhero--bf .kv-stadium-cta {
+  background: #e3161b;
+  box-shadow: 0 16px 34px -14px rgb(227 22 27 / 0.7);
+}
+.kv-vhero--bf .kv-stadium-cta:hover {
+  background: #ff2a2f;
+  box-shadow: 0 18px 40px -12px rgb(255 42 47 / 0.8);
+}
+.kv-vhero--bf .kv-stadium-link {
+  border-bottom-color: #e3161b;
+}
+.kv-vhero--bf .kv-stadium-cash {
+  border-color: rgb(255 60 60 / 0.45);
+  background: rgb(255 40 40 / 0.08);
+}
+.kv-vhero--bf .kv-stadium-cash svg,
+.kv-vhero--bf .kv-stadium-meta-item svg {
+  color: #ff2a2f;
+}
+.kv-vhero--bf .kv-stadium-meta-price {
+  color: #ff3a3f;
+}
+.kv-vhero--bf .kv-showcase-arrow {
+  border-color: rgb(255 70 70 / 0.55);
+}
+
+/* the decorative countdown to 20.11 */
+.kv-bf-countdown {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+}
+.kv-bf-countdown-label {
+  width: 100%;
+  margin-bottom: -0.2rem;
+  color: rgb(232 236 246 / 0.75);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.kv-bf-countdown-cells {
+  display: flex;
+  gap: 0.5rem;
+}
+.kv-bf-countdown-cell {
+  display: flex;
+  min-width: 3.2rem;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.45rem 0.4rem 0.35rem;
+  border: 1px solid rgb(255 60 60 / 0.4);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgb(40 6 9 / 0.9), rgb(14 3 5 / 0.9));
+}
+.kv-bf-countdown-num {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.kv-bf-countdown-unit {
+  color: #ff6b6f;
+  font-size: 11px;
+  font-weight: 600;
+}
+.kv-bf-countdown-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+.kv-bf-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2bdc6a;
+  box-shadow: 0 0 0 0 rgb(43 220 106 / 0.6);
+  animation: kv-bf-pulse 1.6s ease-out infinite;
+}
+@keyframes kv-bf-pulse {
+  70% { box-shadow: 0 0 0 8px rgb(43 220 106 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(43 220 106 / 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kv-bf-dot { animation: none; }
+}
+
+/* the black top strip */
+.kv-bf-strip {
+  border-bottom: 1px solid rgb(255 40 40 / 0.35);
+  background: linear-gradient(90deg, #120406, #050304 30%, #050304 70%, #120406);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  transition: opacity 200ms ease-out;
+}
+.kv-bf-strip:hover { opacity: 0.92; }
+.kv-bf-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding: 0.55rem 1rem;
+}
+.kv-bf-strip-text {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+.kv-bf-strip-mark {
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+.kv-bf-strip-pct {
+  display: inline-grid;
+  width: 1.6rem;
+  height: 1.6rem;
+  place-items: center;
+  border: 1.5px solid #ff2a2f;
+  border-radius: 50%;
+  color: #ff2a2f;
+  font-size: 0.8rem;
+  font-weight: 900;
+  box-shadow: 0 0 10px -2px rgb(255 42 47 / 0.7);
+}
+.kv-bf-strip-word {
+  font-size: 1rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+.kv-bf-strip-word span {
+  color: #ff2a2f;
+}
+@media (width >= 64rem) {
+  .kv-bf-strip-mark { display: inline-flex; }
+}
+@media (width < 40rem) {
+  .kv-bf-strip { font-size: 12.5px; }
+  .kv-bf-strip-text svg { display: none; }
+}
+/* short desktop windows (1366x768 etc.): keep the offer, drop the extras */
+@media (width >= 48rem) and (orientation: landscape) and (height < 56rem) {
+  .kv-vhero--bf .kv-flood-eyebrow,
+  .kv-vhero--bf .kv-bf-sub {
+    display: none;
+  }
+  .kv-vhero--bf .kv-bf-lockup {
+    width: clamp(13rem, 19vw, 19rem);
+  }
+  .kv-vhero--bf .kv-bf-title {
+    margin-top: 0;
+  }
+}

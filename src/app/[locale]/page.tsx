@@ -11,6 +11,14 @@ import { ProductGrid } from "@/components/shop/ProductCard";
 import { Figure, Price } from "@/components/shared/Money";
 import { Wrap } from "@/components/shared/PageLede";
 import { alternatesFor } from "@/lib/site";
+import { saleOn } from "@/lib/sale";
+
+/**
+ * Black Friday (owner request 2026-11-15): while the sale runs the hero is its Black Friday version,
+ * and it must go back to the normal hero by itself when the sale ends - so this page is regenerated
+ * every 5 minutes (ISR) and picks the hero by the time it is rendered.
+ */
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -68,7 +76,7 @@ export default async function HomePage({
           The video hero. A complete component so that the hero can be
           swapped or reverted without this page knowing how it is built.
           See HeroVideo for the intro and how the shirt meets the podium. */}
-      <HeroVideo locale={locale} />
+      <HeroVideo locale={locale} blackFriday={saleOn()} />
 
       {/* ─────────── THE CATEGORY GRID ───────────
           Was "THE WAYS IN", a bordered text-link row. Rebuilt as the

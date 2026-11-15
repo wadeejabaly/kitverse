@@ -9,7 +9,8 @@
     "welcomeNoMin": "خصم {amount} على طلبك الأول — الكود <c>{code}</c> عند الدفع",
     "cta": "تسوق الآن",
     "sale": "خصم {amount} على كل الموقع — الكود <c>{code}</c> عند الدفع",
-    "saleMin": "خصم {amount} على الطلبيات من {min} وما فوق، بالموقع بس — الكود <c>{code}</c> عند الدفع"
+    "saleMin": "خصم {amount} على الطلبيات من {min} وما فوق، بالموقع بس — الكود <c>{code}</c> عند الدفع",
+    "saleStrip": "خصم {amount} على الطلبات من {min} وما فوق <s>|</s> عرض Black Friday لفترة محدودة، بالموقع بس!"
   },
   "nav": {
     "home": "الرئيسية",
@@ -131,7 +132,21 @@
       }
     },
     "bundlesEyebrow": "بكجات",
-    "bundlesTitle": "القمصان الثلاثة مع بعض"
+    "bundlesTitle": "القمصان الثلاثة مع بعض",
+    "bf": {
+      "eyebrow": "KITVERSE JERSEYS",
+      "title": "Black Friday",
+      "discount": "خصم {amount}",
+      "minLine": "على الطلبات من {min} وما فوق",
+      "sub": "اكتشف أضخم تشكيلة من قمصان الأندية والمنتخبات، الكلاسيكية والحديثة، بجودة عالية وتصاميم مميزة.",
+      "autoNote": "الخصم بيتطبّق لحاله بصفحة الدفع",
+      "countdownLabel": "العدّ التنازلي لـ Black Friday",
+      "countdownLive": "الخصم شغّال من هلق",
+      "days": "يوم",
+      "hours": "ساعة",
+      "minutes": "دقيقة",
+      "seconds": "ثانية"
+    }
   },
   "common": {
     "addToCart": "أضف للسلة",

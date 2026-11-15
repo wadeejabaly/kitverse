@@ -83,19 +83,34 @@ export async function PromoBanner() {
 
   if (!sale) return welcomeStrip;
 
+  // Black Friday strip (owner request 2026-11-15, the owner's mockup): black bar, red "BLACK FRIDAY"
+  // marks at both ends (from sm up), the offer in the middle. The code itself is applied
+  // automatically at checkout while the sale runs (CheckoutView), so the strip doesn't ask for it.
+  const bfMark = (
+    <span aria-hidden className="kv-bf-strip-mark">
+      <span className="kv-bf-strip-pct">%</span>
+      <span className="latin kv-bf-strip-word">
+        BLACK <span>FRIDAY</span>
+      </span>
+    </span>
+  );
   const saleStrip = (
-    <Link
-      href="/shop"
-      data-kv-chrome
-      className="relative z-40 block border-b border-[#2f6bff]/40 bg-[#05081a] px-4 py-2.5 text-center text-sm font-medium text-white transition-opacity hover:opacity-90"
-    >
-      <span className="latin me-2 font-extrabold tracking-[0.12em] text-[#7fa6ff]">BLACK FRIDAY</span>
-      {sale.minOrder > 0
-        ? t.rich("saleMin", { amount: amountOf(sale), min: `₪${sale.minOrder}`, code: sale.code, c: strong })
-        : t.rich("sale", { amount: amountOf(sale), code: sale.code, c: strong })}
-      {cash ? <span className="mx-2 opacity-60">·</span> : null}
-      {cashNote}
-      {cta}
+    <Link href="/shop" data-kv-chrome className="kv-bf-strip relative z-40 block">
+      <span className="kv-bf-strip-inner">
+        {bfMark}
+        <span className="kv-bf-strip-text">
+          <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4 shrink-0 text-[#ff3b3b]">
+            <path d="M3 12V4h8l9 9-8 8-9-9Z" strokeLinejoin="round" />
+            <circle cx="7.5" cy="8.5" r="1.4" />
+          </svg>
+          <span>
+            {sale.minOrder > 0
+              ? t.rich("saleStrip", { amount: `\u2066${amountOf(sale)}\u2069`, min: `\u2066₪${sale.minOrder}\u2069`, s: (c) => <span className="mx-1.5 opacity-50">{c}</span> })
+              : t.rich("sale", { amount: amountOf(sale), code: sale.code, c: strong })}
+          </span>
+        </span>
+        {bfMark}
+      </span>
     </Link>
   );
 

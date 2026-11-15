@@ -1,3 +1,5 @@
+import { SALE } from "@/lib/sale";
+
 /**
  * The home page film intro's first decision (see HeroVideo.tsx). The store
  * layout runs this as the first thing in <body>, before the banner and the
@@ -49,8 +51,14 @@ export const INTRO_EVERY_MS = 30 * 24 * 60 * 60 * 1000;
  */
 export const INTRO_MARK_URL = "/home/hero/intro-mark.txt";
 
+/**
+ * No film while the Black Friday hero is up (owner request 2026-11-15): that hero has no intro, so
+ * the flag must not hide the header. By the shopper's clock, same window as the sale strip.
+ */
+const SALE_WINDOW = SALE ? `var n=Date.now();if(n>=${Date.parse(SALE.startsAt)}&&n<${Date.parse(SALE.endsAt)})return;` : "";
+
 export const INTRO_PENDING_SCRIPT = `(function(){try{
-if(!/^\\/(en|he)?\\/?$/.test(location.pathname))return;
+if(!/^\\/(en|he)?\\/?$/.test(location.pathname))return;${SALE_WINDOW}
 var force=/[?&]intro(=|&|$)/.test(location.search),retry=false;try{retry=localStorage.getItem(${JSON.stringify(INTRO_RETRY_KEY)})==='1'}catch(e){}
 if(!force){
 if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;

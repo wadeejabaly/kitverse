@@ -9,7 +9,8 @@
     "welcomeNoMin": "{amount} הנחה על ההזמנה הראשונה — קוד <c>{code}</c> בקופה",
     "cta": "לחנות",
     "sale": "{amount} הנחה על כל האתר — קוד <c>{code}</c> בקופה",
-    "saleMin": "{amount} הנחה על הזמנות מ־{min} ומעלה, רק באתר — קוד <c>{code}</c> בקופה"
+    "saleMin": "{amount} הנחה על הזמנות מ־{min} ומעלה, רק באתר — קוד <c>{code}</c> בקופה",
+    "saleStrip": "{amount} הנחה על הזמנות מ־{min} ומעלה <s>|</s> מבצע Black Friday לזמן מוגבל, רק באתר!"
   },
   "nav": {
     "home": "בית",
@@ -131,7 +132,21 @@
       }
     },
     "bundlesEyebrow": "מארזים",
-    "bundlesTitle": "שלוש החולצות, ביחד"
+    "bundlesTitle": "שלוש החולצות, ביחד",
+    "bf": {
+      "eyebrow": "KITVERSE JERSEYS",
+      "title": "Black Friday",
+      "discount": "{amount} הנחה",
+      "minLine": "על הזמנות מ־{min} ומעלה",
+      "sub": "הקולקציה הגדולה של חולצות מועדונים ונבחרות, קלאסיות וחדשות, באיכות גבוהה ובעיצובים מיוחדים.",
+      "autoNote": "ההנחה נכנסת אוטומטית בקופה",
+      "countdownLabel": "ספירה לאחור ל־Black Friday",
+      "countdownLive": "ההנחה כבר פעילה",
+      "days": "ימים",
+      "hours": "שעות",
+      "minutes": "דקות",
+      "seconds": "שניות"
+    }
   },
   "common": {
     "addToCart": "הוספה לעגלה",

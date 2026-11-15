@@ -9,7 +9,8 @@
     "welcomeNoMin": "{amount} off your first order — code <c>{code}</c> at checkout",
     "cta": "Shop now",
     "sale": "{amount} off everything — code <c>{code}</c> at checkout",
-    "saleMin": "{amount} off orders of {min} or more, online only — code <c>{code}</c> at checkout"
+    "saleMin": "{amount} off orders of {min} or more, online only — code <c>{code}</c> at checkout",
+    "saleStrip": "{amount} off orders of {min} or more <s>|</s> Black Friday, limited time, online only!"
   },
   "nav": {
     "home": "Home",
@@ -131,7 +132,21 @@
       }
     },
     "bundlesEyebrow": "Bundles",
-    "bundlesTitle": "All three shirts, together"
+    "bundlesTitle": "All three shirts, together",
+    "bf": {
+      "eyebrow": "KITVERSE JERSEYS",
+      "title": "Black Friday",
+      "discount": "{amount} OFF",
+      "minLine": "on orders of {min} or more",
+      "sub": "The biggest range of club and national-team shirts, classic and current, in great quality and standout designs.",
+      "autoNote": "Applied automatically at checkout",
+      "countdownLabel": "Countdown to Black Friday",
+      "countdownLive": "The discount is already on",
+      "days": "days",
+      "hours": "hrs",
+      "minutes": "min",
+      "seconds": "sec"
+    }
   },
   "common": {
     "addToCart": "Add to cart",
