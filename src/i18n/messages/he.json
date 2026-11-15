@@ -10,7 +10,13 @@
     "cta": "לחנות",
     "sale": "{amount} הנחה על כל האתר — קוד <c>{code}</c> בקופה",
     "saleMin": "{amount} הנחה על הזמנות מ־{min} ומעלה, רק באתר — קוד <c>{code}</c> בקופה",
-    "saleStrip": "{amount} הנחה על הזמנות מ־{min} ומעלה <s>|</s> מבצע Black Friday לזמן מוגבל, רק באתר!"
+    "saleStrip": "{amount} הנחה על הזמנות מ־{min} ומעלה <s>|</s> קוד <c>{code}</c> · רק באתר!",
+    "claimTitle": "רוצים לקבל {amount} הנחה?",
+    "claimBodyMin": "הנחת Black Friday של {amount} על הזמנות מ־{min} ומעלה, רק באתר.",
+    "claimBody": "הנחת Black Friday של {amount} על כל האתר.",
+    "claimYes": "כן, אני רוצה",
+    "claimNo": "לא תודה",
+    "claimNote": "אם תבחרו כן, הקוד ייכנס לבד בקופה. אם לא, אפשר להקליד אותו בעצמכם."
   },
   "nav": {
     "home": "בית",

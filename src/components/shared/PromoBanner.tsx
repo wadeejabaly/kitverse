@@ -105,7 +105,7 @@ export async function PromoBanner() {
           </svg>
           <span>
             {sale.minOrder > 0
-              ? t.rich("saleStrip", { amount: `\u2066${amountOf(sale)}\u2069`, min: `\u2066₪${sale.minOrder}\u2069`, s: (c) => <span className="mx-1.5 opacity-50">{c}</span> })
+              ? t.rich("saleStrip", { amount: `\u2066${amountOf(sale)}\u2069`, min: `\u2066₪${sale.minOrder}\u2069`, s: (c) => <span className="mx-1.5 opacity-50">{c}</span>, code: sale.code, c: (c) => <strong dir="ltr" className="latin tracking-wide text-[#ff4a4f]">{c}</strong> })
               : t.rich("sale", { amount: amountOf(sale), code: sale.code, c: strong })}
           </span>
         </span>

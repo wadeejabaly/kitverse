@@ -3060,3 +3060,23 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
     margin-top: 0;
   }
 }
+
+/* "Claim your Black Friday discount?" pop-up (owner request 2026-11-15, SaleClaim.tsx) */
+.kv-claim{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%}
+.kv-claim[open]{display:grid;place-items:center}
+.kv-claim::backdrop{background:rgba(6,2,4,.74);backdrop-filter:blur(6px)}
+.kv-claim-panel{position:relative;width:min(420px,calc(100vw - 32px));padding:22px 22px 20px;border-radius:22px;text-align:center;color:#fff;
+  background:radial-gradient(120% 80% at 50% 0%,#3a0a0e 0%,#12060a 55%,#070405 100%);border:1px solid rgb(255 50 50 / .45);
+  box-shadow:0 0 40px -6px rgb(255 30 30 / .55),0 30px 80px -20px rgb(0 0 0 / .8);animation:kv-claim-in .35s cubic-bezier(.2,.7,.2,1) both}
+@keyframes kv-claim-in{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.kv-claim-panel{animation:none}}
+.kv-claim-lockup{display:block;width:min(100%,250px);height:auto;margin:0 auto 6px}
+.kv-claim-title{font-size:24px;font-weight:900;line-height:1.25}
+.kv-claim-body{margin-top:6px;font-size:15px;line-height:1.5;color:rgb(255 255 255 / .85)}
+.kv-claim-code{display:inline-block;margin-top:12px;padding:6px 14px;border:1.5px dashed #ff3a3f;border-radius:10px;font-weight:800;letter-spacing:.1em;color:#fff;background:rgb(255 40 40 / .1)}
+.kv-claim-actions{display:grid;gap:10px;margin-top:18px}
+.kv-claim-yes{padding:14px 16px;border-radius:12px;background:#e3161b;color:#fff;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 14px 30px -12px rgb(227 22 27 / .8)}
+.kv-claim-yes:hover{background:#ff2a2f}
+.kv-claim-no{padding:11px 16px;border-radius:12px;border:1px solid rgb(255 255 255 / .2);color:rgb(255 255 255 / .8);font-size:14px;font-weight:600;cursor:pointer;background:transparent}
+.kv-claim-no:hover{background:rgb(255 255 255 / .06)}
+.kv-claim-note{margin-top:12px;font-size:12px;line-height:1.5;color:rgb(255 255 255 / .6)}

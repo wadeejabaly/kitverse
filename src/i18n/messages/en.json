@@ -10,7 +10,13 @@
     "cta": "Shop now",
     "sale": "{amount} off everything — code <c>{code}</c> at checkout",
     "saleMin": "{amount} off orders of {min} or more, online only — code <c>{code}</c> at checkout",
-    "saleStrip": "{amount} off orders of {min} or more <s>|</s> Black Friday, limited time, online only!"
+    "saleStrip": "{amount} off orders of {min} or more <s>|</s> code <c>{code}</c> · online only!",
+    "claimTitle": "Claim {amount} off?",
+    "claimBodyMin": "Black Friday: {amount} off orders of {min} or more, online only.",
+    "claimBody": "Black Friday: {amount} off everything.",
+    "claimYes": "Yes, claim it",
+    "claimNo": "No thanks",
+    "claimNote": "Say yes and the code is added at checkout for you. Say no and you can still type it yourself."
   },
   "nav": {
     "home": "Home",

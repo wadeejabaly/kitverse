@@ -10,7 +10,13 @@
     "cta": "تسوق الآن",
     "sale": "خصم {amount} على كل الموقع — الكود <c>{code}</c> عند الدفع",
     "saleMin": "خصم {amount} على الطلبيات من {min} وما فوق، بالموقع بس — الكود <c>{code}</c> عند الدفع",
-    "saleStrip": "خصم {amount} على الطلبات من {min} وما فوق <s>|</s> عرض Black Friday لفترة محدودة، بالموقع بس!"
+    "saleStrip": "خصم {amount} على الطلبات من {min} وما فوق <s>|</s> الكود <c>{code}</c> · بالموقع بس!",
+    "claimTitle": "بدك تستلم خصم {amount}؟",
+    "claimBodyMin": "خصم Black Friday {amount} على الطلبات من {min} وما فوق، بالموقع بس.",
+    "claimBody": "خصم Black Friday {amount} على كل الموقع.",
+    "claimYes": "ايوا، بدي الخصم",
+    "claimNo": "لا شكرًا",
+    "claimNote": "إذا اخترت ايوا، الكود بينحط لحاله بصفحة الدفع. إذا لا، بتقدر تكتبه بنفسك."
   },
   "nav": {
     "home": "الرئيسية",

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SALE, saleOn } from "@/lib/sale";
+import { saleClaimed } from "@/components/shared/SaleClaim";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -297,13 +298,14 @@ export function CheckoutView({
     }
   }
 
-  // Black Friday (owner request 2026-11-15, "make it available to use"): while the dated sale runs
-  // (src/lib/sale.ts, shopper's clock) its code is put on the order automatically, once per visit.
+  // Black Friday (owner request 2026-11-15): while the dated sale runs (src/lib/sale.ts, shopper's
+  // clock) its code is put on the order automatically, once per visit - but only for a visitor who
+  // said "Yes, claim it" in the pop-up (SaleClaim); one who said no types the code themselves.
   // Below its minimum order the usual "needs a minimum of ₪X" note shows under it; the shopper can
   // still remove it or use another code instead. The server re-checks it like any typed code.
   const saleAutoTried = useRef(false);
   useEffect(() => {
-    if (saleAutoTried.current || !hydrated || !SALE || !saleOn()) return;
+    if (saleAutoTried.current || !hydrated || !SALE || !saleOn() || !saleClaimed()) return;
     saleAutoTried.current = true;
     if (appliedDiscounts.length === 0) void applyDiscountCode(SALE.code);
     // eslint-disable-next-line react-hooks/exhaustive-deps
