@@ -195,8 +195,13 @@ export function ProductForm({
                 onClick={() => setVersion(option)}
               >
                 {option === "fan" ? t("versionFan") : t("versionPlayer")}
+                {/* owner 2026-11-15: the base price on the first option, then only what each choice adds */}
                 <small className="ms-1.5 text-ink-soft">
-                  <Price value={priceFor(season, size, option, "short", set)} />
+                  {option === "fan" ? (
+                    <Price value={priceFor(season, size, "fan", "short", set)} />
+                  ) : (
+                    <AddOn value={priceFor(season, size, option, "short", set) - priceFor(season, size, "fan", "short", set)} />
+                  )}
                 </small>
               </OptionButton>
             ))}
@@ -218,9 +223,11 @@ export function ProductForm({
               onClick={() => setSleeve(option)}
             >
               {option === "short" ? t("sleeveShort") : t("sleeveLong")}
-              <small className="ms-1.5 text-ink-soft">
-                <Price value={priceFor(season, size, version, option)} />
-              </small>
+              {option === "long" ? (
+                <small className="ms-1.5 text-ink-soft">
+                  <AddOn value={priceFor(season, size, version, "long") - priceFor(season, size, version, "short")} />
+                </small>
+              ) : null}
             </OptionButton>
           ))}
         </div>
@@ -495,4 +502,11 @@ export function OptionButton({
       {children}
     </button>
   );
+}
+
+/** "+₪16" - what a choice adds to the price (owner 2026-11-15); nothing when it adds nothing. */
+function AddOn({ value }: { value: number }) {
+  const v = Math.round(value * 100) / 100;
+  if (v <= 0) return null;
+  return <Figure>+₪{Number.isInteger(v) ? v : v.toFixed(2)}</Figure>;
 }
