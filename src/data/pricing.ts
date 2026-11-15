@@ -1,4 +1,4 @@
-import type { Sleeve, Size, Version } from "./types";
+import type { AdultSize, KidsSize, ProductSet, Sleeve, Size, Version } from "./types";
 import priceList from "./price-list.json";
 import { tieredTotal } from "@/lib/pricing/tiers";
 import { pairedActive, pairedCount, type PairedPrice } from "@/lib/pricing/paired";
@@ -40,7 +40,41 @@ const zoneLabel = (id: string) => pl.delivery.zones.find((z) => z.id === id)?.na
  * first fractional price, see round2() below.
  */
 
-export const SIZES: Size[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
+export const SIZES: AdultSize[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
+
+/**
+ * Kids kit sizes with the supplier's chart (owner 2026-11-15): letter, age (years) and height (cm).
+ * The kids size calculator (KidsSizeHelper) and the size guide read this one table.
+ */
+export const KIDS_SIZE_CHART: { size: KidsSize; letter: string; age: [number, number]; height: [number, number]; length: number; halfBust: number; shortsLength: number }[] = [
+  { size: "16", letter: "XXS", age: [3, 4], height: [95, 105], length: 44, halfBust: 35, shortsLength: 32 },
+  { size: "18", letter: "XS", age: [4, 5], height: [105, 115], length: 47, halfBust: 37, shortsLength: 34 },
+  { size: "20", letter: "S", age: [5, 6], height: [115, 125], length: 50, halfBust: 39, shortsLength: 36 },
+  { size: "22", letter: "M", age: [7, 8], height: [125, 135], length: 53, halfBust: 41, shortsLength: 38 },
+  { size: "24", letter: "L", age: [8, 9], height: [135, 145], length: 56, halfBust: 43, shortsLength: 39 },
+  { size: "26", letter: "XL", age: [10, 11], height: [145, 155], length: 59, halfBust: 45, shortsLength: 40 },
+  { size: "28", letter: "2XL", age: [12, 13], height: [155, 165], length: 62, halfBust: 47, shortsLength: 43 },
+];
+export const KIDS_SIZES: KidsSize[] = KIDS_SIZE_CHART.map((r) => r.size);
+/** Every size a cart line may carry (adult shirts/kits + kids kits) - the checkout wire check. */
+export const ALL_SIZES: Size[] = [...SIZES, ...KIDS_SIZES];
+
+/**
+ * Kids size from height (cm), the chart's own measure: the row whose height range holds it; between two
+ * rows (or on a boundary) the bigger one, so a growing child isn't squeezed. Outside the chart: null.
+ */
+export function kidsSizeForHeight(heightCm: number): KidsSize | null {
+  if (!Number.isFinite(heightCm) || heightCm < KIDS_SIZE_CHART[0].height[0] - 5 || heightCm > KIDS_SIZE_CHART.at(-1)!.height[1] + 5) return null;
+  for (const r of KIDS_SIZE_CHART) if (heightCm < r.height[1]) return r.size;
+  return KIDS_SIZE_CHART.at(-1)!.size;
+}
+
+/** Kids size from age (years) when the height isn't known: the first row whose age range reaches it. */
+export function kidsSizeForAge(age: number): KidsSize | null {
+  if (!Number.isFinite(age) || age < 2 || age > 14) return null;
+  for (const r of KIDS_SIZE_CHART) if (age <= r.age[1]) return r.size;
+  return KIDS_SIZE_CHART.at(-1)!.size;
+}
 export const VERSIONS: Version[] = ["fan", "player"];
 export const SLEEVES: Sleeve[] = ["short", "long"];
 
@@ -95,10 +129,13 @@ const RETRO_LONG_PRICE = groupPrice("retro_long");
  * photography/catalogue entries yet, so nothing reads these constants.
  */
 export const FUTURE_PRICES = {
-  kidsKit: 200,
-  adultKit: 300,
   nbaVersion: 160,
 } as const;
+
+/** Full kits (shirt + shorts, owner request 2026-11-15) - the `adult_kit` / `adult_kit_player` / `kids_kit` groups in admin Pricing. */
+const ADULT_KIT_PRICE = groupPrice("adult_kit");
+const ADULT_KIT_PLAYER_PRICE = groupPrice("adult_kit_player") || ADULT_KIT_PRICE;
+const KIDS_KIT_PRICE = groupPrice("kids_kit");
 
 /**
  * Base price + size surcharge for a jersey identified by its season, the
@@ -106,7 +143,10 @@ export const FUTURE_PRICES = {
  * `version` — there is one Retro price (short or long), not a Retro-Fan and
  * a Retro-Player.
  */
-export function priceFor(season: string, size: Size, version: Version, sleeve: Sleeve = "short"): number {
+export function priceFor(season: string, size: Size, version: Version, sleeve: Sleeve = "short", set?: ProductSet): number {
+  // kits are short sleeve only; kids kits are one price (fan), adult kits fan/player + the 3XL/4XL surcharge
+  if (set === "kids_kit") return KIDS_KIT_PRICE;
+  if (set === "kit") return (version === "player" ? ADULT_KIT_PLAYER_PRICE : ADULT_KIT_PRICE) + sizeSurcharge(size);
   const long = sleeve === "long";
   const base = isRetroSeason(season)
     ? (long ? RETRO_LONG_PRICE : RETRO_PRICE)
@@ -204,10 +244,10 @@ export function priceLine(
   size: Size,
   version: Version,
   qty: number,
-  addons: { nameNumber?: boolean; patchCount?: number; sleeve?: Sleeve } = {},
+  addons: { nameNumber?: boolean; patchCount?: number; sleeve?: Sleeve; set?: ProductSet } = {},
 ): PricedLine {
   const unitPrice = round2(
-    priceFor(season, size, version, addons.sleeve ?? "short") +
+    priceFor(season, size, version, addons.sleeve ?? "short", addons.set) +
       (addons.nameNumber ? ADDONS.nameNumber : 0) +
       patchesTotal(addons.patchCount ?? 0),
   );

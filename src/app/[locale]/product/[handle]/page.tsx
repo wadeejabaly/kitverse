@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/config";
-import { getLeagues, getProduct, getVisibleProducts, localName } from "@/data/catalog";
+import { getLeagues, getProduct, getVisibleProducts, localName, getSellableProducts } from "@/data/catalog";
 import { isRetroSeason, priceFor } from "@/data/pricing";
 import { slugify } from "@/data/slug";
 import { Reveal } from "@/components/motion/Reveal";
@@ -29,7 +29,7 @@ import { enabledPaymentMethods } from "@/lib/payment-methods";
  */
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
-    getVisibleProducts().map((product) => ({ locale, handle: product.handle })),
+    getSellableProducts().map((product) => ({ locale, handle: product.handle })),
   );
 }
 
@@ -97,7 +97,7 @@ export default async function ProductPage({
     offers: {
       "@type": "Offer",
       priceCurrency: "ILS",
-      price: String(priceFor(product.season, "S", "fan")),
+      price: String(priceFor(product.season, product.set === "kids_kit" ? "22" : "S", "fan", "short", product.set)),
       availability: "https://schema.org/InStock",
       url: localeUrl(locale, `/product/${product.handle}`),
     },
@@ -174,6 +174,7 @@ export default async function ProductPage({
               leagueName={leagueName}
               image={product.image}
               title={title}
+              set={product.set}
             />
             )}
 
@@ -222,7 +223,7 @@ export default async function ProductPage({
                   <dd className="text-ink">{t(`kit.${product.kit}`)}</dd>
                   <dt>{t("detailVersions")}</dt>
                   <dd className="text-ink">
-                    {isRetroSeason(product.season) ? t("retroBadge") : `${t("versionFan")} · ${t("versionPlayer")}`}
+                    {isRetroSeason(product.season) ? t("retroBadge") : product.set === "kids_kit" ? t("versionFan") : `${t("versionFan")} · ${t("versionPlayer")}`}
                   </dd>
                 </dl>
               </Accordion>

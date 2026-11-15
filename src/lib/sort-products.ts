@@ -10,7 +10,7 @@ import type { SortKey } from "@/lib/shop-href";
 export function sortProducts(products: Product[], sort: SortKey): Product[] {
   if (sort === "featured") return products;
   const indexed = products.map((product, index) => ({ product, index }));
-  const from = (p: Product) => priceFor(p.season, "S", "fan");
+  const from = (p: Product) => priceFor(p.season, p.set === "kids_kit" ? "22" : "S", "fan", "short", p.set);
   indexed.sort((a, b) => {
     let diff = 0;
     if (sort === "newest") diff = seasonYear(b.product.season) - seasonYear(a.product.season);

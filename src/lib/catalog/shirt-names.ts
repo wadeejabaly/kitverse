@@ -18,17 +18,32 @@ export type ShirtKit = (typeof SHIRT_KITS)[number];
 const KIT_AR: Record<ShirtKit, string> = { Home: "الأساسي", Away: "الاحتياطي", Third: "الثالث" };
 const KIT_HE: Record<ShirtKit, string> = { Home: "בית", Away: "חוץ", Third: "שלישית" };
 
+/** What is being sold (owner request 2026-11-15): a shirt, a full adult kit (shirt + shorts) or a kids kit. */
+export const PRODUCT_TYPES = ["shirt", "kit", "kids_kit"] as const;
+export type ProductType = (typeof PRODUCT_TYPES)[number];
+
 export interface ShirtNameInput {
   team: { name: string; nameAr: string; nameHe: string };
   season: string;
   kit: ShirtKit;
   retro: boolean;
+  /** default "shirt" */
+  type?: ProductType;
 }
 
-export function shirtNames({ team, season, kit, retro }: ShirtNameInput) {
-  const en = `${team.name} ${season} ${retro ? "Retro " : ""}${kit} Shirt`;
-  const ar = `قميص ${team.nameAr} ${season} ${KIT_AR[kit]}${retro ? " ريترو" : ""}`;
-  const he = `חולצת ${KIT_HE[kit]} ${retro ? "רטרו " : ""}${team.nameHe} ${season}`;
+export function shirtNames({ team, season, kit, retro, type = "shirt" }: ShirtNameInput) {
+  //   kit:      Real Madrid 2026/27 Home Kit       طقم ريال مدريد 2026/27 الأساسي        ערכת בית ריאל מדריד 2026/27
+  //   kids_kit: Real Madrid 2026/27 Home Kids Kit  طقم أطفال ريال مدريد 2026/27 الأساسي  ערכת בית לילדים ריאל מדריד 2026/27
+  const r = retro ? "Retro " : "";
+  const en = type === "kit" ? `${team.name} ${season} ${r}${kit} Kit`
+    : type === "kids_kit" ? `${team.name} ${season} ${r}${kit} Kids Kit`
+    : `${team.name} ${season} ${r}${kit} Shirt`;
+  const ar = type === "kit" ? `طقم ${team.nameAr} ${season} ${KIT_AR[kit]}${retro ? " ريترو" : ""}`
+    : type === "kids_kit" ? `طقم أطفال ${team.nameAr} ${season} ${KIT_AR[kit]}${retro ? " ريترو" : ""}`
+    : `قميص ${team.nameAr} ${season} ${KIT_AR[kit]}${retro ? " ريترو" : ""}`;
+  const he = type === "kit" ? `ערכת ${KIT_HE[kit]} ${retro ? "רטרו " : ""}${team.nameHe} ${season}`
+    : type === "kids_kit" ? `ערכת ${KIT_HE[kit]} לילדים ${retro ? "רטרו " : ""}${team.nameHe} ${season}`
+    : `חולצת ${KIT_HE[kit]} ${retro ? "רטרו " : ""}${team.nameHe} ${season}`;
   return { en, ar, he, handle: slugify(en) };
 }
 

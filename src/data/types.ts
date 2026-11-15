@@ -11,7 +11,12 @@ export type { PatchId };
 
 export type Kind = "national" | "current" | "previous";
 export type Kit = "Home" | "Away" | "Third";
-export type Size = "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "4XL";
+export type AdultSize = "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "4XL";
+/** Kids kit sizes (owner's supplier chart 2026-11-15): 16 = XXS, age 3-4 ... 28 = 2XL, age 12-13. */
+export type KidsSize = "16" | "18" | "20" | "22" | "24" | "26" | "28";
+export type Size = AdultSize | KidsSize;
+/** A full kit (shirt + shorts, owner request 2026-11-15): "kit" = adult, "kids_kit" = kids. Missing = a shirt. */
+export type ProductSet = "kit" | "kids_kit";
 export type Version = "fan" | "player";
 /**
  * Short or long sleeve (owner decision 2026-10-26: offered on every shirt,
@@ -89,6 +94,8 @@ export interface Product {
   imagesLongSleeve?: string[];
   /** false = shown on the site marked "Out of stock", not orderable (products.flags 'out_of_stock', owner request 2026-11-12). Missing = in stock. */
   inStock?: boolean;
+  /** A full kit (shirt + shorts) instead of a shirt - products.is_kit_with_shorts (+ flag kids_kit). Kits list only on /kits and /kids-kits. */
+  set?: ProductSet;
   sourceHash: string; // supplier provenance
   visible: boolean; // approved review state AND not deduped-away
 }

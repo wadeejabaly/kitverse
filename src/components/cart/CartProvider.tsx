@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { GIFT_BOX_MAX_QTY, SIZES, SLEEVES, VERSIONS } from "@/data/pricing";
+import { ALL_SIZES, GIFT_BOX_MAX_QTY, SLEEVES, VERSIONS } from "@/data/pricing";
 import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Sleeve, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { PATCHES } from "@/lib/orders/rules";
@@ -77,7 +77,7 @@ export function lineKey(item: CartItem): string {
   return ["jersey", item.handle, item.size, item.version, item.sleeve, item.nameNumber ?? "", patches].join("|");
 }
 
-const SIZE_SET = new Set<string>(SIZES);
+const SIZE_SET = new Set<string>(ALL_SIZES); // adult sizes + kids kit sizes (2026-11-15)
 const VERSION_SET = new Set<string>(VERSIONS);
 const SLEEVE_SET = new Set<string>(SLEEVES);
 const PATCH_ID_SET = new Set<string>(Object.keys(PATCHES));

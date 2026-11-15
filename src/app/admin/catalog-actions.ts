@@ -7,8 +7,8 @@ import { requireStaff } from "@/lib/auth";
 import { db, must } from "@/lib/db";
 import { env } from "@/lib/env";
 import { isRetroSeason } from "@/data/pricing";
-import { SHIRT_KITS, isValidSeason, parseSeasonInput, shirtNames } from "@/lib/catalog/shirt-names";
-import { OUT_OF_STOCK_FLAG, SITE_LISTED_FLAG } from "@/lib/catalog/stock";
+import { PRODUCT_TYPES, SHIRT_KITS, isValidSeason, parseSeasonInput, shirtNames } from "@/lib/catalog/shirt-names";
+import { KIDS_KIT_FLAG, OUT_OF_STOCK_FLAG, SITE_LISTED_FLAG } from "@/lib/catalog/stock";
 import collections from "../../../catalog/store-collections.json";
 
 /**
@@ -52,15 +52,21 @@ export async function addShirt(form: FormData): Promise<AddShirtResult> {
     kit: z.enum(SHIRT_KITS),
     player: z.boolean(),
     longSleeve: z.boolean(),
+    type: z.enum(PRODUCT_TYPES),
   }).safeParse({
     team: form.get("team"),
     season: form.get("season"),
     kit: form.get("kit"),
     player: form.get("player") === "on",
     longSleeve: form.get("longSleeve") === "on",
+    type: form.get("type") ?? "shirt",
   });
   if (!parsed.success) return { ok: false, error: "Pick the team, season and kit." };
-  const { team: slug, kit, player, longSleeve } = parsed.data;
+  const { team: slug, kit, type } = parsed.data;
+  // kits (owner request 2026-11-15): short sleeve only; kids kits are fan version only
+  const longSleeve = type === "shirt" && parsed.data.longSleeve;
+  const player = type !== "kids_kit" && parsed.data.player;
+  const isKit = type !== "shirt";
 
   const team = TEAMS.find((t) => t.slug === slug);
   if (!team) return { ok: false, error: "Unknown team." };
@@ -76,13 +82,16 @@ export async function addShirt(form: FormData): Promise<AddShirtResult> {
   for (const f of [...shortPhotos, ...longPhotos]) if (f.size > MAX_PHOTO) return { ok: false, error: `"${f.name}" is larger than 15 MB.` };
 
   const retro = isRetroSeason(season);
-  const names = shirtNames({ team: { name: team.name, nameAr: team.nameAr, nameHe: team.nameHe ?? team.name }, season, kit, retro });
+  const names = shirtNames({ team: { name: team.name, nameAr: team.nameAr, nameHe: team.nameHe ?? team.name }, season, kit, retro, type });
   const era = retro ? "retro" : "current";
 
   // the same shirt already in the database (its own handle, or a supplier listing of the same team/season/kit)
   const byHandle = (await db().from("products").select("id,handle,flags,status").eq("handle", names.handle).maybeSingle()).data as { id: string; handle: string; flags: string[] | null; status: string } | null;
-  const sameShirt = byHandle ?? ((await db().from("products").select("id,handle,flags,status").eq("team_id", slug).eq("season", season).eq("kit", kit)
-    .neq("status", "hidden").order("created_at").limit(1)).data as { id: string; handle: string; flags: string[] | null; status: string }[] | null)?.[0] ?? null;
+  // a kit never takes over a shirt's row (or the other way round): only the exact same kit handle is reused
+  type Row = { id: string; handle: string; flags: string[] | null; status: string };
+  const supplierRow = async () => ((await db().from("products").select("id,handle,flags,status").eq("team_id", slug).eq("season", season).eq("kit", kit)
+    .eq("is_kit_with_shorts", false).neq("status", "hidden").order("created_at").limit(1)).data as Row[] | null)?.[0] ?? null;
+  const sameShirt = byHandle ?? (isKit ? null : await supplierRow());
 
   let productId: string;
   let handle: string;
@@ -95,16 +104,16 @@ export async function addShirt(form: FormData): Promise<AddShirtResult> {
     handle = sameShirt.handle;
   } else {
     const row = must(await db().from("products").insert({
-      handle: names.handle, team_id: slug, season, kit, era,
+      handle: names.handle, team_id: slug, season, kit, era, is_kit_with_shorts: isKit,
       title_en: names.en, title_ar: names.ar, title_he: names.he,
-      status: "featured", flags: [SITE_LISTED_FLAG, "owner_catalog", "not_at_supplier"],
+      status: "featured", flags: [SITE_LISTED_FLAG, "owner_catalog", "not_at_supplier", ...(type === "kids_kit" ? [KIDS_KIT_FLAG] : [])],
     }).select("id,handle").single(), "new shirt") as { id: string; handle: string };
     productId = row.id;
     handle = row.handle;
   }
 
   // options: adult fan short always; player and long sleeve as ticked (retro shirts are fan only)
-  const options: { audience: "adult"; version: "fan" | "player"; sleeve: "short" | "long" }[] = [{ audience: "adult", version: "fan", sleeve: "short" }];
+  const options: { audience: "adult" | "kids"; version: "fan" | "player"; sleeve: "short" | "long" }[] = [{ audience: type === "kids_kit" ? "kids" : "adult", version: "fan", sleeve: "short" }];
   if (longSleeve) options.push({ audience: "adult", version: "fan", sleeve: "long" });
   if (player && !retro) {
     options.push({ audience: "adult", version: "player", sleeve: "short" });

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/config";
-import { getVisibleProducts } from "@/data/catalog";
+import { getSellableProducts } from "@/data/catalog";
 import { collectionParams } from "@/lib/collections";
 import { localeUrl } from "@/lib/site";
 
@@ -30,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...collectionParams().map((slug) => `/shop/${slug}`),
     // Only approved products — a hidden handle 404s, and a 404 in a sitemap
     // is a crawl error we would be reporting on ourselves.
-    ...getVisibleProducts().map((product) => `/product/${product.handle}`),
+    ...getSellableProducts().map((product) => `/product/${product.handle}`),
   ];
 
   const lastModified = new Date();

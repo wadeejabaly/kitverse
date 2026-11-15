@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Figure } from "@/components/shared/Money";
-import { sizeSurcharge } from "@/data/pricing";
+import { KIDS_SIZE_CHART, sizeSurcharge } from "@/data/pricing";
+import { KidsSizeHelper } from "@/components/product/KidsSizeHelper";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/shared/Info";
@@ -48,9 +49,8 @@ export default async function SizeGuidePage({
 
   // Redesign phase 2 (2026-11-09): navy-headed table on a white card, a
   // "how to measure" diagram beside it, the size finder, and the notes.
-  // The measurements are the same verified ROWS as before. Youth sizes are
-  // not in the website catalogue and there is no verified youth size data,
-  // so the page says so plainly instead of inventing a chart.
+  // The measurements are the same verified ROWS as before. Kids sizes (2026-11-15): the owner's
+  // supplier chart (KIDS_SIZE_CHART in src/data/pricing.ts) + the kids calculator, for the kids kits.
   return (
     <Wrap>
       <PageLede eyebrow={t("eyebrow")} title={t("title")} intro={t("intro")} />
@@ -154,6 +154,22 @@ export default async function SizeGuidePage({
             <div>
               <h2 className="mb-1 text-[16px] font-extrabold">{t("youthTitle")}</h2>
               <p className="text-[14px] text-ink-soft">{t("youthBody")}</p>
+              {/* kids kits (owner request 2026-11-15): the supplier's chart + the kids calculator */}
+              <div className="mt-3 overflow-x-auto">
+                <table className="kv-table min-w-[420px] text-center text-[13px]">
+                  <thead><tr><th>{t("kidsSize")}</th><th>{t("kidsAge")}</th><th>{t("kidsHeight")}</th></tr></thead>
+                  <tbody>
+                    {KIDS_SIZE_CHART.map((r) => (
+                      <tr key={r.size}>
+                        <td className="latin tabular font-bold">{r.size} <span className="font-normal text-ink-soft">({r.letter})</span></td>
+                        <td className="tabular">{r.age[0]}-{r.age[1]}</td>
+                        <td className="tabular">{r.height[0]}-{r.height[1]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <KidsSizeHelper startOpen />
             </div>
           </section>
 

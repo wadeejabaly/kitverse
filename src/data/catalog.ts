@@ -2,7 +2,7 @@ import catalogData from "./catalog.json";
 import collectionsData from "./collections.json";
 import { isRetroSeason } from "./pricing";
 import { slugify } from "./slug";
-import type { Kind, Product } from "./types";
+import type { Kind, Product, ProductSet } from "./types";
 
 /**
  * Typed catalog accessors — the only way the storefront (wave 3) and the
@@ -43,7 +43,8 @@ const productsByHandle = new Map<string, Product>(products.map((p) => [p.handle,
 
 /** Every product whose review state is approved — the only set the storefront renders. */
 export function getVisibleProducts(): Product[] {
-  return products.filter((p) => p.visible);
+  // shirts only: full kits (owner request 2026-11-15) live on their own pages - kitProducts()
+  return products.filter((p) => p.visible && !p.set);
 }
 
 /**
@@ -84,6 +85,16 @@ export function byKind(kind: Kind): Product[] {
  */
 export function retroProducts(): Product[] {
   return getVisibleProducts().filter((p) => isRetroSeason(p.season));
+}
+
+/** Everything a shopper can have in the cart: shirts AND full kits (cart, checkout). */
+export function getSellableProducts(): Product[] {
+  return products.filter((p) => p.visible);
+}
+
+/** Full kits on the site (shirt + shorts): "kit" = adults (/kits), "kids_kit" = kids (/kids-kits). */
+export function kitProducts(set: ProductSet): Product[] {
+  return products.filter((p) => p.visible && p.set === set);
 }
 
 /** Lightweight index for client-side search — visible products only. */

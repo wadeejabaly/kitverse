@@ -7,7 +7,7 @@ import { accessoryDeals, cartTotals, isRetroSeason, priceLine, round2 } from "@/
 import { patchPieces } from "@/lib/patch-limits";
 import { accessoryHref } from "@/data/accessories";
 import { accessoryLabel } from "@/components/shop/accessoryLabel";
-import type { AccessoryCategory } from "@/data/types";
+import type { AccessoryCategory, ProductSet } from "@/data/types";
 import { PATCH_PROP_KEYS } from "@/data/patches";
 import { lineKey, useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
@@ -22,6 +22,8 @@ export interface CartProductInfo {
   image: string;
   /** English team name (catalog `team`) - checkout uses it to suggest that team's scarf/keychain */
   team?: string;
+  /** a full kit (owner request 2026-11-15) - priced as a kit, not a shirt */
+  set?: ProductSet;
 }
 
 /**
@@ -87,6 +89,7 @@ export function CartView({
       const product = byHandle.get(item.handle);
       if (!product) return null;
       const priced = priceLine(product.season, item.size, item.version, item.qty, {
+          set: product.set,
         nameNumber: Boolean(item.nameNumber),
         patchCount: patchPieces(item.patches, isRetroSeason(product.season)),
         sleeve: item.sleeve,

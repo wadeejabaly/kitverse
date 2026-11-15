@@ -47,7 +47,10 @@
     "contact": "Contact",
     "returns": "Returns & refunds",
     "shippingOnly": "Shipping",
-    "bundles": "Bundles"
+    "bundles": "Bundles",
+    "kits": "Kits",
+    "fullKits": "Full kits",
+    "kidsKits": "Kids kits"
   },
   "home": {
     "hero": {
@@ -169,7 +172,9 @@
     "badgeRetro": "Retro",
     "badgeNational": "National team",
     "retroLine": "Retro",
-    "fanPlayer": "Fan & Player"
+    "fanPlayer": "Fan & Player",
+    "kidsKitLine": "Shirt + shorts · kids 3-13",
+    "kitLine": "Shirt + shorts · fan & player"
   },
   "notFound": {
     "title": "Page not found",
@@ -397,6 +402,17 @@
     "sizeHelperResult": "We'd recommend size {size}.",
     "sizeHelperLoose": "Prefer it loose? Go {size}.",
     "sizeHelperUse": "Use size {size}",
+    "kidsAge": "age {from}-{to}",
+    "kidsHelperOpen": "Not sure? Find the size by height or age",
+    "kidsHelperHeight": "Child's height (cm)",
+    "kidsHelperAge": "Age (years)",
+    "kidsHelperOr": "or",
+    "kidsHelperHint": "Height gives the most accurate size.",
+    "kidsHelperResult": "Size {size} ({letter}) - usually age {from}-{to}",
+    "kidsHelperDetail": "For {minH}-{maxH} cm. Shirt length {length} cm, shorts {shorts} cm.",
+    "kidsHelperOut": "That's outside the kids sizes (3-13 years) - message us on Instagram and we'll help.",
+    "kidsKitNote": "Kids kit: shirt + shorts, fan version.",
+    "kitNote": "Full kit: shirt + shorts.",
     "priceNote": "for your selection, in shekels incl. VAT",
     "sizeGuideLink": "Size guide",
     "qtyLess": "Decrease quantity",
@@ -487,9 +503,12 @@
     "lengthLabel": "Length",
     "lengthHow": "From the highest point of the shoulder down to the hem.",
     "finderTitle": "Find your size",
-    "youthTitle": "Youth & kids sizes",
-    "youthBody": "Youth and kids sizes aren't sold through the website, and we don't publish a youth size chart. Message us on Instagram and we'll check what's available for the shirt you want.",
-    "shopCta": "Shop shirts"
+    "youthTitle": "Kids sizes",
+    "youthBody": "Kids kits (shirt + shorts) come in sizes 16-28, for ages 3-13. Use the child's height for the best fit. Don't see the kit you want on the site? Message us on Instagram.",
+    "shopCta": "Shop shirts",
+    "kidsSize": "Size",
+    "kidsAge": "Age",
+    "kidsHeight": "Height (cm)"
   },
   "shippingPage": {
     "eyebrow": "Shipping and returns",
@@ -813,7 +832,7 @@
         },
         "kids": {
           "q": "Do you sell kids' sizes?",
-          "a": "Kids' and youth sizes aren't sold through the website. Message us on Instagram and we'll check what's available for the shirt you want."
+          "a": "Yes - kids kits (shirt + shorts) in sizes 16-28 for ages 3-13. The kits on the site are under Kids kits, with a size chart and calculator. For any other kit, message us on Instagram."
         }
       },
       "customization": {
@@ -976,5 +995,23 @@
     "teaserEyebrow": "Bundle",
     "teaserBody": "Home, away and third together, each customised",
     "viewBundle": "View bundle"
+  },
+  "kits": {
+    "eyebrow": "Full kits",
+    "adultTitle": "Full kits",
+    "kidsTitle": "Kids kits",
+    "adultIntro": "Shirt + shorts of this season's kits, in adult sizes S-4XL - fan or player version.",
+    "kidsIntro": "Shirt + shorts for kids aged 3-13, sizes 16-28. Find the right size with the calculator below.",
+    "whatsIn": "Shirt + shorts",
+    "fanFrom": "From",
+    "playerFrom": "Player version",
+    "custom": "Name + number and patches available",
+    "chartTitle": "Kids size chart",
+    "size": "Size",
+    "age": "Age",
+    "height": "Height (cm)",
+    "length": "Shirt length (cm)",
+    "shorts": "Shorts length (cm)",
+    "empty": "New kits are on their way. Message us on Instagram and we'll check the kit you want."
   }
 }

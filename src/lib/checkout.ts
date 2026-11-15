@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GIFT_BOX_MAX_QTY, SIZES, VERSIONS } from "@/data/pricing";
+import { ALL_SIZES, GIFT_BOX_MAX_QTY, VERSIONS } from "@/data/pricing";
 import type { Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX } from "@/lib/product";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
@@ -23,7 +23,7 @@ export const MAX_CART_LINES = 40;
 // Membership checks against the single source of truth in pricing.ts, so a
 // new size can never be valid in the cart and invalid at checkout.
 const SizeSchema = z.custom<Size>(
-  (value) => typeof value === "string" && (SIZES as string[]).includes(value),
+  (value) => typeof value === "string" && (ALL_SIZES as string[]).includes(value),
 );
 const VersionSchema = z.custom<Version>(
   (value) => typeof value === "string" && (VERSIONS as string[]).includes(value),

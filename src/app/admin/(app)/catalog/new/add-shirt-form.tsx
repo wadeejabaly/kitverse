@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { CheckCircle2, ImagePlus, Loader2, X } from "lucide-react";
 import { isRetroSeason } from "@/data/pricing";
-import { SHIRT_KITS, parseSeasonInput, seasonChoices, shirtNames, type ShirtKit } from "@/lib/catalog/shirt-names";
+import { PRODUCT_TYPES, SHIRT_KITS, parseSeasonInput, seasonChoices, shirtNames, type ProductType, type ShirtKit } from "@/lib/catalog/shirt-names";
 import { addShirt, type AddShirtResult } from "../../../catalog-actions";
 import { Card, SectionTitle, button, cx, input } from "../../../ui";
 
@@ -20,6 +20,7 @@ export interface TeamChoice {
 }
 
 const KIT_LABEL: Record<ShirtKit, string> = { Home: "Home", Away: "Away", Third: "Third" };
+const TYPE_LABEL: Record<ProductType, string> = { shirt: "Shirt", kit: "Full kit (adult)", kids_kit: "Kids kit" };
 
 /**
  * The "Add shirt" form (owner request 2026-11-12). The team and season can be TYPED or picked from the
@@ -33,6 +34,7 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
   const [teamText, setTeamText] = useState("");
   const [seasonText, setSeasonText] = useState("");
   const [kit, setKit] = useState<ShirtKit>("Home");
+  const [type, setType] = useState<ProductType>("shirt");
   const [player, setPlayer] = useState(true);
   const [longSleeve, setLongSleeve] = useState(false);
   const [shortPhotos, setShortPhotos] = useState<File[]>([]);
@@ -58,7 +60,7 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
   const season = team ? (parseSeasonInput(seasonText, team.type) ?? "") : "";
 
   const retro = season ? isRetroSeason(season) : false;
-  const names = team && season ? shirtNames({ team, season, kit, retro }) : null;
+  const names = team && season ? shirtNames({ team, season, kit, retro, type }) : null;
 
   const groups = [
     ...leagues.map((l) => ({ label: l.name, rows: teams.filter((t) => t.league === l.slug) })),
@@ -67,7 +69,7 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
   ].filter((g) => g.rows.length);
 
   function reset() {
-    setTeamText(""); setSeasonText(""); setKit("Home"); setPlayer(true); setLongSleeve(false);
+    setTeamText(""); setSeasonText(""); setKit("Home"); setType("shirt"); setPlayer(true); setLongSleeve(false);
     setShortPhotos([]); setLongPhotos([]); setResult(null);
   }
 
@@ -77,10 +79,11 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
     form.set("team", team.slug);
     form.set("season", season);
     form.set("kit", kit);
-    if (player && !retro) form.set("player", "on");
-    if (longSleeve) form.set("longSleeve", "on");
+    form.set("type", type);
+    if (player && !retro && type !== "kids_kit") form.set("player", "on");
+    if (longSleeve && type === "shirt") form.set("longSleeve", "on");
     for (const f of shortPhotos) form.append("shortPhotos", f);
-    if (longSleeve) for (const f of longPhotos) form.append("longPhotos", f);
+    if (longSleeve && type === "shirt") for (const f of longPhotos) form.append("longPhotos", f);
     startTransition(async () => {
       try {
         setResult(await addShirt(form));
@@ -162,6 +165,24 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
           </label>
 
           <fieldset className="grid gap-1.5">
+            <legend className="mb-1.5 text-sm font-bold text-ink">What is it</legend>
+            <div className="flex flex-wrap gap-2">
+              {PRODUCT_TYPES.map((t) => (
+                <button key={t} type="button" onClick={() => setType(t)} aria-pressed={type === t}
+                  className={cx(type === t ? button.primary : button.ghost, "justify-center")}>
+                  {TYPE_LABEL[t]}
+                </button>
+              ))}
+            </div>
+            {type !== "shirt" ? (
+              <span className="text-xs text-muted">
+                {type === "kit" ? "Shirt + shorts, adult sizes S-4XL, short sleeve. Upload photos of the kit (shirt and shorts)." : "Shirt + shorts for kids, sizes 16-28 (age 3-13), fan version, short sleeve. Upload photos of the kids kit."}
+                {" "}It goes on the website in its own Full kits / Kids kits page.
+              </span>
+            ) : null}
+          </fieldset>
+
+          <fieldset className="grid gap-1.5">
             <legend className="mb-1.5 text-sm font-bold text-ink">Kit</legend>
             <div className="flex flex-wrap gap-2">
               {SHIRT_KITS.map((k) => (
@@ -175,18 +196,18 @@ export function AddShirtForm({ teams, leagues }: { teams: TeamChoice[]; leagues:
 
           <div className="grid gap-2">
             <span className="text-sm font-bold text-ink">Versions</span>
-            <label className={cx("flex items-center gap-2 text-sm", retro && "opacity-50")}>
-              <input type="checkbox" checked={player && !retro} disabled={retro} onChange={(e) => setPlayer(e.target.checked)} />
+            <label className={cx("flex items-center gap-2 text-sm", (retro || type === "kids_kit") && "opacity-50")}>
+              <input type="checkbox" checked={player && !retro && type !== "kids_kit"} disabled={retro || type === "kids_kit"} onChange={(e) => setPlayer(e.target.checked)} />
               Player version too (fan version is always included){retro ? " - not for retro" : ""}
             </label>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={longSleeve} onChange={(e) => setLongSleeve(e.target.checked)} />
+            <label className={cx("flex items-center gap-2 text-sm", type !== "shirt" && "opacity-50")}>
+              <input type="checkbox" checked={longSleeve && type === "shirt"} disabled={type !== "shirt"} onChange={(e) => setLongSleeve(e.target.checked)} />
               Long sleeve too
             </label>
           </div>
 
           <PhotoPicker label="Short-sleeve photos" hint="The first photo is the main photo on the website." files={shortPhotos} onChange={setShortPhotos} />
-          {longSleeve ? (
+          {longSleeve && type === "shirt" ? (
             <PhotoPicker label="Long-sleeve photos" hint="Shown when a customer picks long sleeve. The first one is the front." files={longPhotos} onChange={setLongPhotos} />
           ) : null}
         </div>

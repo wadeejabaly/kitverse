@@ -162,7 +162,7 @@
           "kids"
         ]
       },
-      "price": 200,
+      "price": 150,
       "source": "owner DM price list",
       "history": [
         200,
@@ -180,7 +180,7 @@
         ],
         "kit_with_shorts": true
       },
-      "price": 300,
+      "price": 170,
       "source": "owner DM price list",
       "history": [
         300,
@@ -189,6 +189,20 @@
       ],
       "name_ar": "طقم الكبار",
       "name_en": "Adult kit (shirt + shorts)"
+    },
+    {
+      "id": "adult_kit_player",
+      "price": 180,
+      "source": "owner request 2026-11-15",
+      "match": {
+        "audience": [
+          "adult"
+        ],
+        "version": "player",
+        "kit_with_shorts": true
+      },
+      "name_ar": "طقم الكبار نسخة اللاعبين",
+      "name_en": "Adult kit, player version (shirt + shorts)"
     }
   ],
   "offers": [

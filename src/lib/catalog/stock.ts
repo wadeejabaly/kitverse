@@ -17,3 +17,9 @@ export function isOutOfStock(flags: readonly string[] | null | undefined): boole
  * catalog/store-selection.json, which only a code change can edit.
  */
 export const SITE_LISTED_FLAG = "site_listed";
+
+/**
+ * A kids full kit (shirt + shorts, owner request 2026-11-15). Kit rows have products.is_kit_with_shorts = true;
+ * this flag on top marks the kids one (order lines: audience "kids", fan version, kids sizes 16-28).
+ */
+export const KIDS_KIT_FLAG = "kids_kit";

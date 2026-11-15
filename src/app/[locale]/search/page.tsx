@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getVisibleProducts } from "@/data/catalog";
+import { getSellableProducts } from "@/data/catalog";
 import { SearchView, type SearchEntry } from "@/components/search/SearchView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { normalizeSearch } from "@/lib/search";
@@ -37,7 +37,7 @@ export default async function SearchPage({
   setRequestLocale(locale);
   const t = await getTranslations("search");
 
-  const entries: SearchEntry[] = getVisibleProducts().map((product) => ({
+  const entries: SearchEntry[] = getSellableProducts().map((product) => ({
     product,
     haystack: normalizeSearch(
       [

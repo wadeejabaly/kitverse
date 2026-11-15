@@ -1,4 +1,4 @@
-import { byKind, getLeagues, getTeams, getVisibleProducts, retroProducts, type Team } from "@/data/catalog";
+import { byKind, getLeagues, getTeams, getVisibleProducts, kitProducts, retroProducts, type Team } from "@/data/catalog";
 import { slugify } from "@/data/slug";
 import type { Product } from "@/data/types";
 import { localName } from "@/lib/local-name";
@@ -123,6 +123,7 @@ export interface NavLabels {
   shop: string; nationalTeams: string; retro: string; leagues: string; accessories: string; more: string;
   allNationalTeams: string; allClassics: string; classicsByLeague: string; classicsTeams: string; allAccessories: string;
   keychains: string; scarves: string; bundles: string; sizeGuide: string; trackOrder: string; about: string; contact: string;
+  kits: string; fullKits: string; kidsKits: string;
 }
 
 /** The six header entries in the owner's order: Shop, National teams, Classics, Leagues, Accessories, More. */
@@ -132,6 +133,14 @@ export function buildNav(locale: string, t: NavLabels): NavEntry[] {
   const classicsColumns: NavColumn[] = [];
   if (classics.byLeague.length) classicsColumns.push({ heading: { label: t.classicsByLeague }, links: classics.byLeague });
   if (classics.teams.length) classicsColumns.push({ heading: { label: t.classicsTeams }, links: classics.teams, flow: 2 });
+  // Kits (owner request 2026-11-15): full kits (adult) + kids kits - shown once at least one kit is on the site
+  const kitLinks: NavLink[] = [
+    ...(kitProducts("kit").length ? [{ href: "/kits", label: t.fullKits }] : []),
+    ...(kitProducts("kids_kit").length ? [{ href: "/kids-kits", label: t.kidsKits }] : []),
+  ];
+  const kitsEntry: NavEntry[] = kitLinks.length
+    ? [{ id: "kits", label: t.kits, href: kitLinks[0].href, match: ["/kits", "/kids-kits"], panel: { layout: "compact", columns: [{ links: kitLinks }] } }]
+    : [];
   return [
     { id: "shop", label: t.shop, href: "/shop", match: ["/shop$"] },
     {
@@ -146,6 +155,7 @@ export function buildNav(locale: string, t: NavLabels): NavEntry[] {
       id: "leagues", label: t.leagues, href: "/shop#league", match: leagues.map((c) => c.heading?.href ?? "").filter(Boolean),
       panel: { layout: "mega", columns: leagues },
     },
+    ...kitsEntry,
     {
       id: "accessories", label: t.accessories, href: "/accessories", match: ["/accessories"],
       panel: {

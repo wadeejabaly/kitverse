@@ -6,7 +6,7 @@
  * Runs before every build when the database is reachable; otherwise the committed JSON is used as is.
  *   npm run store:export
  */
-import { OUT_OF_STOCK_FLAG, SITE_LISTED_FLAG } from "../src/lib/catalog/stock";
+import { KIDS_KIT_FLAG, OUT_OF_STOCK_FLAG, SITE_LISTED_FLAG } from "../src/lib/catalog/stock";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
@@ -59,10 +59,10 @@ async function main() {
       (JSON.parse(readFileSync("catalog/store-collections.json", "utf8")) as { teams: { slug: string; name: string; nameAr: string; nameHe?: string }[] }).teams.map((t) => [t.slug, t]),
     );
     const { data, error } = await db.from("products")
-      .select("handle,title_en,title_ar,title_he,season,kit,status,team:teams(id,name_en,name_ar,name_he,type,league_id)")
+      .select("handle,title_en,title_ar,title_he,season,kit,status,flags,is_kit_with_shorts,team:teams(id,name_en,name_ar,name_he,type,league_id)")
       .contains("flags", [SITE_LISTED_FLAG]).neq("status", "hidden").order("created_at", { ascending: false });
     if (error) throw error;
-    type Listed = { handle: string; title_en: string; title_ar: string | null; title_he: string | null; season: string | null; kit: string; team: { id: string; name_en: string; name_ar: string | null; name_he: string | null; type: "club" | "national"; league_id: string | null } };
+    type Listed = { handle: string; title_en: string; title_ar: string | null; title_he: string | null; season: string | null; kit: string; flags: string[] | null; is_kit_with_shorts: boolean; team: { id: string; name_en: string; name_ar: string | null; name_he: string | null; type: "club" | "national"; league_id: string | null } };
     const added = ((data ?? []) as unknown as Listed[])
       .filter((r) => !inSelection.has(r.handle) && r.season && ["Home", "Away", "Third"].includes(r.kit))
       .map((r): Product & { productHandle?: string } => {
@@ -77,6 +77,8 @@ async function main() {
           edition: "standard",
           image: "/products/_placeholder.jpg", // replaced by the database photo below
           sourceHash: "admin",
+          // full kits (owner request 2026-11-15): their own /kits and /kids-kits pages, never the shirt grids
+          ...(r.is_kit_with_shorts ? { set: r.flags?.includes(KIDS_KIT_FLAG) ? "kids_kit" as const : "kit" as const } : {}),
           visible: true,
         };
       });
@@ -168,10 +170,12 @@ async function main() {
       visible: true,
     };
   });
+  // a kit goes on the site only with its own photos (owner 2026-11-15: "I'll send kit photos") - never a placeholder or a shirt photo
+  for (let i = products.length - 1; i >= 0; i--) if (products[i].set && products[i].image.includes("_placeholder")) products.splice(i, 1);
   const collections = JSON.parse(readFileSync("catalog/store-collections.json", "utf8")) as { leagues: { slug: string }[]; teams: unknown[] };
   // only leagues with at least one shirt on the site (owner 2026-11-13: the Saudi Pro League is listed
   // ahead of its Al Nassr shirts - it must not show as an empty menu heading / page until they are live)
-  const leagues = collections.leagues.filter((l) => products.some((p) => p.league === l.slug));
+  const leagues = collections.leagues.filter((l) => products.some((p) => p.league === l.slug && !p.set));
   const { teams } = collections;
 
   // the price list the bot uses (published, else the latest draft) - the site shows the same numbers

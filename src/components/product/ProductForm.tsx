@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { ADDONS, SIZES, SLEEVES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
+import { ADDONS, KIDS_SIZE_CHART, SIZES, SLEEVES, VERSIONS, isRetroSeason, patchPrice, patchesTotal, priceFor, sizeSurcharge } from "@/data/pricing";
 import { CHEST_PATCHES, FULL_VERSION_PATCH, fullVersionPieces, patchPieces, sleevePatches, togglePatchIn } from "@/lib/patch-limits";
-import type { Kind, PatchId, Size, Version } from "@/data/types";
+import type { Kind, PatchId, ProductSet, Size, Version } from "@/data/types";
 import { maxPatchesFor, patchOptionsFor } from "@/data/patches";
 import { useCart, MAX_QTY } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { useProductSleeve } from "@/components/product/ProductSleeveContext";
 import { SizeHelper } from "@/components/product/SizeHelper";
+import { KidsSizeHelper } from "@/components/product/KidsSizeHelper";
 
 /**
  * The buy box.
@@ -47,6 +48,7 @@ export function ProductForm({
   leagueName,
   image,
   title,
+  set,
 }: {
   handle: string;
   season: string;
@@ -60,6 +62,8 @@ export function ProductForm({
   /** Photo + title for the add-to-cart confirmation (redesign phase 2). */
   image?: string;
   title?: string;
+  /** A full kit (owner request 2026-11-15): short sleeve only; kids kits = kids sizes 16-28, fan version. */
+  set?: ProductSet;
 }) {
   const t = useTranslations("product");
   const tCommon = useTranslations("common");
@@ -69,7 +73,8 @@ export function ProductForm({
   const patchOptions = patchOptionsFor({ league, kind, team, season, handle });
   const maxPatches = maxPatchesFor({ league, kind, season, handle });
 
-  const [size, setSize] = useState<Size>("M");
+  const kids = set === "kids_kit";
+  const [size, setSize] = useState<Size>(kids ? "22" : "M");
   const [version, setVersion] = useState<Version>("fan");
   // Shared with <ProductGallery> via <ProductSleeveProvider> on the page, so
   // picking "Long sleeve" here can swap the photo tile too (owner decision
@@ -88,7 +93,7 @@ export function ProductForm({
   const pieces = patchPieces(patches, retro);
 
   const unitPrice =
-    priceFor(season, size, version, sleeve) +
+    priceFor(season, size, kids ? "fan" : version, set ? "short" : sleeve, set) +
     (hasName ? ADDONS.nameNumber : 0) +
     patchesTotal(pieces);
 
@@ -109,8 +114,8 @@ export function ProductForm({
       kind: "jersey",
       handle,
       size,
-      version,
-      sleeve,
+      version: kids ? "fan" : version,
+      sleeve: set ? "short" : sleeve,
       patches,
       qty,
       ...(hasName ? { nameNumber: trimmedName } : {}),
@@ -124,6 +129,7 @@ export function ProductForm({
         <Price value={unitPrice} className="text-[2rem] leading-none font-extrabold text-ink" />
         <span className="pb-1 text-[13px] text-ink-soft">{t("priceNote")}</span>
       </div>
+      {set ? <p className="-mt-4 mb-6 text-[14px] font-semibold text-ink">{t(kids ? "kidsKitNote" : "kitNote")}</p> : null}
 
       {/* Size */}
       <fieldset className="mb-7 border-0 p-0">
@@ -136,6 +142,20 @@ export function ProductForm({
             {t("sizeGuideLink")}
           </Link>
         </legend>
+        {kids ? (
+          <>
+            <div className="flex flex-wrap gap-2.5">
+              {KIDS_SIZE_CHART.map((row) => (
+                <OptionButton key={row.size} pressed={size === row.size} onClick={() => setSize(row.size)}>
+                  <span className="latin tabular">{row.size}</span>
+                  <small className="ms-1.5 text-ink-soft">{t("kidsAge", { from: row.age[0], to: row.age[1] })}</small>
+                </OptionButton>
+              ))}
+            </div>
+            <KidsSizeHelper onPick={setSize} />
+          </>
+        ) : (
+        <>
         <div className="flex flex-wrap gap-2.5">
           {SIZES.map((option) => {
             // 3XL and 4XL no longer add the same figure, so the delta is
@@ -158,11 +178,13 @@ export function ProductForm({
           })}
         </div>
         <SizeHelper initialVersion={version} onPick={setSize} />
+        </>
+        )}
       </fieldset>
 
       {/* Version — Retro has none: one product, one price, so offering the
           choice would be a lie about what changes. */}
-      {retro ? null : (
+      {retro || kids ? null : (
         <fieldset className="mb-7 border-0 p-0">
           <legend className="kv-legend">{t("version")}</legend>
           <div className="flex flex-wrap gap-2.5">
@@ -174,7 +196,7 @@ export function ProductForm({
               >
                 {option === "fan" ? t("versionFan") : t("versionPlayer")}
                 <small className="ms-1.5 text-ink-soft">
-                  <Price value={priceFor(season, size, option)} />
+                  <Price value={priceFor(season, size, option, "short", set)} />
                 </small>
               </OptionButton>
             ))}
@@ -185,6 +207,7 @@ export function ProductForm({
       {/* Sleeve (owner decision 2026-10-26): offered on every shirt, retro
           included — unlike Version, there is no era this hides for, since
           the price list has a long-sleeve group for retro too. */}
+      {set ? null : (
       <fieldset className="mb-7 border-0 p-0">
         <legend className="kv-legend">{t("sleeve")}</legend>
         <div className="flex flex-wrap gap-2.5">
@@ -202,6 +225,7 @@ export function ProductForm({
           ))}
         </div>
       </fieldset>
+      )}
 
       {/* Name and number */}
       <fieldset className="mb-7 border-0 p-0">

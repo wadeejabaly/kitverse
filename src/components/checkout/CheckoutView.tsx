@@ -350,6 +350,7 @@ export function CheckoutView({
         item,
         product,
         priced: priceLine(product.season, item.size, item.version, item.qty, {
+          set: product.set,
           nameNumber: Boolean(item.nameNumber),
           patchCount: patchPieces(item.patches, isRetroSeason(product.season)),
           sleeve: item.sleeve,

@@ -23,7 +23,7 @@ export default async function AddShirtPage() {
     <>
       <PageHeader
         eyebrow="Catalog"
-        title="Add a shirt"
+        title="Add a shirt or kit"
         subtitle="Pick the team, season and kit - the name is written for you in English, Arabic and Hebrew, always in the same format. It goes on the website about 2 minutes after you save."
         actions={<Link href="/admin/catalog" className={button.ghost}><ArrowLeft className="h-4 w-4" /> Products</Link>}
       />

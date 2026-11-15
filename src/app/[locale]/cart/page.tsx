@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getVisibleProducts } from "@/data/catalog";
+import { getSellableProducts } from "@/data/catalog";
 import { getOrderableAccessories } from "@/data/accessories";
 import { CartView, type CartAccessoryInfo, type CartProductInfo } from "@/components/cart/CartView";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
@@ -37,7 +37,8 @@ export default async function CartPage({
   setRequestLocale(locale);
   const t = await getTranslations("cart");
 
-  const products: CartProductInfo[] = getVisibleProducts().filter((product) => product.inStock !== false).map((product) => ({
+  const products: CartProductInfo[] = getSellableProducts().filter((product) => product.inStock !== false).map((product) => ({
+    set: product.set,
     handle: product.handle,
     title: product.title,
     titleAr: product.titleAr,

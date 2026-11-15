@@ -39,6 +39,7 @@ export async function Header() {
     allNationalTeams: t("allNationalTeams"), allClassics: t("allClassics"), classicsByLeague: t("classicsByLeague"), classicsTeams: t("classicsTeams"),
     allAccessories: t("allAccessories"), keychains: tAcc("keychainsLabel"), scarves: tAcc("scarvesLabel"), bundles: t("bundles"),
     sizeGuide: t("sizeGuide"), trackOrder: t("trackOrder"), about: t("about"), contact: t("contact"),
+    kits: t("kits"), fullKits: t("fullKits"), kidsKits: t("kidsKits"),
   });
 
   return (

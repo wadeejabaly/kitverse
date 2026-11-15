@@ -15,8 +15,10 @@ import type { BatchLine } from "./admin";
 export const OWNER_PICTURE_SLOTS = 3;
 
 /** "Player" / "Fan", plus LONG SLEEVE / KIDS / WOMEN only when it isn't the usual adult short sleeve. */
-export function versionText(l: Pick<BatchLine, "version" | "sleeve" | "audience">): string {
-  return [l.version, l.sleeve === "Long" ? "LONG SLEEVE" : "", l.audience === "kids" ? "KIDS" : l.audience === "women" ? "WOMEN" : ""].filter(Boolean).join(" ");
+export function versionText(l: Pick<BatchLine, "version" | "sleeve" | "audience"> & { full_kit?: boolean }): string {
+  // a full kit = shirt + shorts (owner request 2026-11-15) - the supplier must see it, it's a different item
+  const kit = l.full_kit || l.audience === "kids" ? (l.audience === "kids" ? "KIDS FULL KIT (SHIRT+SHORTS)" : "FULL KIT (SHIRT+SHORTS)") : "";
+  return [l.version, l.sleeve === "Long" ? "LONG SLEEVE" : "", kit || (l.audience === "women" ? "WOMEN" : "")].filter(Boolean).join(" ");
 }
 
 /** "OLISE#11", "OLISE", "#11" or "" - the supplier's own format. */

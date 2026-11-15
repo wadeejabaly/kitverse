@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getVisibleProducts } from "@/data/catalog";
+import { getSellableProducts } from "@/data/catalog";
 import { getOrderableAccessories } from "@/data/accessories";
 import type { CartAccessoryInfo, CartProductInfo } from "@/components/cart/CartView";
 import { CheckoutView } from "@/components/checkout/CheckoutView";
@@ -41,7 +41,8 @@ export default async function CheckoutPage({
   setRequestLocale(locale);
   const t = await getTranslations("checkout");
 
-  const products: CartProductInfo[] = getVisibleProducts().filter((product) => product.inStock !== false).map((product) => ({
+  const products: CartProductInfo[] = getSellableProducts().filter((product) => product.inStock !== false).map((product) => ({
+    set: product.set,
     handle: product.handle,
     title: product.title,
     titleAr: product.titleAr,

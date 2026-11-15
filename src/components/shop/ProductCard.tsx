@@ -38,7 +38,7 @@ export function ProductCard({
   const retro = isRetroSeason(product.season);
   // The "from" price exactly as before: smallest size, Fan (Retro has one
   // price whatever the version). From the price list, never hardcoded.
-  const price = priceFor(product.season, "S", "fan");
+  const price = priceFor(product.season, product.set === "kids_kit" ? "22" : "S", "fan", "short", product.set);
   const inStock = hasPhoto(product.image);
   // owner request 2026-11-12: a shirt flagged out of stock stays listed, greyed, with no price
   const soldOut = product.inStock === false;
@@ -88,7 +88,7 @@ export function ProductCard({
           <span className="kv-pcard-meta">
             <Season value={shortSeason(product.season)} />
             <br />
-            {retro ? t("retroLine") : t("fanPlayer")}
+            {retro ? t("retroLine") : product.set === "kids_kit" ? t("kidsKitLine") : product.set === "kit" ? t("kitLine") : t("fanPlayer")}
           </span>
         </div>
       </div>

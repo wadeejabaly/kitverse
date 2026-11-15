@@ -7,7 +7,8 @@ import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { getAccessory, isInStock } from "@/data/accessories";
-import { isOutOfStock } from "@/lib/catalog/stock";
+import { KIDS_KIT_FLAG, isOutOfStock } from "@/lib/catalog/stock";
+import { KIDS_SIZES, SIZES } from "@/data/pricing";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
 import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, type DiscountCode } from "../discounts";
@@ -81,7 +82,7 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   if (!resolved) return { ok: false, code: "unknown_city", detail: c.city };
 
   const handles = [...new Set(req.items.map((i) => i.handle))];
-  const products = must(await db().from("products").select("id,handle,title_en,status,flags").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string; flags: string[] }[];
+  const products = must(await db().from("products").select("id,handle,title_en,status,flags,is_kit_with_shorts").in("handle", handles), "web products") as { id: string; handle: string; title_en: string; status: string; flags: string[]; is_kit_with_shorts: boolean }[];
   const lines = req.items.map((i) => ({ i, p: products.find((p) => p.handle === i.handle && p.status !== "hidden") }));
   // accessories (owner request 2026-11-10): only real, visible ones; quantities of the same handle are merged
   const accessoryQty = new Map<string, number>();
@@ -92,6 +93,12 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   if (!lines.length && !accessories.length) return { ok: false, code: "cart_empty" };
   if (lines.some((l) => !l.p)) return { ok: false, code: "invalid_request", detail: "unknown product" };
   if (lines.some((l) => isOutOfStock(l.p?.flags))) return { ok: false, code: "invalid_request", detail: "product out of stock" };
+  // full kits (owner request 2026-11-15): a kids kit takes only kids sizes, everything else only adult sizes;
+  // whatever the browser sent, the line is stored from the product's own type below
+  for (const { i, p } of lines) {
+    const kids = !!p?.flags?.includes(KIDS_KIT_FLAG);
+    if (!(kids ? (KIDS_SIZES as string[]) : (SIZES as string[])).includes(i.size)) return { ok: false, code: "invalid_request", detail: "size not offered" };
+  }
   for (const { i } of lines) {
     const { name, number } = splitNameNumber(i.nameNumber);
     const err = validatePrint(name, number);
@@ -127,7 +134,9 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
       // re-validated against the catalogue (team type, league, the cap) - whatever the browser sent, only an eligible set is ever stored
       const store = getStoreProduct(i.handle);
       const patches = store ? sanitizePatches(i.patches, store) : [];
-      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: "adult", version: i.version, sleeve: i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
+      const kids = !!p!.flags?.includes(KIDS_KIT_FLAG);
+      const kit = kids || p!.is_kit_with_shorts; // kits: short sleeve only; kids kits: fan version (requote() prices them from these)
+      return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: kids ? "kids" : "adult", version: kids ? "fan" : i.version, sleeve: kit ? "short" : i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches };
     })).select("id"), "web items");
     if (accessories.length) {
       must(await db().from("order_accessories").insert(accessories.map(({ a, handle, qty }) => ({
