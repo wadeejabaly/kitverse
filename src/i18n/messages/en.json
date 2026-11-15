@@ -408,13 +408,13 @@
     "sizeHelperLoose": "Prefer it loose? Go {size}.",
     "sizeHelperUse": "Use size {size}",
     "kidsAge": "age {from}-{to}",
-    "kidsHelperOpen": "Not sure? Find the size by height or age",
+    "kidsHelperOpen": "Not sure? Find the size by height and weight",
     "kidsHelperHeight": "Child's height (cm)",
     "kidsHelperAge": "Age (years)",
-    "kidsHelperOr": "or",
-    "kidsHelperHint": "Height gives the most accurate size.",
+    "kidsHelperOr": "and",
+    "kidsHelperHint": "Enter height and weight - if they point to two sizes, we pick the bigger one.",
     "kidsHelperResult": "Size {size} ({letter}) - usually age {from}-{to}",
-    "kidsHelperDetail": "For {minH}-{maxH} cm. Shirt length {length} cm, shorts {shorts} cm.",
+    "kidsHelperDetail": "For about {minH}-{maxH} cm and {minW}-{maxW} kg. Shirt length {length} cm, shorts {shorts} cm.",
     "kidsHelperOut": "That's outside the kids sizes (3-13 years) - message us on Instagram and we'll help.",
     "kidsKitNote": "Kids kit: shirt + shorts, fan version.",
     "kitNote": "Full kit: shirt + shorts.",
@@ -443,7 +443,8 @@
     "zoomHint": "Hover to zoom · click to enlarge",
     "galleryPrev": "Previous photo",
     "galleryNext": "Next photo",
-    "closeViewer": "Close"
+    "closeViewer": "Close",
+    "kidsHelperWeight": "Weight (kg)"
   },
   "cart": {
     "eyebrow": "Cart",
@@ -513,7 +514,8 @@
     "shopCta": "Shop shirts",
     "kidsSize": "Size",
     "kidsAge": "Age",
-    "kidsHeight": "Height (cm)"
+    "kidsHeight": "Height (cm)",
+    "kidsWeight": "Weight (kg)"
   },
   "shippingPage": {
     "eyebrow": "Shipping and returns",

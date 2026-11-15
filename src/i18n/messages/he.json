@@ -408,13 +408,13 @@
     "sizeHelperLoose": "אוהבים רפוי יותר? קחו {size}.",
     "sizeHelperUse": "בחרו מידה {size}",
     "kidsAge": "גיל {from}-{to}",
-    "kidsHelperOpen": "לא בטוחים? מצאו מידה לפי גובה או גיל",
+    "kidsHelperOpen": "לא בטוחים? מצאו מידה לפי גובה ומשקל",
     "kidsHelperHeight": "גובה הילד (ס\"מ)",
     "kidsHelperAge": "גיל (שנים)",
-    "kidsHelperOr": "או",
-    "kidsHelperHint": "הגובה נותן את המידה המדויקת ביותר.",
+    "kidsHelperOr": "ו",
+    "kidsHelperHint": "הזינו גובה ומשקל - אם יוצאות שתי מידות, נבחר את הגדולה.",
     "kidsHelperResult": "מידה {size} ({letter}) - בדרך כלל לגיל {from}-{to}",
-    "kidsHelperDetail": "לגובה {minH}-{maxH} ס\"מ. אורך החולצה {length} ס\"מ, המכנסיים {shorts} ס\"מ.",
+    "kidsHelperDetail": "לגובה {minH}-{maxH} ס\"מ ומשקל {minW}-{maxW} ק\"ג בערך. אורך החולצה {length} ס\"מ, המכנסיים {shorts} ס\"מ.",
     "kidsHelperOut": "זה מחוץ למידות הילדים (גיל 3-13) - שלחו לנו הודעה באינסטגרם ונעזור.",
     "kidsKitNote": "ערכת ילדים: חולצה + מכנסיים, גרסת אוהדים.",
     "kitNote": "ערכה מלאה: חולצה + מכנסיים.",
@@ -443,7 +443,8 @@
     "zoomHint": "רחפו להגדלה · לחצו לתצוגה מלאה",
     "galleryPrev": "התמונה הקודמת",
     "galleryNext": "התמונה הבאה",
-    "closeViewer": "סגירה"
+    "closeViewer": "סגירה",
+    "kidsHelperWeight": "משקל (ק\"ג)"
   },
   "cart": {
     "eyebrow": "עגלה",
@@ -513,7 +514,8 @@
     "shopCta": "לחולצות",
     "kidsSize": "מידה",
     "kidsAge": "גיל",
-    "kidsHeight": "גובה (ס\"מ)"
+    "kidsHeight": "גובה (ס\"מ)",
+    "kidsWeight": "משקל (ק\"ג)"
   },
   "shippingPage": {
     "eyebrow": "משלוח והחזרות",

@@ -408,13 +408,13 @@
     "sizeHelperLoose": "بتحب الواسع؟ خذ {size}.",
     "sizeHelperUse": "اختر مقاس {size}",
     "kidsAge": "عمر {from}-{to}",
-    "kidsHelperOpen": "مش متأكد؟ اعرف المقاس حسب الطول أو العمر",
+    "kidsHelperOpen": "مش متأكد؟ اعرف المقاس حسب الطول والوزن",
     "kidsHelperHeight": "طول الولد (سم)",
     "kidsHelperAge": "العمر (سنين)",
-    "kidsHelperOr": "أو",
-    "kidsHelperHint": "الطول بيعطي أدق مقاس.",
+    "kidsHelperOr": "و",
+    "kidsHelperHint": "اكتب الطول والوزن - إذا طلعوا على مقاسين منختار الأكبر.",
     "kidsHelperResult": "مقاس {size} ({letter}) - عادة لعمر {from}-{to}",
-    "kidsHelperDetail": "لطول {minH}-{maxH} سم. طول القميص {length} سم، الشورت {shorts} سم.",
+    "kidsHelperDetail": "لطول {minH}-{maxH} سم ووزن {minW}-{maxW} كغ تقريبًا. طول القميص {length} سم، الشورت {shorts} سم.",
     "kidsHelperOut": "هاد برا مقاسات الأطفال (3-13 سنة) - احكولنا على إنستغرام ومنساعدكم.",
     "kidsKitNote": "طقم أطفال: قميص + شورت، نسخة المشجعين.",
     "kitNote": "طقم كامل: قميص + شورت.",
@@ -443,7 +443,8 @@
     "zoomHint": "مرّر للتكبير · اضغط للعرض الكامل",
     "galleryPrev": "الصورة السابقة",
     "galleryNext": "الصورة التالية",
-    "closeViewer": "إغلاق"
+    "closeViewer": "إغلاق",
+    "kidsHelperWeight": "الوزن (كغ)"
   },
   "cart": {
     "eyebrow": "السلة",
@@ -509,11 +510,12 @@
     "lengthHow": "من أعلى نقطة في الكتف حتى أسفل القميص.",
     "finderTitle": "اعثر على مقاسك",
     "youthTitle": "مقاسات الأطفال",
-    "youthBody": "أطقم الأطفال (قميص + شورت) بمقاسات 16-28، لعمر 3-13 سنة. الأفضل تختاروا حسب طول الولد. ما لقيتو الطقم اللي بدكم إياه بالموقع؟ احكولنا على إنستغرام.",
+    "youthBody": "أطقم الأطفال (قميص + شورت) بمقاسات 16-28، لعمر 3-13 سنة. اختاروا حسب الطول والوزن بالحاسبة تحت. ما لقيتو الطقم اللي بدكم إياه بالموقع؟ احكولنا على إنستغرام.",
     "shopCta": "تسوّق القمصان",
     "kidsSize": "المقاس",
     "kidsAge": "العمر",
-    "kidsHeight": "الطول (سم)"
+    "kidsHeight": "الطول (سم)",
+    "kidsWeight": "الوزن (كغ)"
   },
   "shippingPage": {
     "eyebrow": "الشحن والإرجاع",

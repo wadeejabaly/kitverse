@@ -46,14 +46,19 @@ export const SIZES: AdultSize[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"];
  * Kids kit sizes with the supplier's chart (owner 2026-11-15): letter, age (years) and height (cm).
  * The kids size calculator (KidsSizeHelper) and the size guide read this one table.
  */
-export const KIDS_SIZE_CHART: { size: KidsSize; letter: string; age: [number, number]; height: [number, number]; length: number; halfBust: number; shortsLength: number }[] = [
-  { size: "16", letter: "XXS", age: [3, 4], height: [95, 105], length: 44, halfBust: 35, shortsLength: 32 },
-  { size: "18", letter: "XS", age: [4, 5], height: [105, 115], length: 47, halfBust: 37, shortsLength: 34 },
-  { size: "20", letter: "S", age: [5, 6], height: [115, 125], length: 50, halfBust: 39, shortsLength: 36 },
-  { size: "22", letter: "M", age: [7, 8], height: [125, 135], length: 53, halfBust: 41, shortsLength: 38 },
-  { size: "24", letter: "L", age: [8, 9], height: [135, 145], length: 56, halfBust: 43, shortsLength: 39 },
-  { size: "26", letter: "XL", age: [10, 11], height: [145, 155], length: 59, halfBust: 45, shortsLength: 40 },
-  { size: "28", letter: "2XL", age: [12, 13], height: [155, 165], length: 62, halfBust: 47, shortsLength: 43 },
+/**
+ * `weight` (kg, owner request 2026-11-15: "the calculator based on height and weight") is NOT from the
+ * supplier's chart - it is the usual kids-clothing weight for each height band, an estimate to change
+ * here if the supplier sends real numbers.
+ */
+export const KIDS_SIZE_CHART: { size: KidsSize; letter: string; age: [number, number]; height: [number, number]; weight: [number, number]; length: number; halfBust: number; shortsLength: number }[] = [
+  { size: "16", letter: "XXS", age: [3, 4], height: [95, 105], weight: [14, 17], length: 44, halfBust: 35, shortsLength: 32 },
+  { size: "18", letter: "XS", age: [4, 5], height: [105, 115], weight: [17, 20], length: 47, halfBust: 37, shortsLength: 34 },
+  { size: "20", letter: "S", age: [5, 6], height: [115, 125], weight: [20, 24], length: 50, halfBust: 39, shortsLength: 36 },
+  { size: "22", letter: "M", age: [7, 8], height: [125, 135], weight: [24, 29], length: 53, halfBust: 41, shortsLength: 38 },
+  { size: "24", letter: "L", age: [8, 9], height: [135, 145], weight: [29, 35], length: 56, halfBust: 43, shortsLength: 39 },
+  { size: "26", letter: "XL", age: [10, 11], height: [145, 155], weight: [35, 42], length: 59, halfBust: 45, shortsLength: 40 },
+  { size: "28", letter: "2XL", age: [12, 13], height: [155, 165], weight: [42, 50], length: 62, halfBust: 47, shortsLength: 43 },
 ];
 export const KIDS_SIZES: KidsSize[] = KIDS_SIZE_CHART.map((r) => r.size);
 /** Every size a cart line may carry (adult shirts/kits + kids kits) - the checkout wire check. */
@@ -67,6 +72,24 @@ export function kidsSizeForHeight(heightCm: number): KidsSize | null {
   if (!Number.isFinite(heightCm) || heightCm < KIDS_SIZE_CHART[0].height[0] - 5 || heightCm > KIDS_SIZE_CHART.at(-1)!.height[1] + 5) return null;
   for (const r of KIDS_SIZE_CHART) if (heightCm < r.height[1]) return r.size;
   return KIDS_SIZE_CHART.at(-1)!.size;
+}
+
+/** Kids size from weight (kg): the row whose weight range holds it, the bigger one on a boundary; outside the chart: null. */
+export function kidsSizeForWeight(weightKg: number): KidsSize | null {
+  if (!Number.isFinite(weightKg) || weightKg < KIDS_SIZE_CHART[0].weight[0] - 3 || weightKg > KIDS_SIZE_CHART.at(-1)!.weight[1] + 6) return null;
+  for (const r of KIDS_SIZE_CHART) if (weightKg < r.weight[1]) return r.size;
+  return KIDS_SIZE_CHART.at(-1)!.size;
+}
+
+/**
+ * The calculator (owner request 2026-11-15): height and weight. With both, the BIGGER of the two sizes -
+ * a kit that is a little roomy fits, a tight one doesn't. With one, that one. Null when neither fits the chart.
+ */
+export function kidsSizeFor(heightCm: number | null, weightKg: number | null): KidsSize | null {
+  const h = heightCm != null ? kidsSizeForHeight(heightCm) : null;
+  const w = weightKg != null ? kidsSizeForWeight(weightKg) : null;
+  if (h && w) return KIDS_SIZES.indexOf(h) >= KIDS_SIZES.indexOf(w) ? h : w;
+  return h ?? w;
 }
 
 /** Kids size from age (years) when the height isn't known: the first row whose age range reaches it. */

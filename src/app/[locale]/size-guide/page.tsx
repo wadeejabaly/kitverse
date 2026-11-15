@@ -147,30 +147,35 @@ export default async function SizeGuidePage({
             <SizeHelper />
           </section>
 
-          <section id="kids" className="kv-panel flex scroll-mt-28 gap-4 p-6">
-            <span className="kv-icon-tile">
-              <Icon name="star" />
-            </span>
-            <div>
-              <h2 className="mb-1 text-[16px] font-extrabold">{t("youthTitle")}</h2>
-              <p className="text-[14px] text-ink-soft">{t("youthBody")}</p>
-              {/* kids kits (owner request 2026-11-15): the supplier's chart + the kids calculator */}
-              <div className="mt-3 overflow-x-auto">
-                <table className="kv-table min-w-[420px] text-center text-[13px]">
-                  <thead><tr><th>{t("kidsSize")}</th><th>{t("kidsAge")}</th><th>{t("kidsHeight")}</th></tr></thead>
-                  <tbody>
-                    {KIDS_SIZE_CHART.map((r) => (
-                      <tr key={r.size}>
-                        <td className="latin tabular font-bold">{r.size} <span className="font-normal text-ink-soft">({r.letter})</span></td>
-                        <td className="tabular">{r.age[0]}-{r.age[1]}</td>
-                        <td className="tabular">{r.height[0]}-{r.height[1]}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* kids kits (owner requests 2026-11-15): the supplier's chart + the height & weight calculator.
+              Header row (icon + text) then the table and calculator at the card's full width, so neither
+              can run out of the card on a narrow column. */}
+          <section id="kids" className="kv-panel scroll-mt-28 p-6">
+            <div className="flex gap-4">
+              <span className="kv-icon-tile">
+                <Icon name="star" />
+              </span>
+              <div className="min-w-0">
+                <h2 className="mb-1 text-[16px] font-extrabold">{t("youthTitle")}</h2>
+                <p className="text-[14px] text-ink-soft">{t("youthBody")}</p>
               </div>
-              <KidsSizeHelper startOpen />
             </div>
+            <div className="mt-4 overflow-x-auto">
+              <table className="kv-table w-full text-center text-[13px]">
+                <thead><tr><th>{t("kidsSize")}</th><th>{t("kidsAge")}</th><th>{t("kidsHeight")}</th><th>{t("kidsWeight")}</th></tr></thead>
+                <tbody>
+                  {KIDS_SIZE_CHART.map((r) => (
+                    <tr key={r.size}>
+                      <td className="latin tabular whitespace-nowrap font-bold">{r.size} <span className="font-normal text-ink-soft">({r.letter})</span></td>
+                      <td className="tabular whitespace-nowrap">{r.age[0]}-{r.age[1]}</td>
+                      <td className="tabular whitespace-nowrap">{r.height[0]}-{r.height[1]}</td>
+                      <td className="tabular whitespace-nowrap">{r.weight[0]}-{r.weight[1]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <KidsSizeHelper startOpen />
           </section>
 
           <Link href="/shop" className="btn w-full">

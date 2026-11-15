@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KIDS_SIZES, kidsSizeForAge, kidsSizeForHeight, priceFor } from "./pricing";
+import { KIDS_SIZES, kidsSizeFor, kidsSizeForAge, kidsSizeForHeight, kidsSizeForWeight, priceFor } from "./pricing";
 import { shirtNames } from "@/lib/catalog/shirt-names";
 import { quote } from "@/lib/pricing/engine";
 import list from "./price-list.json";
@@ -56,5 +56,23 @@ describe("kit names", () => {
     expect(shirtNames({ team: rm, season: "2026/27", kit: "Home", retro: false, type: "kit" })).toEqual({
       en: "Real Madrid 2026/27 Home Kit", ar: "طقم ريال مدريد 2026/27 الأساسي", he: "ערכת בית ריאל מדריד 2026/27", handle: "real-madrid-2026-27-home-kit" });
     expect(shirtNames({ team: rm, season: "2026/27", kit: "Away", retro: false, type: "kids_kit" }).handle).toBe("real-madrid-2026-27-away-kids-kit");
+  });
+});
+
+describe("kids size from height and weight (owner request 2026-11-15)", () => {
+  it("weight alone", () => {
+    expect(kidsSizeForWeight(15)).toBe("16");
+    expect(kidsSizeForWeight(26)).toBe("22");
+    expect(kidsSizeForWeight(5)).toBeNull();
+  });
+  it("both: the bigger of the two sizes", () => {
+    expect(kidsSizeFor(120, 22)).toBe("20"); // both say 20
+    expect(kidsSizeFor(120, 31)).toBe("24"); // heavy for the height -> bigger
+    expect(kidsSizeFor(150, 20)).toBe("26"); // tall and light -> by height
+  });
+  it("one of them only, or nothing usable", () => {
+    expect(kidsSizeFor(130, null)).toBe("22");
+    expect(kidsSizeFor(null, 40)).toBe("26");
+    expect(kidsSizeFor(null, null)).toBeNull();
   });
 });
