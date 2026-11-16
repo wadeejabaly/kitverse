@@ -21,6 +21,7 @@ import { CityCombobox } from "@/components/checkout/CityCombobox";
 import type { TownOption } from "@/data/localities";
 import { trackCheckoutStart } from "@/lib/analytics/track";
 import { pixel } from "@/lib/analytics/meta-pixel";
+import { canCombine, codeAmounts } from "@/lib/discount-rules";
 import { BitMark } from "@/components/checkout/BitMark";
 import { AccessoryPicks } from "@/components/checkout/AccessoryPicks";
 import type { ManualMethod } from "@/lib/manual-pay-core";
@@ -106,7 +107,7 @@ const MAX_DISCOUNT_CODES = 5;
  *  One that checks out but doesn't yet meet its own minimum order stays in
  *  this list rather than being dropped, so it kicks in on its own the
  *  moment the cart grows enough — see discountQualifies below. */
-type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean; appliesTo: "order" | "shirts" };
+type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean; appliesTo: "order" | "shirts"; combinesWithSale?: boolean; isSale?: boolean };
 
 /** What the discount-code input is doing right now. */
 type DiscountCheck =
@@ -269,7 +270,7 @@ export function CheckoutView({
         body: JSON.stringify({ code }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown; appliesTo?: unknown }
+        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown; appliesTo?: unknown; combinesWithSale?: unknown; isSale?: unknown }
         | null;
       if (data?.ok && (data.kind === "percent" || data.kind === "fixed") && typeof data.value === "number") {
         const next: AppliedDiscount = {
@@ -278,12 +279,14 @@ export function CheckoutView({
           stackable: data.stackable === true,
           firstOrderOnly: data.firstOrderOnly === true,
           appliesTo: data.appliesTo === "shirts" ? "shirts" : "order",
+          combinesWithSale: data.combinesWithSale === true,
+          isSale: data.isSale === true,
         };
         // Same rule the server enforces (src/lib/discounts.ts
         // codesCanCombine): more than one code only works when EVERY one of
         // them is marked combinable.
         const combined = [...appliedDiscounts, next];
-        if (combined.length > 1 && !combined.every((d) => d.stackable)) {
+        if (!canCombine(combined)) {
           setDiscountCheck({ status: "invalid", reason: "not_stackable" });
           return;
         }
@@ -424,11 +427,9 @@ export function CheckoutView({
   // a "shirts" code (owner request 2026-11-15) is taken off the shirts' and kits' own price only - with the
   // 3XL/4XL size price, never names, patches, gift boxes or accessories - same as the server (discountAmount)
   const shirtsBase = round2(lines.reduce((s, line) => s + priceFor(line.product.season, line.item.size, line.item.version, line.item.sleeve, line.product.set, !!line.item.bundle && okBundles.has(line.item.bundle)) * line.item.qty, 0));
-  const perCodeAmount = (d: AppliedDiscount) => {
-    const base = d.appliesTo === "shirts" ? Math.min(shirtsBase, itemsSubtotal) : itemsSubtotal;
-    return round2(Math.min(base, d.kind === "percent" ? (base * d.value) / 100 : d.value));
-  };
-  const discountAmount = Math.min(itemsSubtotal, round2(qualifyingDiscounts.reduce((sum, d) => sum + perCodeAmount(d), 0)));
+  // owner 2026-11-16: fixed-₪ codes first, percent codes on what is left - same as the server (codeAmounts)
+  const codeAmountList = codeAmounts(qualifyingDiscounts, itemsSubtotal, shirtsBase, round2);
+  const discountAmount = Math.min(itemsSubtotal, round2(codeAmountList.reduce((s, a) => s + a, 0)));
   // rounded UP to a whole shekel, like the order itself (owner request 2026-11-15)
   const grandTotal = roundUpShekel(round2(totals.total - dealSaving - discountAmount));
 
@@ -963,10 +964,10 @@ export function CheckoutView({
               </span>
             </Row>
           ))}
-          {qualifyingDiscounts.map((d) => (
+          {qualifyingDiscounts.map((d, i) => (
             <Row key={d.code} label={t("discountRow", { code: d.code })}>
               <span dir="ltr">
-                -<Price value={perCodeAmount(d)} />
+                -<Price value={codeAmountList[i]} />
               </span>
             </Row>
           ))}

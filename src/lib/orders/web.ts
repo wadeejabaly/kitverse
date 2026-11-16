@@ -12,7 +12,8 @@ import { KIDS_KIT_FLAG, isOutOfStock } from "@/lib/catalog/stock";
 import { KIDS_SIZES, SIZES } from "@/data/pricing";
 import { sanitizePatches } from "../product";
 import { resolveTown } from "../localities";
-import { findActiveDiscountCode, discountAmount, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, shirtsSubtotal, type DiscountCode } from "../discounts";
+import { codeAmounts } from "../discount-rules";
+import { findActiveDiscountCode, recordDiscountCodeUse, codesCanCombine, hasEarlierOrder, normalizeCode, shirtsSubtotal, type DiscountCode } from "../discounts";
 
 /**
  * Website checkout -> the same orders table, pricing engine and admin as Instagram orders.
@@ -166,8 +167,14 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
         await db().from("orders").update({ status: "cancelled", notes: "checkout cancelled: discount code minimum order not met" }).eq("id", order.id);
         return { ok: false, code: "invalid_discount_code", detail: "min_order" };
       }
-      for (const d of discounts) {
-        const amount = discountAmount(d, q.itemsTotal, shirtsSubtotal(q));
+      // owner 2026-11-16: fixed-₪ codes come off first, percent codes on what is left (src/lib/discount-rules.ts)
+      const amounts = codeAmounts(
+        discounts.map((d) => ({ kind: d.kind, value: d.value, appliesTo: d.applies_to === "shirts" ? "shirts" : "order", stackable: d.stackable })),
+        q.itemsTotal,
+        shirtsSubtotal(q),
+      );
+      for (const [i, d] of discounts.entries()) {
+        const amount = amounts[i];
         if (amount <= 0) continue;
         // cash orders claim the use now; online ones only when the payment settles (settleOnlinePayment)
         if (opts.claimCodes && !(await recordDiscountCodeUse(d.code))) {

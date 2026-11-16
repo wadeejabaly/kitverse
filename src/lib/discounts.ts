@@ -1,4 +1,5 @@
 import "server-only";
+import { canCombine, isSaleRow } from "./discount-rules";
 import { db } from "./db";
 
 /**
@@ -35,6 +36,8 @@ export type DiscountCode = {
   first_order_only: boolean;
   /** Owner request 2026-11-15: what the code is taken off - "order" (items total) or "shirts" (shirt/kit price only). */
   applies_to?: "order" | "shirts";
+  /** Owner request 2026-11-16: may be used together with the running dated sale code (and only that one). */
+  combines_with_sale?: boolean;
   created_at: string;
 };
 
@@ -64,8 +67,12 @@ export async function findActiveDiscountCode(raw: string): Promise<DiscountLooku
  * of them is marked stackable - one exclusive code in the mix means the
  * shopper has to pick just that one.
  */
-export function codesCanCombine(rows: Pick<DiscountCode, "stackable">[]): boolean {
-  return rows.length <= 1 || rows.every((r) => r.stackable);
+export function codesCanCombine(rows: (Pick<DiscountCode, "stackable"> & Partial<Pick<DiscountCode, "combines_with_sale" | "starts_at" | "ends_at" | "first_order_only" | "max_uses">>)[]): boolean {
+  return canCombine(rows.map((r) => ({
+    stackable: r.stackable,
+    combinesWithSale: r.combines_with_sale === true,
+    isSale: isSaleRow({ starts_at: r.starts_at ?? null, ends_at: r.ends_at ?? null, first_order_only: r.first_order_only ?? false, max_uses: r.max_uses ?? null }),
+  })));
 }
 
 /**

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { findActiveDiscountCode } from "@/lib/discounts";
+import { isSaleRow } from "@/lib/discount-rules";
 
 const Body = z.object({ code: z.string().trim().min(1).max(40) });
 
@@ -36,5 +37,8 @@ export async function POST(req: NextRequest) {
     firstOrderOnly: first_order_only === true,
     // owner 2026-11-15: a "shirts" code is only taken off the shirts' and kits' own price
     appliesTo: applies_to === "shirts" ? "shirts" : "order",
+    // owner 2026-11-16: the riddle coupon may join the running sale code (src/lib/discount-rules.ts)
+    combinesWithSale: lookup.row.combines_with_sale === true,
+    isSale: isSaleRow(lookup.row),
   });
 }
