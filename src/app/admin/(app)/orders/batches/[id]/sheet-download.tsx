@@ -1,35 +1,23 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Download } from "lucide-react";
 import { button, cx } from "../../../../ui";
+import type { SheetLang } from "@/lib/orders/supplier-sheet";
 
-type Lang = "en" | "zh";
-const KEY = "kv_sheet_lang";
-const LABEL: Record<Lang, string> = { en: "English", zh: "中文" };
+const LABEL: Record<SheetLang, string> = { en: "English", zh: "中文" };
 
-/** "Download Excel" with an English / 中文 switch (owner request 2026-11-17); the last choice is remembered. */
-export function SheetDownload({ batchId }: { batchId: string }) {
-  const [lang, setLang] = useState<Lang>("en");
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(KEY) === "zh") setLang("zh"); // eslint-disable-line react-hooks/set-state-in-effect
-    } catch {}
-  }, []);
-  const pick = (l: Lang) => {
-    setLang(l);
-    try {
-      localStorage.setItem(KEY, l);
-    } catch {}
-  };
+/**
+ * English / 中文 switch (owner requests 2026-11-17): changes the batch table on this page AND the Excel download,
+ * so the owner can screenshot or download it in Chinese for the supplier. Kept in the URL (?lang=zh).
+ */
+export function SheetDownload({ batchId, lang }: { batchId: string; lang: SheetLang }) {
   return (
     <span className="inline-flex items-center gap-2">
       <span className="flex gap-1 rounded-lg p-0.5 text-xs ring-1 ring-inset ring-line-2">
-        {(Object.keys(LABEL) as Lang[]).map((l) => (
-          <button key={l} type="button" onClick={() => pick(l)} aria-pressed={l === lang}
+        {(Object.keys(LABEL) as SheetLang[]).map((l) => (
+          <Link key={l} href={`/admin/orders/batches/${batchId}${l === "zh" ? "?lang=zh" : ""}`} replace scroll={false} aria-current={l === lang ? "true" : undefined}
             className={cx("rounded-md px-2 py-1", l === lang ? "bg-raised font-semibold text-ink" : "text-muted hover:text-ink")}>
             {LABEL[l]}
-          </button>
+          </Link>
         ))}
       </span>
       <a href={`/admin/orders/batches/${batchId}/xlsx${lang === "zh" ? "?lang=zh" : ""}`} className={button.primary}>

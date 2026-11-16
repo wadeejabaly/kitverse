@@ -47,6 +47,116 @@ export function patchSupplierNameZh(id: string, leagueId: string | null): string
   }
 }
 
+/** Team names in Chinese for the on-screen batch table (owner request 2026-11-17); an unknown team stays in English. */
+const ZH_TEAM: Record<string, string> = {
+  "AC Milan": "AC米兰",
+  "AS Monaco": "摩纳哥",
+  "AS Roma": "罗马",
+  "Algeria": "阿尔及利亚",
+  "Argentina": "阿根廷",
+  "Arsenal": "阿森纳",
+  "Aston Villa": "阿斯顿维拉",
+  "Atalanta": "亚特兰大",
+  "Athletic Bilbao": "毕尔巴鄂竞技",
+  "Atlético Madrid": "马德里竞技",
+  "Australia": "澳大利亚",
+  "Austria": "奥地利",
+  "Barcelona": "巴塞罗那",
+  "Bayer Leverkusen": "勒沃库森",
+  "Bayern Munich": "拜仁慕尼黑",
+  "Belgium": "比利时",
+  "Bologna": "博洛尼亚",
+  "Borussia Dortmund": "多特蒙德",
+  "Borussia Mönchengladbach": "门兴格拉德巴赫",
+  "Brazil": "巴西",
+  "Cameroon": "喀麦隆",
+  "Canada": "加拿大",
+  "Celta Vigo": "塞尔塔",
+  "Chelsea": "切尔西",
+  "Colombia": "哥伦比亚",
+  "Costa Rica": "哥斯达黎加",
+  "Croatia": "克罗地亚",
+  "Czechia": "捷克",
+  "Denmark": "丹麦",
+  "Ecuador": "厄瓜多尔",
+  "Egypt": "埃及",
+  "Eintracht Frankfurt": "法兰克福",
+  "England": "英格兰",
+  "Everton": "埃弗顿",
+  "Fiorentina": "佛罗伦萨",
+  "France": "法国",
+  "Germany": "德国",
+  "Ghana": "加纳",
+  "Hamburger SV": "汉堡",
+  "Inter Milan": "国际米兰",
+  "Iran": "伊朗",
+  "Iraq": "伊拉克",
+  "Ivory Coast": "科特迪瓦",
+  "Japan": "日本",
+  "Jordan": "约旦",
+  "Juventus": "尤文图斯",
+  "Lazio": "拉齐奥",
+  "Lens": "朗斯",
+  "Lille": "里尔",
+  "Liverpool": "利物浦",
+  "Manchester City": "曼城",
+  "Manchester United": "曼联",
+  "Mexico": "墨西哥",
+  "Morocco": "摩洛哥",
+  "Nantes": "南特",
+  "Napoli": "那不勒斯",
+  "Netherlands": "荷兰",
+  "Newcastle United": "纽卡斯尔",
+  "Nice": "尼斯",
+  "Norway": "挪威",
+  "Olympique Lyonnais": "里昂",
+  "Olympique Marseille": "马赛",
+  "Paraguay": "巴拉圭",
+  "Paris Saint-Germain": "巴黎圣日耳曼",
+  "Poland": "波兰",
+  "Portugal": "葡萄牙",
+  "Qatar": "卡塔尔",
+  "RB Leipzig": "莱比锡",
+  "Real Betis": "皇家贝蒂斯",
+  "Real Madrid": "皇家马德里",
+  "Real Sociedad": "皇家社会",
+  "Rennes": "雷恩",
+  "Saint-Étienne": "圣埃蒂安",
+  "Saudi Arabia": "沙特阿拉伯",
+  "Schalke 04": "沙尔克04",
+  "Scotland": "苏格兰",
+  "Senegal": "塞内加尔",
+  "Serbia": "塞尔维亚",
+  "Sevilla": "塞维利亚",
+  "South Africa": "南非",
+  "South Korea": "韩国",
+  "Spain": "西班牙",
+  "Sweden": "瑞典",
+  "Switzerland": "瑞士",
+  "Torino": "都灵",
+  "Tottenham Hotspur": "热刺",
+  "Tunisia": "突尼斯",
+  "Turkey": "土耳其",
+  "USA": "美国",
+  "Uruguay": "乌拉圭",
+  "Valencia": "瓦伦西亚",
+  "VfB Stuttgart": "斯图加特",
+  "Villarreal": "比利亚雷亚尔",
+  "Wales": "威尔士",
+  "Werder Bremen": "不来梅",
+  "West Ham United": "西汉姆联",
+  "Al Nassr": "利雅得胜利",
+  "Como": "科莫",
+  "Ajax": "阿贾克斯",
+};
+const ZH_KIT: Record<string, string> = { Home: "主场", Away: "客场", Third: "第三", Fourth: "第四" };
+
+/** "巴塞罗那 2026/27 客场球衣" (kits: 套装 = shirt + shorts). Falls back to the English title when the line has no team/kit. */
+export function shirtTitleZh(l: Pick<BatchLine, "team" | "season" | "kit" | "title" | "full_kit">): string {
+  if (!l.team || !ZH_KIT[l.kit]) return l.title;
+  return `${ZH_TEAM[l.team] ?? l.team} ${l.season} ${ZH_KIT[l.kit]}${l.full_kit ? "套装" : "球衣"}`.replace(/\s+/g, " ");
+}
+
 const HEADERS: Record<SheetLang, { photo: string; pic: string; version: string; size: string; print: string; patches: string; order: string }> = {
   en: { photo: "Photo", pic: "Pic", version: "Version", size: "Size", print: "Name#Number", patches: "Patches", order: "#" },
   zh: { photo: "图片", pic: "图", version: "版本", size: "尺码", print: "名字#号码", patches: "臂章", order: "订单 #" },
@@ -135,9 +245,9 @@ export async function buildSupplierSheet(lines: BatchLine[], origin: string, lan
         const at = row.number;
         placements.push(picture(l.photo).then((img) => {
           if (img !== null) ws.addImage(img, { tl: { col: 0.06, row: at - 1 + 0.06 }, ext: { width: PX, height: PX }, editAs: "oneCell" });
-          else ws.getCell(at, 1).value = l.title;
+          else ws.getCell(at, 1).value = lang === "zh" ? shirtTitleZh(l) : l.title;
         }));
-      } else row.getCell(1).value = l.title;
+      } else row.getCell(1).value = lang === "zh" ? shirtTitleZh(l) : l.title;
     }
   }
   await Promise.all(placements);

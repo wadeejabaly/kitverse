@@ -3,20 +3,24 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Check, PackageCheck, RefreshCw, Truck } from "lucide-react";
 import { db } from "@/lib/db";
 import { batchOrderIds, batchLines } from "@/lib/orders/admin";
-import { patchesText } from "@/lib/orders/supplier-sheet";
+import { patchesText, sheetLang, shirtTitleZh, versionText } from "@/lib/orders/supplier-sheet";
 import { checkTrackingNow, markBatchSent, markShipmentReceived } from "../../../../orders-actions";
 import { STATUS_LABEL } from "@/lib/orders/admin";
 import { trackingEnabled } from "@/lib/tracking/track17";
 import { DELIVERED_AFTER_DAYS, type TrackEvent } from "@/lib/tracking/stage";
 import { TrackingNumberForm } from "./tracking";
 import { SheetDownload } from "./sheet-download";
-import { PageHeader, Card, Badge, SectionTitle, button, type Tone } from "../../../../ui";
+import { PageHeader, Card, Badge, SectionTitle, button, cx, type Tone } from "../../../../ui";
 import { SubmitButton } from "../../../../submit-button";
 
 export const dynamic = "force-dynamic";
 
-export default async function Batch({ params }: PageProps<"/admin/orders/batches/[id]">) {
+export default async function Batch({ params, searchParams }: PageProps<"/admin/orders/batches/[id]">) {
   const { id } = await params;
+  const sp = await searchParams;
+  const lang = sheetLang(typeof sp.lang === "string" ? sp.lang : null); // English / 中文 switch (owner 2026-11-17)
+  const zh = lang === "zh";
+  const H = zh ? ZH_HEAD : EN_HEAD;
   const b = (await db().from("supplier_batches").select("id,status,sent_at,tracking_number,tracking_status,tracking_events,tracking_checked_at,tracking_error,shipped_at,received_at").eq("id", id).maybeSingle()).data as
     { id: string; status: string; sent_at: string | null; tracking_number: string | null; tracking_status: string | null; tracking_events: TrackEvent[] | null; tracking_checked_at: string | null; tracking_error: string | null; shipped_at: string | null; received_at: string | null } | null;
   if (!b) notFound();
@@ -32,7 +36,7 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
       <Link href="/admin/orders/batches" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Batches</Link>
       <PageHeader eyebrow="Sales" title="Supplier batch" subtitle={`${lines.length} lines from ${orderIds.length} order${orderIds.length === 1 ? "" : "s"}. Download the Excel (shirt photo + 3 empty cells per shirt for your own pictures), add your pictures, send it on WhatsApp, then mark it sent.`}
         actions={<>
-          <SheetDownload batchId={id} />
+          <SheetDownload batchId={id} lang={lang} />
           <a href={`/admin/orders/batches/${id}/csv`} className={button.ghost}>CSV</a>
           {b.status !== "sent" ? <form action={markBatchSent}><input type="hidden" name="batchId" value={id} /><SubmitButton bare className={button.ghost}><Check className="h-4 w-4" /> Mark as sent</SubmitButton></form> : <Badge tone="green">Sent</Badge>}
         </>} />
@@ -77,30 +81,53 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
         </div>
       </Card>
       <Card padded={false} className="overflow-x-auto">
-        <table className="w-full min-w-[560px] text-sm">
+        <table className="w-full min-w-[720px] text-sm">
           <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
-            <tr><th className="px-4 py-3 font-medium">Order</th><th className="px-4 py-3 font-medium">Photo</th><th className="px-4 py-3 font-medium">Shirt</th><th className="px-4 py-3 font-medium">Version</th><th className="px-4 py-3 font-medium">Size</th><th className="px-4 py-3 font-medium">Print</th></tr>
+            <tr>{H.map((h) => <th key={h} className="px-4 py-3 font-semibold">{h}</th>)}</tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {lines.map((l, i) => (
-              <tr key={i}>
-                <td className="px-4 py-3 tabular-nums">#{l.order_number}</td>
-                <td className="px-4 py-2">{l.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail; links to the full photo so it can be saved for WhatsApp
-                  <a href={l.photo} target="_blank" rel="noreferrer"><img src={l.photo} alt="" className="h-14 w-14 rounded-md bg-white object-contain" /></a>
-                ) : <span className="text-muted">-</span>}</td>
-                <td className="px-4 py-3">{l.title}</td>
-                <td className="px-4 py-3 text-muted">{l.version} · {l.sleeve}</td>
-                <td className="px-4 py-3 font-medium">{l.size}{l.qty > 1 ? ` ×${l.qty}` : ""}</td>
-                <td className="px-4 py-3">{[l.print_name, l.print_number].filter(Boolean).join(" ") || <span className="text-muted">-</span>}{l.patch_ids.length || l.box ? <span className="text-muted"> · {patchesText(l)}</span> : null}</td>
-              </tr>
-            ))}
+            {lines.map((l, i) => {
+              const version = versionText({ version: l.version, sleeve: "Short", audience: "adult" }, lang);
+              const extra = versionText({ version: "", sleeve: "Short", audience: l.audience, full_kit: l.full_kit }, lang);
+              const long = l.sleeve === "Long";
+              const print = [l.print_name, l.print_number].filter(Boolean).join(" ");
+              const patches = l.patch_ids.length || l.box ? patchesText(l, lang).split(" + ") : [];
+              return (
+                <tr key={i} className="align-middle">
+                  <td className="px-4 py-4 text-base font-bold tabular-nums text-ink">{zh ? "订单 " : ""}#{l.order_number}</td>
+                  <td className="px-4 py-3">{l.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail; links to the full photo so it can be saved for WhatsApp
+                    <a href={l.photo} target="_blank" rel="noreferrer"><img src={l.photo} alt="" className="h-24 w-24 rounded-lg bg-white object-contain ring-1 ring-line-2" /></a>
+                  ) : <span className="text-muted">-</span>}</td>
+                  <td className="px-4 py-4 text-base font-semibold leading-snug text-ink">{zh ? shirtTitleZh(l) : l.title}</td>
+                  <td className="px-4 py-4">
+                    <div className="flex flex-wrap gap-1.5">
+                      <span className={cx("rounded-md px-2.5 py-1 text-sm font-bold", l.version === "Player" ? "bg-pitch-fill text-white" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{version}</span>
+                      <span className={cx("rounded-md px-2.5 py-1 text-sm font-bold", long ? "bg-gold text-[#0a1024]" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{zh ? (long ? "长袖" : "短袖") : long ? "Long sleeve" : "Short sleeve"}</span>
+                      {extra ? <span className="rounded-md bg-green px-2.5 py-1 text-sm font-bold text-white">{extra}</span> : null}
+                    </div>
+                  </td>
+                  <td className="px-4 py-4"><span className="inline-block min-w-12 rounded-lg bg-ink px-3 py-1.5 text-center text-xl font-extrabold text-paper">{l.size}</span>{l.qty > 1 ? <span className="ms-2 text-lg font-extrabold text-gold">×{l.qty}</span> : null}</td>
+                  <td className="px-4 py-4">
+                    {print ? <div className="text-lg font-extrabold tracking-wide text-gold">{print}</div> : <span className="text-muted">{zh ? "无印字" : "No print"}</span>}
+                    {patches.length ? (
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {patches.map((p, j) => <span key={j} className="rounded-md bg-raised px-2 py-0.5 text-sm font-semibold text-ink ring-1 ring-inset ring-line-2">{p}</span>)}
+                      </div>
+                    ) : null}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Card>
     </>
   );
 }
+
+const EN_HEAD = ["Order", "Photo", "Shirt", "Version", "Size", "Print"];
+const ZH_HEAD = ["订单", "图片", "球衣", "版本", "尺码", "印字 / 臂章"];
 
 const TRACK_LABEL: Record<string, string> = {
   NotFound: "Not found yet", InfoReceived: "Label created", InTransit: "In transit", Expired: "Expired", AvailableForPickup: "At pickup point",
