@@ -62,6 +62,14 @@ export function LanguagePicker() {
       if (saved !== locale && external) window.location.replace(hrefFor(saved));
       return;
     }
+    // Since 2026-11-16 the first visit is already sent to the phone's language by src/proxy.ts (which
+    // sets NEXT_LOCALE). Asking again on top of that blocked the whole page for ad visitors (78% left
+    // after one page), so a visitor routed that way just keeps the language they landed in; the
+    // header switch still changes it.
+    if (/(?:^|;\s*)NEXT_LOCALE=/.test(document.cookie)) {
+      rememberLocale(locale);
+      return;
+    }
     let timer = 0;
     const tryOpen = () => {
       if (introBusy()) { timer = window.setTimeout(tryOpen, 500); return; }
