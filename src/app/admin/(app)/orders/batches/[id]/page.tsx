@@ -104,7 +104,7 @@ export default async function Batch({ params, searchParams }: PageProps<"/admin/
                     <div className="flex flex-wrap gap-1">
                       <span className={cx("rounded px-1.5 py-0.5 text-xs font-semibold", l.version === "Player" ? "bg-pitch-fill text-white" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{version}</span>
                       <span className={cx("rounded px-1.5 py-0.5 text-xs font-semibold", long ? "bg-gold text-[#0a1024]" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{zh ? (long ? "长袖" : "短袖") : long ? "Long sleeve" : "Short sleeve"}</span>
-                      {extra ? <span className="rounded-md bg-green px-2.5 py-1 text-sm font-bold text-white">{extra}</span> : null}
+                      {extra ? <span className="rounded bg-green px-1.5 py-0.5 text-xs font-semibold text-white">{extra}</span> : null}
                     </div>
                   </td>
                   <td className="px-4 py-3"><span className="inline-block min-w-8 rounded-md bg-ink px-2 py-0.5 text-center text-sm font-bold text-paper">{l.size}</span>{l.qty > 1 ? <span className="ms-1.5 font-bold text-gold">×{l.qty}</span> : null}</td>
