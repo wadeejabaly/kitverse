@@ -9,5 +9,9 @@ export function accessoryLabel(t: T, a: Labelled, locale: string): string {
     const variant = accessoryVariant(a, locale);
     return variant ? t("scarfTitle", { team, variant }) : t("scarfTitleOnly", { team });
   }
+  if (a.category === "phone_case") {
+    const variant = accessoryVariant(a, locale);
+    return t("phoneCaseTitle", { team, variant: variant ?? "" });
+  }
   return t("keychainTitle", { team });
 }

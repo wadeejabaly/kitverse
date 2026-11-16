@@ -51,6 +51,7 @@ export interface Costs {
   giftBox: number;
   keychain: number;
   scarf: number;
+  phoneCase: number;
   /** what the courier charges to deliver one order, north zone / every other zone */
   deliveryNorth: number;
   deliveryOther: number;
@@ -61,12 +62,12 @@ export interface Costs {
 /** Fields priced by the supplier (converted with usdRate when supplierCurrency is USD). */
 export const SUPPLIER_FIELDS = ["shirtFan", "shirtPlayer", "shirtRetro", "longSleeveExtra", "bigSizeExtra", "kidsSet", "adultSet", "nameNumber", "patch", "supplierShippingPerShirt"] as const;
 /** Fields always in shekels. */
-export const ILS_FIELDS = ["giftBox", "scarf", "keychain", "deliveryNorth", "deliveryOther"] as const;
+export const ILS_FIELDS = ["giftBox", "scarf", "keychain", "phoneCase", "deliveryNorth", "deliveryOther"] as const;
 
 export const EMPTY_COSTS: Costs = {
   supplierCurrency: "ILS", usdRate: 0,
   shirtFan: 0, shirtPlayer: 0, shirtRetro: 0, longSleeveExtra: 0, bigSizeExtra: 0, kidsSet: 0, adultSet: 0, nameNumber: 0, patch: 0, supplierShippingPerShirt: 0,
-  giftBox: 0, keychain: 0, scarf: 0, deliveryNorth: 0, deliveryOther: 0,
+  giftBox: 0, keychain: 0, scarf: 0, phoneCase: 0, deliveryNorth: 0, deliveryOther: 0,
   fees: { cod: { pct: 0, fixed: 0 }, bit_personal: { pct: 0, fixed: 0 }, paypal_me: { pct: 0, fixed: 0 }, paypal: { pct: 0, fixed: 0 }, bit: { pct: 0, fixed: 0 } },
 };
 
@@ -147,7 +148,7 @@ export function orderProfit(o: OrderForProfit, c: Costs): OrderProfit {
     if (it.box) extrasCost += q * c.giftBox;
   }
   extrasCost += Math.max(0, o.gift_boxes) * c.giftBox;
-  for (const a of o.accessories) extrasCost += Math.max(0, a.qty) * (a.category === "scarf" ? c.scarf : a.category === "keychain" ? c.keychain : 0);
+  for (const a of o.accessories) extrasCost += Math.max(0, a.qty) * (a.category === "scarf" ? c.scarf : a.category === "keychain" ? c.keychain : a.category === "phone_case" ? c.phoneCase : 0);
   const supplierShipping = shirts * sup(c.supplierShippingPerShirt);
   const delivery = o.zone === "north" ? c.deliveryNorth : c.deliveryOther;
   const fee = c.fees[(o.payment_method ?? "cod") as PayMethod] ?? { pct: 0, fixed: 0 };

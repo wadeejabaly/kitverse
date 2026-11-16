@@ -45,7 +45,7 @@ export function getOrderableAccessories(): Accessory[] {
   return getVisibleAccessories().filter(isInStock);
 }
 
-/** Every visible accessory in one category ("keychain" or "scarf"). */
+/** Every visible accessory in one category ("keychain", "scarf" or "phone_case"). */
 export function accessoriesByCategory(category: Accessory["category"]): Accessory[] {
   // in-stock first (stable), so out-of-stock designs sit at the end of the grid
   const list = getVisibleAccessories().filter((a) => a.category === category);
@@ -64,6 +64,7 @@ export function keychainForTeam(teamSlug: string): Accessory | undefined {
 
 /** The page an accessory lives on: keychains by team slug, scarves by their own handle (a team has several). */
 export function accessoryHref(a: { category: string; handle: string; team: string }): string {
+  if (a.category === "phone_case") return `/accessories/phone-cases/${a.handle}`;
   return a.category === "scarf" ? `/accessories/scarves/${a.handle}` : `/accessories/keychains/${slugify(a.team)}`;
 }
 

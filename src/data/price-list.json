@@ -75,6 +75,14 @@
         "ends_at": "2026-11-10T22:00:00.000Z"
       },
       "bundle_price": 45
+    },
+    {
+      "id": "phone_case",
+      "per": "order",
+      "price": 45,
+      "source": "website",
+      "name_ar": "كفر موبايل",
+      "name_en": "Phone case"
     }
   ],
   "groups": [

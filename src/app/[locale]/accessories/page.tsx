@@ -39,6 +39,7 @@ export default async function AccessoriesPage({
 
   const keychains = accessoriesByCategory("keychain");
   const scarves = accessoriesByCategory("scarf");
+  const cases = accessoriesByCategory("phone_case");
 
   return (
     <Wrap>
@@ -91,6 +92,26 @@ export default async function AccessoriesPage({
                 {t("count", { count: scarves.length, countText: String(scarves.length) })}
               </span>
               <span className="kv-pcard-title text-[17px]">{t("scarvesLabel")}</span>
+            </span>
+          </Link>
+        ) : null}
+        {cases.length ? (
+          <Link href="/accessories/phone-cases" className="kv-pcard group col-span-2 sm:col-span-1">
+            <span className="kv-pcard-media">
+              <Image
+                src={cases[0].image}
+                alt=""
+                width={600}
+                height={600}
+                sizes="(max-width: 640px) 100vw, 300px"
+                className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.05]"
+              />
+            </span>
+            <span className="kv-pcard-body">
+              <span className="kv-pcard-team">
+                {t("count", { count: cases.length, countText: String(cases.length) })}
+              </span>
+              <span className="kv-pcard-title text-[17px]">{t("phoneCasesLabel")}</span>
             </span>
           </Link>
         ) : null}

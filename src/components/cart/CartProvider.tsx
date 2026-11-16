@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { ALL_SIZES, GIFT_BOX_MAX_QTY, SLEEVES, VERSIONS } from "@/data/pricing";
+import { isPhoneModel } from "@/data/phone-models";
 import type { AccessoryCartItem, CartItem, JerseyCartItem, PatchId, Sleeve, Size, Version } from "@/data/types";
 import { NAME_NUMBER_MAX, sanitizeNameNumber } from "@/lib/product";
 import { PATCHES } from "@/lib/orders/rules";
@@ -73,7 +74,7 @@ const CartContext = createContext<CartContextValue | null>(null);
  * same keychain twice just grows its qty.
  */
 export function lineKey(item: CartItem): string {
-  if (item.kind === "accessory") return `accessory|${item.handle}${item.bundle ? `|${item.bundle}` : ""}`;
+  if (item.kind === "accessory") return `accessory|${item.handle}${item.bundle ? `|${item.bundle}` : ""}${item.model ? `|m:${item.model}` : ""}`;
   const patches = [...item.patches].sort().join("+");
   return ["jersey", item.handle, item.size, item.version, item.sleeve, item.nameNumber ?? "", patches, item.bundle ?? ""].join("|");
 }
@@ -135,7 +136,7 @@ function parseAccessoryEntry(value: Record<string, unknown>): AccessoryCartItem 
   if (typeof value.handle !== "string" || value.handle === "") return null;
   const qtyRaw = typeof value.qty === "number" ? Math.floor(value.qty) : 1;
   const qty = Math.min(MAX_QTY, Math.max(1, qtyRaw));
-  return { kind: "accessory", handle: value.handle, qty, ...(typeof value.bundle === "string" && /^[a-z0-9-]{1,60}$/.test(value.bundle) ? { bundle: value.bundle } : {}) };
+  return { kind: "accessory", handle: value.handle, qty, ...(typeof value.bundle === "string" && /^[a-z0-9-]{1,60}$/.test(value.bundle) ? { bundle: value.bundle } : {}), ...(isPhoneModel(value.model) ? { model: value.model } : {}) };
 }
 
 /**

@@ -110,7 +110,10 @@ export async function productSales(saleIds: string[]) {
     const cat = !p ? "Other shirts" : year <= 2023 ? "Retro" : p.team?.type === "national" ? "National teams" : LEAGUE[p.team?.league_id ?? ""] ?? "Other clubs";
     byCategory.set(cat, (byCategory.get(cat) ?? 0) + l.qty);
   }
-  for (const a of acc) byCategory.set(a.category === "scarf" ? "Scarves" : "Keychains", (byCategory.get(a.category === "scarf" ? "Scarves" : "Keychains") ?? 0) + a.qty);
+  for (const a of acc) {
+    const label = a.category === "scarf" ? "Scarves" : a.category === "phone_case" ? "Phone cases" : "Keychains";
+    byCategory.set(label, (byCategory.get(label) ?? 0) + a.qty);
+  }
   return {
     shirtsSold: lines.reduce((s, l) => s + l.qty, 0),
     accessoriesSold: acc.reduce((s, a) => s + a.qty, 0),

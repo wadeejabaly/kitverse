@@ -483,7 +483,7 @@ export function CheckoutView({
       // accessories are really ordered now (owner request 2026-11-10): handle + qty only, priced on the server
       accessories: items
         .filter((item) => item.kind === "accessory" && byAccessoryHandle.has(item.handle))
-        .map((item) => ({ handle: item.handle, qty: item.qty, ...(item.bundle ? { bundle: item.bundle } : {}) })),
+        .map((item) => ({ handle: item.handle, qty: item.qty, ...(item.bundle ? { bundle: item.bundle } : {}), ...(item.kind === "accessory" && item.model ? { model: item.model } : {}) })),
       customer: parsed.success ? parsed.data : null,
       locale,
       giftBoxQty,
@@ -835,6 +835,7 @@ export function CheckoutView({
               </span>
               <span className="text-[13px]">
                 <span className="block">{accessoryLabel(tAccessories, accessory, locale)}</span>
+                {item.model ? <span className="block text-ink-soft" dir="ltr">{item.model}</span> : null}
                 {item.qty > 1 ? <span className="block text-ink-soft" dir="ltr">×{item.qty}</span> : null}
               </span>
               <span className="text-[13.5px] font-bold text-ink">

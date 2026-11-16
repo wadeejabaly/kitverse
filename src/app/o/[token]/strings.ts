@@ -47,7 +47,7 @@ const T = {
     paidThanks: "مدفوعة، شكرًا الك",
     returns: "ارجاع خلال 14 يوم من الاستلام، البلوزة مش ملبوسة ومع التيكت. البلايز المطبوع عليها اسم ورقم بترجع بس اذا الطباعة غلط او فيها عيب. اذا وصلك اشي مضروب، ابعتلنا صور خلال 48 ساعة.",
     askUs: "عندك سؤال؟ راسلنا عالانستغرام", privacy: "الخصوصية",
-    scarf: "شال", keychain: "ميدالية",
+    scarf: "شال", keychain: "ميدالية", phoneCase: "كفر موبايل",
   },
   he: {
     title: "ההזמנה שלך · Kitverse",
@@ -73,7 +73,7 @@ const T = {
     paidThanks: "שולם, תודה!",
     returns: "החזרה תוך 14 יום מהקבלה, חולצה לא לבושה ועם התווית. חולצות עם הדפסת שם ומספר חוזרות רק אם ההדפסה שגויה או פגומה. אם הגיע משהו פגום, שלחו לנו תמונות תוך 48 שעות.",
     askUs: "יש שאלה? כתבו לנו באינסטגרם", privacy: "פרטיות",
-    scarf: "צעיף", keychain: "מחזיק מפתחות",
+    scarf: "צעיף", keychain: "מחזיק מפתחות", phoneCase: "כיסוי לטלפון",
   },
   en: {
     title: "Your order · Kitverse",
@@ -99,7 +99,7 @@ const T = {
     paidThanks: "Paid - thank you",
     returns: "Returns within 14 days of delivery, unworn and with the tag. Shirts printed with a name and number can only be returned if the print is wrong or faulty. If something arrives damaged, send us photos within 48 hours.",
     askUs: "Questions? Message us on Instagram", privacy: "Privacy",
-    scarf: "Scarf", keychain: "Keychain",
+    scarf: "Scarf", keychain: "Keychain", phoneCase: "Phone case",
   },
 } as const;
 

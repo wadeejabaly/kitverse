@@ -129,6 +129,8 @@ export interface AccessoryCartItem {
   qty: number; // 1..10
   /** Fan bundle slug when added as part of a fan bundle (owner 2026-11-15). */
   bundle?: string;
+  /** Phone cases (owner 2026-11-16): the phone model, one of src/data/phone-models.ts. */
+  model?: string;
 }
 
 /**
@@ -139,7 +141,7 @@ export interface AccessoryCartItem {
  */
 export type CartItem = JerseyCartItem | AccessoryCartItem;
 
-export type AccessoryCategory = "keychain" | "scarf";
+export type AccessoryCategory = "keychain" | "scarf" | "phone_case";
 
 /**
  * A non-jersey product (2026-10-25). Intentionally a separate, much simpler
@@ -164,4 +166,8 @@ export interface Accessory {
   variant?: string;
   variantAr?: string;
   variantHe?: string;
+  /** Phone cases (owner 2026-11-16): which supplier list of phone models this case is sold for (src/data/phone-models.ts). */
+  phoneModels?: string;
+  /** Extra photos under the main one (phone cases). */
+  gallery?: string[];
 }

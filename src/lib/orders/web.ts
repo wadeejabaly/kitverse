@@ -7,6 +7,7 @@ import { orderLink, orderToken } from "./link";
 import type { CreateOrderRequest } from "../checkout";
 import { getProduct as getStoreProduct } from "@/data/catalog";
 import { getAccessory, isInStock } from "@/data/accessories";
+import { isPhoneModel, needsPhoneModel } from "@/data/phone-models";
 import { completeBundles } from "@/data/bundles";
 import { KIDS_KIT_FLAG, isOutOfStock } from "@/lib/catalog/stock";
 import { KIDS_SIZES, SIZES } from "@/data/pricing";
@@ -91,14 +92,19 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
   const bundlesOk = completeBundles(req.items, req.accessories ?? []);
   const bundleOf = (slug: string | undefined) => (slug && bundlesOk.has(slug) ? slug : null);
   // accessories (owner request 2026-11-10): only real, visible ones; quantities of the same handle (and bundle) are merged
-  const accessoryQty = new Map<string, { handle: string; bundle: string | null; qty: number }>();
+  const accessoryQty = new Map<string, { handle: string; bundle: string | null; model: string | null; qty: number }>();
   for (const a of req.accessories ?? []) {
     const bundle = bundleOf(a.bundle);
-    const key = `${a.handle}|${bundle ?? ""}`;
+    // phone cases (owner 2026-11-16): the model must be one we offer; other accessories never carry one
+    const acc = getAccessory(a.handle);
+    const needsModel = needsPhoneModel(acc?.category);
+    if (needsModel && !isPhoneModel(a.model, acc?.phoneModels)) return { ok: false, code: "invalid_request", detail: "phone model missing" };
+    const model = needsModel ? a.model! : null;
+    const key = `${a.handle}|${bundle ?? ""}|${model ?? ""}`;
     const prev = accessoryQty.get(key);
-    accessoryQty.set(key, { handle: a.handle, bundle, qty: Math.min(10, (prev?.qty ?? 0) + a.qty) });
+    accessoryQty.set(key, { handle: a.handle, bundle, model, qty: Math.min(10, (prev?.qty ?? 0) + a.qty) });
   }
-  const accessories = [...accessoryQty.values()].map(({ handle, bundle, qty }) => ({ a: getAccessory(handle), handle, bundle, qty }));
+  const accessories = [...accessoryQty.values()].map(({ handle, bundle, model, qty }) => ({ a: getAccessory(handle), handle, bundle, model, qty }));
   if (accessories.some((x) => !x.a || !x.a.visible)) return { ok: false, code: "invalid_request", detail: "unknown accessory" };
   if (accessories.some((x) => x.a && !isInStock(x.a))) return { ok: false, code: "invalid_request", detail: "accessory out of stock" };
   if (!lines.length && !accessories.length) return { ok: false, code: "cart_empty" };
@@ -150,9 +156,9 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
       return { order_id: order.id, product_id: p!.id, description: p!.title_en, audience: kids ? "kids" : "adult", version: kids ? "fan" : i.version, sleeve: kit ? "short" : i.sleeve, size: i.size, qty: i.qty, print_name: name, print_number: number, patches, bundle: kit ? null : bundleOf(i.bundle) };
     })).select("id"), "web items");
     if (accessories.length) {
-      must(await db().from("order_accessories").insert(accessories.map(({ a, handle, qty, bundle }) => ({
-        order_id: order.id, handle, category: a!.category, qty, bundle,
-        title: `${a!.team} ${a!.category === "scarf" ? "Scarf" : "Keychain"}${a!.variant ? ` - ${a!.variant}` : ""}`,
+      must(await db().from("order_accessories").insert(accessories.map(({ a, handle, qty, bundle, model }) => ({
+        order_id: order.id, handle, category: a!.category, qty, bundle, model,
+        title: `${a!.team} ${a!.category === "scarf" ? "Scarf" : a!.category === "phone_case" ? "Phone Case" : "Keychain"}${a!.variant ? ` - ${a!.variant}` : ""}${model ? ` - ${model}` : ""}`,
       }))).select("id"), "web accessories");
     }
     let q = await requote(order);

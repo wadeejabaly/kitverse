@@ -104,6 +104,8 @@ export const CheckoutAccessorySchema = z.object({
   qty: z.number().int().min(1).max(10),
   // fan bundle slug (owner 2026-11-15): honoured only when the bundle is complete (web.ts)
   bundle: z.string().regex(/^[a-z0-9-]{1,60}$/).optional(),
+  // phone cases (owner 2026-11-16): the phone model, checked against src/data/phone-models.ts in web.ts
+  model: z.string().min(1).max(40).optional(),
 });
 
 export const CreateOrderRequestSchema = z.object({

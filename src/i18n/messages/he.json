@@ -354,7 +354,16 @@
     "scarfBody": "צעיף קבוצה סרוג עם פרנזים בקצוות, אפשר להוסיף לכל הזמנה.",
     "scarfMetaDescription": "צעיף {team}, {variant}. תוספת של KitVerse לכל הזמנה.",
     "dealBadge": "היום בלבד: ⁦₪{price}⁩ עם חולצה (צעיף אחד לכל חולצה בהזמנה).",
-    "dealRow": "צעיף עם חולצה ×{qty}"
+    "dealRow": "צעיף עם חולצה ×{qty}",
+    "phoneCasesLabel": "כיסויים לטלפון",
+    "phoneCasesIntro": "כיסויים לאייפון ולסמסונג גלקסי - עיצובים של מסי, ריאל מדריד וברצלונה. בחרו עיצוב ודגם טלפון.",
+    "phoneCaseTitle": "כיסוי {team} · {variant}",
+    "phoneCaseBody": "כיסוי מגן עם שוליים מוגבהים סביב המצלמה. בחרו את דגם הטלפון למטה.",
+    "phoneCaseMetaDescription": "כיסוי טלפון {team}, {variant}, לאייפון ולסמסונג גלקסי.",
+    "phoneModel": "דגם הטלפון",
+    "phoneModelPick": "בחרו טלפון",
+    "phoneModelMissing": "בחרו קודם את דגם הטלפון.",
+    "phoneModelNote": "לא מוצאים את הטלפון שלכם? שלחו לנו הודעה באינסטגרם."
   },
   "product": {
     "breadcrumbShop": "חנות",

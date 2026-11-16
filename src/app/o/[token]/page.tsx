@@ -65,12 +65,12 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
   const products = pids.length ? ((await db().from("products").select("id,title_ar,title_en,title_he,primary_image_url,photo_status").in("id", pids)).data ?? []) as Product[] : [];
   const q = o.quote;
   // keychains / scarves on the order (owner request 2026-11-10), named in Arabic from the accessories catalogue
-  const accessories = (((await db().from("order_accessories").select("handle,category,title,qty").eq("order_id", o.id).order("created_at")).data ?? []) as { handle: string; category: string; title: string; qty: number }[])
+  const accessories = (((await db().from("order_accessories").select("handle,category,title,qty,model").eq("order_id", o.id).order("created_at")).data ?? []) as { handle: string; category: string; title: string; qty: number; model: string | null }[])
     .map((x) => {
       const a = getAccessory(x.handle);
       const team = a ? (lang === "ar" ? a.teamAr : lang === "he" ? a.teamHe || a.team : a.team) : "";
       const variant = a ? (lang === "ar" ? a.variantAr : lang === "he" ? a.variantHe || a.variant : a.variant) : null;
-      const name = a ? (x.category === "scarf" ? `${t.scarf} ${team}${variant ? ` · ${variant}` : ""}` : `${t.keychain} ${team}`) : x.title;
+      const name = a ? (x.category === "scarf" ? `${t.scarf} ${team}${variant ? ` · ${variant}` : ""}` : x.category === "phone_case" ? `${t.phoneCase} ${team}${variant ? ` · ${variant}` : ""}${x.model ? ` · ${x.model}` : ""}` : `${t.keychain} ${team}`) : x.title;
       return { ...x, name, image: a?.image ?? null };
     });
   const confirmed = CONFIRMED.includes(o.status) || o.status === "delivered";
@@ -173,7 +173,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
           );
         })}
         {accessories.map((x) => (
-          <article key={x.handle} className="flex items-center gap-3 py-4">
+          <article key={`${x.handle}|${x.model ?? ""}`} className="flex items-center gap-3 py-4">
             <div className="grid h-[72px] w-[72px] shrink-0 place-items-center overflow-hidden rounded-md bg-white ring-1 ring-line">
               {x.image ? <img src={x.image} alt="" className="h-full w-full object-contain" /> : null}
             </div>

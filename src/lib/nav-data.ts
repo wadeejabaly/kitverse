@@ -122,7 +122,7 @@ export function classicsMenu(locale: string, labels: { nationalTeams: string }):
 export interface NavLabels {
   shop: string; nationalTeams: string; retro: string; leagues: string; accessories: string; more: string;
   allNationalTeams: string; allClassics: string; classicsByLeague: string; classicsTeams: string; allAccessories: string;
-  keychains: string; scarves: string; bundles: string; sizeGuide: string; trackOrder: string; about: string; contact: string;
+  keychains: string; scarves: string; phoneCases?: string; bundles: string; sizeGuide: string; trackOrder: string; about: string; contact: string;
   kits: string; fullKits: string; kidsKits: string;
 }
 
@@ -160,7 +160,7 @@ export function buildNav(locale: string, t: NavLabels): NavEntry[] {
       id: "accessories", label: t.accessories, href: "/accessories", match: ["/accessories"],
       panel: {
         layout: "compact",
-        columns: [{ links: [{ href: "/accessories/scarves", label: t.scarves }, { href: "/accessories/keychains", label: t.keychains }] }],
+        columns: [{ links: [{ href: "/accessories/scarves", label: t.scarves }, { href: "/accessories/keychains", label: t.keychains }, ...(t.phoneCases ? [{ href: "/accessories/phone-cases", label: t.phoneCases }] : [])] }],
         cta: { href: "/accessories", label: t.allAccessories },
       },
     },

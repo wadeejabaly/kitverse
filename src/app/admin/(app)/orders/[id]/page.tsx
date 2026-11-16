@@ -140,8 +140,8 @@ export default async function OrderPage({ params }: PageProps<"/admin/orders/[id
             <Card>
               <SectionTitle>Accessories</SectionTitle>
               <div className="divide-y divide-line">
-                {accessories.map((x) => (
-                  <div key={x.handle} className="flex items-center justify-between gap-3 py-2.5 text-sm first:pt-0 last:pb-0">
+                {accessories.map((x, i) => (
+                  <div key={`${x.handle}-${i}`} className="flex items-center justify-between gap-3 py-2.5 text-sm first:pt-0 last:pb-0">
                     <span className="font-medium">{x.title}</span>
                     <Badge>×{x.qty}</Badge>
                   </div>

@@ -354,7 +354,16 @@
     "scarfBody": "A knitted team scarf with fringed ends, ready to add to any order.",
     "scarfMetaDescription": "{team} scarf, {variant}. A KitVerse extra for any order.",
     "dealBadge": "Today only: ₪{price} with a shirt (one per shirt in your order).",
-    "dealRow": "Scarf with a shirt ×{qty}"
+    "dealRow": "Scarf with a shirt ×{qty}",
+    "phoneCasesLabel": "Phone cases",
+    "phoneCasesIntro": "Phone cases for iPhone and Samsung Galaxy - Messi, Real Madrid and Barcelona designs. Pick your design and your phone model.",
+    "phoneCaseTitle": "{team} Phone Case · {variant}",
+    "phoneCaseBody": "A protective case with a raised edge around the camera. Choose your phone model below.",
+    "phoneCaseMetaDescription": "{team} phone case, {variant}, for iPhone and Samsung Galaxy.",
+    "phoneModel": "Phone model",
+    "phoneModelPick": "Choose your phone",
+    "phoneModelMissing": "Choose your phone model first.",
+    "phoneModelNote": "Don't see your phone? Message us on Instagram."
   },
   "product": {
     "breadcrumbShop": "Shop",

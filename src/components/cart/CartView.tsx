@@ -292,6 +292,7 @@ export function CartView({
                     {accessoryLabel(tAccessories, accessory, locale)}
                   </Link>
                 </h3>
+                {item.model ? <p className="text-[13px] text-ink-soft" dir="ltr">{item.model}</p> : null}
 
                 <div className="mt-3 flex items-center gap-4">
                   <div className="flex items-center rounded-[8px] border-[1.5px] border-rule bg-tile" dir="ltr">

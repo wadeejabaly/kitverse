@@ -28,6 +28,7 @@ const LOCAL: Field[] = [
   { key: "giftBox", label: "Gift box" },
   { key: "scarf", label: "Scarf" },
   { key: "keychain", label: "Keychain" },
+  { key: "phoneCase", label: "Phone case" },
 ];
 
 const METHOD_NAMES: Record<(typeof PAY_METHODS)[number], string> = {

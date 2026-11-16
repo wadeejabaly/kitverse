@@ -354,7 +354,16 @@
     "scarfBody": "شال فريق محاك مع شرّابات بالأطراف، بينضاف لأي طلب.",
     "scarfMetaDescription": "شال {team}، {variant}. إضافة من كيتفيرس لأي طلب.",
     "dealBadge": "اليوم بس: ⁦₪{price}⁩ مع قميص (شال واحد لكل قميص بالطلب).",
-    "dealRow": "شال مع قميص ×{qty}"
+    "dealRow": "شال مع قميص ×{qty}",
+    "phoneCasesLabel": "كفرات موبايل",
+    "phoneCasesIntro": "كفرات موبايل لآيفون وسامسونج جالكسي - تصاميم ميسي وريال مدريد وبرشلونة. اختار التصميم وموديل جوالك.",
+    "phoneCaseTitle": "كفر {team} · {variant}",
+    "phoneCaseBody": "كفر حامي مع حافة مرفوعة حول الكاميرا. اختار موديل جوالك تحت.",
+    "phoneCaseMetaDescription": "كفر موبايل {team}، {variant}، لآيفون وسامسونج جالكسي.",
+    "phoneModel": "موديل الجوال",
+    "phoneModelPick": "اختار جوالك",
+    "phoneModelMissing": "اختار موديل جوالك أول.",
+    "phoneModelNote": "جوالك مش موجود؟ ابعتلنا عالانستغرام."
   },
   "product": {
     "breadcrumbShop": "المتجر",
