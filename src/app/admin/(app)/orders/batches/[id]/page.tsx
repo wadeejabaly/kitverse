@@ -81,9 +81,9 @@ export default async function Batch({ params, searchParams }: PageProps<"/admin/
         </div>
       </Card>
       <Card padded={false} className="overflow-x-auto">
-        <table className="w-full min-w-[720px] text-sm">
+        <table className="w-full min-w-[560px] text-sm">
           <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
-            <tr>{H.map((h) => <th key={h} className="px-4 py-3 font-semibold">{h}</th>)}</tr>
+            <tr>{H.map((h) => <th key={h} className="px-4 py-3 font-medium">{h}</th>)}</tr>
           </thead>
           <tbody className="divide-y divide-line">
             {lines.map((l, i) => {
@@ -94,25 +94,25 @@ export default async function Batch({ params, searchParams }: PageProps<"/admin/
               const patches = l.patch_ids.length || l.box ? patchesText(l, lang).split(" + ") : [];
               return (
                 <tr key={i} className="align-middle">
-                  <td className="px-4 py-4 text-base font-bold tabular-nums text-ink">{zh ? "订单 " : ""}#{l.order_number}</td>
-                  <td className="px-4 py-3">{l.photo ? (
+                  <td className="px-4 py-3 font-semibold tabular-nums text-ink">{zh ? "订单 " : ""}#{l.order_number}</td>
+                  <td className="px-4 py-2">{l.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail; links to the full photo so it can be saved for WhatsApp
-                    <a href={l.photo} target="_blank" rel="noreferrer"><img src={l.photo} alt="" className="h-24 w-24 rounded-lg bg-white object-contain ring-1 ring-line-2" /></a>
+                    <a href={l.photo} target="_blank" rel="noreferrer"><img src={l.photo} alt="" className="h-14 w-14 rounded-md bg-white object-contain" /></a>
                   ) : <span className="text-muted">-</span>}</td>
-                  <td className="px-4 py-4 text-base font-semibold leading-snug text-ink">{zh ? shirtTitleZh(l) : l.title}</td>
-                  <td className="px-4 py-4">
-                    <div className="flex flex-wrap gap-1.5">
-                      <span className={cx("rounded-md px-2.5 py-1 text-sm font-bold", l.version === "Player" ? "bg-pitch-fill text-white" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{version}</span>
-                      <span className={cx("rounded-md px-2.5 py-1 text-sm font-bold", long ? "bg-gold text-[#0a1024]" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{zh ? (long ? "长袖" : "短袖") : long ? "Long sleeve" : "Short sleeve"}</span>
+                  <td className="px-4 py-3 font-medium text-ink">{zh ? shirtTitleZh(l) : l.title}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      <span className={cx("rounded px-1.5 py-0.5 text-xs font-semibold", l.version === "Player" ? "bg-pitch-fill text-white" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{version}</span>
+                      <span className={cx("rounded px-1.5 py-0.5 text-xs font-semibold", long ? "bg-gold text-[#0a1024]" : "bg-raised text-ink ring-1 ring-inset ring-line-2")}>{zh ? (long ? "长袖" : "短袖") : long ? "Long sleeve" : "Short sleeve"}</span>
                       {extra ? <span className="rounded-md bg-green px-2.5 py-1 text-sm font-bold text-white">{extra}</span> : null}
                     </div>
                   </td>
-                  <td className="px-4 py-4"><span className="inline-block min-w-12 rounded-lg bg-ink px-3 py-1.5 text-center text-xl font-extrabold text-paper">{l.size}</span>{l.qty > 1 ? <span className="ms-2 text-lg font-extrabold text-gold">×{l.qty}</span> : null}</td>
-                  <td className="px-4 py-4">
-                    {print ? <div className="text-lg font-extrabold tracking-wide text-gold">{print}</div> : <span className="text-muted">{zh ? "无印字" : "No print"}</span>}
+                  <td className="px-4 py-3"><span className="inline-block min-w-8 rounded-md bg-ink px-2 py-0.5 text-center text-sm font-bold text-paper">{l.size}</span>{l.qty > 1 ? <span className="ms-1.5 font-bold text-gold">×{l.qty}</span> : null}</td>
+                  <td className="px-4 py-3">
+                    {print ? <div className="font-bold text-gold">{print}</div> : <span className="text-muted">{zh ? "无印字" : "No print"}</span>}
                     {patches.length ? (
-                      <div className="mt-1.5 flex flex-wrap gap-1.5">
-                        {patches.map((p, j) => <span key={j} className="rounded-md bg-raised px-2 py-0.5 text-sm font-semibold text-ink ring-1 ring-inset ring-line-2">{p}</span>)}
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {patches.map((p, j) => <span key={j} className="rounded px-1.5 py-0.5 text-xs font-medium text-ink bg-raised ring-1 ring-inset ring-line-2">{p}</span>)}
                       </div>
                     ) : null}
                   </td>
