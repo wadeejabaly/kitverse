@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download, Check, PackageCheck, RefreshCw, Truck } from "lucide-react";
+import { ArrowLeft, Check, PackageCheck, RefreshCw, Truck } from "lucide-react";
 import { db } from "@/lib/db";
 import { batchOrderIds, batchLines } from "@/lib/orders/admin";
 import { patchesText } from "@/lib/orders/supplier-sheet";
@@ -9,6 +9,7 @@ import { STATUS_LABEL } from "@/lib/orders/admin";
 import { trackingEnabled } from "@/lib/tracking/track17";
 import { DELIVERED_AFTER_DAYS, type TrackEvent } from "@/lib/tracking/stage";
 import { TrackingNumberForm } from "./tracking";
+import { SheetDownload } from "./sheet-download";
 import { PageHeader, Card, Badge, SectionTitle, button, type Tone } from "../../../../ui";
 import { SubmitButton } from "../../../../submit-button";
 
@@ -31,7 +32,7 @@ export default async function Batch({ params }: PageProps<"/admin/orders/batches
       <Link href="/admin/orders/batches" className="mb-3 inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft className="h-4 w-4" /> Batches</Link>
       <PageHeader eyebrow="Sales" title="Supplier batch" subtitle={`${lines.length} lines from ${orderIds.length} order${orderIds.length === 1 ? "" : "s"}. Download the Excel (shirt photo + 3 empty cells per shirt for your own pictures), add your pictures, send it on WhatsApp, then mark it sent.`}
         actions={<>
-          <a href={`/admin/orders/batches/${id}/xlsx`} className={button.primary}><Download className="h-4 w-4" /> Download Excel</a>
+          <SheetDownload batchId={id} />
           <a href={`/admin/orders/batches/${id}/csv`} className={button.ghost}>CSV</a>
           {b.status !== "sent" ? <form action={markBatchSent}><input type="hidden" name="batchId" value={id} /><SubmitButton bare className={button.ghost}><Check className="h-4 w-4" /> Mark as sent</SubmitButton></form> : <Badge tone="green">Sent</Badge>}
         </>} />

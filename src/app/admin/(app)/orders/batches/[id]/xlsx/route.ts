@@ -1,6 +1,6 @@
 import { requireStaff } from "@/lib/auth";
 import { batchOrderIds, batchLines } from "@/lib/orders/admin";
-import { buildSupplierSheet } from "@/lib/orders/supplier-sheet";
+import { buildSupplierSheet, sheetLang } from "@/lib/orders/supplier-sheet";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // fetches every shirt + patch picture once
@@ -10,11 +10,13 @@ export async function GET(req: Request, ctx: RouteContext<"/admin/orders/batches
   await requireStaff();
   const { id } = await ctx.params;
   const orderIds = await batchOrderIds(id); // cancelled orders are left out
-  const buf = await buildSupplierSheet(await batchLines(orderIds), new URL(req.url).origin);
+  const url = new URL(req.url);
+  const lang = sheetLang(url.searchParams.get("lang")); // ?lang=zh = Chinese for the supplier (owner 2026-11-17)
+  const buf = await buildSupplierSheet(await batchLines(orderIds), url.origin, lang);
   return new Response(new Uint8Array(buf), {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": `attachment; filename="kitverse-batch-${id.slice(0, 8)}.xlsx"`,
+      "Content-Disposition": `attachment; filename="kitverse-batch-${id.slice(0, 8)}${lang === "zh" ? "-zh" : ""}.xlsx"`,
     },
   });
 }
