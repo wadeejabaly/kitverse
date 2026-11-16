@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { RotateCw, Upload, X, ZoomIn, ZoomOut } from "lucide-react";
 import type { Sleeve } from "@/data/types";
-import { uploadProductPhoto } from "../../photos-actions";
+import { uploadProductPhoto, uploadProductPhotos } from "../../photos-actions";
 import { button, cx } from "../../ui";
 
 const VIEWPORT = 320; // the crop window, css px - matches the square thumbnails everywhere else
@@ -22,6 +22,52 @@ export function loadImage(url: string, opts?: { crossOrigin?: boolean }): Promis
     img.onerror = () => reject(new Error("decode failed"));
     img.src = url;
   });
+}
+
+/** Phone photos can be 5+ MB each; shrink to the size the server keeps anyway (2048px JPEG) before
+ *  sending, so a batch of several fits the upload limit. Falls back to the original file when the
+ *  browser can't decode it (e.g. HEIC) - the server converts those itself. */
+export async function shrinkForUpload(file: File): Promise<File> {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await loadImage(url);
+    const k = Math.min(1, 2048 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.naturalWidth * k);
+    c.height = Math.round(img.naturalHeight * k);
+    const ctx = c.getContext("2d")!;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise<Blob | null>((r) => c.toBlob(r, "image/jpeg", 0.9));
+    return blob ? new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" }) : file;
+  } catch {
+    return file;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+/** Uploads several photos for one shirt in as few requests as fit the 16 MB server-action limit.
+ *  Sent last-picked first, so the FIRST photo picked ends up as the front / main photo. */
+export async function uploadMany(productId: string, sleeve: Sleeve, picked: File[], onProgress?: (done: number) => void) {
+  const files = await Promise.all(picked.map(shrinkForUpload));
+  const queue = [...files].reverse();
+  let done = 0;
+  while (queue.length) {
+    const fd = new FormData();
+    fd.set("productId", productId);
+    fd.set("sleeve", sleeve);
+    let size = 0;
+    while (queue.length && (size === 0 || size + queue[0].size < 12 * 1024 * 1024)) {
+      const f = queue.shift()!;
+      size += f.size;
+      fd.append("photos", f);
+      done++;
+    }
+    await uploadProductPhotos(fd);
+    onProgress?.(done);
+  }
 }
 
 /** Bakes the chosen rotation into its own canvas once, so the pan/zoom math below never has to think about it. */
@@ -55,11 +101,27 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
   const [sleeve, setSleeve] = useState<Sleeve>("short");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [busy, setBusy] = useState<string | null>(null);
+
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+    const picked = Array.from(e.target.files ?? []);
     e.target.value = "";
-    if (!file) return;
+    if (!picked.length) return;
     setErr(null);
+    // Owner 2026-11-16: "it's not letting me upload more than a single picture at a time" - several
+    // files go up together (first one picked = main photo); one file still opens the crop editor.
+    if (picked.length > 1) {
+      setBusy(`Uploading 0/${picked.length}...`);
+      try {
+        await uploadMany(productId, sleeve, picked, (n) => setBusy(`Uploading ${n}/${picked.length}...`));
+      } catch {
+        setErr("Couldn't upload one or more of those photos - try again.");
+      } finally {
+        setBusy(null);
+      }
+      return;
+    }
+    const file = picked[0];
     const url = URL.createObjectURL(file);
     try {
       setEditing(await loadImage(url));
@@ -104,7 +166,7 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
           {sleeveToggle}
           <label className={triggerClass}>
             <Upload className={iconClass} /> {label}
-            <input ref={inputRef} type="file" accept="image/*" className="sr-only" onChange={onPick} />
+            <input ref={inputRef} type="file" accept="image/*" multiple className="sr-only" onChange={onPick} />
           </label>
         </div>
       ) : (
@@ -112,10 +174,11 @@ export function PhotoUploadButton({ productId, label, variant }: { productId: st
           {sleeveToggle}
           <label className={triggerClass}>
             <Upload className={iconClass} /> {label}
-            <input ref={inputRef} type="file" accept="image/*" className="sr-only" onChange={onPick} />
+            <input ref={inputRef} type="file" accept="image/*" multiple className="sr-only" onChange={onPick} />
           </label>
         </div>
       )}
+      {busy ? <p className="mt-1 text-xs text-muted">{busy}</p> : null}
       {err ? <p className="mt-1 text-xs text-red">{err}</p> : null}
       {editing ? <CropEditor img={editing} productId={productId} sleeve={sleeve} onClose={() => setEditing(null)} /> : null}
     </>

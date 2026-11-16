@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 /* eslint-disable @next/next/no-img-element */
 import { ArrowLeftRight, Images, Pencil, Plus, Star, Trash2, X } from "lucide-react";
 import type { Sleeve } from "@/data/types";
-import { deleteProductPhoto, listProductPhotos, setPhotoSleeve, setPrimaryPhoto, uploadProductPhoto, uploadProductPhotos } from "../../photos-actions";
+import { deleteProductPhoto, listProductPhotos, setPhotoSleeve, setPrimaryPhoto, uploadProductPhoto } from "../../photos-actions";
 import { button, cx, Badge } from "../../ui";
-import { CropEditor, loadImage } from "./photo-upload-button";
+import { CropEditor, loadImage, uploadMany } from "./photo-upload-button";
 
 type Photo = Awaited<ReturnType<typeof listProductPhotos>>[number];
 
@@ -234,11 +234,7 @@ function PhotoManager({ productId, onClose }: { productId: string; onClose: () =
 
     setBulkUploading(true);
     try {
-      const fd = new FormData();
-      fd.set("productId", productId);
-      fd.set("sleeve", sleeve);
-      for (const file of files) fd.append("photos", file);
-      await uploadProductPhotos(fd);
+      await uploadMany(productId, sleeve, files);
       await refresh();
     } catch {
       setError("Couldn't upload one or more of those photos - try again.");
