@@ -14,6 +14,8 @@ baked-in shadow leaves a light outline.
 Usage: python3 scripts/images/compose_kit.py SHIRT SHORTS OUT_PREFIX
   e.g. ... shirt.jpg shorts.webp public/products/real-madrid-2026-27-home-kit
 Then add the three as product_images rows (short sleeve, sort 0/1/2) of the kit's product.
+Then run scripts/images/relayout_kit.py <OUT_PREFIX> so the kit photo uses the one shared proportion rule
+(shorts waistband = 0.92 x shirt torso, centred, 90% of the height) - owner request 2026-11-17.
 """
 import os
 import sys
