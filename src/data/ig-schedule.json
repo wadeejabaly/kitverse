@@ -152,7 +152,7 @@
     "id": "nov17-ar-4-story",
     "at": "2026-11-17T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov17-ar-4-story.jpg"
+    "image": "/campaign/daily/nov17-ar-4-story-w1.jpg"
   },
   {
     "id": "nov18-ar-2-story",
@@ -164,7 +164,7 @@
     "id": "nov18-ar-3-story",
     "at": "2026-11-18T16:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov18-ar-3-story.jpg"
+    "image": "/campaign/daily/nov18-ar-3-story-w1.jpg"
   },
   {
     "id": "nov18-ar-1-post",
@@ -174,122 +174,150 @@
     "caption": "BLACK FRIDAY بلّش 🔥\n15% على كل القمصان، بدون حد أدنى\nالكود: BLACKFRIDAY15 · لحد 30.11\n\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #blackfriday #قمصان_كرة_قدم #חולצות_כדורגל"
   },
   {
+    "id": "nov18-ar-1b-post",
+    "at": "2026-11-18T20:00:00+02:00",
+    "kind": "post",
+    "image": "/campaign/daily/nov18-ar-1b-post-w1.jpg",
+    "caption": "باقي 13 يوم على نهاية الخصم ⏳\nBLACK FRIDAY: 15% على كل القمصان، بدون حد أدنى\nالكود: BLACKFRIDAY15 · لحد 30.11\n\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #blackfriday #قمصان_كرة_قدم #חולצות_כדורגל"
+  },
+  {
     "id": "nov18-ar-4-story",
     "at": "2026-11-18T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov18-ar-4-story.jpg"
+    "image": "/campaign/daily/nov18-ar-4-story-w1.jpg",
+    "poll": {
+      "question": "زمان ولا إسا؟",
+      "options": [
+        "زمان 2016/17",
+        "إسا 2026/27"
+      ]
+    }
   },
   {
     "id": "nov19-ar-2-story",
     "at": "2026-11-19T12:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov19-ar-2-story.jpg"
+    "image": "/campaign/daily/nov19-ar-2-story-w1.jpg"
   },
   {
     "id": "nov19-ar-3-story",
     "at": "2026-11-19T16:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov19-ar-3-story.jpg"
+    "image": "/campaign/daily/nov19-ar-3-story-w1.jpg"
   },
   {
     "id": "nov19-ar-1-post",
     "at": "2026-11-19T20:00:00+02:00",
     "kind": "post",
-    "image": "/campaign/daily/nov19-ar-1-post.jpg",
-    "caption": "مانشستر يونايتد 2007/08 🔥\nالأساسي والاحتياطي\n\n⏳ BLACK FRIDAY بيبلش 20.11 · فعّلوا التنبيهات 🔔\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n➕ تابعونا لأحلى القمصان\n#kitverse #قمصان_كرة_قدم #חולצות_כדורגל #blackfriday"
+    "image": "/campaign/daily/nov19-ar-1-post-w1.jpg",
+    "caption": "مانشستر يونايتد 2007/08 🔴⚫\nالأساسي ولا الاحتياطي؟ 👇\n\nوعليهم كمان 15% بكود BLACKFRIDAY15\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #ريترو #manchesterunited #חולצות_כדורגל"
   },
   {
     "id": "nov19-ar-4-story",
     "at": "2026-11-19T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov19-ar-4-story.jpg"
+    "image": "/campaign/daily/nov19-ar-4-story-w1.jpg",
+    "poll": {
+      "question": "ميلان ولا إنتر؟",
+      "options": [
+        "ميلان",
+        "إنتر"
+      ]
+    }
   },
   {
     "id": "nov20-ar-2-story",
     "at": "2026-11-20T12:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov20-ar-2-story.jpg"
+    "image": "/campaign/daily/nov20-ar-2-story-w1.jpg"
   },
   {
     "id": "nov20-ar-3-story",
     "at": "2026-11-20T16:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov20-ar-3-story.jpg"
+    "image": "/campaign/daily/nov20-ar-3-story-w1.jpg"
   },
   {
     "id": "nov20-ar-1-post",
     "at": "2026-11-20T20:00:00+02:00",
     "kind": "post",
-    "image": "/campaign/daily/nov20-ar-1-post.jpg",
-    "caption": "بلشت BLACK FRIDAY 🔥 −15% على كل القمصان والأطقم\n\n🏷️ الكود BLACKFRIDAY15 · −15% على كل القمصان والأطقم · بالموقع بس · لحد 30.11\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n➕ تابعونا لأحلى القمصان\n#kitverse #قمصان_كرة_قدم #חולצות_כדורגל #blackfriday"
+    "image": "/campaign/daily/nov20-ar-1-post-w1.jpg",
+    "caption": "أكثر من 10,000 قميص بالموقع 😍\nأندية · منتخبات · ريترو\nوكلهم عليهم 15% بكود BLACKFRIDAY15 لحد 30.11\n\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #blackfriday #قمصان_كرة_قدم #חולצות_כדורגל"
   },
   {
     "id": "nov20-ar-4-story",
     "at": "2026-11-20T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov20-ar-4-story.jpg"
+    "image": "/campaign/daily/nov20-ar-4-story-w1.jpg"
   },
   {
     "id": "nov21-ar-2-story",
     "at": "2026-11-21T12:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov21-ar-2-story.jpg"
+    "image": "/campaign/daily/nov21-ar-2-story-w1.jpg"
   },
   {
     "id": "nov21-ar-3-story",
     "at": "2026-11-21T16:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov21-ar-3-story.jpg"
+    "image": "/campaign/daily/nov21-ar-3-story-w1.jpg"
   },
   {
     "id": "nov21-ar-1-post",
     "at": "2026-11-21T20:00:00+02:00",
     "kind": "post",
-    "image": "/campaign/daily/nov21-ar-1-post.jpg",
-    "caption": "البنفسجي الأسطوري 🔥\nريال مدريد 2016/17\n\nمين الأحلى؟ 👇 اكتبوا بالتعليقات\n🏷️ الكود BLACKFRIDAY15 · −15% على كل القمصان والأطقم · بالموقع بس · لحد 30.11\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n➕ تابعونا لأحلى القمصان\n#kitverse #قمصان_كرة_قدم #חולצות_כדורגל #blackfriday"
+    "image": "/campaign/daily/nov21-ar-1-post-w1.jpg",
+    "caption": "البرتغال 2026 🇵🇹\nالقميص الاحتياطي لكأس العالم\n\n15% بكود BLACKFRIDAY15 لحد 30.11\n👕 ضيف اسمك ورقمك\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #portugal #worldcup2026 #חולצות_כדורגל"
   },
   {
     "id": "nov21-ar-4-story",
     "at": "2026-11-21T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov21-ar-4-story.jpg"
+    "image": "/campaign/daily/nov21-ar-4-story-w1.jpg",
+    "poll": {
+      "question": "قصير ولا طويل؟",
+      "options": [
+        "قصير",
+        "طويل"
+      ]
+    }
   },
   {
     "id": "nov22-ar-2-story",
     "at": "2026-11-22T12:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov22-ar-2-story.jpg"
+    "image": "/campaign/daily/nov22-ar-2-story-w1.jpg"
   },
   {
     "id": "nov22-ar-3-story",
     "at": "2026-11-22T16:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov22-ar-3-story.jpg"
+    "image": "/campaign/daily/nov22-ar-3-story-w1.jpg"
   },
   {
     "id": "nov22-ar-1-post",
     "at": "2026-11-22T20:00:00+02:00",
     "kind": "post",
-    "image": "/campaign/daily/nov22-ar-1-post.jpg",
-    "caption": "بكج ريال مدريد الكامل 🤍 أساسي + احتياطي + ثالث\n\n🏷️ الكود BLACKFRIDAY15 · −15% على كل القمصان والأطقم · بالموقع بس · لحد 30.11\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n➕ تابعونا لأحلى القمصان\n#kitverse #قمصان_كرة_قدم #חולצות_כדורגל #blackfriday"
+    "image": "/campaign/daily/nov22-ar-1-post-w1.jpg",
+    "caption": "بكج ريال مدريد 26/27 الكامل 🤍\nأساسي + احتياطي + ثالث · نسخة اللاعب\n3 قمصان بـ330₪، وعليهم كمان 15% بكود BLACKFRIDAY15 لحد 30.11\n\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #realmadrid #blackfriday #חולצות_כדורגל"
   },
   {
     "id": "nov22-ar-4-story",
     "at": "2026-11-22T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov22-ar-4-story.jpg"
+    "image": "/campaign/daily/nov22-ar-4-story-w1.jpg"
   },
   {
     "id": "nov23-ar-2-story",
     "at": "2026-11-23T12:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov23-ar-2-story.jpg"
+    "image": "/campaign/daily/nov23-ar-2-story-w1.jpg"
   },
   {
     "id": "nov23-ar-3-story",
     "at": "2026-11-23T16:00:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov23-ar-3-story.jpg"
+    "image": "/campaign/daily/nov23-ar-3-story-w1.jpg"
   },
   {
     "id": "riddle-20261123-ar",
@@ -301,14 +329,21 @@
     "id": "nov23-ar-1-post",
     "at": "2026-11-23T20:00:00+02:00",
     "kind": "post",
-    "image": "/campaign/daily/nov23-ar-1-post.jpg",
-    "caption": "تاريخ برشلونة 🔥\n1992 · 2005 · 2008 · 2010\n\nأي حقبة؟ 👇 اكتبوا بالتعليقات\n🏷️ الكود BLACKFRIDAY15 · −15% على كل القمصان والأطقم · بالموقع بس · لحد 30.11\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n➕ تابعونا لأحلى القمصان\n#kitverse #قمصان_كرة_قدم #חולצות_כדורגל #blackfriday"
+    "image": "/campaign/daily/nov23-ar-1-post-w1.jpg",
+    "caption": "تاريخ برشلونة على قميص 💙❤️\n1992 · 2005/06 · 2008/09 · 2010/11 · 2014/15\nأي واحد بتذكّرك بأحلى أيام؟ 👇\n\n15% بكود BLACKFRIDAY15 لحد 30.11\n💵 الدفع عند الاستلام · 🚚 توصيل لكل البلاد\n🛒 الرابط بالبايو · kitversejerseys.com\n#kitverse #barcelona #ريترو #חולצות_כדורגל"
   },
   {
     "id": "nov23-ar-4-story",
     "at": "2026-11-23T21:30:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/nov23-ar-4-story.jpg"
+    "image": "/campaign/daily/nov23-ar-4-story-w1.jpg",
+    "poll": {
+      "question": "فرنسا 98 ولا البرازيل 2002؟",
+      "options": [
+        "فرنسا 98",
+        "البرازيل 2002"
+      ]
+    }
   },
   {
     "id": "nov24-ar-2-story",
