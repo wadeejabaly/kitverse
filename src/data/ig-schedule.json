@@ -158,7 +158,8 @@
     "id": "nov18-ar-2-story",
     "at": "2026-11-17T20:40:00+02:00",
     "kind": "story",
-    "image": "/campaign/daily/bf-launch-story.jpg"
+    "image": "/campaign/daily/bf-launch-story.jpg",
+    "manual": true
   },
   {
     "id": "nov18-ar-3-story",

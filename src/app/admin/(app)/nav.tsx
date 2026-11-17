@@ -43,7 +43,7 @@ const SECTIONS: { title?: string; items: Item[] }[] = [
       { href: "/admin/inbox", label: "Inbox", icon: MessagesSquare },
       { href: "/admin/approvals", label: "Approvals", icon: ClipboardCheck },
       { href: "/admin/media", label: "Posts", icon: Images },
-      { href: "/admin/stories", label: "Poll stories", icon: Vote },
+      { href: "/admin/stories", label: "Stories to post", icon: Vote },
       { href: "/admin/test-chat", label: "Test bot", icon: FlaskConical },
     ],
   },

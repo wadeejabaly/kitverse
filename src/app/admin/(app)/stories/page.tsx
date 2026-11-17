@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Vote, Download, Camera as Instagram } from "lucide-react";
 import { db } from "@/lib/db";
-import { SCHEDULE, type ScheduledPost } from "@/lib/channels/ig-publish";
+import { SCHEDULE } from "@/lib/channels/ig-publish";
 import { markPollStory } from "../../stories-actions";
 import { PageHeader, Card, Badge, EmptyState, type Tone } from "../../ui";
 import { SubmitButton } from "../../submit-button";
@@ -20,7 +20,7 @@ const BADGE: Record<State, [string, Tone]> = { now: ["Post it now", "amber"], up
  * Instagram app with a poll (question + two answers copied from this page).
  */
 export default async function Stories() {
-  const polls = SCHEDULE.filter((i): i is ScheduledPost & { poll: NonNullable<ScheduledPost["poll"]> } => !!i.poll);
+  const polls = SCHEDULE.filter((i) => !!i.poll || !!i.manual);
   const { data } = await db().from("bot_settings").select("key,value").in("key", polls.map((p) => `ig_post:${p.id}`));
   const rows = new Map((data ?? []).map((r) => [r.key as string, (r.value ?? {}) as { status?: string }]));
   const now = Date.now();
@@ -37,8 +37,8 @@ export default async function Stories() {
 
   return (
     <>
-      <PageHeader eyebrow="Instagram" title="Poll stories"
-        subtitle="Instagram doesn't let apps add a poll to a story, so these are the ones you post yourself. At each one's time you get an alert: save the picture, open Instagram, add it as a story, add the Poll sticker and paste the question and the two answers. Every other post and story still goes up by itself." />
+      <PageHeader eyebrow="Instagram" title="Stories you post"
+        subtitle="These are the stories you post yourself (poll stories - Instagram doesn't let apps add a poll - and any you chose to post by hand). At each one's time you get an alert: save the picture, open Instagram, add it as a story, add the Poll sticker and paste the question and the two answers. Every other post and story still goes up by itself." />
       {!shown.length ? <EmptyState icon={Vote} title="No poll stories coming up" /> : (
         <div className="grid gap-4 lg:grid-cols-2">
           {shown.map((s) => {
@@ -53,11 +53,13 @@ export default async function Stories() {
                     <span className="text-sm font-semibold">{when(s.at)}</span>
                     <Badge tone={tone}>{label}</Badge>
                   </div>
-                  <CopyText label="Poll question" text={s.poll.question} />
-                  <div className="grid grid-cols-2 gap-2">
-                    <CopyText label="Answer 1" text={s.poll.options[0]} />
-                    <CopyText label="Answer 2" text={s.poll.options[1]} />
-                  </div>
+                  {s.poll ? <>
+                    <CopyText label="Poll question" text={s.poll.question} />
+                    <div className="grid grid-cols-2 gap-2">
+                      <CopyText label="Answer 1" text={s.poll.options[0]} />
+                      <CopyText label="Answer 2" text={s.poll.options[1]} />
+                    </div>
+                  </> : <p className="text-sm text-muted">No poll - just save the picture and add it as a story.</p>}
                   <div className="mt-1 flex flex-wrap gap-2">
                     <a href={s.image} download={`${s.id}.jpg`} className="inline-flex items-center gap-1.5 rounded-xl border border-line-2 px-3 py-2 text-sm"><Download className="h-4 w-4" />Save picture</a>
                     <a href="instagram://story-camera" className="inline-flex items-center gap-1.5 rounded-xl bg-pitch-fill px-3 py-2 text-sm font-semibold text-white"><Instagram className="h-4 w-4" />Open Instagram</a>

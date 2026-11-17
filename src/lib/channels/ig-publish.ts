@@ -34,6 +34,8 @@ export interface ScheduledPost {
   caption?: string;
   /** VS stories: the owner adds this as Instagram's poll sticker by hand (the API can't). */
   poll?: { question: string; options: [string, string] };
+  /** Owner request 2026-11-17: a story he posts himself from /admin/stories (no poll) - never auto-published. */
+  manual?: boolean;
 }
 
 export const SCHEDULE = schedule as ScheduledPost[];
@@ -91,13 +93,13 @@ export async function runScheduledPosts(now = new Date()) {
     // claim: the primary key makes this a one-time insert
     const claim = await db().from("bot_settings").insert({ key, value: { status: "publishing", at: new Date().toISOString() } });
     if (claim.error) continue; // already claimed (posted, failed or in progress)
-    if (item.poll) {
+    if (item.poll || item.manual) {
       await db().from("bot_settings").update({ value: { status: "owner_poll", at: new Date().toISOString() } }).eq("key", key);
       await notify({
         kind: `ig.poll_story.${item.id}`,
         priority: "normal",
-        title: "Story with a poll - post it now",
-        body: `${item.poll.question} (${item.poll.options.join(" / ")}). Tap to open the picture and the poll text.`,
+        title: item.poll ? "Story with a poll - post it now" : "Story to post yourself - post it now",
+        body: item.poll ? `${item.poll.question} (${item.poll.options.join(" / ")}). Tap to open the picture and the poll text.` : "Tap to open the picture and save it.",
         link: `/admin/stories#${item.id}`,
       }).catch(() => {});
       results[item.id] = "owner_poll";
