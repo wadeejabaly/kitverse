@@ -63,6 +63,19 @@ export const FAN_BUNDLES: FanBundle[] = [
   { slug: "fan-manchester-united", team: "manchester-united", club: "manchester-united-2026-27" },
 ];
 
+/* ------------------------------------------------------ build your own -- */
+
+/**
+ * "Make your own bundle" (owner request 2026-11-17): ANY 3 current-season shirts (2024/25+, not retro,
+ * not kits) from any teams, fan or player, short or long sleeve, each at the bundle price (the same
+ * admin Pricing groups as the club bundles - bundle_fan 95 / bundle_fan_long 105 / bundle_player 110 /
+ * bundle_player_long 120), plus an optional gift box. Every bundle added gets its own slug
+ * "custom-<random>", so two custom bundles on one order are counted separately.
+ */
+export const CUSTOM_BUNDLE_SIZE = 3;
+export const isCustomBundle = (slug: string) => /^custom-[a-z0-9]{4,20}$/.test(slug);
+export const newCustomBundleSlug = () => `custom-${Math.random().toString(36).slice(2, 10).padEnd(8, "0")}`;
+
 /**
  * Which bundle slugs on an order are COMPLETE, so their lines may take the bundle prices (the server
  * calls this; the browser's word is never enough). A club bundle = its three shirts, player version,
@@ -74,12 +87,20 @@ export function completeBundles(
   accessories: { handle: string; qty: number; bundle?: string | null }[],
   /** team slug + category of an accessory handle (server: the accessories file; browser: the cart's accessory info) */
   accessoryInfo: (handle: string) => { team: string; category: string } | undefined,
+  /** custom bundles: may this shirt be in one? (server: current season, not a kit, on sale). Browser: not checked (the picker only offers those). */
+  customEligible?: (handle: string) => boolean,
 ): Set<string> {
   const ok = new Set<string>();
   const slugs = new Set([...items, ...accessories].map((x) => x.bundle).filter((s): s is string => !!s));
   for (const slug of slugs) {
     const lines = items.filter((i) => i.bundle === slug);
     const extras = accessories.filter((a) => a.bundle === slug);
+    if (isCustomBundle(slug)) {
+      // exactly 3 shirts, nothing else, every one allowed
+      const units = lines.reduce((n, l) => n + l.qty, 0);
+      if (!extras.length && units === CUSTOM_BUNDLE_SIZE && (!customEligible || lines.every((l) => customEligible(l.handle)))) ok.add(slug);
+      continue;
+    }
     const club = BUNDLES.find((b) => b.slug === slug);
     if (club) {
       if (extras.length || lines.some((l) => l.version !== BUNDLE_VERSION || !club.handles.includes(l.handle))) continue;

@@ -1,10 +1,21 @@
-import { getProduct } from "@/data/catalog";
+import { getProduct, getVisibleProducts } from "@/data/catalog";
+import { isRetroSeason } from "@/data/pricing";
 import { getAccessory, getOrderableAccessories } from "@/data/accessories";
 import type { Accessory, Product } from "@/data/types";
 import { slugify } from "@/data/slug";
 import { BUNDLES, BUNDLE_VERSION, FAN_BUNDLES, completeBundles as completeWith, type Bundle, type FanBundle } from "@/data/bundle-defs";
 
 export { BUNDLES, BUNDLE_VERSION, FAN_BUNDLES, type Bundle, type FanBundle };
+
+/** A shirt that may go into a "make your own" bundle (owner request 2026-11-17): current season, not a kit, on sale. */
+export function customBundleEligible(p: Product | undefined): p is Product {
+  return !!p && p.visible && p.inStock !== false && !p.set && !isRetroSeason(p.season);
+}
+
+/** Every shirt the "make your own" bundle offers. */
+export function customBundleShirts(): Product[] {
+  return getVisibleProducts().filter(customBundleEligible);
+}
 
 /**
  * Club bundles (owner request 2026-11-12): one club's three 2026/27 shirts - home, away, third - sold
@@ -57,5 +68,5 @@ export function completeBundles(
   return completeWith(items, accessories, (handle) => {
     const a = getAccessory(handle);
     return a ? { team: slugify(a.team), category: a.category } : undefined;
-  });
+  }, (handle) => customBundleEligible(getProduct(handle)));
 }

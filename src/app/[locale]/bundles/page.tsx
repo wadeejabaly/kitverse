@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { availableBundles, availableFanBundles, BUNDLE_VERSION } from "@/data/bundles";
+import { availableBundles, availableFanBundles, customBundleShirts, BUNDLE_VERSION } from "@/data/bundles";
 import { accessoryBundlePrice, accessoryListPrice, priceFor } from "@/data/pricing";
 import { PageLede, Wrap } from "@/components/shared/PageLede";
 import { Price } from "@/components/shared/Money";
@@ -22,12 +22,38 @@ export default async function BundlesPage({ params }: { params: Promise<{ locale
   const t = await getTranslations("bundle");
   const bundles = availableBundles();
   const fanBundles = availableFanBundles();
+  const custom = customBundleShirts();
+  // the tile shows a few eye-catching home shirts first: Real Madrid, Barcelona, Manchester United
+  const TOP = ["real-madrid", "barcelona", "arsenal"];
+  const rank = (p: (typeof custom)[number]) => (TOP.includes(p.team) && p.kit === "Home" ? TOP.indexOf(p.team) : 99);
+  custom.sort((a, b) => rank(a) - rank(b));
   const keyB = accessoryBundlePrice("keychain") ?? 0, keyN = accessoryListPrice("keychain") ?? keyB;
   const scarfB = accessoryBundlePrice("scarf") ?? 0, scarfN = accessoryListPrice("scarf") ?? scarfB;
 
   return (
     <Wrap>
       <PageLede eyebrow={t("eyebrow")} title={t("listTitle")} intro={t("listIntro")} crumbs={[{ label: t("listTitle") }]} />
+      {/* Build your own bundle (owner request 2026-11-17): any 3 current shirts, bundle prices */}
+      {custom.length >= 3 ? (
+        <Link href="/bundles/build-your-own" className="kv-pcard group mt-10 grid items-center gap-0 sm:grid-cols-[1.2fr_1fr]">
+          <span className="kv-pcard-media">
+            <span className="grid w-full grid-cols-3 items-center gap-1 px-3">
+              {custom.slice(0, 3).map((p) => (
+                <Image key={p.handle} src={p.image} alt="" width={300} height={300} sizes="(max-width: 640px) 33vw, 18vw"
+                  className="h-auto w-full mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.04]" />
+              ))}
+            </span>
+          </span>
+          <span className="kv-pcard-body">
+            <span className="kv-pcard-team">{t("customCardBody")}</span>
+            <span className="kv-pcard-title text-[20px]">{t("customCardTitle")}</span>
+            <span className="text-[14px] text-ink-soft">{t("customIntro")}</span>
+            <span className="kv-pcard-price">
+              {t("fromLabel")} <Price value={3 * priceFor(custom[0].season, "M", "fan", "short", undefined, true)} />
+            </span>
+          </span>
+        </Link>
+      ) : null}
       {/* Fan bundles (owner request 2026-11-15): shirt + keychain + scarf, with the saving */}
       {fanBundles.length ? (
         <>
