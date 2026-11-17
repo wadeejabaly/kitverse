@@ -9,8 +9,7 @@ import { patchPieces } from "@/lib/patch-limits";
 import { useCart } from "@/components/cart/CartProvider";
 import { Figure, Price } from "@/components/shared/Money";
 import { sanitizeNameNumber } from "@/lib/product";
-import { OptionButton } from "@/components/product/ProductForm";
-import { CUSTOM_BUNDLE_SIZE, newCustomBundleSlug } from "@/data/bundle-defs";
+import { BUNDLE_VERSION, CUSTOM_BUNDLE_SIZE, newCustomBundleSlug } from "@/data/bundle-defs";
 import { SaveNote, ShirtCard, START, type BundleShirt, type ShirtChoice } from "./BundleForm";
 
 /** A shirt the shopper can pick, with the names the picker searches in. */
@@ -23,15 +22,14 @@ export interface PickableShirt extends BundleShirt {
 
 interface Slot {
   shirt: PickableShirt | null;
-  version: "fan" | "player";
   choice: ShirtChoice;
 }
 
-const EMPTY: Slot = { shirt: null, version: "player", choice: START };
+const EMPTY: Slot = { shirt: null, choice: START };
 
 /**
- * "Make your own bundle" (owner request 2026-11-17): any 3 current-season shirts from any teams, each
- * fan or player and customised on its own, at the bundle prices (admin Pricing bundle groups), plus an
+ * "Build your own bundle" (owner request 2026-11-17): any 3 current-season shirts from any teams, player
+ * version only (owner, same day: "all the bundles should be only player version"), each customised on its own, at the bundle prices (admin Pricing bundle groups), plus an
  * optional gift box. Adding puts three ordinary jersey lines in the cart tagged with a fresh
  * "custom-<id>" slug; the cart, checkout and the server keep the bundle prices only while all three are
  * there (completeBundles in src/data/bundle-defs.ts).
@@ -66,8 +64,8 @@ export function CustomBundleForm({ shirts, bundleTitle }: { shirts: PickableShir
     const name = s.choice.personalise ? sanitizeNameNumber(s.choice.nameNumber).trim() : "";
     const extras = (name ? ADDONS.nameNumber : 0) + patchesTotal(patchPieces(s.choice.patches, false));
     return {
-      price: round2(priceFor(s.shirt.season, s.choice.size, s.version, s.choice.sleeve, undefined, true) + extras),
-      normal: round2(priceFor(s.shirt.season, s.choice.size, s.version, s.choice.sleeve) + extras),
+      price: round2(priceFor(s.shirt.season, s.choice.size, BUNDLE_VERSION, s.choice.sleeve, undefined, true) + extras),
+      normal: round2(priceFor(s.shirt.season, s.choice.size, BUNDLE_VERSION, s.choice.sleeve) + extras),
     };
   });
   const ready = slots.every((s) => s.shirt);
@@ -84,7 +82,7 @@ export function CustomBundleForm({ shirts, bundleTitle }: { shirts: PickableShir
         kind: "jersey",
         handle: s.shirt!.handle,
         size: s.choice.size,
-        version: s.version,
+        version: BUNDLE_VERSION,
         sleeve: s.choice.sleeve,
         patches: s.choice.patches,
         qty: 1,
@@ -111,18 +109,6 @@ export function CustomBundleForm({ shirts, bundleTitle }: { shirts: PickableShir
                     {t("changeShirt")}
                   </button>
                 </div>
-                <fieldset className="mb-3 border-0 p-0">
-                  <div className="flex flex-wrap gap-2">
-                    {(["fan", "player"] as const).map((v) => (
-                      <OptionButton key={v} pressed={s.version === v} onClick={() => update(i, { version: v })}>
-                        {v === "fan" ? tp("versionFan") : tp("versionPlayer")}
-                        <small className="ms-1.5 text-ink-soft">
-                          <Price value={priceFor(s.shirt!.season, s.choice.size, v, s.choice.sleeve, undefined, true)} />
-                        </small>
-                      </OptionButton>
-                    ))}
-                  </div>
-                </fieldset>
                 <ShirtCard
                   shirt={s.shirt}
                   index={i}
@@ -132,7 +118,7 @@ export function CustomBundleForm({ shirts, bundleTitle }: { shirts: PickableShir
                   onChange={(patch) => update(i, { choice: { ...s.choice, ...patch } })}
                   t={t}
                   tp={tp}
-                  version={s.version}
+                  version={BUNDLE_VERSION}
                   label={s.shirt.title}
                 />
               </div>

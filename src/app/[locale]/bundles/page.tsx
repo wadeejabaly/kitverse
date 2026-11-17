@@ -49,7 +49,7 @@ export default async function BundlesPage({ params }: { params: Promise<{ locale
             <span className="kv-pcard-title text-[20px]">{t("customCardTitle")}</span>
             <span className="text-[14px] text-ink-soft">{t("customIntro")}</span>
             <span className="kv-pcard-price">
-              {t("fromLabel")} <Price value={3 * priceFor(custom[0].season, "M", "fan", "short", undefined, true)} />
+              {t("fromLabel")} <Price value={3 * priceFor(custom[0].season, "M", BUNDLE_VERSION, "short", undefined, true)} />
             </span>
           </span>
         </Link>
@@ -62,8 +62,8 @@ export default async function BundlesPage({ params }: { params: Promise<{ locale
           <section className="grid gap-5 sm:grid-cols-3">
             {fanBundles.map(({ bundle, shirts, keychain, scarves }) => {
               const team = bundleTeam(shirts[0], locale);
-              const price = priceFor(shirts[0].season, "M", "fan", "short", undefined, true) + keyB + scarfB;
-              const normal = priceFor(shirts[0].season, "M", "fan") + keyN + scarfN;
+              const price = priceFor(shirts[0].season, "M", BUNDLE_VERSION, "short", undefined, true) + keyB + scarfB;
+              const normal = priceFor(shirts[0].season, "M", BUNDLE_VERSION) + keyN + scarfN;
               return (
                 <Link key={bundle.slug} href={`/bundles/${bundle.slug}`} className="kv-pcard group">
                   <span className="kv-pcard-media">

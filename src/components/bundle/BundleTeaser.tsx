@@ -48,7 +48,7 @@ async function BuildYourOwnTeaser({ locale, handle, className }: { locale: strin
   const p = getProduct(handle);
   if (!customBundleEligible(p)) return null;
   const t = await getTranslations({ locale, namespace: "bundle" });
-  const each = priceFor(p.season, "M", "fan", "short", undefined, true);
+  const each = priceFor(p.season, "M", BUNDLE_VERSION, "short", undefined, true);
   return (
     <Link href={`/bundles/build-your-own?first=${encodeURIComponent(handle)}`} className={`group flex items-center gap-4 rounded-[14px] border border-rule bg-tile p-3 pe-5 transition-colors hover:border-ink ${className}`}>
       <span className="flex shrink-0 -space-x-4 rtl:space-x-reverse">

@@ -11,6 +11,7 @@ import { Figure, Price } from "@/components/shared/Money";
 import { sanitizeNameNumber } from "@/lib/product";
 import { OptionButton } from "@/components/product/ProductForm";
 import { SaveNote, ShirtCard, START, type BundleShirt, type ShirtChoice } from "./BundleForm";
+import { BUNDLE_VERSION } from "@/data/bundle-defs";
 
 export interface FanBundleAccessory {
   handle: string;
@@ -37,7 +38,7 @@ export function FanBundleForm({
   const tCommon = useTranslations("common");
   const { add, count: cartCount } = useCart();
   const [shirtIndex, setShirtIndex] = useState(0);
-  const [version, setVersion] = useState<"fan" | "player">("fan");
+  const version = BUNDLE_VERSION; // every bundle is player version (owner 2026-11-17)
   const [choice, setChoice] = useState<ShirtChoice>(START);
   const [scarfIndex, setScarfIndex] = useState(0);
   const [added, setAdded] = useState(false);
@@ -103,20 +104,7 @@ export function FanBundleForm({
         </div>
       </fieldset>
 
-      {/* 2. fan or player */}
-      <fieldset className="mb-5 border-0 p-0">
-        <legend className="kv-legend">{tp("version")}</legend>
-        <div className="flex flex-wrap gap-2">
-          {(["fan", "player"] as const).map((v) => (
-            <OptionButton key={v} pressed={version === v} onClick={() => setVersion(v)}>
-              {v === "fan" ? tp("versionFan") : tp("versionPlayer")}
-              <small className="ms-1.5 text-ink-soft">
-                <Price value={priceFor(shirt.season, choice.size, v, choice.sleeve, undefined, true)} />
-              </small>
-            </OptionButton>
-          ))}
-        </div>
-      </fieldset>
+      {/* bundles are player version only (owner 2026-11-17) */}
 
       <ShirtCard
         shirt={shirt}
@@ -152,7 +140,7 @@ export function FanBundleForm({
       <div className="mt-6 rounded-[14px] border border-rule bg-tile p-5">
         <ul className="grid gap-1.5 text-[13.5px] text-ink-soft">
           <li className="flex justify-between gap-4">
-            <span>{shirt.kitLabel} · {version === "fan" ? tp("versionFan") : tp("versionPlayer")}{choice.sleeve === "long" ? ` · ${tp("sleeveLong")}` : ""}</span>
+            <span>{shirt.kitLabel} · {tp("versionPlayer")}{choice.sleeve === "long" ? ` · ${tp("sleeveLong")}` : ""}</span>
             <Price value={shirtPrice} />
           </li>
           <li className="flex justify-between gap-4">

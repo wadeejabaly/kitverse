@@ -98,7 +98,7 @@ export function completeBundles(
     if (isCustomBundle(slug)) {
       // exactly 3 shirts, nothing else, every one allowed
       const units = lines.reduce((n, l) => n + l.qty, 0);
-      if (!extras.length && units === CUSTOM_BUNDLE_SIZE && (!customEligible || lines.every((l) => customEligible(l.handle)))) ok.add(slug);
+      if (!extras.length && units === CUSTOM_BUNDLE_SIZE && lines.every((l) => l.version === BUNDLE_VERSION) && (!customEligible || lines.every((l) => customEligible(l.handle)))) ok.add(slug);
       continue;
     }
     const club = BUNDLES.find((b) => b.slug === slug);
@@ -111,7 +111,7 @@ export function completeBundles(
     const fan = FAN_BUNDLES.find((b) => b.slug === slug);
     const fanClub = fan && BUNDLES.find((b) => b.slug === fan.club);
     if (!fan || !fanClub) continue;
-    if (lines.some((l) => !fanClub.handles.includes(l.handle))) continue;
+    if (lines.some((l) => !fanClub.handles.includes(l.handle) || l.version !== BUNDLE_VERSION)) continue; // player only (owner 2026-11-17)
     const shirts = lines.reduce((n, l) => n + l.qty, 0);
     let keychains = 0, scarves = 0, stray = false;
     for (const a of extras) {
