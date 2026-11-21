@@ -1,6 +1,6 @@
 import type { Product } from "@/data/types";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
-import { FULL_VERSION_PATCH, allowedPatchesFor, maxPatches, sleevePatches } from "@/lib/patch-limits";
+import { FULL_VERSION_PATCH, UCL_SLEEVE_PATCHES, allowedPatchesFor, countedSleeves, maxPatches, sleevePatches } from "@/lib/patch-limits";
 import { slugify } from "@/data/slug";
 import { isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "@/lib/patch-eligibility";
 
@@ -99,7 +99,10 @@ export function sanitizePatches(patches: PatchId[], product: Product): PatchId[]
   const seen = new Set<PatchId>();
   const valid: PatchId[] = [];
   for (const p of sleeves) {
-    if (valid.length >= max || seen.has(p)) continue;
+    if (seen.has(p)) continue;
+    // one-patch shirts (owner 2026-11-21): the Champions League patch is extra - one of it, plus `max` others
+    const ucl = max === 1 && UCL_SLEEVE_PATCHES.includes(p);
+    if (ucl ? valid.some((v) => UCL_SLEEVE_PATCHES.includes(v)) : countedSleeves(valid, max).length >= max) continue;
     const rule: (typeof PATCHES)[PatchId] | undefined = PATCHES[p];
     if (!rule) continue;
     if (team.type === "club" && !rule.clubs) continue;

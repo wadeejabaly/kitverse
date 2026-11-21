@@ -11,7 +11,9 @@ import { normalizeSeason } from "./text";
  *  - EXCEPT La Liga 2025/26 and 2026/27 shirts: only 1 (owner decision
  *    2026-11-10, "in the Spanish league only 1 patch at a time" - applied to
  *    2025/26 as asked and to the 2026/27 shirts the website sells; older and
- *    retro La Liga shirts keep 2).
+ *    retro La Liga shirts keep 2) - PLUS one Champions League patch on the
+ *    other sleeve (owner request 2026-11-21: the Champions League patch can go
+ *    with the La Liga patch). See UCL_SLEEVE_PATCHES / countedSleeves().
  */
 export const ONE_PATCH_SEASONS: Record<string, readonly string[]> = {
   "la-liga": ["2025/26", "2026/27"],
@@ -40,6 +42,18 @@ export const CHEST_PATCHES: readonly string[] = ["club_world_cup", "ucl_final_pr
 /** The patches that take a sleeve (everything but the chest extras) - what the cap and the "alone" rule count. */
 export function sleevePatches<T extends string>(patches: readonly T[]): T[] {
   return patches.filter((p) => !CHEST_PATCHES.includes(p));
+}
+
+/**
+ * Owner request 2026-11-21: on a one-patch shirt (La Liga 2025/26, 2026/27) a Champions League sleeve
+ * patch doesn't count toward the 1 - it may go next to the La Liga (or any one other) patch, one of them.
+ */
+export const UCL_SLEEVE_PATCHES: readonly string[] = ["champions_league", "ucl_titles_badge"];
+
+/** The sleeve patches that count toward the cap: all of them, except on a one-patch shirt where the Champions League one is extra. */
+export function countedSleeves<T extends string>(patches: readonly T[], max: number): T[] {
+  const sleeves = sleevePatches(patches);
+  return max === 1 ? sleeves.filter((p) => !UCL_SLEEVE_PATCHES.includes(p)) : sleeves;
 }
 
 /** How many patches the full version is priced as. `retro` = the same retro signal the shirt's own price uses. */
@@ -92,7 +106,11 @@ export function togglePatchIn<T extends string>(current: readonly T[], id: T, ma
   const chest = current.filter((p) => CHEST_PATCHES.includes(p));
   const sleeves = sleevePatches(current);
   if (id === FULL_VERSION_PATCH || sleeves.includes(FULL_VERSION_PATCH as T)) return [id, ...chest];
-  if (max === 1) return [id, ...chest];
+  if (max === 1) {
+    // one-patch shirt (owner 2026-11-21): one Champions League patch + one other; a second of either kind swaps it
+    const ucl = UCL_SLEEVE_PATCHES.includes(id);
+    return [...sleeves.filter((p) => UCL_SLEEVE_PATCHES.includes(p) !== ucl), id, ...chest];
+  }
   if (sleeves.length >= max) return [...current];
   return [...current, id];
 }

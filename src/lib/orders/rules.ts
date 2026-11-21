@@ -1,5 +1,5 @@
 /** Pure validation rules for order lines and customer details (unit-tested). */
-import { FULL_VERSION_PATCH, allowedPatchesFor, maxPatches, sleevePatches } from "../patch-limits";
+import { FULL_VERSION_PATCH, UCL_SLEEVE_PATCHES, allowedPatchesFor, countedSleeves, maxPatches, sleevePatches } from "../patch-limits";
 import { hasUclTitlesBadge, isClubWorldChampionSeason, uclFinalPrint, uclRespectOffered, uclStarballOffered } from "../patch-eligibility";
 
 export const ADULT_SIZES = ["S", "M", "L", "XL", "XXL", "3XL", "4XL"] as const;
@@ -92,7 +92,9 @@ export function checkPatches(patches: PatchId[], team: { id?: string; type: "clu
   if (team.id && season && patches.includes("champions_league") && !uclStarballOffered(team.id, season)) return "on a current shirt this club takes the Champions League titles badge (with the number), not the plain ball";
   if (season && patches.includes("ucl_respect") && !uclRespectOffered(season)) return "the Respect patch is only on retro shirts";
   const max = maxPatches({ type: team.type, leagueId: team.league_id, season, handle });
-  if (sleeves.length > max) return max === 1 ? "only 1 patch allowed on this shirt" : `more than ${max} patches allowed`;
+  // one-patch shirts (owner 2026-11-21): 1 patch + one Champions League patch next to it
+  if (countedSleeves(patches, max).length > max) return max === 1 ? "only 1 patch on this shirt (plus one Champions League patch)" : `more than ${max} patches allowed`;
+  if (max === 1 && sleeves.filter((p) => UCL_SLEEVE_PATCHES.includes(p)).length > 1) return "only one Champions League patch";
   for (const p of patches) {
     const rule = PATCHES[p];
     if (!rule) return `unknown patch ${p}`;

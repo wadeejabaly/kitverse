@@ -71,10 +71,12 @@ describe("text", () => {
 
 describe("patch cap: La Liga 2025/26 + 2026/27 take only 1 (owner decision 2026-11-10)", () => {
   const laLiga = { type: "club" as const, league_id: "la-liga" };
-  it("refuses a second patch on La Liga 2025/26 and 2026/27, in any season spelling", () => {
+  it("refuses a second non-Champions-League patch on La Liga 2025/26 and 2026/27, in any season spelling", () => {
     for (const season of ["2025/26", "2026/27", "25/26", "2026-27"]) {
       expect(checkPatches(["league"], laLiga, season)).toBeNull();
-      expect(checkPatches(["league", "champions_league"], laLiga, season)).toBe("only 1 patch allowed on this shirt");
+      // owner 2026-11-21: the Champions League patch may go next to the La Liga one
+      expect(checkPatches(["league", "champions_league"], laLiga, season)).toBeNull();
+      expect(checkPatches(["league", "europa_league"], laLiga, season)).toBe("only 1 patch on this shirt (plus one Champions League patch)");
     }
   });
   it("keeps 2 for older La Liga seasons, other leagues, and 3 for national teams", () => {

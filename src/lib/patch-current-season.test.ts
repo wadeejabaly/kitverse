@@ -24,3 +24,22 @@ describe("current-shirt Champions League patches (owner request 2026-11-12)", ()
     expect(checkPatches(["champions_league"], rm, "2016/17")).toBeNull();
   });
 });
+
+describe("La Liga one-patch shirts + Champions League (owner 2026-11-21)", () => {
+  it("toggling keeps the La Liga patch next to a Champions League patch, and swaps within each kind", async () => {
+    const { togglePatchIn } = await import("./patch-limits");
+    let p: string[] = togglePatchIn([], "league", 1);
+    p = togglePatchIn(p, "ucl_titles_badge", 1);
+    expect(p.sort()).toEqual(["league", "ucl_titles_badge"]);
+    p = togglePatchIn(p, "europa_league", 1); // another non-UCL patch swaps the league one
+    expect(p.sort()).toEqual(["europa_league", "ucl_titles_badge"]);
+    p = togglePatchIn(p, "champions_league", 1); // another UCL piece swaps the UCL one
+    expect(p.sort()).toEqual(["champions_league", "europa_league"]);
+  });
+  it("the bot check accepts league + titles badge on a La Liga 2026/27 shirt, refuses two non-UCL", async () => {
+    const { checkPatches } = await import("./orders/rules");
+    const team = { id: "real-madrid", type: "club" as const, league_id: "la-liga" };
+    expect(checkPatches(["league", "ucl_titles_badge"] as never, team as never, "2026/27")).toBeNull();
+    expect(checkPatches(["league", "europa_league"] as never, team as never, "2026/27")).not.toBeNull();
+  });
+});
