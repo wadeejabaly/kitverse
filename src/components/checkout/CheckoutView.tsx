@@ -107,7 +107,7 @@ const MAX_DISCOUNT_CODES = 5;
  *  One that checks out but doesn't yet meet its own minimum order stays in
  *  this list rather than being dropped, so it kicks in on its own the
  *  moment the cart grows enough — see discountQualifies below. */
-type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean; appliesTo: "order" | "shirts"; combinesWithSale?: boolean; isSale?: boolean };
+type AppliedDiscount = { code: string; kind: "percent" | "fixed"; value: number; minOrder: number; stackable: boolean; firstOrderOnly: boolean; appliesTo: "order" | "shirts"; combinesWithSale?: boolean; isSale?: boolean; freeDelivery?: boolean };
 
 /** What the discount-code input is doing right now. */
 type DiscountCheck =
@@ -270,7 +270,7 @@ export function CheckoutView({
         body: JSON.stringify({ code }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown; appliesTo?: unknown; combinesWithSale?: unknown; isSale?: unknown }
+        | { ok?: boolean; kind?: unknown; value?: unknown; minOrder?: unknown; stackable?: unknown; firstOrderOnly?: unknown; appliesTo?: unknown; combinesWithSale?: unknown; isSale?: unknown; freeDelivery?: unknown }
         | null;
       if (data?.ok && (data.kind === "percent" || data.kind === "fixed") && typeof data.value === "number") {
         const next: AppliedDiscount = {
@@ -281,6 +281,7 @@ export function CheckoutView({
           appliesTo: data.appliesTo === "shirts" ? "shirts" : "order",
           combinesWithSale: data.combinesWithSale === true,
           isSale: data.isSale === true,
+          freeDelivery: data.freeDelivery === true,
         };
         // Same rule the server enforces (src/lib/discounts.ts
         // codesCanCombine): more than one code only works when EVERY one of
@@ -400,7 +401,9 @@ export function CheckoutView({
 
   // Shipping needs a resolved city — 0 here is "not yet known", not "free".
   // The order is not submittable until cityCheck is "found" (see the button below).
-  const shippingAmount = cityCheck.status === "found" ? cityCheck.fee : 0;
+  // owner 2026-11-21: a code with free delivery (KV25) makes it ₪0 - same as the server (requote)
+  const freeDelivery = appliedDiscounts.some((d) => d.freeDelivery);
+  const shippingAmount = cityCheck.status === "found" && !freeDelivery ? cityCheck.fee : 0;
   const totals = cartTotals(
     [...lines.map((line) => line.priced), ...accessoryLines.map((line) => line.priced)],
     shippingAmount,
@@ -900,6 +903,7 @@ export function CheckoutView({
                     <span dir="ltr" className="latin font-medium">{d.code}</span>
                     {d.firstOrderOnly ? <span className="text-xs text-ink-soft">{t("discountFirstOrderOnly")}</span> : null}
                     {d.appliesTo === "shirts" ? <span className="text-xs text-ink-soft">{t("discountShirtsOnly")}</span> : null}
+                    {d.freeDelivery ? <span className="text-xs text-ink-soft">{t("discountFreeDelivery")}</span> : null}
                   </span>
                   <button type="button" className="text-xs text-ink-soft underline underline-offset-4" onClick={() => removeDiscountCode(d.code)}>
                     {t("discountRemove")}

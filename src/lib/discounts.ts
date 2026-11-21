@@ -38,6 +38,8 @@ export type DiscountCode = {
   applies_to?: "order" | "shirts";
   /** Owner request 2026-11-16: may be used together with the running dated sale code (and only that one). */
   combines_with_sale?: boolean;
+  /** Owner request 2026-11-21: the code also makes delivery free (e.g. KV25). */
+  free_delivery?: boolean;
   created_at: string;
 };
 

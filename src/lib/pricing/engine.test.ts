@@ -57,6 +57,13 @@ describe("real DM orders", () => {
     expect(quote(list, { items: [shirt({ printNameNumber: true })], zoneId: "north" }).total).toBe(ILS(180));
   });
 
+  it("a free-delivery code makes delivery 0 (owner 2026-11-21, KV25)", () => {
+    const paid = quote(list, { items: [shirt()], zoneId: "north" });
+    const free = quote(list, { items: [shirt()], zoneId: "north", freeDelivery: true });
+    expect(free.delivery?.fee).toBe(0);
+    expect(paid.total - free.total).toBe(paid.delivery!.fee);
+  });
+
   it("3 fan + names + patches + north = 431 (fan is not in the bundle)", () => {
     const q = quote(list, { items: [1, 2, 3].map(() => shirt({ version: "fan", printNameNumber: true, patches: 1 })), zoneId: "north" });
     expect(q.offer).toBeNull();

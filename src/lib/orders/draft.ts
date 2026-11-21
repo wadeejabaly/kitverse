@@ -135,7 +135,10 @@ export async function requote(order: OrderRow): Promise<Quote> {
       bundle: !!i.bundle, // a complete bundle's shirt (owner 2026-11-15), checked when the order was written
     });
   }
-  const adj = must(await db().from("adjustments").select("reason,amount").eq("order_id", order.id), "adjustments") as { reason: string; amount: number }[];
+  const adj = must(await db().from("adjustments").select("reason,amount,discount_code").eq("order_id", order.id), "adjustments") as { reason: string; amount: number; discount_code: string | null }[];
+  // owner request 2026-11-21: a code with free_delivery on this order (its adjustment row) makes delivery ₪0
+  const codes = [...new Set(adj.map((a) => a.discount_code).filter((c): c is string => !!c))];
+  const freeDelivery = codes.length > 0 && !!(must(await db().from("discount_codes").select("code").in("code", codes).eq("free_delivery", true), "free delivery codes") as { code: string }[]).length;
   const boxes = items.filter((i) => i.box).reduce((n, i) => n + i.qty, 0) + (order.gift_boxes ?? 0); // boxed shirts + boxes ordered on the website
   // accessories (keychains, scarves - owner request 2026-11-10): priced as the price list's per-order add-on for their category
   const acc = must(await db().from("order_accessories").select("category,qty,bundle").eq("order_id", order.id), "order accessories") as { category: string; qty: number; bundle: string | null }[];
@@ -147,7 +150,7 @@ export async function requote(order: OrderRow): Promise<Quote> {
   }
   // PayPal orders carry the price list's PayPal fee (owner 2026-11-15) - it follows the order's payment method
   const paymentFeePct = order.payment_method === "paypal" || order.payment_method === "paypal_me" ? list.data.payment.paypal_fee_pct ?? 0 : 0;
-  const q = quote(list.data, { items: cart, zoneId: order.zone_id, paymentFeePct, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
+  const q = quote(list.data, { items: cart, zoneId: order.zone_id, paymentFeePct, freeDelivery, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
     orderAddons: [...(boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : []), ...[...accQty].map(([id, qty]) => ({ id, qty: Math.min(qty, 50), bundleQty: accBundle.get(id) ?? 0 }))] });
   const status = order.status === "draft" && (cart.length || acc.length) ? "quoted" : order.status;
   must(await db().from("orders").update({

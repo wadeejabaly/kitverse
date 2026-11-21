@@ -774,6 +774,7 @@
     "picksContinue": "Continue to checkout",
     "picksClose": "Close",
     "discountShirtsOnly": "On the shirts and kits only",
+    "discountFreeDelivery": "+ free delivery",
     "payPalFee": "A {pct}% PayPal fee applies."
   },
   "thankYou": {

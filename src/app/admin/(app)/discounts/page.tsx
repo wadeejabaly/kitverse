@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 type Row = {
   code: string; kind: "percent" | "fixed"; value: number; min_order: number;
-  starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number; active: boolean; stackable: boolean; first_order_only: boolean; applies_to?: string; combines_with_sale?: boolean;
+  starts_at: string | null; ends_at: string | null; max_uses: number | null; used_count: number; active: boolean; stackable: boolean; first_order_only: boolean; applies_to?: string; combines_with_sale?: boolean; free_delivery?: boolean;
 };
 
 function statusOf(r: Row): { label: string; tone: Tone } {
@@ -29,7 +29,7 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
   const sp = await searchParams;
   const saved = sp.saved === "1";
   const error = typeof sp.error === "string" ? sp.error : null;
-  const rows = ((await db().from("discount_codes").select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count,active,stackable,first_order_only,applies_to,combines_with_sale")
+  const rows = ((await db().from("discount_codes").select("code,kind,value,min_order,starts_at,ends_at,max_uses,used_count,active,stackable,first_order_only,applies_to,combines_with_sale,free_delivery")
     .order("created_at", { ascending: false })).data ?? []) as Row[];
 
   return (
@@ -58,6 +58,7 @@ export default async function Discounts({ searchParams }: PageProps<"/admin/disc
                     <Badge tone={status.tone}>{status.label}</Badge>
                     {r.stackable ? <Badge>Combinable</Badge> : null}
                     {r.combines_with_sale ? <Badge>+ sale</Badge> : null}
+                    {r.free_delivery ? <Badge>free delivery</Badge> : null}
                     {r.first_order_only ? <Badge>First order only</Badge> : null}
                     {r.applies_to === "shirts" ? <Badge>Shirts &amp; kits only</Badge> : null}
                   </div>

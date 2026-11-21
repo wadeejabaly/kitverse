@@ -40,5 +40,7 @@ export async function POST(req: NextRequest) {
     // owner 2026-11-16: the riddle coupon may join the running sale code (src/lib/discount-rules.ts)
     combinesWithSale: lookup.row.combines_with_sale === true,
     isSale: isSaleRow(lookup.row),
+    // owner 2026-11-21: the code also makes delivery free (KV25)
+    freeDelivery: lookup.row.free_delivery === true,
   });
 }

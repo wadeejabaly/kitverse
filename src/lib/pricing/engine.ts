@@ -37,6 +37,8 @@ export interface QuoteInput {
   orderAddons?: { id: string; qty: number; bundleQty?: number }[]; // per-order extras with a quantity (e.g. gift boxes); bundleQty of them inside complete bundles
   /** Payment fee in percent of the order (owner 2026-11-15: 5% when paying with PayPal) - the price list's payment.paypal_fee_pct, passed only for PayPal orders. */
   paymentFeePct?: number;
+  /** Owner request 2026-11-21: a discount code with free_delivery (e.g. KV25) makes delivery ₪0. */
+  freeDelivery?: boolean;
   now?: Date;
 }
 
@@ -202,7 +204,7 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
   if (input.zoneId) {
     const z = list.delivery.zones.find((z) => z.id === input.zoneId);
     if (!z) throw new PricingError(`unknown delivery zone ${input.zoneId}`);
-    delivery = { zoneId: z.id, label: z.name_ar, fee: A(z.fee), days: z.days };
+    delivery = { zoneId: z.id, label: z.name_ar, fee: input.freeDelivery ? 0 : A(z.fee), days: z.days };
   }
 
   const missing: Quote["missing"] = [];

@@ -774,6 +774,7 @@
     "picksContinue": "המשך לתשלום",
     "picksClose": "סגירה",
     "discountShirtsOnly": "רק על מחיר החולצות והערכות",
+    "discountFreeDelivery": "+ משלוח חינם",
     "payPalFee": "חלה עמלת PayPal של {pct}%"
   },
   "thankYou": {

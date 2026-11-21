@@ -46,6 +46,10 @@ export function DiscountForm() {
         Can be combined with the running sale only (e.g. Black Friday; this code comes off first)
       </label>
       <label className="flex items-end gap-2 text-sm text-ink">
+        <input type="checkbox" name="freeDelivery" className="h-4 w-4 accent-[var(--pitch)]" />
+        Free delivery too
+      </label>
+      <label className="flex items-end gap-2 text-sm text-ink">
         <input type="checkbox" name="firstOrderOnly" className="h-4 w-4 accent-[var(--pitch)]" />
         First order only (checked by phone number)
       </label>

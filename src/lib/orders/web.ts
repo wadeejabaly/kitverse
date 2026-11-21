@@ -181,7 +181,7 @@ export async function prepareOrder(req: CreateOrderRequest, opts: { claimCodes: 
       );
       for (const [i, d] of discounts.entries()) {
         const amount = amounts[i];
-        if (amount <= 0) continue;
+        if (amount <= 0 && !d.free_delivery) continue; // a free-delivery code still needs its row (requote reads it)
         // cash orders claim the use now; online ones only when the payment settles (settleOnlinePayment)
         if (opts.claimCodes && !(await recordDiscountCodeUse(d.code))) {
           await db().from("orders").update({ status: "cancelled", notes: "checkout cancelled: discount code used up" }).eq("id", order.id);
