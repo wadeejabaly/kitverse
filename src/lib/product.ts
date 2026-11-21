@@ -44,7 +44,7 @@ export function shortSeason(season: string): string {
 
 /**
  * The name & number a customer may print on a shirt: uppercase Latin letters,
- * digits and single spaces, 18 characters max. Used by the PDP input as it
+ * digits, single spaces and dots (owner request 2026-11-21: "R. CARLOS 3"), 18 characters max. Used by the PDP input as it
  * types and again wherever a stored cart item is trusted.
  */
 export const NAME_NUMBER_MAX = 18;
@@ -52,7 +52,8 @@ export const NAME_NUMBER_MAX = 18;
 export function sanitizeNameNumber(input: string): string {
   return input
     .toUpperCase()
-    .replace(/[^A-Z0-9 ]/g, "")
+    .replace(/[^A-Z0-9 .]/g, "")
+    .replace(/\.{2,}/g, ".")
     .replace(/\s{2,}/g, " ")
     .slice(0, NAME_NUMBER_MAX);
 }
