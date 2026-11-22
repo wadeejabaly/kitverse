@@ -592,7 +592,7 @@
     "timingBody": "Shirts ship from our supplier once your order is confirmed. Delivery takes 10 to 20 working days. Shirts printed with a name and number add two days before dispatch, because the print is done to order.",
     "rateTitle": "Rate and area",
     "rateBody": "We deliver within Israel only for now, and the rate depends on your city. Type your city at checkout and the price shows immediately. Prices are in shekels and include VAT.",
-    "tierNorth": "North (through Kfar Qara)",
+    "tierNorth": "North",
     "tierRest": "Everywhere else (West Bank included)",
     "trackingTitle": "Delivery day",
     "trackingBody": "The courier calls you a day before delivery. Want an update on your order? Message us on Instagram and we will tell you exactly where it is.",
@@ -883,7 +883,7 @@
         },
         "cost": {
           "q": "How much does delivery cost?",
-          "a": "One fee per order, however many shirts: {north} in the north (through Kfar Qara) and {rest} everywhere else, the West Bank included. Type your city at checkout to see your exact fee."
+          "a": "One fee per order, however many shirts: {north} in the north and {rest} everywhere else, the West Bank included. Type your city at checkout to see your exact fee."
         },
         "where": {
           "q": "Where do you deliver?",

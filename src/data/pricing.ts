@@ -267,7 +267,7 @@ export const SHIPPING_ILS_BY_TIER: Record<ShippingTier, number> = {
   rest: zoneFee("center"),
 };
 
-/** The zone's own Arabic label (e.g. "الشمال (لحد كفر قرع)" / "باقي المناطق") — matches exactly
+/** The zone's own Arabic label (e.g. "الشمال" / "باقي المناطق"; owner 2026-11-22: no "up to Kafr Qara" - it confused customers) — matches exactly
  *  what POST /api/checkout/resolve-city returns as `label` for a server-resolved town, so the
  *  CityCombobox's instant local pick (src/components/checkout/CityCombobox.tsx) shows the same
  *  text as a server round trip would, no round trip needed. */
