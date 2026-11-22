@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { israelDayStart } from "@/lib/time";
 import { PageHeader, Card, SectionTitle, Badge, EmptyState, KIND, ORDER_STATUS, Kpi, StatusDot, ils, timeAgo, payLabel, cx } from "../ui";
 import { AreaChart, BarChart, Donut, RankList, ChartCard, SERIES } from "../charts";
-import { allOrders, customerName, dailySeries, delta, isSale, PENDING, productSales, summarize } from "../metrics";
+import { allOrders, awaitingPayment, customerName, dailySeries, delta, isSale, PENDING, productSales, summarize } from "../metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +51,7 @@ export default async function Dashboard() {
   const today = summarize(orders, todayStart);
   const pending = orders.filter((o) => PENDING.includes(o.status));
   const webPending = pending.filter((o) => o.source === "website").length;
+  const payWaiting = orders.filter(awaitingPayment).length;
   const delivered = orders.filter((o) => isSale(o) && o.status === "delivered").length;
   const outstanding = orders.filter((o) => isSale(o) && !["delivered", "cancelled"].includes(o.status)).length;
   const customers = ((customersRes.data ?? []) as { id: string; ig_user_id: string | null }[]).filter((c) => !c.ig_user_id?.startsWith("sim:"));
@@ -79,6 +80,7 @@ export default async function Dashboard() {
 
   const alerts = [
     webPending ? { href: "/admin/orders?status=needs_approval", icon: ShoppingBag, text: `${webPending} website order${webPending > 1 ? "s" : ""} waiting for your OK`, tone: "blue" as const } : null,
+    payWaiting ? { href: "/admin/orders?status=needs_approval", icon: ShoppingBag, text: `${payWaiting} Bit / PayPal order${payWaiting > 1 ? "s" : ""} not paid yet`, tone: "amber" as const } : null,
     needsReply ? { href: "/admin/inbox?filter=owner", icon: MessagesSquare, text: `${needsReply} chat${needsReply > 1 ? "s" : ""} waiting for your reply`, tone: "blue" as const } : null,
     noPhoto.count ? { href: "/admin/photos", icon: ImageOff, text: `${noPhoto.count} website shirt${noPhoto.count > 1 ? "s have" : " has"} no photo yet`, tone: "amber" as const } : null,
   ].filter(Boolean) as { href: string; icon: typeof ShoppingBag; text: string; tone: "blue" | "amber" }[];

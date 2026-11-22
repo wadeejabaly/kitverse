@@ -24,6 +24,12 @@ export type OrderLite = {
 
 export const PENDING = ["awaiting_confirmation", "awaiting_payment_verification"];
 
+/** Online-pay rails where the customer pays after the order is written (Bit / PayPal.Me transfer, PayPal / Bit card page). */
+export const PAY_LATER_METHODS = ["bit_personal", "paypal_me", "paypal", "bit"];
+/** A website order placed on one of those rails that the customer has not paid yet (still "quoted"). Owner 2026-11-22: list these with the normal orders, tagged. */
+export const awaitingPayment = (o: { status: string; source: string | null; payment_method: string | null; payment_status: string | null }) =>
+  o.status === "quoted" && o.source === "website" && o.payment_status !== "paid" && PAY_LATER_METHODS.includes(o.payment_method ?? "");
+
 const isTest = (o: OrderLite) => !!o.customer?.ig_user_id?.startsWith("sim:");
 export const isSale = (o: OrderLite) => !!o.confirmed_at && o.status !== "cancelled" && !isTest(o);
 

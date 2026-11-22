@@ -5,7 +5,7 @@ import { createSupplierBatch, approveWebOrder, declineWebOrder } from "../../ord
 import { PageHeader, Card, Badge, EmptyState, ORDER_STATUS, button, ilTime, payLabel, input, ils, Tabs } from "../../ui";
 import { SubmitButton } from "../../submit-button";
 import { DeleteCancelledOrders } from "./delete-cancelled";
-import { allOrders, customerName, PENDING } from "../../metrics";
+import { allOrders, awaitingPayment, customerName, PENDING, PAY_LATER_METHODS } from "../../metrics";
 import { israelDayStart, israelDayEnd } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -33,9 +33,12 @@ export default async function Orders({ searchParams }: PageProps<"/admin/orders"
 
   if (status === "needs_approval") return <NeedsApproval />;
 
-  const orders = (await allOrders()).filter((o) => o.status !== "quoted");
+  // owner 2026-11-22: unpaid Bit / PayPal orders are listed with the normal orders (tagged), not hidden
+  const orders = (await allOrders()).filter((o) => o.status !== "quoted" || awaitingPayment(o));
   const sales = orders.filter((o) => !PRE.includes(o.status));
-  let rows = status === "all" ? orders : status === "open" ? sales.filter((o) => !["delivered", "cancelled"].includes(o.status)) : sales.filter((o) => (TAB_STATUSES[status] ?? []).includes(o.status));
+  const payPending = orders.filter((o) => awaitingPayment(o) || (o.status === "awaiting_payment_verification" && o.source === "website"));
+  const open = [...payPending, ...sales.filter((o) => !["delivered", "cancelled"].includes(o.status))];
+  let rows = status === "all" ? orders : status === "open" ? open : sales.filter((o) => (TAB_STATUSES[status] ?? []).includes(o.status));
   const q = f.q.toLowerCase().replace(/^#/, "");
   const digits = q.replace(/\D/g, "");
   if (q) rows = rows.filter((o) => String(o.number) === q || customerName(o).toLowerCase().includes(q) || (o.address?.town ?? "").includes(f.q)
@@ -48,8 +51,8 @@ export default async function Orders({ searchParams }: PageProps<"/admin/orders"
   rows.sort((a, b) => ((b.confirmed_at ?? b.created_at) > (a.confirmed_at ?? a.created_at) ? 1 : -1));
 
   const batchable = rows.some((r) => r.status === "confirmed" || r.status === "paid");
-  const pendingCount = orders.filter((o) => PENDING.includes(o.status) && o.source === "website").length;
-  const count = (st: string) => st === "open" ? sales.filter((o) => !["delivered", "cancelled"].includes(o.status)).length : st === "all" ? orders.length : sales.filter((o) => (TAB_STATUSES[st] ?? []).includes(o.status)).length;
+  const pendingCount = orders.filter((o) => (PENDING.includes(o.status) && o.source === "website") || awaitingPayment(o)).length;
+  const count = (st: string) => st === "open" ? open.length : st === "all" ? orders.length : sales.filter((o) => (TAB_STATUSES[st] ?? []).includes(o.status)).length;
   const filtered = Object.values(f).some(Boolean);
   const keep = (extra: Record<string, string>) => { const u = new URLSearchParams(Object.entries({ ...f, ...extra }).filter(([, v]) => v)); return `/admin/orders?${u}`; };
 
@@ -113,7 +116,7 @@ export default async function Orders({ searchParams }: PageProps<"/admin/orders"
                         </td>
                         <td className="hidden md:table-cell">{o.source === "website" ? <Badge tone="blue">Website</Badge> : <Badge>Instagram</Badge>}{test ? <Badge className="ms-1">test</Badge> : null}</td>
                         <td className="hidden whitespace-nowrap text-muted lg:table-cell">{payLabel(o.payment_method, o.payment_status)}</td>
-                        <td><Badge tone={st.tone}>{st.label}</Badge></td>
+                        <td>{awaitingPayment(o) ? <Badge tone="amber">Waiting for payment · {payLabel(o.payment_method).replace(" transfer", "")}</Badge> : <Badge tone={st.tone}>{st.label}</Badge>}</td>
                         <td className="whitespace-nowrap text-end font-semibold tabular-nums">{ils(o.total)}</td>
                       </tr>
                     );
@@ -154,14 +157,14 @@ async function NeedsApproval() {
     .eq("status", "awaiting_payment_verification").eq("source", "website").order("created_at")).data ?? []) as unknown as { id: string; number: number; total: number; payment_method: string | null; created_at: string; address: { full_name?: string; town?: string } | null }[];
   // ...and the ones still waiting for the customer to pay (nothing to do yet, listed so a transfer without a report can still be matched)
   const unpaid = ((await db().from("orders").select("id,number,total,payment_method,created_at,address")
-    .eq("status", "quoted").eq("source", "website").eq("payment_status", "unpaid").in("payment_method", ["bit_personal", "paypal_me"]).order("created_at", { ascending: false }).limit(20)).data ?? []) as unknown as typeof verify;
+    .eq("status", "quoted").eq("source", "website").eq("payment_status", "unpaid").in("payment_method", PAY_LATER_METHODS).order("created_at", { ascending: false }).limit(50)).data ?? []) as unknown as typeof verify;
   const tabs = [["needs_approval", "Needs approval"], ["open", "Open"], ["confirmed", "New"], ["with_courier", "With courier"], ["delivered", "Delivered"], ["cancelled", "Cancelled"], ["all", "All"]];
 
   return (
     <>
       <PageHeader eyebrow="Sales" title="Orders" subtitle="Website orders waiting for your OK before they go to production."
         actions={<Link href="/admin/orders/batches" className={button.ghost}><Truck className="h-4 w-4" /> Supplier batches</Link>} />
-      <Tabs active="needs_approval" items={tabs.map(([k, label]) => ({ key: k, href: `/admin/orders?status=${k}`, label, count: k === "needs_approval" ? rows.length + verify.length : undefined }))} />
+      <Tabs active="needs_approval" items={tabs.map(([k, label]) => ({ key: k, href: `/admin/orders?status=${k}`, label, count: k === "needs_approval" ? rows.length + verify.length + unpaid.length : undefined }))} />
       {verify.length ? (
         <>
           <h2 className="mb-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-gold">Payments to verify ({verify.length})</h2>
@@ -170,7 +173,7 @@ async function NeedsApproval() {
           </Card>
         </>
       ) : null}
-      {!rows.length && verify.length ? null : !rows.length ? <EmptyState icon={ClipboardCheck} title="Nothing waiting" text="New website orders show up here the moment they're placed." /> : (
+      {!rows.length && (verify.length || unpaid.length) ? null : !rows.length ? <EmptyState icon={ClipboardCheck} title="Nothing waiting" text="New website orders show up here the moment they're placed." /> : (
         <Card padded={false} className="divide-y divide-line overflow-hidden">
           {rows.map((o) => (
             <div key={o.id} className="flex flex-col gap-3 px-4 py-3.5 sm:px-5">
@@ -197,12 +200,12 @@ async function NeedsApproval() {
         </Card>
       )}
       {unpaid.length ? (
-        <details className="mt-5">
-          <summary className="cursor-pointer text-sm text-muted">Waiting for the customer to pay - Bit / PayPal.Me ({unpaid.length})</summary>
-          <Card padded={false} className="mt-2 divide-y divide-line overflow-hidden">
-            {unpaid.map((o) => <ManualRow key={o.id} o={o} badge={<Badge>Not paid yet</Badge>} />)}
+        <>
+          <h2 className="mb-2 mt-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-gold">Waiting for the customer to pay ({unpaid.length})</h2>
+          <Card padded={false} className="divide-y divide-line overflow-hidden">
+            {unpaid.map((o) => <ManualRow key={o.id} o={o} badge={<Badge tone="amber">Waiting for payment · {payLabel(o.payment_method).replace(" transfer", "")}</Badge>} />)}
           </Card>
-        </details>
+        </>
       ) : null}
     </>
   );
@@ -218,7 +221,7 @@ function ManualRow({ o, badge }: { o: { id: string; number: number; total: numbe
           {badge}
         </div>
         <div className="mt-0.5 flex items-center gap-2 text-xs text-muted">
-          <span>{payLabel(o.payment_method, "unpaid", true).split(" · ")[0]}</span>·<span>note KV{o.number}</span>·<span>{ilTime(o.created_at)}</span>
+          <span>{payLabel(o.payment_method, "unpaid", true).split(" · ")[0]}</span>·{o.payment_method === "bit_personal" || o.payment_method === "paypal_me" ? <><span>note KV{o.number}</span>·</> : null}<span>{ilTime(o.created_at)}</span>
         </div>
       </div>
       <span className="font-medium tabular-nums">₪{o.total / 100}</span>

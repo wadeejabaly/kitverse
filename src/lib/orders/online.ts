@@ -60,6 +60,16 @@ export async function createPendingOnlineOrder(
     "price online order",
   ) as OrderRow;
 
+  // owner 2026-11-22: tell me when an unpaid PayPal / Bit order comes in (the "paid, approve it" alert still follows on settlement)
+  const addr = row.address as { full_name?: string; town?: string } | null;
+  await notify({
+    kind: "order.awaiting_payment",
+    priority: "normal",
+    title: `New ${provider === "paypal" ? "PayPal" : "Bit"} order #${row.number} - ₪${row.total / 100} (not paid yet)`,
+    body: `${addr?.full_name ?? req.customer.name}${addr?.town ? `, ${addr.town}` : ""} · sent to the ${provider === "paypal" ? "PayPal" : "Bit"} payment page`,
+    link: `/admin/orders/${row.id}`,
+  }).catch((e) => console.error("notify awaiting payment failed", e));
+
   return {
     ok: true,
     order: row,

@@ -121,6 +121,16 @@ export async function startManualOrder(req: CreateOrderRequest, method: ManualMe
     return { ok: false, code: "server_error", detail: ins.error.message };
   }
   must(await db().from("order_events").insert({ order_id: row.id, from_status: "draft", to_status: "quoted", actor: "customer", note: `${method === "bit_personal" ? "Bit (personal)" : "PayPal.Me"} checkout - waiting for payment` }).select("id"), "manual order event");
+  // owner 2026-11-22: tell me the moment an unpaid Bit / PayPal.Me order comes in (not only when the customer reports paying)
+  const addr = order.address as { full_name?: string; town?: string } | null;
+  const label = method === "bit_personal" ? "Bit" : "PayPal.Me";
+  await notify({
+    kind: "order.awaiting_payment",
+    priority: "normal",
+    title: `New ${label} order #${row.number} - ₪${formatIls(row.total)} (not paid yet)`,
+    body: `${addr?.full_name ?? "Customer"}${addr?.town ? `, ${addr.town}` : ""} · waiting for ₪${formatIls(row.total)} with note ${transferNote(row.number)}`,
+    link: `/admin/orders/${row.id}`,
+  }).catch((e) => console.error("notify awaiting payment failed", e));
   return { ok: true, token: orderToken(row.id), reference: orderReference(row.id), number: row.number, reused: false };
 }
 
