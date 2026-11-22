@@ -224,3 +224,12 @@ describe("accessories: scarf ₪50, ₪40 with a shirt (one per shirt) during th
     expect(q.total).toBe(ILS(50) + q.delivery!.fee);
   });
 });
+
+describe("custom lines (owner 2026-11-22: items not in the store, at the owner's final price)", () => {
+  it("adds the line at exactly its amount, untouched by discounts already on the order", () => {
+    const base = quote(list, { items: [shirt()], zoneId: "north" });
+    const withShorts = quote(list, { items: [shirt()], zoneId: "north", customLines: [{ id: "custom:x", label: "Barcelona shorts ×2", amount: ILS(140) }] });
+    expect(withShorts.total - base.total).toBe(ILS(140));
+    expect(withShorts.summaryAr).toContain("Barcelona shorts ×2");
+  });
+});

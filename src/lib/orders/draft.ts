@@ -22,6 +22,8 @@ export interface ItemRow {
   id: string; product_id: string | null; description: string | null; audience: "adult" | "women" | "kids";
   version: "fan" | "player"; sleeve: "short" | "long"; size: string; qty: number; print_name: string | null;
   print_number: string | null; patches: string[]; box: boolean; bundle?: string | null;
+  /** agorot; only used for a non-store line (no product_id) the owner priced himself (2026-11-22) */
+  unit_price?: number;
 }
 
 export async function openOrder(conversationId: string): Promise<OrderRow | null> {
@@ -124,8 +126,14 @@ export async function requote(order: OrderRow): Promise<Quote> {
   const list = await currentPriceList();
   const items = await orderItems(order.id);
   const cart: CartItem[] = [];
+  // owner request 2026-11-22: a line that isn't a store product (no product_id) but carries the owner's own
+  // unit_price (e.g. 2x Barcelona shorts at ₪70, after discounts) is charged at exactly that price
+  const customLines: { id: string; label: string; amount: number }[] = [];
   for (const i of items) {
-    if (!i.product_id) continue;
+    if (!i.product_id) {
+      if ((i.unit_price ?? 0) > 0) customLines.push({ id: `custom:${i.id}`, label: `${i.description ?? "item"}${i.qty > 1 ? ` ×${i.qty}` : ""}`, amount: (i.unit_price ?? 0) * i.qty });
+      continue;
+    }
     const p = await getProduct(i.product_id);
     if (!p) continue;
     cart.push({
@@ -150,7 +158,7 @@ export async function requote(order: OrderRow): Promise<Quote> {
   }
   // PayPal orders carry the price list's PayPal fee (owner 2026-11-15) - it follows the order's payment method
   const paymentFeePct = order.payment_method === "paypal" || order.payment_method === "paypal_me" ? list.data.payment.paypal_fee_pct ?? 0 : 0;
-  const q = quote(list.data, { items: cart, zoneId: order.zone_id, paymentFeePct, freeDelivery, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
+  const q = quote(list.data, { items: cart, zoneId: order.zone_id, paymentFeePct, freeDelivery, customLines, adjustments: adj.map((a) => ({ label: a.reason, amount: a.amount })),
     orderAddons: [...(boxes ? [{ id: "gift_box", qty: Math.min(boxes, 10) }] : []), ...[...accQty].map(([id, qty]) => ({ id, qty: Math.min(qty, 50), bundleQty: accBundle.get(id) ?? 0 }))] });
   const status = order.status === "draft" && (cart.length || acc.length) ? "quoted" : order.status;
   must(await db().from("orders").update({

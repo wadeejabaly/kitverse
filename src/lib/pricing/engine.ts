@@ -37,6 +37,8 @@ export interface QuoteInput {
   orderAddons?: { id: string; qty: number; bundleQty?: number }[]; // per-order extras with a quantity (e.g. gift boxes); bundleQty of them inside complete bundles
   /** Payment fee in percent of the order (owner 2026-11-15: 5% when paying with PayPal) - the price list's payment.paypal_fee_pct, passed only for PayPal orders. */
   paymentFeePct?: number;
+  /** Owner request 2026-11-22: items that aren't in the store, added to an order by the owner at his own final price (agorot, already after discounts). */
+  customLines?: { id: string; label: string; amount: number }[];
   /** Owner request 2026-11-21: a discount code with free_delivery (e.g. KV25) makes delivery ₪0. */
   freeDelivery?: boolean;
   now?: Date;
@@ -195,6 +197,11 @@ export function quote(list: PriceListData, input: QuoteInput): Quote {
     const cheap = pairedCount(a.paired_price, rest, shirtCount, now);
     const amount = inBundle * A(a.bundle_price ?? a.price) + cheap * A(a.paired_price?.price ?? a.price) + (rest - cheap) * A(a.price);
     orderAddons.push({ id: a.id, label: x.qty > 1 ? `${a.name_ar} ×${x.qty}` : a.name_ar, amount });
+  }
+
+  for (const c of input.customLines ?? []) {
+    if (!Number.isInteger(c.amount) || c.amount < 0) throw new PricingError(`bad custom line ${c.id}`);
+    orderAddons.push({ id: c.id, label: c.label, amount: c.amount });
   }
 
   const itemsTotal = lines.reduce((s, l) => s + l.lineTotal, 0) + orderAddons.reduce((s, a) => s + a.amount, 0);

@@ -40,8 +40,8 @@ export async function batchOrderIds(batchId: string): Promise<string[]> {
 export async function batchLines(orderIds: string[]): Promise<BatchLine[]> {
   if (!orderIds.length) return [];
   const orders = must(await db().from("orders").select("id,number,address").in("id", orderIds), "orders") as { id: string; number: number; address: Record<string, string> | null }[];
-  const items = must(await db().from("order_items").select("id,order_id,product_id,audience,version,sleeve,size,qty,print_name,print_number,patches,box").in("order_id", orderIds), "items") as
-    { id: string; order_id: string; product_id: string | null; audience: string; version: string; sleeve: string; size: string; qty: number; print_name: string | null; print_number: string | null; patches: string[]; box: boolean }[];
+  const items = must(await db().from("order_items").select("id,order_id,product_id,description,audience,version,sleeve,size,qty,print_name,print_number,patches,box").in("order_id", orderIds), "items") as
+    { id: string; order_id: string; product_id: string | null; description: string | null; audience: string; version: string; sleeve: string; size: string; qty: number; print_name: string | null; print_number: string | null; patches: string[]; box: boolean }[];
   const pids = [...new Set(items.map((i) => i.product_id).filter(Boolean))] as string[];
   const products = pids.length ? must(await db().from("products").select("id,title_en,season,kit,is_kit_with_shorts,primary_image_url,team:teams(id,name_en,league_id),options:product_options(audience,version,sleeve,supplier_album_ids),images:product_images(url,sleeve,sort,status)").in("id", pids), "products") as unknown as
     { id: string; title_en: string; season: string | null; kit: string; is_kit_with_shorts: boolean; primary_image_url: string | null; team: { id: string; name_en: string; league_id: string | null };
@@ -59,7 +59,7 @@ export async function batchLines(orderIds: string[]): Promise<BatchLine[]> {
     return {
       id: i.id, order_id: i.order_id, product_id: i.product_id,
       order_number: o.number, customer: o.address?.full_name ?? "", town: o.address?.town ?? "", team: p?.team.name_en ?? "",
-      title: p?.title_en ?? "", season: p?.season ?? "", kit: p?.kit ?? "", version: i.version === "player" ? "Player" : "Fan",
+      title: p?.title_en ?? i.description ?? "" /* a non-store line (owner 2026-11-22) shows its description */, season: p?.season ?? "", kit: p?.kit ?? "", version: i.version === "player" ? "Player" : "Fan",
       sleeve: i.sleeve === "long" ? "Long" : "Short", audience: i.audience, size: i.size, qty: i.qty, print_name: i.print_name ?? "",
       print_number: i.print_number ?? "", patches: i.patches.join(" + "), box: i.box ? "yes" : "",
       full_kit: !!p?.is_kit_with_shorts || i.audience === "kids",
