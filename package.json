@@ -10,8 +10,6 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "db:push": "node scripts/db-push.mjs",
-    "db:seed": "tsx scripts/seed-catalog.ts",
-    "catalog:build": "python3 tools/catalog-build/build_catalog.py catalog",
     "chat": "tsx --conditions=react-server scripts/chat.ts",
     "style:import": "tsx --conditions=react-server scripts/import-style.ts",
     "eval": "tsx --conditions=react-server scripts/eval.ts",
@@ -20,7 +18,6 @@
     "photos:screen": "tsx --conditions=react-server scripts/screen-photos.ts",
     "photos:verify-teams": "tsx --conditions=react-server scripts/verify-photo-teams.ts",
     "store:export": "tsx scripts/export-store-catalog.ts",
-    "migrate:real-photos": "tsx --conditions=react-server scripts/migrate-real-photos.ts",
     "prebuild": "tsx scripts/export-store-catalog.ts"
   },
   "dependencies": {

@@ -99,7 +99,7 @@ async function main() {
   // Galleries (owner report 2026-11-02: "there are photos in the website that dont appear in the
   // admin") used to live ONLY as committed public/products/ files + the images/imagesLongSleeve
   // arrays below, hand-edited in this JSON - invisible to admin's photo manager, which only ever read
-  // product_images. Photos migrated into product_images (scripts/migrate-real-photos.ts) now win here
+  // product_images. Photos in product_images win here
   // instead, grouped by the sleeve set the storefront gallery actually swaps between (ProductGallery.tsx);
   // a product not yet migrated (shortRows empty) keeps the old JSON-sourced gallery untouched below.
   const imageRows: ImageRow[] = [];

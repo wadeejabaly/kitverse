@@ -7,7 +7,6 @@ import { renameProduct } from "../../photos-actions";
 import { PageHeader, Card, Badge, EmptyState, cx, button } from "../../ui";
 import { PhotoUploadButton } from "./photo-upload-button";
 import { PhotoManagerButton } from "./photo-manager";
-import { MigrateRealPhotosButton } from "./migrate-real-photos-button";
 import { DeleteProductButton } from "./delete-product-button";
 import { ProductManager } from "./product-manager";
 import { SubmitButton } from "../../submit-button";
@@ -93,7 +92,6 @@ export default async function Photos({ searchParams }: PageProps<"/admin/photos"
   return (
     <>
       <PageHeader eyebrow="Catalog" title="Photos & shirts" subtitle={`Every photo is checked before a customer sees it - no labels, watermarks, kids or baby items, or ugly shots. ${env().VERCEL_DEPLOY_HOOK_URL ? "Photos you upload show on the website about 2 minutes later." : "Photos you upload reach the bot right away and the website after the next site update."}`} />
-      <MigrateRealPhotosButton />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="inline-flex rounded-xl border border-line bg-surface p-1 text-sm">
           <Link href={qs("missing")} className={cx("rounded-lg px-3 py-1.5", tab === "missing" ? "bg-pitch-fill text-white" : "text-ink-2")}>Needs a photo ({missing.length})</Link>

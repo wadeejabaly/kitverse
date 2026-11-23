@@ -7,7 +7,7 @@ import { notify } from "../notify";
 /**
  * Daily: read the supplier's newest albums and add any new SHIRT albums to the catalog
  * (status "available" - the bot can sell them, the website doesn't show them until featured).
- * Mirrors the rules of tools/catalog-build (baby/training/jackets/shorts/other sports are skipped).
+ * Mirrors the rules of the original supplier crawl (baby/training/jackets/shorts/other sports are skipped).
  */
 const SUPPLIER = "https://jerseyxie.x.yupoo.com";
 const NEW_ARRIVALS = 4717653;

@@ -16,7 +16,7 @@ export async function currentPriceList(): Promise<LoadedPriceList> {
     .in("status", ["published", "draft"]).order("status", { ascending: false }) // 'published' > 'draft'
     .order("version", { ascending: false }).limit(1).maybeSingle();
   if (r.error) throw new Error(`price list: ${r.error.message}`);
-  if (!r.data) throw new Error("no price list in the database - run npm run db:seed");
+  if (!r.data) throw new Error("no price list in the database - publish one in admin Pricing");
   const list = { id: r.data.id, version: r.data.version, status: r.data.status, data: PriceListData.parse(r.data.data) } as LoadedPriceList;
   cache = { at: Date.now(), list };
   return list;

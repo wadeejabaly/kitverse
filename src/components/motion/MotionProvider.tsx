@@ -12,8 +12,7 @@ import { usePathname } from "@/i18n/navigation";
  * Smooth scrolling (Lenis) was removed 2026-11-05 (owner report: "a little bit of lag scrolling
  * through the website"): it replayed every wheel/trackpad movement over ~1 s, so the page kept
  * gliding ~0.9 s after the hand stopped, and any slow frame showed as a hitch. Scrolling is the
- * browser's own again; the hero's scrubbed parallax (<Parallax/>) runs on native scroll via
- * ScrollTrigger, no smoothing layer needed.
+ * browser's own again, no smoothing layer needed.
  */
 export function MotionProvider() {
   const pathname = usePathname();
