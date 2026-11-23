@@ -93,7 +93,7 @@ export function missingCosts(c: Costs): string[] {
   if (!c.shirtFan) out.push("fan shirt");
   if (!c.shirtPlayer) out.push("player shirt");
   if (!c.shirtRetro) out.push("retro shirt");
-  if (!c.supplierShippingPerShirt) out.push("shipping from the supplier");
+  // shipping from the supplier: 0 is a real answer (owner 2026-11-23: it's included in the shirt prices), never flagged
   if (!c.deliveryNorth || !c.deliveryOther) out.push("delivery to the customer");
   if (c.supplierCurrency === "USD" && !c.usdRate) out.push("dollar rate");
   return out;
