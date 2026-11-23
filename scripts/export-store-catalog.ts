@@ -64,7 +64,7 @@ async function main() {
     if (error) throw error;
     type Listed = { handle: string; title_en: string; title_ar: string | null; title_he: string | null; season: string | null; kit: string; flags: string[] | null; is_kit_with_shorts: boolean; team: { id: string; name_en: string; name_ar: string | null; name_he: string | null; type: "club" | "national"; league_id: string | null } };
     const added = ((data ?? []) as unknown as Listed[])
-      .filter((r) => !inSelection.has(r.handle) && r.season && ["Home", "Away", "Third", "Fourth"].includes(r.kit))
+      .filter((r) => !inSelection.has(r.handle) && r.season && ["Home", "Away", "Third", "Fourth", "Special"].includes(r.kit)) /* Special: e.g. the Barcelona 2026/27 Clásico shirt, owner 2026-11-23 */
       .map((r): Product & { productHandle?: string } => {
         const t = collectionTeams.get(r.team.id);
         return {

@@ -439,7 +439,8 @@
       "Home": "Home",
       "Away": "Away",
       "Third": "Third",
-      "Fourth": "Fourth"
+      "Fourth": "Fourth",
+      "Special": "Special edition"
     },
     "serviceDelivery": "Delivery in 10–20 working days",
     "servicePayment": "Pay with {methods}",

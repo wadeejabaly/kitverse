@@ -439,7 +439,8 @@
       "Home": "أساسي",
       "Away": "احتياطي",
       "Third": "ثالث",
-      "Fourth": "رابع"
+      "Fourth": "رابع",
+      "Special": "إصدار خاص"
     },
     "serviceDelivery": "التوصيل خلال 10–20 يوم عمل",
     "servicePayment": "الدفع: {methods}",
