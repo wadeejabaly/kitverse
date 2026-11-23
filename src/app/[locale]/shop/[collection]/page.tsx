@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { routing } from "@/i18n/config";
+import { PRERENDER_LOCALES } from "@/i18n/config";
 import { getTeams, localName } from "@/data/catalog";
 import { seasonYear } from "@/data/pricing";
 import { slugify } from "@/data/slug";
@@ -40,7 +40,7 @@ import { alternatesFor } from "@/lib/site";
  * team+year only rather than adding a defaulted field.
  */
 export function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
+  return PRERENDER_LOCALES.flatMap((locale) =>
     collectionParams().map((collection) => ({ locale, collection })),
   );
 }

@@ -1,11 +1,9 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
-import sharp from "sharp";
 import { z } from "zod";
 import { env } from "../env";
 import { logAiUsage } from "../ai-cost";
 import { db, must } from "../db";
-import { albumPhotoHashes } from "./images";
 
 /**
  * Photo quality gate. Supplier photos often carry Chinese labels, prices, watermarks or messy
@@ -98,23 +96,6 @@ export async function upload(path: string, buf: Buffer): Promise<string> {
   return db().storage.from("media").getPublicUrl(path).data.publicUrl;
 }
 
-/**
- * Supplier photos often show the shirt next to its shorts. Fallback when an album has no shirt-only
- * photo: crop to the shirt (generous margin); the result is checked again before it is used.
- */
-export async function frameShirt(buf: Buffer, box: NonNullable<Assessment["shirt_box"]>): Promise<Buffer> {
-  const { width = 0, height = 0 } = await sharp(buf).metadata();
-  const m = 0.05; // shirt boxes are rough - keep the sleeves
-  const left = Math.max(0, Math.floor((box.x - m) * width));
-  const top = Math.max(0, Math.floor((box.y - m) * height));
-  const w = Math.min(width - left, Math.ceil((box.w + 2 * m) * width));
-  const h = Math.min(height - top, Math.ceil((box.h + 2 * m) * height));
-  // no padding: the site shows photos "contain" on a white tile and Instagram takes any ratio
-  return sharp(buf).extract({ left, top, width: w, height: h })
-    .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
-    .jpeg({ quality: 88 }).toBuffer();
-}
-
 type Box = { x: number; y: number; w: number; h: number };
 const area = (b: Box) => Math.max(0, b.w) * Math.max(0, b.h);
 const intersect = (a: Box, b: Box): Box => {
@@ -171,32 +152,4 @@ export async function bestProductPhoto(p: ProductRef, opts: { audience?: PhotoAu
   const seen = must(await db().from("product_images").select("url,status,quality").eq("product_id", p.id).eq("status", "good"), "seen") as { url: string; status: string; quality: Assessment | null }[];
   const reuse = seen.find((s) => s.quality && isClean(s.quality, audience) && s.quality.front_view !== false);
   return reuse?.url ?? null;
-}
-
-/** "Barcelona 2026/27 Home shirt" - what the photo must show (used to catch the supplier's mislabelled albums). */
-async function describe(productId: string): Promise<string> {
-  const r = (await db().from("products").select("title_en,kit,season,team:teams(name_en,type)").eq("id", productId).maybeSingle()).data as { title_en: string; kit: string; season: string | null; team: { name_en: string; type: string } | null } | null;
-  if (!r) return "";
-  const kit = ["Special", "Unstated"].includes(r.kit) ? "" : ` ${r.kit.toLowerCase()} kit`;
-  void kit;
-  return `a ${r.team?.name_en ?? ""} ${r.team?.type === "national" ? "national team " : ""}football shirt`.replace(/\s+/g, " ");
-}
-
-/** Clean extra photos (back, details) of a product for "send me more pictures". */
-export async function cleanAlbumPhotos(p: ProductRef, albumId: string, max = 3): Promise<string[]> {
-  const hashes = await albumPhotoHashes(albumId, 8).catch(() => [] as string[]);
-  const out: string[] = [];
-  for (const h of hashes) {
-    if (out.length >= max) break;
-    const prior = (await db().from("product_images").select("url,status").eq("product_id", p.id).eq("supplier_hash", h).maybeSingle()).data;
-    if (prior) { if (prior.status === "good" || prior.status === "cropped") out.push(prior.url); continue; }
-    const buf = await fetchBuffer(`https://photo.yupoo.com/jerseyxie/${h}/big.jpg`, true);
-    if (!buf || buf.length < 5000) continue;
-    const url = await upload(`products/${p.handle}/s-${h}.jpg`, buf);
-    const a = await assessPhoto(url, await describe(p.id));
-    const good = !!a && isClean(a, "adult");
-    await record(p.id, url, good ? "good" : "bad", a, { source: "supplier", hash: h, album: albumId });
-    if (good) out.push(url);
-  }
-  return out;
 }

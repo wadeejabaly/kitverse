@@ -147,10 +147,6 @@ export function Avatar({ name, size = 36 }: { name: string; size?: number }) {
   );
 }
 
-export function Row({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
-  return <Link href={href} className={cx("flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-raised/60 sm:px-5", className)}>{children}</Link>;
-}
-
 /** Segmented tabs (links), e.g. order status filters. */
 export function Tabs({ items, active }: { items: { href: string; label: React.ReactNode; key: string; count?: number }[]; active: string }) {
   return (

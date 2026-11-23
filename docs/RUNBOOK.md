@@ -53,7 +53,7 @@ npm run db:clean-tests -- --yes
 - Environment variables live in Vercel and `.env.local` (`src/lib/env.ts` lists every one and what it
   does). `SUPABASE_DB_URL` is only for migrations; never copy `.env.development.local` to Vercel.
 - Payment buttons, the WhatsApp order alert and the deploy hook each stay off until their own env vars are
-  set (see `CLAUDE.md`).
+  set (see `docs/storefront.md` and `docs/whatsapp-alert.md`).
 - Inngest: after changing background jobs, re-sync the app in the Inngest dashboard
   (`https://kitversejerseys.com/api/inngest`).
 - Meta: webhook callback `https://kitversejerseys.com/api/instagram/webhook`. Until App Review grants

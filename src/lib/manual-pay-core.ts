@@ -21,8 +21,6 @@
 export const MANUAL_METHODS = ["bit_personal", "paypal_me"] as const;
 export type ManualMethod = (typeof MANUAL_METHODS)[number];
 
-export const isManualMethod = (v: unknown): v is ManualMethod => v === "bit_personal" || v === "paypal_me";
-
 /** Israeli mobile number (what Bit is registered on) -> "05XXXXXXXX", or null. Accepts +972 / 972 / spaces / dashes. */
 export function normalizeBitPhone(raw: unknown): string | null {
   if (typeof raw !== "string") return null;

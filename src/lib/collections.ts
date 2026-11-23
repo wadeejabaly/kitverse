@@ -17,12 +17,6 @@ export const KIND_SLUGS = {
 
 export type KindSlug = keyof typeof KIND_SLUGS;
 
-export const SLUG_FOR_KIND: Record<Kind, KindSlug> = {
-  national: "national-teams",
-  current: "new-season",
-  previous: "last-season",
-};
-
 /** The one retro slug — not in KIND_SLUGS, because Retro isn't a Kind. */
 export const RETRO_SLUG = "retro" as const;
 

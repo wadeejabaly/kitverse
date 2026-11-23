@@ -11,24 +11,3 @@ export function motionAllowed() {
   if (typeof window === "undefined") return false;
   return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-
-/**
- * Desktop-with-a-real-pointer. This is the gate on the heavy motion stack:
- * scroll-scrubbed parallax loads ONLY here (smooth scrolling was removed
- * 2026-11-05 - see MotionProvider).
- *
- * It is a performance decision before it is a taste one. GSAP + ScrollTrigger
- * is a lot of JavaScript, the Lighthouse budget on this
- * build is the MOBILE score, and a phone gets nothing out of hijacked
- * scrolling — native momentum scrolling is already better than anything we
- * would ship. So the dynamic imports sit behind this check and a phone never
- * requests those chunks at all.
- */
-export function heavyMotionAllowed() {
-  if (typeof window === "undefined") return false;
-  return (
-    motionAllowed() &&
-    window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
-    window.innerWidth >= 900
-  );
-}

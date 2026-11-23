@@ -25,16 +25,6 @@ export interface Team {
   kind: "national" | "club";
 }
 
-export interface SearchEntry {
-  handle: string;
-  title: string;
-  titleAr: string;
-  titleHe: string;
-  team: string;
-  teamAr: string;
-  teamHe: string;
-}
-
 const products: Product[] = catalogData.products as Product[];
 const leagues: League[] = collectionsData.leagues as League[];
 const teams: Team[] = collectionsData.teams as Team[];
@@ -97,19 +87,6 @@ export function kitProducts(set: ProductSet): Product[] {
   return products.filter((p) => p.visible && p.set === set);
 }
 
-/** Lightweight index for client-side search — visible products only. */
-export function searchIndex(): SearchEntry[] {
-  return getVisibleProducts().map(({ handle, title, titleAr, titleHe, team, teamAr, teamHe }) => ({
-    handle,
-    title,
-    titleAr,
-    titleHe,
-    team,
-    teamAr,
-    teamHe,
-  }));
-}
-
 /** All leagues (collections.json is already filtered to leagues with ≥1 product). */
 export function getLeagues(): League[] {
   return leagues;
@@ -118,11 +95,6 @@ export function getLeagues(): League[] {
 /** All teams (national + club) present in the catalog, regardless of visibility. */
 export function getTeams(): Team[] {
   return teams;
-}
-
-/** Every product, visible or not — used by the review tool's contact sheet/grid. */
-export function getAllProducts(): Product[] {
-  return products;
 }
 
 export { localName } from "@/lib/local-name";

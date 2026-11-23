@@ -81,9 +81,3 @@ export async function getProduct(id: string): Promise<ProductHit | null> {
   if (r.error) throw new Error(`getProduct: ${r.error.message}`);
   return (r.data as unknown as ProductHit) ?? null;
 }
-
-/** Seasons the supplier has for a team (so the bot can say "we have 25/26 and 26/27"). */
-export async function seasonsForTeam(teamId: string): Promise<string[]> {
-  const rows = must(await db().from("products").select("season").eq("team_id", teamId).neq("status", "hidden").limit(1000), "seasons");
-  return [...new Set((rows as { season: string | null }[]).map((r) => r.season).filter(Boolean) as string[])].sort().reverse();
-}

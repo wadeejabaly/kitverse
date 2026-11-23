@@ -1,20 +1,4 @@
 import { describe, it, expect } from "vitest";
-import { parseAlbumTitle } from "./supplier-sync";
-
-describe("supplier album titles", () => {
-  it("parses the supplier's formats", () => {
-    expect(parseAlbumTitle("26-27 Barc Away Player Version Cheap Soccer Jerseys Yupoo")).toMatchObject({ season: "2026/27", kit: "Away", version: "player", teamRaw: "Barc", isShirt: true, era: "current" });
-    expect(parseAlbumTitle("2008-09 M-anchester U-nited Away Retro Long Sleeve Soccer Jerseys Yupoo")).toMatchObject({ season: "2008/09", era: "retro", sleeve: "long", teamRaw: "Manchester United" });
-    expect(parseAlbumTitle("Mens Morocco 2026 World Cup Home Jersey")).toMatchObject({ season: "2026", kit: "Home", teamRaw: "Morocco" });
-    expect(parseAlbumTitle("26-27 AlNassr Home Kids Cheap Soccer Jerseys and shorts Yupoo")).toMatchObject({ audience: "kids", isShirt: true });
-    expect(parseAlbumTitle("25/26 Chelsea Home S-4XL")).toMatchObject({ kit: "Home", isShirt: true });
-  });
-  it("skips non-shirts", () => {
-    expect(parseAlbumTitle("25-26 Bayern Training Soccer Suit Yupoo").isShirt).toBe(false);
-    expect(parseAlbumTitle("26-27 Inter Miami Baby Cheap Soccer Jerseys Yupoo").isShirt).toBe(false);
-    expect(parseAlbumTitle("25-26 Bayern Windbreaker Jackets Yupoo").isShirt).toBe(false);
-  });
-});
 
 describe("label cutting", () => {
   it("trims a top-left label above the shoulders, keeps the shirt", async () => {

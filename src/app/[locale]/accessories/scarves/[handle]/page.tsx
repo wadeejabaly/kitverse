@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/config";
+import { PRERENDER_LOCALES } from "@/i18n/config";
 import { accessoriesByCategory, accessoryTeam, accessoryVariant, getAccessory, isInStock } from "@/data/accessories";
 import { AccessoryForm } from "@/components/product/AccessoryForm";
 import { AccessoryDealNote } from "@/components/product/AccessoryDealNote";
@@ -13,7 +13,7 @@ import { alternatesFor, localeUrl } from "@/lib/site";
 
 /** One scarf design (owner request 2026-11-10). Addressed by its own handle: a team can have several scarves. */
 export function generateStaticParams() {
-  return routing.locales.flatMap((locale) => accessoriesByCategory("scarf").map((a) => ({ locale, handle: a.handle })));
+  return PRERENDER_LOCALES.flatMap((locale) => accessoriesByCategory("scarf").map((a) => ({ locale, handle: a.handle })));
 }
 
 function scarf(handle: string) {

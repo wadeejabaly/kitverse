@@ -127,13 +127,6 @@ export const CreateOrderRequestSchema = z.object({
 
 export type CreateOrderRequest = z.infer<typeof CreateOrderRequestSchema>;
 
-export const CaptureOrderRequestSchema = z.object({
-  paypalOrderId: z.string().min(4).max(64).regex(/^[A-Za-z0-9_-]+$/),
-});
-
-/** The country this store ships to at launch. Not a form field. */
-export const FIXED_COUNTRY = "IL";
-
 /**
  * Failure codes the API returns instead of prose. The browser maps each one
  * to a localized string (messages: checkout.errors.*), so an error message is

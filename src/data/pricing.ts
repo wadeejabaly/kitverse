@@ -149,14 +149,6 @@ const FAN_LONG_PRICE = groupPrice("fan_long");
 const PLAYER_LONG_PRICE = groupPrice("player_long");
 const RETRO_LONG_PRICE = groupPrice("retro_long");
 
-/**
- * Still parked here, unused: the owner hasn't added these product types'
- * photography/catalogue entries yet, so nothing reads these constants.
- */
-export const FUTURE_PRICES = {
-  nbaVersion: 160,
-} as const;
-
 /** Full kits (shirt + shorts, owner request 2026-11-15) - the `adult_kit` / `adult_kit_player` / `kids_kit` groups in admin Pricing. */
 const ADULT_KIT_PRICE = groupPrice("adult_kit");
 const ADULT_KIT_PLAYER_PRICE = groupPrice("adult_kit_player") || ADULT_KIT_PRICE;

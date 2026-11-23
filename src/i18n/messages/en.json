@@ -9,7 +9,6 @@
     "welcomeNoMin": "{amount} off your first order — code <c>{code}</c> at checkout",
     "cta": "Shop now",
     "sale": "{amount} off everything — code <c>{code}</c> at checkout",
-    "saleMin": "{amount} off orders of {min} or more, online only — code <c>{code}</c> at checkout",
     "saleStrip": "{amount} off shirts on orders of {min} or more <s>|</s> code <c>{code}</c> · online only!",
     "claimTitle": "Claim {amount} off?",
     "claimBodyMin": "Black Friday: {amount} off shirts and kits on orders of {min} or more, online only.",
@@ -45,7 +44,6 @@
     "classicsTeams": "Clubs & nations",
     "allAccessories": "All accessories",
     "menuBrowse": "Browse",
-    "menuHelp": "Help",
     "toArabic": "العربية",
     "toEnglish": "English",
     "toHebrew": "עברית",
@@ -54,7 +52,6 @@
     "help": "Help Center",
     "contact": "Contact",
     "returns": "Returns & refunds",
-    "shippingOnly": "Shipping",
     "bundles": "Bundles",
     "kits": "Kits",
     "fullKits": "Full kits",
@@ -79,7 +76,6 @@
       "showcaseRotate": "Drag to rotate",
       "showcaseOpen": "tap to open the shirt"
     },
-    "browseEyebrow": "Browse",
     "kinds": {
       "retro": {
         "title": "Retro",
@@ -150,7 +146,6 @@
       "discount": "{amount} OFF",
       "minLine": "off shirts on orders of {min}+",
       "sub": "The biggest range of club and national-team shirts, classic and current, in great quality and standout designs.",
-      "autoNote": "Applied automatically at checkout",
       "countdownLabel": "Black Friday ends in",
       "days": "days",
       "hours": "hrs",
@@ -196,22 +191,18 @@
   },
   "footer": {
     "rights": "© {year} KitVerse. All rights reserved.",
-    "tagline": "Football shirts for clubs and national teams.",
     "privacy": "Privacy policy",
     "terms": "Terms of use",
     "cookieSettings": "Cookie settings",
     "shopGroup": "Shop",
     "helpGroup": "Help",
-    "legalGroup": "Legal",
     "contactGroup": "Contact",
     "emailUs": "Email us",
     "description": "Football shirts for clubs and national teams",
     "allShirts": "All shirts",
     "retro": "Retro classics",
     "shippingPolicy": "Shipping policy",
-    "returnsPolicy": "Returns & refunds",
-    "weAccept": "Payment:",
-    "cashOnDelivery": "Cash on delivery"
+    "returnsPolicy": "Returns & refunds"
   },
   "consent": {
     "message": "We use cookies to enhance your experience, analyze site traffic and show relevant products. You can change your preferences at any time from “Cookie settings” at the bottom of the page.",
@@ -346,8 +337,6 @@
     "quantity": "Quantity",
     "added": "Added to your cart.",
     "viewCart": "View cart",
-    "checkoutExcluded": "Not included in this order yet",
-    "checkoutNotice": "Keychains can't be ordered online yet — they're left out of your order below. Remove them from your cart, or message us on Instagram to add one to a cash-on-delivery order.",
     "scarvesLabel": "Scarves",
     "scarvesIntro": "Club scarves to wear to the match or hang on the wall.",
     "scarfTitle": "{team} Scarf · {variant}",
@@ -422,7 +411,6 @@
     "kidsAge": "age {from}-{to}",
     "kidsHelperOpen": "Not sure? Find the size by height and weight",
     "kidsHelperHeight": "Child's height (cm)",
-    "kidsHelperAge": "Age (years)",
     "kidsHelperOr": "and",
     "kidsHelperHint": "Enter height and weight - if they point to two sizes, we pick the bigger one.",
     "kidsHelperResult": "Size {size} ({letter}) - usually age {from}-{to}",
@@ -642,9 +630,6 @@
     "title": "Shirts, described honestly",
     "metaDescription": "What KitVerse sells: replica football shirts for clubs and national teams, in Fan and Player versions, with honest photographs and honest delivery dates.",
     "body1": "KitVerse sells football shirts for clubs from the big five leagues and for national teams, in two versions: Fan and Player. Sizes run from S to 4XL, and any shirt can be printed with a name and number.",
-    "productsTitle": "About the products",
-    "body2": "The shirts on our site are replicas, not official original shirts. We work to keep the design and details as close as possible to the authentic version, and our product photographs closely represent the shirt you'll actually receive.",
-    "body3": "Prices are in shekels and include VAT. Delivery takes 10 to 20 working days, inside Israel for now.",
     "contactTitle": "Contact",
     "contactBody": "Questions about an order, a size, or a return — write to us and we reply within two business days.",
     "email": "kitversejerseys@gmail.com",
@@ -764,10 +749,8 @@
     "payBitPersonalNote": "Transfer the exact total to our Bit number from your Bit app. The next page shows the number, the amount and your order number to write in the note. We confirm your payment by hand, usually within a few hours.",
     "payBitPersonalButton": "Pay with Bit",
     "payPalMe": "Pay with PayPal",
-    "payPalMeNote": "We save your order, then the next page has a button that opens our PayPal.Me with the amount filled in. We confirm your payment by hand, usually within a few hours.",
     "payPalMeButton": "Pay with PayPal",
     "picksTitle": "Picks for your shirts",
-    "picksHint": "Matching extras for the teams in your order.",
     "picksAdd": "Add",
     "picksAddLabel": "Add {item} to the order",
     "picksPopupTitle": "Complete your look",
@@ -796,40 +779,6 @@
     "cashIntro": "We have started getting your order ready.",
     "cashNote": "Pay the courier in cash when your order arrives. No deposit was charged.",
     "viewOrder": "Track your order"
-  },
-  "heroPreview": {
-    "pageTitle": "Hero variants",
-    "pageLabel": "Hero variants",
-    "pageNote": "Four directions for the opening of the home page. Pick one.",
-    "live": "live",
-    "d": {
-      "tag": "D",
-      "name": "Floodlight"
-    },
-    "a": {
-      "tag": "A",
-      "name": "Product-forward",
-      "eyebrow": "This season's kits",
-      "titleA": "Your team's shirt,",
-      "titleB": "printed to order.",
-      "sub": "Fan or Player, in every size, with your name and number if you want them. The price you see includes VAT.",
-      "cta": "Shop all shirts"
-    },
-    "b": {
-      "tag": "B",
-      "name": "Full-bleed showcase"
-    },
-    "c": {
-      "tag": "C",
-      "name": "Typographic, quieter",
-      "eyebrow": "This season's kits",
-      "titleA": "Your team's shirt,",
-      "titleB": "in your size,",
-      "titleC": "with your name on it.",
-      "sub": "Clubs and national teams from the major leagues, in the Fan or the Player version, with optional name and number printing.",
-      "cta": "Shop all shirts",
-      "ctaSecondary": "National teams"
-    }
   },
   "help": {
     "eyebrow": "Help Center",
@@ -1115,7 +1064,6 @@
     "fanFrom": "From",
     "playerFrom": "Player version",
     "custom": "Name + number and patches available",
-    "chartTitle": "Kids size chart",
     "size": "Size",
     "age": "Age",
     "height": "Height (cm)",

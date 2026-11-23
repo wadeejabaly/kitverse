@@ -828,10 +828,6 @@ h2 {
   color: var(--flood-gold);
 }
 
-.kv-flood-sub {
-  color: var(--flood-ink-soft);
-}
-
 /* The CTA arrow (owner reference 2026-10-27 — both hero buttons carry a
    directional arrow in the mockup). A plain inline SVG, mirrored in RTL the
    same way .kv-cat-card-arrow is, so the arrows on the page follow one
@@ -2515,18 +2511,6 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
   color: #fff;
 }
 
-.kv-pay {
-  display: inline-flex;
-  align-items: center;
-  height: 30px;
-  padding: 0 0.7rem;
-  border-radius: 6px;
-  background: rgb(255 255 255 / 0.08);
-  border: 1px solid rgb(255 255 255 / 0.14);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
 }
 
 /* ---------------------------------------------------------------------------

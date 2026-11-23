@@ -115,8 +115,8 @@ export const mediaSync = inngest.createFunction(
 
 // Daily supplier-catalog sync retired (owner decision 2026-11-02, Part 9: "i dont want his catalog
 // or pictures anymore" - from now on new products are only ever added by hand/on request, never
-// auto-discovered from jerseyxie.x.yupoo.com). src/lib/catalog/supplier-sync.ts is left in place,
-// just no longer scheduled - existing products and their supplier_album_ids (still used to order
+// auto-discovered from jerseyxie.x.yupoo.com). The sync code was removed in the 2026-11-23 cleanup (it is in git history);
+// existing products and their supplier_album_ids (still used to order
 // stock, see src/lib/orders/admin.ts) are untouched.
 
 /** Every 5 min: publish the scheduled Instagram posts/stories that are due (src/lib/channels/ig-publish.ts). */

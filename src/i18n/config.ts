@@ -23,6 +23,13 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
+/**
+ * Locales whose product / collection / accessory / bundle pages are built ahead at deploy time
+ * (owner 2026-11-23: faster deploys). English pages are rendered on their first visit instead and
+ * then cached until the next deploy - same page, ~a third fewer pages to build.
+ */
+export const PRERENDER_LOCALES: readonly Locale[] = ["ar", "he"];
+
 /** Right-to-left locales. `ar` and `he` are RTL; `en` is LTR. */
 const RTL_LOCALES: ReadonlySet<string> = new Set(["ar", "he"]);
 

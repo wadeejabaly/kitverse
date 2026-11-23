@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/config";
+import { PRERENDER_LOCALES } from "@/i18n/config";
 import { Link } from "@/i18n/navigation";
 import {
   accessoriesByCategory,
@@ -19,7 +19,7 @@ import { alternatesFor, localeUrl } from "@/lib/site";
 
 /** One phone case design + colour (owner request 2026-11-16). The phone model is picked in the buy box. */
 export function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
+  return PRERENDER_LOCALES.flatMap((locale) =>
     accessoriesByCategory("phone_case").map((a) => ({
       locale,
       handle: a.handle,

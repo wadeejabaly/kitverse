@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { routing } from "@/i18n/config";
+import { PRERENDER_LOCALES } from "@/i18n/config";
 import { getLeagues, getProduct, getVisibleProducts, localName, getSellableProducts } from "@/data/catalog";
 import { isRetroSeason, priceFor } from "@/data/pricing";
 import { slugify } from "@/data/slug";
@@ -28,7 +28,7 @@ import { enabledPaymentMethods } from "@/lib/payment-methods";
  * level, exactly as the data contract specifies.
  */
 export function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
+  return PRERENDER_LOCALES.flatMap((locale) =>
     getSellableProducts().map((product) => ({ locale, handle: product.handle })),
   );
 }

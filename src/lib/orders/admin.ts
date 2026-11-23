@@ -1,8 +1,6 @@
 import "server-only";
 import { db, must } from "../db";
 
-export const STATUS_FLOW = ["confirmed", "paid", "in_supplier_batch", "produced", "at_warehouse", "with_courier", "delivered"] as const;
-
 export const STATUS_LABEL: Record<string, [string, string]> = {
   draft: ["مسودة", "Draft"], quoted: ["عرض سعر", "Quoted"], awaiting_details: ["بانتظار التفاصيل", "Awaiting details"],
   awaiting_confirmation: ["بانتظار التأكيد", "Awaiting confirmation"], awaiting_payment_verification: ["بانتظار تأكيد الدفع", "Awaiting payment verification"], confirmed: ["مؤكدة", "Confirmed"], paid: ["مدفوعة", "Paid"],

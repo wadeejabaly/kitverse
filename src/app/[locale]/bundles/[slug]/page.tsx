@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/config";
+import { PRERENDER_LOCALES } from "@/i18n/config";
 import { BUNDLES, FAN_BUNDLES, bundleWithProducts, fanBundleWithProducts } from "@/data/bundles";
 import { accessoryVariant } from "@/data/accessories";
 import { FanBundleForm } from "@/components/bundle/FanBundleForm";
@@ -16,7 +16,7 @@ import { bundleTeam } from "../team-name";
 
 export function generateStaticParams() {
   const slugs = [...BUNDLES.filter((b) => bundleWithProducts(b.slug)).map((b) => b.slug), ...FAN_BUNDLES.filter((b) => fanBundleWithProducts(b.slug)).map((b) => b.slug)];
-  return routing.locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
+  return PRERENDER_LOCALES.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {

@@ -21,7 +21,7 @@ AI sales system for @kitversejerseys (football shirts, Israel): an Instagram-DM 
 - Supabase Postgres (project `kbzpzggsedliunhjegyj`, EU). Schema lives only in `supabase/migrations/`; apply with `npm run db:push` (or the Supabase MCP `apply_migration`). Never edit it in the dashboard. Migrations are additive-only on live data.
 - Inngest for background work (`src/inngest/`) - see `docs/instagram.md`.
 - Claude runs the agent (model picked in admin Settings -> `bot_settings.ai_model`; default `ANTHROPIC_MODEL`) through tools (`src/lib/agent/`). **The AI never does money math**: totals come only from `src/lib/pricing/engine.ts`.
-- Vercel project `prj_Xw7ipGvTOzxa9X5bC4U6WHmvYsgR`, team `team_6guviQzi1wSId1ulzAF8nkoR`; deploys `main` to production. Build ≈ 1 min: `prebuild` = `scripts/export-store-catalog.ts` (DB -> `src/data/catalog.json`, `price-list.json`, `promo.json`), then `next build` (~1,100 static pages).
+- Vercel project `prj_Xw7ipGvTOzxa9X5bC4U6WHmvYsgR`, team `team_6guviQzi1wSId1ulzAF8nkoR`; deploys `main` to production. Build ≈ 1 min: `prebuild` = `scripts/export-store-catalog.ts` (DB -> `src/data/catalog.json`, `price-list.json`, `promo.json`), then `next build` (Arabic + Hebrew shop pages prebuilt; English ones render on first visit - `PRERENDER_LOCALES` in `src/i18n/config.ts`).
 
 ## Where things live
 - `src/app/[locale]/` storefront pages · `src/app/admin/` admin (`(app)/` pages, `*-actions.ts` server actions, `ui.tsx` primitives, `metrics.ts` business numbers) · `src/app/o/` customer order page · `src/app/api/` checkout, webhooks, Inngest.

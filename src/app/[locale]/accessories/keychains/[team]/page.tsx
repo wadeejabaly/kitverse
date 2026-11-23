@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/config";
+import { PRERENDER_LOCALES } from "@/i18n/config";
 import { accessoriesByCategory, keychainForTeam } from "@/data/accessories";
 import { slugify } from "@/data/slug";
 import { AccessoryForm } from "@/components/product/AccessoryForm";
@@ -17,7 +17,7 @@ import { alternatesFor, localeUrl } from "@/lib/site";
  * same as catalog.ts's byTeam() does for shirts.
  */
 export function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
+  return PRERENDER_LOCALES.flatMap((locale) =>
     accessoriesByCategory("keychain").map((accessory) => ({
       locale,
       team: slugify(accessory.team),

@@ -25,9 +25,3 @@ export function pairedCount(p: PairedPrice | undefined | null, qty: number, shir
   if (!pairedActive(p, now) || qty <= 0 || shirts <= 0) return 0;
   return Math.min(qty, Math.floor(shirts * p.per_shirt));
 }
-
-/** Total for `qty` units: the paired ones at the paired price, the rest at `price`. Same unit as the inputs; never rounds. */
-export function pairedTotal(price: number, p: PairedPrice | undefined | null, qty: number, shirts: number, now: Date): number {
-  const cheap = pairedCount(p, qty, shirts, now);
-  return cheap > 0 && p ? cheap * p.price + (qty - cheap) * price : qty * price;
-}
