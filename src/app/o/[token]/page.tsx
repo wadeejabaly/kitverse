@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { readOrderToken } from "@/lib/orders/link";
 import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { getAccessory } from "@/data/accessories";
+import { TOWN_OPTIONS } from "@/data/localities";
 import { estimatedArrival } from "@/lib/orders/eta";
 import { PATCH_PROP_KEYS } from "@/data/patches";
 import heMessages from "@/i18n/messages/he.json";
@@ -17,8 +18,8 @@ type QuoteLine = { key: string; qty: number; title: string; unitPrice: number; g
 type Quote = {
   lines: QuoteLine[]; itemsTotal: number; total: number; discountTotal: number; paymentFee?: number;
   offer?: { label: string; saving: number } | null;
-  delivery?: { fee: number; days: string; label: string } | null;
-  orderAddons?: { label: string; amount: number }[];
+  delivery?: { fee: number; days: string; label: string; zoneId?: string } | null;
+  orderAddons?: { id?: string; label: string; amount: number }[];
 };
 type Item = { id: string; product_id: string | null; description: string | null; version: string; sleeve: string; size: string; qty: number; print_name: string | null; print_number: string | null; patches: string[] };
 type Product = { id: string; title_ar: string | null; title_en: string; title_he: string | null; primary_image_url: string | null; photo_status: string | null };
@@ -73,6 +74,18 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
       const name = a ? (x.category === "scarf" ? `${t.scarf} ${team}${variant ? ` · ${variant}` : ""}` : x.category === "phone_case" ? `${t.phoneCase} ${team}${variant ? ` · ${variant}` : ""}${x.model ? ` · ${x.model}` : ""}` : `${t.keychain} ${team}`) : x.title;
       return { ...x, name, image: a?.image ?? null };
     });
+  // owner 2026-11-22: a Hebrew (or English) order page is all in that language - the stored quote's
+  // labels and the town are Arabic, so name them here (an owner-typed custom line keeps its own text)
+  const addonLabel = (a: { id?: string; label: string }) => {
+    const qty = a.label.match(/ ×\d+$/)?.[0] ?? "";
+    const base = a.id === "gift_box" ? t.giftBox : a.id === "keychain" ? t.keychain : a.id === "scarf" ? t.scarf : a.id === "phone_case" ? t.phoneCase : null;
+    return base ? base + qty : a.label;
+  };
+  const townName = (town: string | null) => {
+    if (!town || lang === "ar") return town;
+    const hit = TOWN_OPTIONS.find((x) => x.ar === town);
+    return hit ? (lang === "he" ? hit.he : hit.en) : town;
+  };
   const confirmed = CONFIRMED.includes(o.status) || o.status === "delivered";
   // Website orders wait for the OWNER's OK, not the customer's — a different message than the
   // bot's "confirm with us in chat" line, which is only ever shown to an Instagram customer.
@@ -188,9 +201,9 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
           {q.offer?.saving ? <Row label={t.offer3} value={`-${ils(q.offer.saving)}`} tone="green" /> : null}
           {nameAddon ? <Row label={t.nameNumber(names)} value={ils(nameAddon)} /> : null}
           {otherAddons ? <Row label={t.patches} value={ils(otherAddons)} /> : null}
-          {(q.orderAddons ?? []).map((a) => <Row key={a.label} label={a.label} value={ils(a.amount)} />)}
+          {(q.orderAddons ?? []).map((a) => <Row key={a.id ?? a.label} label={addonLabel(a)} value={ils(a.amount)} />)}
           {q.discountTotal ? <Row label={t.discount} value={`-${ils(q.discountTotal)}`} tone="green" /> : null}
-          <Row label={q.delivery ? `${t.delivery} · ${q.delivery.label}` : t.delivery} value={q.delivery ? ils(q.delivery.fee) : "—"} />
+          <Row label={q.delivery ? `${t.delivery} · ${q.delivery.zoneId ? (q.delivery.zoneId === "north" ? t.zoneNorth : t.zoneRest) : q.delivery.label}` : t.delivery} value={q.delivery ? ils(q.delivery.fee) : "—"} />
           {q.paymentFee ? <Row label={t.paypalFee} value={ils(q.paymentFee)} /> : null}
           <div className="mt-1 flex items-end justify-between border-t border-ink pt-3">
             <span className="font-semibold">{t.total}</span>
@@ -207,7 +220,7 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
           <Truck className="mt-0.5 h-5 w-5 shrink-0 text-pitch" strokeWidth={1.75} />
           <div className="text-sm">
             <div className="font-semibold">{o.address.full_name}</div>
-            <div className="text-ink-2">{o.address.town} · {t.courierCalls}</div>
+            <div className="text-ink-2">{townName(o.address.town)} · {t.courierCalls}</div>
           </div>
         </section>
       ) : null}
