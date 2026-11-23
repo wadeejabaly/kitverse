@@ -11,7 +11,8 @@ import { DELIVERED_AFTER_DAYS, receivedTime, shipmentStage, type TrackResult } f
  *   number saved (the supplier shipped) or parcel moving -> `in_supplier_batch` become `produced`
  *                                                          (customer: "being packed and sent for a quality check")
  *   Junhe delivered to owner -> orders before `with_courier` become `with_courier` (customer: 24-72 hours)
- *   3 days after that        -> `with_courier` becomes `delivered`
+ *   delivered: only by the owner, by hand (owner 2026-11-23 - the old "3 days after the shipment
+ *   arrived" rule, deliverDueOrders, is no longer run)
  * Only ever FORWARD and only from the statuses listed: a cancelled / issue / already-further order is
  * never touched, and a status the owner set by hand is respected. Customers see only the status and the
  * estimated arrival on their order page - never the tracking number or carrier.
@@ -53,7 +54,7 @@ export async function markBatchReceived(batchId: string, at: Date, how: string):
     await db().from("supplier_batches").update({ received_at: at.toISOString(), ...(b.shipped_at ? {} : { shipped_at: at.toISOString() }) }).eq("id", batchId).is("received_at", null);
   }
   const moved = await advance(await batchOrderIds(batchId), RECEIVED_FROM, "with_courier", `shipment received (${how})`);
-  if (moved) await notify({ kind: "shipment.received", priority: "normal", title: `Shipment arrived: ${moved} order${moved === 1 ? "" : "s"} out for delivery`, body: `They will be marked delivered after ${DELIVERED_AFTER_DAYS} days.`, link: `/admin/orders/batches/${batchId}` });
+  if (moved) await notify({ kind: "shipment.received", priority: "normal", title: `Shipment arrived: ${moved} order${moved === 1 ? "" : "s"} out for delivery`, body: "Mark each order delivered yourself once it reaches the customer.", link: `/admin/orders/batches/${batchId}` });
   return moved;
 }
 
@@ -106,12 +107,12 @@ export async function deliverDueOrders(now = new Date()): Promise<number> {
   return total;
 }
 
-/** Scheduled: every batch with a tracking number that hasn't arrived yet, then the 3-day delivered rule. */
+/** Scheduled: every batch with a tracking number that hasn't arrived yet. Delivered is set by the owner only (2026-11-23). */
 export async function syncOpenShipments(): Promise<{ checked: number; delivered: number }> {
   let checked = 0;
   if (trackingEnabled()) {
     const open = (((await db().from("supplier_batches").select("id").not("tracking_number", "is", null).is("received_at", null).limit(50)).data) ?? []) as { id: string }[];
     for (const b of open) { await syncBatchTracking(b.id); checked++; }
   }
-  return { checked, delivered: await deliverDueOrders() };
+  return { checked, delivered: 0 };
 }

@@ -7,6 +7,7 @@ import { PATCHES, type PatchId } from "@/lib/orders/rules";
 import { getAccessory } from "@/data/accessories";
 import { TOWN_OPTIONS } from "@/data/localities";
 import { estimatedArrival } from "@/lib/orders/eta";
+import { CUSTOMER_STAGES, customerStage } from "@/lib/orders/customer-stage";
 import { PATCH_PROP_KEYS } from "@/data/patches";
 import heMessages from "@/i18n/messages/he.json";
 import enMessages from "@/i18n/messages/en.json";
@@ -26,18 +27,8 @@ type Product = { id: string; title_ar: string | null; title_en: string; title_he
 
 const ils = (agorot: number) => `${(agorot / 100).toLocaleString("en-US")}₪`;
 
-// customer's view of the order lifecycle
-// (owner wording 2026-11-13; shipments are tracked: produced = shipped from the supplier,
-// with_courier = the owner received it and it reaches the customer in 24-72 hours)
-// (labels per language in ./strings.ts - the page follows `?l=he|en|ar`, else the buyer's checkout language)
-const STEPS = [
-  { statuses: ["confirmed", "paid"] },
-  { statuses: ["in_supplier_batch"] },
-  { statuses: ["produced", "at_warehouse"] },
-  { statuses: ["with_courier"] },
-  { statuses: ["delivered"] },
-];
-const CONFIRMED = STEPS.flatMap((s) => s.statuses);
+// customer's view of the order lifecycle: the owner's day-by-day timeline (2026-11-23,
+// src/lib/orders/customer-stage.ts) - labels per language in ./strings.ts (`t.steps`, same order as CUSTOMER_STAGES)
 const PATCH_NAMES: Record<Exclude<OLang, "ar">, Record<string, string>> = { he: heMessages.cart as Record<string, string>, en: enMessages.cart as Record<string, string> };
 function patchName(id: string, lang: OLang): string {
   if (lang !== "ar") { const key = PATCH_PROP_KEYS[id as PatchId]; const v = key ? PATCH_NAMES[lang][key] : undefined; if (v && !v.includes("{")) return v; }
@@ -86,11 +77,12 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
     const hit = TOWN_OPTIONS.find((x) => x.ar === town);
     return hit ? (lang === "he" ? hit.he : hit.en) : town;
   };
-  const confirmed = CONFIRMED.includes(o.status) || o.status === "delivered";
+  const stage = customerStage({ status: o.status, confirmedAt: o.confirmed_at ?? o.created_at });
+  const confirmed = stage !== null;
   // Website orders wait for the OWNER's OK, not the customer's — a different message than the
   // bot's "confirm with us in chat" line, which is only ever shown to an Instagram customer.
   const pendingOwnerApproval = !confirmed && o.status === "awaiting_confirmation" && o.source === "website";
-  const stepIndex = STEPS.findIndex((s) => s.statuses.includes(o.status));
+  const stepIndex = stage ? CUSTOMER_STAGES.indexOf(stage) : -1;
   const paypalReady = !!process.env.PAYPAL_CLIENT_ID && !!process.env.PAYPAL_CLIENT_SECRET;
   const names = items.filter((i) => i.print_name || i.print_number).length;
   const nameAddon = q?.lines.flatMap((l) => l.addons).filter((a) => a.id === "name_number").reduce((s, a) => s + a.amount, 0) ?? 0;
@@ -132,14 +124,14 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/o/
             </div>
           </div>
         ) : null}
-        <ol className="grid grid-cols-5 gap-1.5" aria-label={t.statusAria}>
-          {STEPS.map((s, i) => {
+        <ol className="grid grid-cols-7 gap-1" aria-label={t.statusAria}>
+          {CUSTOMER_STAGES.map((s, i) => {
             const done = i <= stepIndex;
             return (
-              <li key={i} className="flex flex-col gap-1.5">
+              <li key={s} className="flex flex-col gap-1.5">
                 <span className={`h-1.5 rounded-full ${done ? "bg-pitch" : "bg-line-2"}`} />
-                <span className={`flex items-center gap-1 text-xs ${i === stepIndex ? "font-semibold text-pitch" : done ? "text-ink-2" : "text-muted"}`}>
-                  {done && i < stepIndex ? <Check className="h-3 w-3" /> : null}{t.steps[i].label}
+                <span className={`text-[11px] leading-tight ${i === stepIndex ? "font-semibold text-pitch" : done ? "text-ink-2" : "text-muted"}`}>
+                  {done && i < stepIndex ? <Check className="inline h-3 w-3 align-[-2px]" /> : null}{t.steps[i].label}
                 </span>
               </li>
             );

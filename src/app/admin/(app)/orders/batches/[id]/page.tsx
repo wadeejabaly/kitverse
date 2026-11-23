@@ -62,7 +62,7 @@ export default async function Batch({ params, searchParams }: PageProps<"/admin/
             {!b.received_at ? (
               <form action={markShipmentReceived}><input type="hidden" name="batchId" value={id} /><SubmitButton bare className={button.ghost}><PackageCheck className="h-4 w-4" /> I received this shipment</SubmitButton></form>
             ) : null}
-            <p className="text-xs text-muted">Customers only see “preparing for production”, “being packed and sent to our warehouse for a quality check”, “being delivered (24-72 hours)” and “delivered”, with an estimated arrival date - never the tracking number or Junhe.</p>
+            <p className="text-xs text-muted">Customers see a fixed timeline from the day the order was confirmed - received (day 0-2), in production (3-6), produced (7-9), on the way to our warehouse (10-13), at our warehouse (14-17), out for delivery (18 on) - and “delivered” only once you mark it, with an estimated arrival of day 18-25. Never the tracking number or Junhe.</p>
           </div>
           {tracking ? <div>
             <div className="mb-2 text-sm font-medium text-ink-2">Tracking events</div>

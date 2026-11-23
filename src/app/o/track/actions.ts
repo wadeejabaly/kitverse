@@ -6,15 +6,22 @@ import { db, must } from "@/lib/db";
 import { normalizePhone } from "@/lib/orders/rules";
 import { orderToken } from "@/lib/orders/link";
 import { overLimit, recordFailure } from "@/lib/rate-limit";
+import { customerStage, type CustomerStage } from "@/lib/orders/customer-stage";
 
 export interface TrackState { error?: string; orders?: { number: number; status: string; total: string; href: string }[] }
 
-// The same lifecycle buckets /o/[token] shows, in Arabic.
+// Before confirmation: the order's own status. After: the same day-by-day stage /o/[token] shows (customer-stage.ts), in Arabic.
 const STATUS_LABEL: Record<string, string> = {
   draft: "قيد التجهيز", quoted: "قيد التجهيز", awaiting_details: "قيد التجهيز",
-  awaiting_confirmation: "بانتظار التأكيد", awaiting_payment_verification: "بانتظار تأكيد الدفع", confirmed: "تأكدت", paid: "تأكدت",
-  in_supplier_batch: "تحضير للإنتاج", produced: "تغليف وفحص الجودة", at_warehouse: "تغليف وفحص الجودة", with_courier: "بالتوصيل (24-72 ساعة)",
-  delivered: "وصلت", issue: "في مشكلة، راسلنا",
+  awaiting_confirmation: "بانتظار التأكيد", awaiting_payment_verification: "بانتظار تأكيد الدفع", issue: "في مشكلة، راسلنا",
+};
+const STAGE_LABEL: Record<CustomerStage, string> = {
+  received: "استلمناها وتأكدت", production: "بالإنتاج", produced: "جاهزة وعم تتحضّر لتنبعت للمخزن", to_warehouse: "بالطريق لمخزننا",
+  at_warehouse: "بمخزننا", with_courier: "بالتوصيل إلك", delivered: "وصلت",
+};
+const statusLabel = (o: { status: string; confirmed_at: string | null }) => {
+  const st = customerStage({ status: o.status, confirmedAt: o.confirmed_at });
+  return st ? STAGE_LABEL[st] : STATUS_LABEL[o.status] ?? o.status;
 };
 const ils = (agorot: number) => `${(agorot / 100).toLocaleString("en-US")}₪`;
 const ACTION = "track.lookup_failed";
@@ -38,12 +45,12 @@ export async function trackOrder(_prev: TrackState, form: FormData): Promise<Tra
     return { error: "حاولت كتير. جرب كمان شوي، أو راسلنا عالانستغرام." };
   }
 
-  const cols = "id,number,status,total,created_at,address";
+  const cols = "id,number,status,total,created_at,confirmed_at,address";
   const [byPhone, byAlt] = await Promise.all([
     db().from("orders").select(cols).eq("address->>phone", phone).neq("status", "cancelled"),
     db().from("orders").select(cols).eq("address->>phone_alt", phone).neq("status", "cancelled"),
   ]);
-  type Row = { id: string; number: number; status: string; total: number; created_at: string; address: { email?: string } | null };
+  type Row = { id: string; number: number; status: string; total: number; created_at: string; confirmed_at: string | null; address: { email?: string } | null };
   const all = [...(must(byPhone, "orders by phone") as Row[]), ...(must(byAlt, "orders by alt phone") as Row[])].filter((o, i, arr) => arr.findIndex((x) => x.id === o.id) === i);
   const found = orderNo ? all.filter((o) => String(o.number) === orderNo) : all.filter((o) => (o.address?.email ?? "").toLowerCase() === email);
 
@@ -54,6 +61,6 @@ export async function trackOrder(_prev: TrackState, form: FormData): Promise<Tra
   if (found.length === 1) redirect(`/o/${orderToken(found[0].id)}`);
   return {
     orders: found.sort((a, b) => b.created_at.localeCompare(a.created_at))
-      .map((o) => ({ number: o.number, status: STATUS_LABEL[o.status] ?? o.status, total: ils(o.total), href: `/o/${orderToken(o.id)}` })),
+      .map((o) => ({ number: o.number, status: statusLabel(o), total: ils(o.total), href: `/o/${orderToken(o.id)}` })),
   };
 }

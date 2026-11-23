@@ -15,23 +15,23 @@ describe("addWorkingDays", () => {
 
 describe("estimatedArrival", () => {
   const confirmedAt = "2026-11-15T08:00:00Z"; // Sunday, Israel morning
-  it("10-20 working days from confirmation while it is on the way", () => {
-    for (const status of ["confirmed", "in_supplier_batch", "produced"]) {
-      expect(estimatedArrival({ status, confirmedAt }, new Date("2026-11-16T10:00:00Z"))).toEqual({ kind: "window", from: "2026-11-29", to: "2026-12-13" });
+  it("day 18 - day 25 after confirmation while it is on the way (owner timeline 2026-11-23)", () => {
+    for (const status of ["confirmed", "in_supplier_batch", "produced", "at_warehouse"]) {
+      expect(estimatedArrival({ status, confirmedAt }, new Date("2026-11-16T10:00:00Z"))).toEqual({ kind: "window", from: "2026-12-03", to: "2026-12-10" });
     }
   });
   it("starts the window tomorrow once the first date has passed, then says soon", () => {
-    expect(estimatedArrival({ status: "produced", confirmedAt }, new Date("2026-12-02T10:00:00Z"))).toEqual({ kind: "window", from: "2026-12-03", to: "2026-12-13" });
-    expect(estimatedArrival({ status: "produced", confirmedAt }, new Date("2026-12-13T10:00:00Z"))).toEqual({ kind: "soon" });
+    expect(estimatedArrival({ status: "produced", confirmedAt }, new Date("2026-12-05T10:00:00Z"))).toEqual({ kind: "window", from: "2026-12-06", to: "2026-12-10" });
+    expect(estimatedArrival({ status: "with_courier", confirmedAt }, new Date("2026-12-10T10:00:00Z"))).toEqual({ kind: "soon" });
   });
-  it("out for delivery: 1-3 days from the day it went out", () => {
+  it("sent out by hand early: 1-3 days from the day it went out", () => {
     const out = "2026-11-20T15:00:00Z";
     expect(estimatedArrival({ status: "with_courier", confirmedAt, outForDeliveryAt: out }, new Date("2026-11-20T16:00:00Z"))).toEqual({ kind: "window", from: "2026-11-21", to: "2026-11-23" });
     expect(estimatedArrival({ status: "with_courier", confirmedAt, outForDeliveryAt: out }, new Date("2026-11-24T10:00:00Z"))).toEqual({ kind: "soon" });
   });
   it("uses the Israel day, not the UTC day", () => {
     // 23:30 UTC on Sat 14 Nov is already Sunday 15 Nov in Israel
-    expect(estimatedArrival({ status: "confirmed", confirmedAt: "2026-11-14T23:30:00Z" }, new Date("2026-11-15T10:00:00Z"))).toEqual({ kind: "window", from: "2026-11-29", to: "2026-12-13" });
+    expect(estimatedArrival({ status: "confirmed", confirmedAt: "2026-11-14T23:30:00Z" }, new Date("2026-11-15T10:00:00Z"))).toEqual({ kind: "window", from: "2026-12-03", to: "2026-12-10" });
   });
   it("nothing when delivered or not confirmed", () => {
     expect(estimatedArrival({ status: "delivered", confirmedAt })).toBeNull();
