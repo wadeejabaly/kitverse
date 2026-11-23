@@ -23,8 +23,7 @@ export type Sale = {
 
 export const SALE: Sale | null = ((promo as { sale?: Sale }).sale ?? null);
 
-/** The decorative countdown's target: 20 Nov 2026, 00:00 Israel time. */
-export const SALE_COUNTDOWN_TO = "2026-11-19T22:00:00Z";
+// (The hero countdown and the top strip now count down to the sale's own end, `endsAt` - owner 2026-11-23.)
 
 export function saleOn(now: number = Date.now(), sale: Sale | null = SALE): boolean {
   if (!sale?.startsAt || !sale?.endsAt) return false;

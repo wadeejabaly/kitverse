@@ -12,7 +12,7 @@ import { HeroChromeOffset } from "./HeroChromeOffset";
 import { JerseyShowcase, type ShowcaseItem } from "./JerseyShowcase";
 import { INTRO_RETRY_KEY, INTRO_SEEN_KEY } from "./intro";
 import { BfCountdown } from "./BfCountdown";
-import { SALE, SALE_COUNTDOWN_TO, saleAmount } from "@/lib/sale";
+import { SALE, saleAmount } from "@/lib/sale";
 
 /**
  * THE VIDEO HERO — the home page hero (owner request 2026-11-11).
@@ -266,10 +266,11 @@ export async function HeroVideo({ locale, blackFriday = false }: { locale: strin
               </p>
             ) : null}
 
-            {bf ? (
+            {bf && SALE ? (
               <div className="kv-vhero-in mb-8" style={{ "--i": 4 } as React.CSSProperties}>
+                {/* owner 2026-11-23: counts down to the END of the sale (was a decorative 20 Nov target) */}
                 <BfCountdown
-                  to={SALE_COUNTDOWN_TO}
+                  to={SALE.endsAt}
                   label={tb("countdownLabel")}
                   units={{ days: tb("days"), hours: tb("hours"), minutes: tb("minutes"), seconds: tb("seconds") }}
                 />

@@ -17,7 +17,8 @@
     "claimYes": "Yes, claim it",
     "claimNo": "No thanks",
     "claimNote": "Say yes and the code is added at checkout for you. Say no and you can still type it yourself.",
-    "saleStripAll": "{amount} off all shirts and kits <s>|</s> code <c>{code}</c> · online only!"
+    "saleStripAll": "{amount} off all shirts and kits <s>|</s> code <c>{code}</c> · online only!",
+    "endsIn": "Ends in"
   },
   "nav": {
     "home": "Home",
@@ -150,7 +151,7 @@
       "minLine": "off shirts on orders of {min}+",
       "sub": "The biggest range of club and national-team shirts, classic and current, in great quality and standout designs.",
       "autoNote": "Applied automatically at checkout",
-      "countdownLabel": "Countdown to Black Friday",
+      "countdownLabel": "Black Friday ends in",
       "days": "days",
       "hours": "hrs",
       "minutes": "min",

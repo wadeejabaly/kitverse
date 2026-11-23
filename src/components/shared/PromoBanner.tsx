@@ -1,9 +1,10 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import promo from "@/data/promo.json";
 import { PromoSwitch } from "@/components/shared/PromoSwitch";
 import { enabledPaymentMethods } from "@/lib/payment-methods";
 import { CashIcon } from "./CashIcon";
+import { StripCountdown } from "./StripCountdown";
 
 /**
  * Site-wide strip for the first-order welcome code (owner request
@@ -46,6 +47,7 @@ export async function PromoBanner() {
   const cash = enabledPaymentMethods().cash;
   if (!welcome && !sale && !cash) return null;
   const t = await getTranslations("promo");
+  const locale = await getLocale();
   const amountOf = (c: Code) => (c.kind === "fixed" ? `₪${c.value}` : `${c.value}%`);
 
   const cashNote = cash ? (
@@ -108,6 +110,8 @@ export async function PromoBanner() {
               ? t.rich("saleStrip", { amount: `\u2066${amountOf(sale)}\u2069`, min: `\u2066₪${sale.minOrder}\u2069`, s: (c) => <span className="mx-1.5 opacity-50">{c}</span>, code: sale.code, c: (c) => <strong dir="ltr" className="latin tracking-wide text-[#ff4a4f]">{c}</strong> })
               : t.rich("saleStripAll", { amount: `\u2066${amountOf(sale)}\u2069`, s: (c) => <span className="mx-1.5 opacity-50">{c}</span>, code: sale.code, c: (c) => <strong dir="ltr" className="latin tracking-wide text-[#ff4a4f]">{c}</strong> })}
           </span>
+          {/* owner 2026-11-23: time left until the sale ends */}
+          <StripCountdown to={sale.endsAt} label={t("endsIn")} lang={locale} />
         </span>
         {bfMark}
       </span>

@@ -3045,12 +3045,25 @@ html:has(.kv-vhero[data-intro="done"]) [data-consent-banner] {
 .kv-bf-strip-word span {
   color: #ff2a2f;
 }
+/* time left until the sale ends (owner 2026-11-23) */
+.kv-bf-strip-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid rgb(255 42 47 / 0.55);
+  border-radius: 999px;
+  background: rgb(255 42 47 / 0.12);
+  white-space: nowrap;
+}
+.kv-bf-strip-timer b { color: #ff4a4f; font-weight: 800; }
 @media (width >= 64rem) {
   .kv-bf-strip-mark { display: inline-flex; }
 }
 @media (width < 40rem) {
   .kv-bf-strip { font-size: 12.5px; }
   .kv-bf-strip-text svg { display: none; }
+  .kv-bf-strip-text { flex-wrap: wrap; row-gap: 0.3rem; }
 }
 /* short desktop windows (1366x768 etc.): keep the offer, drop the extras */
 @media (width >= 48rem) and (orientation: landscape) and (height < 56rem) {
